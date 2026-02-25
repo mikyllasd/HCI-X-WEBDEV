@@ -21,25 +21,28 @@ body {
 
 #login {
     display: flex;
-<<<<<<< Updated upstream
-=======
+
 }
 
 #terms{
     display: none;
->>>>>>> Stashed changes
+
 }
 
 #terms:target{
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .submitBTN{
+    display: inline-block;
+    vertical-align: middle;
     padding: 8px;
-    background color: gray;
+    background-color: gray;
     color: white;
     border: none;
-    cursor: hover;
+    cursor: not-allowed;
 }
 
 #agree:checked~button{
@@ -210,9 +213,17 @@ input, select {
     color: #8B0000;
     text-decoration: none;
 }
+<<<<<<< HEAD
 .sticky{
     background-color: #8B0000;
     border: none;
     position: sticky;
     top: 0px;
+=======
+
+#bottom{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+>>>>>>> ad9ff5941523dc474aef28eff17543c48debdcc2
 }

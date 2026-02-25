@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UPRESSease - WMSU</title>
+<link rel="stylesheet" href="HCIXWEBDEV.css">
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<section id="login" class="section login-bg">
+
+    <div class="login-card">
+        <div class="login-icon">🎓</div>
+        <h2>UPRESSease</h2>
+        <p class="login-sub">
+            Western Mindanao State University<br>
+            Printing & Merchandise Reservation System
+        </p>
+
+        <!-- FORM (NO JAVASCRIPT) -->
+        <form action="#dashboard">
+            <label>Email</label>
+            <input type="email" placeholder="student@wmsu.edu.ph" required>
+
+            <label>Password</label>
+            <input type="password" placeholder="Enter password" required>
+
+            <button type="submit" class="btn-red full">Login</button>
+        </form>
+    </div>
+
+</section>
+
+
+<!-- ================= DASHBOARD ================= -->
+<section id="dashboard" class="section">
+
+    <div class="topbar">
+        <div class="logo">🎓 UPRESSease</div>
+        <div>
+            <a href="#">My Orders</a>
+            <a href="#login">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <div class="welcome-card">
+            <h3>Welcome back!</h3>
+            <p>Select a service below to get started with your order.</p>
+        </div>
+
+        <h2 class="section-title">Our Services</h2>
+
+        <div class="service-grid">
+
+            <div class="service-card">
+                <div class="icon-box">🖨</div>
+                <h4>Printing</h4>
+                <p>Document printing services</p>
+                <a href="#order" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box">📖</div>
+                <h4>Binding</h4>
+                <p>Professional binding services</p>
+                <a href="#order" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box">🏷</div>
+                <h4>Lanyards</h4>
+                <p>Custom lanyards</p>
+                <a href="#order" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box">☕</div>
+                <h4>Mug Printing</h4>
+                <p>Custom printed mugs</p>
+                <a href="#order" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box">🎽</div>
+                <h4>Merchandise</h4>
+                <p>University shirts & items</p>
+                <a href="#order" class="btn-red">Order Now</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ORDER PAGE ================= -->
+<section id="order" class="section">
+
+    <div class="topbar">
+        <div class="logo">🎓 UPRESSease</div>
+        <div>
+            <a href="#">My Orders</a>
+            <a href="#login">Logout</a>
+        </div>
+    </div>
+
+    <div class="order-container">
+
+        <div>
+            <div class="card">
+                <h3>Order Details</h3>
+
+                <label>Upload File</label>
+                <div class="upload-box">
+                    Click to upload or drag and drop
+                </div>
+
+                <label>Item Type</label>
+                <select>
+                    <option>Select option</option>
+                </select>
+
+                <label>Quantity</label>
+                <input type="number" value="1" min="1">
+            </div>
+        </div>
+
+        <div>
+            <div class="card summary-card">
+                <h3>Order Summary</h3>
+
+                <div class="summary-row">
+                    <span>Quantity</span>
+                    <span>1</span>
+                </div>
+
+                <div class="summary-total">
+                    <span>Total Amount</span>
+                    <span>₱0.00</span>
+                </div>
+
+                <a href="#" class="btn-red full">Proceed to Payment</a>
+                <a href="#dashboard" class="btn-back">Back to Services</a>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>

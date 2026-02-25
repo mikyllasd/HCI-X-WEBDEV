@@ -15,10 +15,12 @@ body {
     display: none;
 }
 
-.section:target {
-    display: block;
+.section:target ~ .section{
+    display: none;
 }
 
+
+#login:target,
 #login {
     display: flex;
 }

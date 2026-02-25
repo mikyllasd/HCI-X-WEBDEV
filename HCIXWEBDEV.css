@@ -21,6 +21,30 @@ body {
 
 #login {
     display: flex;
+<<<<<<< Updated upstream
+=======
+}
+
+#terms{
+    display: none;
+>>>>>>> Stashed changes
+}
+
+#terms:target{
+    display: block;
+}
+
+.submitBTN{
+    padding: 8px;
+    background color: gray;
+    color: white;
+    border: none;
+    cursor: hover;
+}
+
+#agree:checked~button{
+    background-color: #2e7d32;
+    cursor: pointer;
 }
 
 /* LOGIN CENTERED */
@@ -185,4 +209,10 @@ input, select {
     margin-top: 1rem;
     color: #8B0000;
     text-decoration: none;
+}
+.sticky{
+    background-color: #8B0000;
+    border: none;
+    position: sticky;
+    top: 0px;
 }

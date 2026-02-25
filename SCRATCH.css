@@ -1,0 +1,73 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI, sans serif";
+}
+
+body {
+    background: #f3f3f3;
+    color: #333;
+}
+
+#terms{
+    display: none;
+
+}
+
+#terms:target{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.submitBTN{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 8px;
+    background-color: gray;
+    color: white;
+    border: none;
+    cursor: not-allowed;
+}
+
+#agree:checked~button{
+    background-color: #2e7d32;
+    cursor: pointer;
+}
+
+
+/* LOGIN CENTERED */
+.login-bg {
+    background: #8B0000;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    width: 420px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.login-icon {
+    background: #8B0000;
+    color: white;
+    width: 60px;
+    height: 60px;
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.login-sub {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}

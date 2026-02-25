@@ -39,28 +39,21 @@ body {
     width: 50px;
     height: 50px;
     object-fit: contain;
-    border-radius: 50%; /* remove if you don't want circle */
+    border-radius: 50%; 
 }
 
 .nav-right a {
     color: white;
-    text-decoration: none;
+    text-decoration: none;  
     padding: 6px 12px;
     margin-left: 15px;
     border-radius: 5px;
     transition: 0.3s;
 }
 
-/* Remove underline in ALL states */
-.nav-right a:hover,
-.nav-right a:active,
-.nav-right a:focus,
-.nav-right a:visited {
-    text-decoration: none;
-}
-
-/* Shadow on hover */
+/* Hover effect */
 .nav-right a:hover {
+    text-decoration: none;   
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -152,4 +145,183 @@ body {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 1.5rem;
+}
+
+/* MY ORDERS */
+
+#orders{
+display:none;
+background:#f3f4f6;
+height:100vh;
+}
+
+#orders:target{
+display:block;
+}
+
+
+/* RED HEADER */
+
+.orders-header{
+
+background:#990000;
+height:90px;
+
+display:flex;
+align-items:center;
+
+}
+
+
+.header-content{
+
+width:1200px;
+margin:auto;
+
+display:flex;
+align-items:center;
+gap:20px;
+
+color:white;
+
+}
+
+
+.arrow{
+
+font-size:22px;
+
+}
+
+
+/* TITLE */
+
+.orders-header h2{
+
+font-size:22px;
+
+}
+
+
+.orders-header p{
+
+font-size:14px;
+
+}
+
+
+
+/* TABS */
+
+.orders-tabs{
+
+width:1200px;
+
+margin:30px auto;
+
+background:#eeeeee;
+
+padding:15px 40px;
+
+border-radius:30px;
+
+display:flex;
+justify-content:space-between;
+
+box-shadow:0px 2px 6px rgba(0,0,0,0.15);
+
+font-size:15px;
+
+}
+
+
+
+/* CENTER BOX */
+
+.orders-container{
+
+width:1200px;
+
+margin:auto;
+
+}
+
+
+.orders-box{
+
+background:#e9e9e9;
+
+height:420px;
+
+border-radius:20px;
+
+box-shadow:0px 4px 12px rgba(0,0,0,0.15);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+}
+
+
+
+/* ICON */
+
+.cube{
+
+font-size:50px;
+
+opacity:0.5;
+
+margin-bottom:20px;
+
+}
+
+
+
+/* TEXT */
+
+.orders-box h3{
+
+font-size:20px;
+
+margin-bottom:10px;
+
+}
+
+
+.orders-box p{
+
+font-size:14px;
+
+color:#666;
+
+margin-bottom:20px;
+
+}
+
+
+
+/* BUTTON */
+
+.browse-btn{
+
+background:#990000;
+
+color:white;
+
+border:none;
+
+padding:12px 28px;
+
+border-radius:10px;
+
+cursor:pointer;
+
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Print Preview Example</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+  }
+
+  .no-print {
+    margin-bottom: 20px;
+  }
+
+  .print-area {
+    border: 1px solid #ccc;
+    padding: 20px;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    body {
+      margin: 0;
+    }
+
+    .no-print {
+      display: none; /* Hide buttons when printing */
+    }
+
+    .print-area {
+      border: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <button onclick="window.print()">Print Preview</button>
+</div>
+
+<div class="print-area">
+  <h1>Invoice</h1>
+  <p><strong>Name:</strong> John Doe</p>
+  <p><strong>Date:</strong> 28 Feb 2026</p>
+  <p><strong>Amount:</strong> $250.00</p>
+</div>
+
+</body>
+</html>

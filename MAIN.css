@@ -87,7 +87,6 @@ body {
 
 #terms{
     display: none;
-
 }
 
 #terms:target{
@@ -110,7 +109,6 @@ body {
     background-color: #2e7d32;
     cursor: pointer;
 }
-
 
 /* LOGIN CENTERED */
 .login-bg {
@@ -149,184 +147,107 @@ body {
 }
 
 /* MY ORDERS */
-
 #orders{
-display:none;
-background:#f3f4f6;
-height:100vh;
+    display:none;
+    background:#f3f4f6;
+    height:100vh;
 }
 
 #orders:target{
-display:block;
+    display:block;
 }
-
 
 /* RED HEADER */
-
 .orders-header{
-
-background:#990000;
-height:90px;
-
-display:flex;
-align-items:center;
-
+    background:#990000;
+    height:90px;
+    display:flex;
+    align-items:center;
 }
-
 
 .header-content{
-
-width:1200px;
-margin:auto;
-
-display:flex;
-align-items:center;
-gap:20px;
-
-color:white;
-
+    width:1200px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    color:white;
 }
-
 
 .arrow{
-
-font-size:22px;
-
+    font-size:22px;
 }
-
 
 /* TITLE */
-
 .orders-header h2{
-
-font-size:22px;
-
+    font-size:22px;
 }
-
 
 .orders-header p{
-
-font-size:14px;
-
+    font-size:14px;
 }
-
-
 
 /* TABS */
-
 .orders-tabs{
-
-width:1200px;
-
-margin:30px auto;
-
-background:#eeeeee;
-
-padding:15px 40px;
-
-border-radius:30px;
-
-display:flex;
-justify-content:space-between;
-
-box-shadow:0px 2px 6px rgba(0,0,0,0.15);
-
-font-size:15px;
-
+    width:1200px;
+    margin:30px auto;
+    background:#eeeeee;
+    padding:15px 40px;
+    border-radius:30px;
+    display:flex;
+    justify-content:space-between;
+    box-shadow:0px 2px 6px rgba(0,0,0,0.15);
+    font-size:15px;
 }
-
-
 
 /* CENTER BOX */
-
 .orders-container{
-
-width:1200px;
-
-margin:auto;
-
+    width:1200px;
+    margin:auto;
 }
-
 
 .orders-box{
-
-background:#e9e9e9;
-
-height:420px;
-
-border-radius:20px;
-
-box-shadow:0px 4px 12px rgba(0,0,0,0.15);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-text-align:center;
-
+    background:#e9e9e9;
+    height:420px;
+    border-radius:20px;
+    box-shadow:0px 4px 12px rgba(0,0,0,0.15);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
 }
-
-
 
 /* ICON */
-
 .cube{
-
-font-size:50px;
-
-opacity:0.5;
-
-margin-bottom:20px;
-
+    font-size:50px;
+    opacity:0.5;
+    margin-bottom:20px;
 }
-
-
 
 /* TEXT */
-
 .orders-box h3{
-
-font-size:20px;
-
-margin-bottom:10px;
-
+    font-size:20px;
+    margin-bottom:10px;
 }
-
 
 .orders-box p{
-
-font-size:14px;
-
-color:#666;
-
-margin-bottom:20px;
-
+    font-size:14px;
+    color:#666;
+    margin-bottom:20px;
 }
-
-
 
 /* BUTTON */
-
 .browse-btn{
-
-background:#990000;
-
-color:white;
-
-border:none;
-
-padding:12px 28px;
-
-border-radius:10px;
-
-cursor:pointer;
-
+    background:#990000;
+    color:white;
+    border:none;
+    padding:12px 28px;
+    border-radius:10px;
+    cursor:pointer;
 }
 
+/* ================= CORRECTED ORDER NOW BUTTON ================= */
 .btn-red{
     width: 100%;
     padding: 12px;
@@ -338,14 +259,18 @@ cursor:pointer;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s ease;
+    display: inline-block;       /* ensures it behaves like a button */
+    margin-top: 15px;            /* space below the paragraph */
+    text-align: center;           /* center text */
+    text-decoration: none;        /* remove underline if used on <a> */
 }
+
 .btn-red:hover {
     background-color: #871a1a;
 }
 
-
-
- .login-bg input {
+/* LOGIN INPUTS */
+.login-bg input {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
@@ -362,7 +287,6 @@ cursor:pointer;
 }
 
 /* DASHBOARD */
-
 #dashboard {
     display: none;
     background: #f3f3f3;

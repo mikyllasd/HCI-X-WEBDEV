@@ -2,131 +2,136 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Upload & Print Preview</title>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-  }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-  .container {
-    background: white;
-    width: 700px;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-
-  h2 {
-    margin-bottom: 20px;
-  }
-
-  input[type="file"] {
-    margin-bottom: 20px;
-  }
-
-  .preview-area {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    display: none;
-  }
-
-  .preview-area img {
-    max-width: 100%;
-    max-height: 400px;
-  }
-
-  .print-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    background: #007bff;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .print-btn:hover {
-    background: #0056b3;
-  }
-
-  /* PRINT STYLING */
-  @media print {
     body {
-      background: white;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
-    .container {
-      box-shadow: none;
-      width: 100%;
+    .card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        transition: 0.3s ease;
     }
 
-    input,
-    .print-btn,
-    h2 {
-      display: none;
+    .card h2 {
+        margin-bottom: 20px;
+        font-weight: 600;
     }
-  }
+
+    .upload-area {
+        border: 2px dashed rgba(255,255,255,0.6);
+        padding: 30px;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .upload-area:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: white;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .btn {
+        margin-top: 20px;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 30px;
+        background: white;
+        color: #764ba2;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #f1f1f1;
+        transform: scale(1.05);
+    }
+
+    .preview {
+        margin-top: 20px;
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .preview img, .preview iframe {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    @media(max-width: 500px) {
+        .card {
+            padding: 25px;
+        }
+    }
 </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h2>Upload File for Preview</h2>
+<div class="card">
+    <h2>Upload File for Preview</h2>
 
-  <input type="file" id="fileInput" accept="image/*,application/pdf">
+    <label class="upload-area" for="fileInput">
+        Drag & Drop or Click to Upload
+    </label>
+    <input type="file" id="fileInput" accept="image/*,.pdf">
 
-  <div class="preview-area" id="previewArea">
-    <div id="previewContent"></div>
-    <button class="print-btn" onclick="window.print()">Print</button>
-  </div>
+    <div class="preview" id="preview"></div>
+
+    <button class="btn" onclick="window.print()">Print</button>
 </div>
 
 <script>
-  const fileInput = document.getElementById("fileInput");
-  const previewArea = document.getElementById("previewArea");
-  const previewContent = document.getElementById("previewContent");
+const fileInput = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
 
-  fileInput.addEventListener("change", function () {
+fileInput.addEventListener("change", function() {
     const file = this.files[0];
+    preview.innerHTML = "";
+
     if (!file) return;
 
-    previewContent.innerHTML = "";
-    previewArea.style.display = "block";
+    const fileURL = URL.createObjectURL(file);
 
     if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
         const img = document.createElement("img");
-        img.src = e.target.result;
-        previewContent.appendChild(img);
-      };
-      reader.readAsDataURL(file);
+        img.src = fileURL;
+        preview.appendChild(img);
     } 
     else if (file.type === "application/pdf") {
-      const reader = new FileReader();
-      reader.onload = function (e) {
         const iframe = document.createElement("iframe");
-        iframe.src = e.target.result;
-        iframe.width = "100%";
-        iframe.height = "500px";
-        previewContent.appendChild(iframe);
-      };
-      reader.readAsDataURL(file);
-    } 
-    else {
-      previewContent.innerHTML = "<p>Preview not supported for this file type.</p>";
+        iframe.src = fileURL;
+        iframe.height = "300px";
+        preview.appendChild(iframe);
     }
-  });
+});
 </script>
 
 </body>

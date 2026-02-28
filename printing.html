@@ -79,60 +79,41 @@
         overflow: auto;
     }
 
-    .preview img, .preview iframe {
-        width: 100%;
-        border-radius: 10px;
-        margin-top: 10px;
-    }
-
-    @media(max-width: 500px) {
-        .card {
-            padding: 25px;
-        }
-    }
-</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mug Printing</title>
+    <link rel="stylesheet" href="MAIN.css">
 </head>
 
 <body>
+    
+    <header class="order-navbar">
+        
+       <a href="dashboard.html" class="back-btn">
+        <span class="arrow">&larr;</span>
+       </a>
 
-<div class="card">
-    <h2>Upload File for Preview</h2>
+        <div class="header-text">
+            <h1 class="main-title"> Printing Order</h1>
+            <p class="sub-title">UPRESSease - WMSU </p>
+        </div>
+    </header>
 
-    <label class="upload-area" for="fileInput">
-        Drag & Drop or Click to Upload
+    <body>
+<div class="container">
+    <h2>Upload File</h2>
+
+    <label class="upload-box" for="fileInput">
+        Click to Upload File
     </label>
     <input type="file" id="fileInput" accept="image/*,.pdf">
 
-    <div class="preview" id="preview"></div>
-
-    <button class="btn" onclick="window.print()">Print</button>
+    <button>Print</button>
 </div>
 
-<script>
-const fileInput = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
-
-fileInput.addEventListener("change", function() {
-    const file = this.files[0];
-    preview.innerHTML = "";
-
-    if (!file) return;
-
-    const fileURL = URL.createObjectURL(file);
-
-    if (file.type.startsWith("image/")) {
-        const img = document.createElement("img");
-        img.src = fileURL;
-        preview.appendChild(img);
-    } 
-    else if (file.type === "application/pdf") {
-        const iframe = document.createElement("iframe");
-        iframe.src = fileURL;
-        iframe.height = "300px";
-        preview.appendChild(iframe);
-    }
-});
-</script>
+    </body>
 
 </body>
+
 </html>

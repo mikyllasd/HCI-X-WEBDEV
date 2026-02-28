@@ -157,12 +157,16 @@ body {
     display:block;
 }
 
-.order-navbar{
+.orders-header{
+    position: sticky;
+    top: 0;
+    z-index: 10;
     background-color: #8b1a1a;
     color: white;
     padding: 15px 20px;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .back-btn{
@@ -187,6 +191,24 @@ body {
     margin: 0;
     font-size: 0.85rem;
     opacity: 0.8;
+}
+
+#pic-display{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    padding: 40px 0;
+    width: 100%;
+}
+
+#pic-display img{
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid black;
+
 }
 
 .header-content{
@@ -366,4 +388,72 @@ body {
     justify-content: center;
     font-size: 24px;
     margin-bottom: 20px;
+}
+
+.lanyard-preview {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.lanyard-item {
+    text-align: center;
+}
+
+.lanyard-item img {
+    width: 139px;
+    height: 200px;      /* taller height */
+    object-fit: contain; /* shows full image without cutting */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.lanyard-item img:hover {
+    transform: scale(1.05);
+}
+
+.order-navbar {
+    background-color: #990000;   /* makes the header red */
+    color: white;            /* text becomes white */
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+/* PRINTING CSS */
+
+
+.upload-box {
+    border: 2px dashed crimson;
+    padding: 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: crimson;
+    font-weight: bold;
+    align-items: center;
+    display: inline-block;
+}
+
+.upload-box:hover {
+    background-color: #ffe5ea;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background-color: crimson;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #a0001c;
 }

@@ -158,11 +158,15 @@ body {
 }
 
 .order-navbar{
+    position: sticky;
+    top: 0;
+    z-index: 10;
     background-color: #8b1a1a;
     color: white;
     padding: 15px 20px;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .back-btn{
@@ -187,6 +191,24 @@ body {
     margin: 0;
     font-size: 0.85rem;
     opacity: 0.8;
+}
+
+#pic-display{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    padding: 40px 0;
+    width: 100%;
+}
+
+#pic-display img{
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid black;
+
 }
 
 .header-content{

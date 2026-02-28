@@ -389,3 +389,28 @@ body {
     font-size: 24px;
     margin-bottom: 20px;
 }
+
+.lanyard-preview {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.lanyard-item {
+    text-align: center;
+}
+
+.lanyard-item img {
+    width: 139px;
+    height: 200px;      /* taller height */
+    object-fit: contain; /* shows full image without cutting */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.lanyard-item img:hover {
+    transform: scale(1.05);
+}
+

@@ -173,6 +173,20 @@ align-items:center;
 
 }
 
+.order-header{
+    background-color: #8b1a1a;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn{
+    background: none;
+    border: none;
+    color: white;
+}
+
 
 .header-content{
 

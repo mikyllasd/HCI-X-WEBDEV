@@ -2,51 +2,132 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Print Preview Example</title>
+<title>Upload & Print Preview</title>
 
 <style>
   body {
     font-family: Arial, sans-serif;
-    margin: 40px;
+    background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
   }
 
-  .no-print {
+  .container {
+    background: white;
+    width: 700px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  h2 {
     margin-bottom: 20px;
   }
 
-  .print-area {
-    border: 1px solid #ccc;
-    padding: 20px;
+  input[type="file"] {
+    margin-bottom: 20px;
   }
 
-  /* PRINT STYLES */
+  .preview-area {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: none;
+  }
+
+  .preview-area img {
+    max-width: 100%;
+    max-height: 400px;
+  }
+
+  .print-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .print-btn:hover {
+    background: #0056b3;
+  }
+
+  /* PRINT STYLING */
   @media print {
     body {
-      margin: 0;
+      background: white;
     }
 
-    .no-print {
-      display: none; /* Hide buttons when printing */
+    .container {
+      box-shadow: none;
+      width: 100%;
     }
 
-    .print-area {
-      border: none;
+    input,
+    .print-btn,
+    h2 {
+      display: none;
     }
   }
 </style>
 </head>
 <body>
 
-<div class="no-print">
-  <button onclick="window.print()">Print Preview</button>
+<div class="container">
+  <h2>Upload File for Preview</h2>
+
+  <input type="file" id="fileInput" accept="image/*,application/pdf">
+
+  <div class="preview-area" id="previewArea">
+    <div id="previewContent"></div>
+    <button class="print-btn" onclick="window.print()">Print</button>
+  </div>
 </div>
 
-<div class="print-area">
-  <h1>Invoice</h1>
-  <p><strong>Name:</strong> John Doe</p>
-  <p><strong>Date:</strong> 28 Feb 2026</p>
-  <p><strong>Amount:</strong> $250.00</p>
-</div>
+<script>
+  const fileInput = document.getElementById("fileInput");
+  const previewArea = document.getElementById("previewArea");
+  const previewContent = document.getElementById("previewContent");
+
+  fileInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    previewContent.innerHTML = "";
+    previewArea.style.display = "block";
+
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        previewContent.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    } 
+    else if (file.type === "application/pdf") {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const iframe = document.createElement("iframe");
+        iframe.src = e.target.result;
+        iframe.width = "100%";
+        iframe.height = "500px";
+        previewContent.appendChild(iframe);
+      };
+      reader.readAsDataURL(file);
+    } 
+    else {
+      previewContent.innerHTML = "<p>Preview not supported for this file type.</p>";
+    }
+  });
+</script>
 
 </body>
 </html>

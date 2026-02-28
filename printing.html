@@ -1,124 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload & Print Preview</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4;
-}
-
-.container {
-    background: white;
-    padding: 40px;
-    width: 90%;
-    max-width: 450px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    text-align: center;
-}
-
-h2 {
-    color: crimson;
-    margin-bottom: 20px;
-}
-
-.upload-box {
-    border: 2px dashed crimson;
-    padding: 25px;
-    border-radius: 8px;
-    cursor: pointer;
-    color: crimson;
-    font-weight: bold;
-}
-
-.upload-box:hover {
-    background-color: #ffe5ea;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-.preview {
-    margin-top: 20px;
-}
-
-.preview img, .preview iframe {
-    width: 100%;
-    margin-top: 10px;
-    border-radius: 5px;
-}
-
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    background-color: crimson;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #a0001c;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mug Printing</title>
+    <link rel="stylesheet" href="MAIN.css">
 </head>
 
 <body>
+    
+    <header class="order-navbar">
+        
+       <a href="dashboard.html" class="back-btn">
+        <span class="arrow">&larr;</span>
+       </a>
 
+        <div class="header-text">
+            <h1 class="main-title"> Printing Order</h1>
+            <p class="sub-title">UPRESSease - WMSU </p>
+        </div>
+    </header>
+
+    <body>
 <div class="container">
-    <h2>Upload File for Preview</h2>
+    <h2>Upload File</h2>
 
     <label class="upload-box" for="fileInput">
         Click to Upload File
     </label>
     <input type="file" id="fileInput" accept="image/*,.pdf">
 
-    <div class="preview" id="preview"></div>
-
-    <button onclick="window.print()">Print</button>
+    <button>Print</button>
 </div>
 
-<script>
-const fileInput = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
-
-fileInput.addEventListener("change", function() {
-    const file = this.files[0];
-    preview.innerHTML = "";
-
-    if (!file) return;
-
-    const fileURL = URL.createObjectURL(file);
-
-    if (file.type.startsWith("image/")) {
-        const img = document.createElement("img");
-        img.src = fileURL;
-        preview.appendChild(img);
-    } 
-    else if (file.type === "application/pdf") {
-        const iframe = document.createElement("iframe");
-        iframe.src = fileURL;
-        iframe.height = "300px";
-        preview.appendChild(iframe);
-    }
-});
-</script>
+    </body>
 
 </body>
+
 </html>

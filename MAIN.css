@@ -157,7 +157,7 @@ body {
     display:block;
 }
 
-.order-navbar{
+.orders-header{
     position: sticky;
     top: 0;
     z-index: 10;
@@ -414,3 +414,46 @@ body {
     transform: scale(1.05);
 }
 
+.order-navbar {
+    background-color: #990000;   /* makes the header red */
+    color: white;            /* text becomes white */
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+/* PRINTING CSS */
+
+
+.upload-box {
+    border: 2px dashed crimson;
+    padding: 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: crimson;
+    font-weight: bold;
+    align-items: center;
+    display: inline-block;
+}
+
+.upload-box:hover {
+    background-color: #ffe5ea;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background-color: crimson;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #a0001c;
+}

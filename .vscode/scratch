@@ -1,69 +1,16 @@
-<!-- ================= PRINTING PAGE ================= -->
-<section id="printing" class="section">
+<div class="preview-wrapper">
 
-    <!-- NAVBAR -->
-    <div class="main-navbar">
-        <div class="nav-left">
-            <div class="nav-icon">🎓</div>
-            <div class="nav-text">
-                <h2>UPRESSease</h2>
-                <p>Western Mindanao State University</p>
-            </div>
-        </div>
-        <div class="nav-right">
-            <a href="#dashboard">📦 My Orders</a>
-            <a href="#login">📄 Logout</a>
+    <div class="upload-section">
+        <label>Upload File</label>
+        <input type="file">
+    </div>
+
+    <div class="preview-section">
+        <h3>Print Preview</h3>
+
+        <div class="preview-box">
+            <span>Preview Area</span>
         </div>
     </div>
 
-    <div class="order-container">
-
-        <!-- LEFT SIDE -->
-        <div>
-            <div class="card">
-                <h3>Printing Order Details</h3>
-
-                <label>Upload File</label>
-                <input type="file">
-
-                <label>Print Type</label>
-                <select>
-                    <option>Black & White</option>
-                    <option>Colored</option>
-                </select>
-
-                <label>Paper Size</label>
-                <select>
-                    <option>A4</option>
-                    <option>Short</option>
-                    <option>Long</option>
-                </select>
-
-                <label>Quantity</label>
-                <input type="number" value="1" min="1">
-            </div>
-        </div>
-
-        <!-- RIGHT SIDE -->
-        <div>
-            <div class="card summary-card">
-                <h3>Order Summary</h3>
-
-                <div class="summary-row">
-                    <span>Quantity</span>
-                    <span>1</span>
-                </div>
-
-                <div class="summary-total">
-                    <span>Total Amount</span>
-                    <span>₱0.00</span>
-                </div>
-
-                <a href="#" class="btn-red full">Proceed to Payment</a>
-                <a href="#dashboard" class="btn-back">Back to Services</a>
-            </div>
-        </div>
-
-    </div>
-
-</section>
+</div>

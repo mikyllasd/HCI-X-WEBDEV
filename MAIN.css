@@ -424,7 +424,6 @@ body {
 
 /* PRINTING CSS */
 
-
 .upload-box {
     border: 2px dashed crimson;
     padding: 25px;
@@ -432,7 +431,6 @@ body {
     cursor: pointer;
     color: crimson;
     font-weight: bold;
-    align-items: center;
     display: inline-block;
 }
 
@@ -456,4 +454,91 @@ button {
 
 button:hover {
     background-color: #a0001c;
+}
+
+/* SAMPLE SECTION */
+
+.sample-section{
+    width: 1200px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.section-title{
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.sample-grid{
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.sample-card{
+    background: #e9e9e9;
+    padding: 20px;
+    border-radius: 15px;
+    width: 200px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+
+.sample-card:hover{
+    transform: translateY(-5px);
+}
+
+.sample-card img{
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.proceed-btn{
+    display: inline-block;
+    padding: 12px 30px;
+    background: #990000;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.proceed-btn:hover{
+    background: #7a0000;
+}
+
+/* ORDER PAGE */
+
+.order-section{
+    width: 1200px;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+
+.order-card{
+    background: #e9e9e9;
+    padding: 30px;
+    border-radius: 20px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.order-card img{
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.price{
+    font-size: 18px;
+    font-weight: bold;
+    margin: 15px 0;
 }

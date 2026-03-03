@@ -372,7 +372,7 @@ body {
     background: #e9e9e9;
     padding: 30px;
     border-radius: 20px;
-    text-a lign: center;
+    text-align: center;
     box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
 }
 
@@ -452,78 +452,7 @@ button {
     cursor: pointer;
 }
 
-
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
-
-/* Full red background */
-body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #b00000;
-}
-
-/* White card */
-.container {
-  width: 95%;
-  max-width: 500px;
-  padding: 45px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-  text-align: center;
-}
-
-/* Titles */
-.main-title {
-  color: #333;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.sub-title {
-  color: #666;
-  margin-bottom: 25px;
-}
-
-/* Upload box */
-.upload-box {
-  border: 2px dashed #b00000;
-  padding: 35px;
-  border-radius: 12px;
-  margin: 20px 0;
-  font-weight: 600;
-  color: #b00000;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.upload-box:hover {
-  background: #fff0f0;
-}
-
-/* Button */
-button {
-  padding: 12px;
-  width: 100%;
-  background: #b00000;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
 button:hover {
-<<<<<<< HEAD
     background-color: #a0001c;
 }
 
@@ -612,7 +541,4 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     margin: 15px 0;
-=======
-  background: #8a0000;
->>>>>>> d2e541205a755dec342c53a0b204c15787a88ae7
 }

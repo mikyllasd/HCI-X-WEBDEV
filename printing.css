@@ -34,12 +34,21 @@ top:0;
 }
 
 .appbar__inner{
+<<<<<<< HEAD
 max-width:1200px;
 margin:auto;
 padding:15px;
 display:flex;
 align-items:center;
 gap:10px;
+=======
+  width: 100px;
+  padding: 14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content: flex-start;
+  gap: 12px;
+>>>>>>> e7c9d7536f10cde73fb3925be51a2d68fc544b70
 }
 
 .appbar__back{

@@ -389,3 +389,19 @@ body {
     width: 100%;
     border: none;
 }
+
+.signup-text{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.signup-text a{
+    color: #b30000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-text a:hover{
+    text-decoration: underline;
+}

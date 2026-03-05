@@ -109,3 +109,9 @@ body {
     color: #a32020;
     border: 1px solid #a32020;
 }
+
+.btn-admin {
+    margin-top: 10px; /* ensures Admin button is below Login button */
+    display: block;    /* makes sure it behaves like a button, full width */
+    text-align: center;
+}

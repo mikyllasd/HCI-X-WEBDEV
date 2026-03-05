@@ -1,0 +1,66 @@
+/* Reset & base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f3f3f3;
+    color: #333;
+}
+
+/* ADMIN SECTION CENTERED */
+.admin-bg {
+    display: flex;
+    background: #8B0000;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ADMIN CARD */
+.admin-card {
+    background: white;
+    padding: 2.5rem;
+    width: 420px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+/* ADMIN ICON */
+.admin-icon {
+    background: #8B0000;
+    color: white;
+    width: 60px;
+    height: 60px;
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+/* BUTTON */
+.btn-red {
+    width: 100%;
+    padding: 12px;
+    background-color: #a32020;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.btn-red:hover {
+    background-color: #871a1a;
+}

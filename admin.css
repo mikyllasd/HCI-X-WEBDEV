@@ -11,8 +11,8 @@ body {
     color: #333;
 }
 
-/* ADMIN SECTION CENTERED */
-.admin-bg {
+/* LOGIN SECTION CENTERED */
+.login-bg {
     display: flex;
     background: #8B0000;
     min-height: 100vh;
@@ -20,8 +20,8 @@ body {
     align-items: center;
 }
 
-/* ADMIN CARD */
-.admin-card {
+/* LOGIN CARD */
+.login-card {
     background: white;
     padding: 2.5rem;
     width: 420px;
@@ -29,8 +29,8 @@ body {
     text-align: center;
 }
 
-/* ADMIN ICON */
-.admin-icon {
+/* LOGIN ICON */
+.login-icon {
     background: #8B0000;
     color: white;
     width: 60px;
@@ -43,7 +43,28 @@ body {
     margin-bottom: 1rem;
 }
 
-/* BUTTON */
+/* LOGIN INPUTS */
+.login-bg input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: none; 
+    outline: none;
+    box-sizing: border-box;
+}
+.login-bg label {
+    font-weight: bold;
+}
+
+.login-bg input:focus {
+    border-color: #a32020;
+    box-shadow: 0 0 5px rgba(163, 32, 32, 0.3);
+}
+
+/* LOGIN BUTTON */
 .btn-red {
     width: 100%;
     padding: 12px;
@@ -57,10 +78,40 @@ body {
     transition: 0.3s ease;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
-    margin-top: 10px;
 }
 
 .btn-red:hover {
     background-color: #871a1a;
+}
+
+/* SIGNUP LINK */
+.signup-text {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.signup-text a {
+    color: #b30000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
+.btn-admin {
+    margin-top: 10px; /* space below user login */
+}
+
+.btn-admin:hover {
+    background-color: white;
+    color: #a32020;
+    border: 1px solid #a32020;
+}
+
+.btn-admin {
+    margin-top: 10px; /* ensures Admin button is below Login button */
+    display: block;    /* makes sure it behaves like a button, full width */
+    text-align: center;
 }

@@ -1,19 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Login</title>
+    <title>UPRESSease Login</title>
     <link rel="stylesheet" href="admin.css">
 </head>
+
 <body>
 
-<section class="admin-bg">
-    <div class="admin-card">
-        <div class="admin-icon">🛡️</div>
-        <h2>Admin Panel</h2>
-        <p>Welcome, Admin!</p>
-        <a href="index.html" class="btn-red">Back to Login</a>
+<section id="login" class="login-bg">
+    
+
+    <div class="login-card">
+        <div class="login-icon">🎓</div>
+        <h2>UPRESSease</h2>
+
+        <p>
+            Western Mindanao State University<br>
+            Printing & Merchandise Reservation System
+            <br><br>
+        </p>
+
+        <!-- LOGIN FORM -->
+        <form action="dashboard.html">
+
+            
+            <label>Email</label><br>
+            <input type="email" placeholder="admin@wmsu.edu.ph" required>
+
+            <br><br>
+
+            <label>Password</label><br>
+            <input type="password" placeholder="Enter password" required>
+
+            <br><br>
+
+
+            <button class="btn-red btn-admin">Admin Login</button>
+
+            <!-- SIGN UP LINK -->
+            <p class="signup-text">
+                Don't have an account?
+                <a href="signup.html">Sign up</a>
+            </p>
+
+
+        </form>
+
     </div>
+
 </section>
 
 </body>

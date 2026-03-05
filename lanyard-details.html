@@ -1,48 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Order Details</title>
-    <link rel="stylesheet" href="lanyard.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Section</title>
+
+<link rel="stylesheet" href="lanyard.css">
 </head>
 
 <body>
 
 <header class="order-navbar">
-    <a href="lanyard-order.html" class="back-btn">
-        <span class="arrow">&larr;</span>
-    </a>
-    <div class="header-text">
-        <h1 class="main-title">Order Details</h1>
-        <p class="sub-title">UPRESSease - WMSU</p>
-    </div>
+
+<a href="lanyard-order.html" class="back-btn">
+<span class="arrow">&larr;</span>
+</a>
+
+<div class="header-text">
+<h1 class="main-title">Details and Contact Information</h1>
+<p class="sub-title">UPRESSease - WMSU</p>
+</div>
+
 </header>
 
-<section class="details-container">
 
-    <div class="details-left">
-        <label>Quantity (How many pieces?)</label>
-        <input type="number" value="1" min="1">
+<form class="payment-form">
 
-        <label>Needed Date</label>
-        <input type="date">
+<div class="form-wrapper">
 
-        <h3>Additional Services</h3>
+<!-- LEFT SIDE UPLOAD BOX -->
 
-        <label><input type="checkbox"> ID Card Holder (+₱50)</label>
-        <label><input type="checkbox"> Waterproof ID Case (+₱50)</label>
-    </div>
+<div class="upload-section">
 
-    <div class="details-right">
-        <h3>Order Summary</h3>
-        <p>Quantity: 1</p>
-        <p>Total Payment: ₱120.00</p>
-        <a href="lanyard-payment.html" class="btn-red">
-            Proceed to Payment
-        </a>
-    </div>
+<label for="design-upload" class="upload-box">
 
-</section>
+<span id="file-name">Upload chosen design</span>
+
+<input type="file" id="design-upload" name="design_file" accept="image/*" hidden>
+
+</label>
+
+</div>
+
+
+<!-- RIGHT SIDE DETAILS -->
+
+<div class="details-section">
+
+<h3>Fill out:</h3>
+
+<div class="form-group">
+<label>Name:</label>
+<input type="text" placeholder="Enter your full name">
+</div>
+
+<div class="form-group">
+<label>Phone Number:</label>
+<input type="tel" placeholder="e.g., 09123456789">
+</div>
+
+<div class="form-group">
+<label>Course and Year:</label>
+<input type="text" placeholder="e.g., BSCS 3rd Year">
+</div>
+
+<div class="form-group">
+<label>College:</label>
+<input type="text" placeholder="Enter your college">
+</div>
+
+<div class="form-group">
+<label>Delivery/Pick-up Date:</label>
+<input type="date">
+</div>
+
+</div>
+
+</div>
+
+</form>
+
+
+<!-- PROCEED BUTTON -->
+
+<div class="proceed-container">
+
+<a href="payment.html" class="proceed-button">
+PROCEED
+</a>
+
+</div>
 
 </body>
 </html>
+
+
+
+

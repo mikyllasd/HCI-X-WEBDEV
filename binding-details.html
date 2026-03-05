@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Section</title>
+    <link rel="stylesheet" href="MAIN.css">
+    <link rel="stylesheet" href="binding.css">
+</head>
+
+
+<body>
+
+     <header class="order-navbar">
+        
+       <a href="binding.html" class="back-btn">
+        <span class="arrow">&larr;</span>
+       </a>
+
+        <div class="header-text">
+            <h1 class="main-title"> Details and Contact Information</h1>
+            <p class="sub-title">UPRESSease - WMSU </p>
+        </div>
+    </header>
+
+    <form action="your-backend-script.php" method="POST" enctype="multipart/form-data" class="payment-form">
+        <div class="form-wrapper">
+            
+            <div class="upload-section">
+                <label for="design-upload" class="upload-box">
+                    <span id="file-name">Upload chosen Binding</span>
+                    <input type="file" id="design-upload" name="design_file" accept="image/*" style="display: none;" required>
+                </label>
+            </div>
+
+            <div class="details-section">
+                <h3>Fill out:</h3>
+                
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" name="customer_name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number:</label>
+                    <input type="tel" name="phone_number" placeholder="e.g., 09123456789" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Course and Year:</label>
+                    <input type="text" name="course_year" placeholder="e.g., BSCS 3rd Year" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>College:</label>
+                    <input type="text" name="college" placeholder="Enter your college" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Delivery/Pick-up Date:</label>
+                    <input type="date" name="delivery_date" required>
+                </div>
+            </div>
+            
+        </div>
+
+    </form>
+
+     <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
+            <a href="binding-payment.html" class="proceed-button-1" >
+            <span class="proceed">PROCEED</span>
+           </a>
+        </div>
+
+
+</body>
+</html>

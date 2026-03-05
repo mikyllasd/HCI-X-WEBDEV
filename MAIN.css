@@ -151,6 +151,11 @@ body {
     display:none;
     background:#f3f4f6;
     height:100vh;
+      background: linear-gradient(to right, #7b0000, #b30000);
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
 }
 
 #orders:target{

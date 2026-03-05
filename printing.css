@@ -32,11 +32,11 @@ body{
   z-index: 10;
 }
 .appbar__inner{
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 14px 18px;
+  width: 100px;
+  padding: 14px 20px;
   display:flex;
   align-items:center;
+  justify-content: flex-start;
   gap: 12px;
 }
 .appbar__back{

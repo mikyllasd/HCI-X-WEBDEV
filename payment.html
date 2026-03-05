@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Section</title>
+     <link rel="stylesheet" href="MAIN.css">
+    <link rel="stylesheet" href="mug.css">
+</head>
+<body>
+
+    <section id="payment-section">
+            <form action="your-backend-script.php" method="POST" enctype="multipart/form-data" id="customization-form">
+                
+  <div class="form-wrapper">
+    
+    <div class="upload-section">
+      <label for="design-upload" class="upload-box">
+        <span>Upload chosen design</span>
+        <input type="file" id="design-upload" name="design_file" accept="image/*" style="display: none;" required>
+      </label>
+    </div>
+
+    <div class="details-section">
+      <h3>Fill out:</h3>
+      
+      <div class="form-group">
+        <label>Name:</label>
+        <input type="text" name="customer_name" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number:</label>
+        <input type="tel" name="phone_number" placeholder="e.g., 09123456789" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Course and Year:</label>
+        <input type="text" name="course_year" placeholder="e.g., BSCS 3rd Year" required>
+      </div>
+      
+      <div class="form-group">
+        <label>College:</label>
+        <input type="text" name="college" placeholder="Enter your college" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Delivery/Pick-up Date:</label>
+        <input type="date" name="delivery_date" required>
+      </div>
+    </div>
+    
+  </div>
+
+    <div class="button-container">
+        <button type="submit" class="proceed-button">
+      <span class="proceed">PROCEED</span>
+        </button>
+     </div>
+    </form>
+</section>
+    
+</body>
+</html>

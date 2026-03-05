@@ -44,24 +44,31 @@
     opacity: 0.8;
 }
 
-#pic-display{
+#display{
     display:flex;
     justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
-    padding: 20px;
-    padding: 40px 0;
-    width: 100%;
+    gap: 40px;
+    margin: 30px 0;
 }
 
-#pic-display img{
-    width: 300px;
-    height: auto;
-    border-radius: 8px;
-    border: 1px solid black;
-    padding: (5, 5, 5, 5);
-    margin: 20px;
+.sample-card{
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 220 px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: 0.3s;
+}
 
+.sample-card:hover{
+    transform:translateY(-5px);
+}
+
+.sample-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
 }
 
 .header-content{
@@ -75,4 +82,49 @@
 
 .arrow{
     font-size:22px;
+    padding: 20px;
+}
+
+.button-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin: 10px 0;;
+}
+
+.proceed-button {
+    display: inline-block;
+    background-color: #a63131;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+.proceed-button-1 {
+    display: inline-block;
+    background-color: #a63131;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+.proceed-button:hover, .proceed-button-1:hover{
+    background-color: #852626;\
+    transform: translateY(-2px);
+}
+
+.proceed{
+    letter-spacing: 1px;
 }

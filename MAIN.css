@@ -193,24 +193,6 @@ body {
     opacity: 0.8;
 }
 
-#pic-display{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 20px;
-    padding: 40px 0;
-    width: 100%;
-}
-
-#pic-display img{
-    width: 300px;
-    height: auto;
-    border-radius: 8px;
-    border: 1px solid black;
-
-}
-
 .header-content{
     width:1200px;
     margin:auto;

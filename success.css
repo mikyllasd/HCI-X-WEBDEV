@@ -1,33 +1,28 @@
-/* --- SUCCESS PAGE STYLES --- */
+/* --- OVERALL PAGE SETUP --- */
+body {
+    background-color: #f4f4f4; 
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
 .success-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh; /* This pushes the card into the vertical center of the screen */
+    min-height: 100vh; /* Stretches to the full height of the screen */
     padding: 20px;
-    font-family: Arial, sans-serif;
 }
 
+/* --- THE MAIN WHITE CARD --- */
 .success-card {
     background-color: white;
+    width: 100%;
     max-width: 450px;
     padding: 40px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-    border-top: 5px solid #4CAF50; /* A green accent border at the top for success */
-}
-
-/* The big green checkmark circle */
-.checkmark-circle {
-    background-color: #4CAF50; /* Standard Success Green */
-    color: white;
-    font-size: 40px;
-    width: 80px;
-    height: 80px;
-    line-height: 80px; /* Vertically centers the checkmark inside the circle */
-    border-radius: 50%; /* Makes it a perfect circle */
-    margin: 0 auto 20px auto; /* Centers the circle itself */
+    border-top: 5px solid #4CAF50; /* Green accent */
 }
 
 .success-card h2 {
@@ -41,4 +36,54 @@
     line-height: 1.6;
     margin-bottom: 15px;
     font-size: 15px;
+}
+
+/* --- GREEN CHECKMARK --- */
+.checkmark-circle {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 40px;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 20px auto;
+}
+
+/* --- QR CODE SECTION --- */
+.claim-qr-section {
+    margin: 25px 0;
+    padding: 20px;
+    border: 2px dashed #a63131; /* Your signature maroon */
+    border-radius: 8px;
+    background-color: #fffafb;
+}
+
+.qr-title {
+    font-weight: bold;
+    color: #a63131;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+#generated-qr {
+    display: none; /* Kept hidden until the Javascript loads the image */
+    margin: 0 auto;
+    border-radius: 8px;
+    border: 5px solid white; /* Adds a nice white frame around the QR code */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#order-id-text {
+    font-size: 16px;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.qr-instruction {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 0;
 }

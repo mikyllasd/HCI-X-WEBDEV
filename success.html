@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="mug.css">
 </head>
 <body style="background-color: #f4f4f4;"> <section class="success-section">
+        
+    <section class="success-section">
         <div class="success-card">
             
             <div class="checkmark-circle">
@@ -17,16 +19,40 @@
 
             <h2>Order Submitted!</h2>
             <p>Thank you for choosing UPRESSease. We have successfully received your customization details and proof of payment.</p>
+            
+            <div class="claim-qr-section">
+                <p class="qr-title">Your Claim QR Code</p>
+                
+                <img id="generated-qr" src="" alt="Claim QR Code">
+                
+                <p id="order-id-text"></p>
+                <p class="qr-instruction">Screenshot this and present it upon claiming!</p>
+            </div>
+
             <p><strong>What's next?</strong><br> We will send a text message to your phone number once your order is ready for pick-up or delivery.</p>
             
             <div class="button-container" style="margin-top: 30px;">
-                <a href="dashboard.html" class="proceed-button">
+                <a href="dashboard.html" class="proceed-button" style="text-decoration: none;">
                     <span class="proceed">BACK TO HOME</span>
                 </a>
             </div>
 
         </div>
     </section>
+
+    <script>
+        window.onload = function() {
+            var randomNum = Math.floor(10000 + Math.random() * 90000);
+            var orderId = "UPRESS-" + randomNum;
+            document.getElementById("order-id-text").innerText = "Order Number: " + orderId;
+            var qrData = "UPRESSease Claim Ticket | Order ID: " + orderId + " | Status: Payment Processing";
+            var apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(qrData);
+            var qrImage = document.getElementById("generated-qr");
+            qrImage.src = apiUrl;
+            qrImage.style.display = "block";
+        };
+    </script>
+
 
 </body>
 </html>

@@ -51,8 +51,12 @@ body {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
+    font-weight: none; 
     outline: none;
     box-sizing: border-box;
+}
+.login-bg label {
+    font-weight: bold;
 }
 
 .login-bg input:focus {
@@ -95,4 +99,13 @@ body {
 
 .signup-text a:hover {
     text-decoration: underline;
+}
+.btn-admin {
+    margin-top: 10px; /* space below user login */
+}
+
+.btn-admin:hover {
+    background-color: white;
+    color: #a32020;
+    border: 1px solid #a32020;
 }

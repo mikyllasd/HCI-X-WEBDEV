@@ -1,0 +1,70 @@
+/* --- CONTAINER STYLES --- */
+.signup-container {
+    background-color: white;
+    max-width: 500px;
+    margin: 50px auto; /* Centers the box on the page */
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    border-top: 5px solid #a63131; /* Your signature maroon */
+}
+
+.signup-container h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+/* --- FORM ROW (Lines up label and input) --- */
+.form-row {
+    display: flex;
+    align-items: center; /* Vertically centers the text with the box */
+    margin-bottom: 15px;
+}
+
+/* Forces all labels to be the exact same width so the inputs align perfectly */
+.form-row label {
+    width: 160px; 
+    font-weight: bold;
+    color: #444;
+    font-size: 15px;
+}
+
+.form-row input[type="text"] {
+    flex: 1; /* Makes the input box stretch to fill the rest of the row */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-row input[type="text"]:focus {
+    outline: none;
+    border-color: #a63131;
+}
+
+/* --- FILE UPLOAD STYLES --- */
+.file-input {
+    flex: 1;
+    font-size: 14px;
+}
+
+/* --- TERMS AND CONDITIONS --- */
+.terms-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    font-size: 14px;
+    color: #333;
+}
+
+.terms-container a {
+    color: #a63131;
+    text-decoration: underline;
+    font-weight: bold;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-Up Page</title>
+    <link rel="stylesheet" href="MAIN.css">
+    <link rel="stylesheet" href="mug.css">
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+
+    <body style="background-color: #f4f4f4;">
+
+       <header class="navbar">
+        <div class="nav-left">
+            <img src="images/wmsu.png.jpg" alt="Logo" class="logo">
+            <div class="title">
+                <h1>UPRESSease</h1>
+                <p>Western Mindanao State University</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="signup-container">
+        <h2>SIGN-UP PAGE</h2>
+
+        <form action="login.html" method="POST" enctype="multipart/form-data">
+            
+            <div class="form-row">
+                <label>Name:</label>
+                <input type="text" name="full_name" required>
+            </div>
+
+            <div class="form-row">
+                <label>College:</label>
+                <input type="text" name="college" required>
+            </div>
+
+            <div class="form-row">
+                <label>Course:</label>
+                <input type="text" name="course" required>
+            </div>
+
+            <div class="form-row">
+                <label>Year:</label>
+                <input type="text" name="year" required>
+            </div>
+
+            <hr style="border: 0.5px solid #eee; margin: 25px 0;">
+
+            <div class="form-row">
+                <label>Validated ID:</label>
+                <input type="file" name="validated_id" accept="image/*,.pdf" class="file-input" required>
+            </div>
+
+            <div class="form-row">
+                <label>Validated 1st Sem COR:</label>
+                <input type="file" name="cor" accept="image/*,.pdf" class="file-input" required>
+            </div>
+
+            <div class="terms-container">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the <a href="#">terms and conditions</a>.</label>
+            </div>
+
+            <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
+            <a href="dashboard.html" class="proceed-button-1" >
+            <span class="proceed">PROCEED</span>
+           </a>
+        </div>
+
+        </form>
+    </div>
+
+</body>
+</html>
+    
+</body>
+</html>

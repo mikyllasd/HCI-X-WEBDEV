@@ -1,0 +1,182 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body{
+    background: #f3f3f3;
+}
+
+/* HEADER */
+.order-navbar{
+    background: #990000;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn{
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.arrow{
+    font-size: 22px;
+}
+
+.header-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.sub-title{
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* BUTTON */
+.btn-red{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 25px;
+    background: #990000;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-red:hover{
+    background: #7a0000;
+}
+
+/* SAMPLE PAGE */
+.sample-section{
+    width: 1100px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.sample-grid{
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 30px 0;
+}
+
+.sample-card{
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 220px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+
+.sample-card:hover{
+    transform: translateY(-5px);
+}
+
+.sample-card img{
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+
+/* ORDER PAGE */
+.order-section{
+    width: 1100px;
+    margin: 60px auto;
+    display: flex;
+    gap: 60px;
+    justify-content: center;
+}
+
+.order-card{
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.order-card img{
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+}
+
+.price{
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+/* DETAILS PAGE */
+.details-container{
+    width: 1100px;
+    margin: 60px auto;
+    display: flex;
+    gap: 50px;
+}
+
+.details-left, .details-right{
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    flex: 1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.details-left input{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* PAYMENT PAGE */
+.payment-container{
+    width: 1100px;
+    margin: 60px auto;
+    display: flex;
+    gap: 50px;
+}
+
+.payment-left, .payment-right{
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    flex: 1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.upload-box{
+    border: 2px dashed #990000;
+    padding: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.upload-box input{
+    display: none;
+}
+
+.wait-text{
+    margin-top: 15px;
+    font-size: 14px;
+    color: gray;
+}

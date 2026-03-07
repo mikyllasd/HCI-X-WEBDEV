@@ -1,9 +1,4 @@
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI, sans serif";
-}
+
 
 /* Navigation Bar */
 .top-nav{
@@ -27,6 +22,7 @@
     background: none;
     border: none;
     color: white;
+    padding: 10px;
 }
 
 .top-nav h2{
@@ -70,7 +66,7 @@
 }
 
 .hero button{
-    font-size: 15pxx;
+    font-size: 15px;
 }
 
 .hero button:hover{
@@ -127,6 +123,18 @@ h1{
     margin: 10px 0 20px;
     border-radius: 8px;
     border: 1px solid #ccc;
+}
+
+.underline-box{
+    width: 250px;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid gray;
+    outline: none; 
+    font-size: 14px;
+}
+.underline-box: focus{
+    border-bottom: bottom 2px solid red;
 }
 
 /* ===================== PAYMENT PAGE ===================== */

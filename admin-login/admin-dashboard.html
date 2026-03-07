@@ -1,33 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="MAIN.css">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin-dashboard.css">
 </head>
-
 <body>
 
- <header class="navbar">
-        <div class="nav-left">
-            <img src="images/wmsu.png.jpg" alt="Logo" class="logo">
-            <div class="title">
-                <h1>UPRESSease</h1>
-                <p>Western Mindanao State University</p>
+<header class="navbar">
+    <div class="nav-left">
+        <img src="images/wmsu.png.jpg" alt="Logo" class="logo">
+        <div class="title">
+            <h1>Admin Dashboard</h1>
+            <p>UPRESSease Management</p>
+        </div>
+    </div>
+    <div class="nav-right">
+        <a href="#">Orders</a>
+        <a href="#">QR Scanner</a>
+        <a href="login.html">Logout</a>
+    </div>
+</header>
+
+<div class="dashboard-container">
+
+    <div class="stats-row">
+
+        <div class="card card-red">
+            <div class="card-top">
+                <span>Total Orders</span>
             </div>
+            <div class="card-number">5</div>
+            <div class="card-label">All time</div>
         </div>
 
-        <div class="nav-right">
-            <a href="login.html">Logout</a>
+        <div class="card card-green">
+            <div class="card-top">
+                <span>Total Income</span>
+            </div>
+            <div class="card-number">₱750.00</div>
+            <div class="card-label">Completed orders</div>
         </div>
-    </header>
 
-  <div class="dashboard-container">
+        <div class="card card-blue">
+            <div class="card-top">
+                <span>Today's Orders</span>
+            </div>
+            <div class="card-number">0</div>
+            <div class="card-label">3/7/2026</div>
+        </div>
 
-    <!-- Welcome Card -->
-    <div class="welcome-card">
-        <h2>Welcome back!</h2>
-        <p>admin@wmsu.edu.ph</p>
-        <p>Select a service below to get started with your order.</p>
+        <div class="card card-purple">
+            <div class="card-top">
+                <span>Today's Income</span>
+            </div>
+            <div class="card-number">₱0.00</div>
+            <div class="card-label">From completed orders</div>
+        </div>
+
+    </div>
+
+    <div class="status-row">
+
+        <div class="status-card status-yellow">
+            <div class="status-top">
+                <span>Pending/Paid</span>
+            </div>
+            <div class="status-number">2</div>
+        </div>
+
+        <div class="status-card status-lavender">
+            <div class="status-top">
+                <span>Processing</span>
+            </div>
+            <div class="status-number">1</div>
+        </div>
+
+        <div class="status-card status-green">
+            <div class="status-top">
+                <span>Ready for Pickup</span>
+            </div>
+            <div class="status-number">1</div>
+        </div>
+
+        <div class="status-card status-gray">
+            <div class="status-top">
+                <span>Completed</span>
+            </div>
+            <div class="status-number">1</div>
+        </div>
+
     </div>
 
 </div>

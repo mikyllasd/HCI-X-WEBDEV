@@ -27,44 +27,41 @@ color:var(--text);
 /* APP BAR */
 
 .appbar{
-background:var(--primary);
-color:white;
-position:sticky;
-top:0;
+  background: var(--primary);
+  color: white;
+  position: sticky;
+  top: 0;
 }
 
 .appbar__inner{
-<<<<<<< HEAD
-max-width:1200px;
-margin:auto;
-padding:15px;
-display:flex;
-align-items:center;
-gap:10px;
-=======
-  width: 100px;
+  max-width: 1200px;
+  margin: auto;
   padding: 14px 20px;
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   justify-content: flex-start;
   gap: 12px;
->>>>>>> e7c9d7536f10cde73fb3925be51a2d68fc544b70
 }
 
 .appbar__back{
-color:white;
-text-decoration:none;
-font-size:20px;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.appbar__titles{
+  display: flex;
+  flex-direction: column;
 }
 
 .appbar__title{
-font-weight:bold;
-font-size:20px;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .appbar__subtitle{
-font-size:12px;
-opacity:.8;
+  font-size: 12px;
+  opacity: .8;
 }
 
 

@@ -29,16 +29,19 @@
             <div class="form-group text-left" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                 <label style="font-size: 16px; margin-bottom: 10px;">Select Payment Method:</label>
                 
-                <div style="margin-bottom: 10px;">
-                    <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked onchange="togglePayment()">
-                    <label for="pay-gcash" style="font-weight: normal; cursor: pointer;"> GCash</label>
-                </div>
-                
-                <div>
-                    <input type="radio" id="pay-cash" name="payment_method" value="Cash" onchange="togglePayment()">
-                    <label for="pay-cash" style="font-weight: normal; cursor: pointer;"> Cash on Pick-up</label>
-                </div>
-            </div>
+               <div class="radio-group" style="margin-bottom: 20px;">
+    
+        <label for="pay-gcash" style="display: flex; flex-direction:row;align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+        <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked onchange="togglePayment()"> 
+        GCash
+        </label>
+
+         <label for="pay-gcash" style="display: flex; flex-direction:row;align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+            <input type="radio" id="pay-cash" name="payment_method" value="Cash" onchange="togglePayment()"> 
+            Cash on Pick-up
+         </label>
+
+        </div>
 
             <div id="gcash-details">
                 <p>Please scan the QR code below or send your total amount to:</p>

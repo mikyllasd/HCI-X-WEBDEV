@@ -1,184 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Printing Order - UPRESSease</title>
-  <link rel="stylesheet" href="printing.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Printing Order - UPRESSease</title>
+<link rel="stylesheet" href="printing.css">
 </head>
+
 <body>
 
+<<<<<<< HEAD
+<header class="appbar">
+<div class="appbar__inner">
+=======
   <!-- Top App Bar -->
   <header class="appbar">
     <div class="appbar__inner">
-      <a class="appbar__back" href="#" aria-label="Back">←</a>
+      <a class="appbar__back" href="dashboard.html" aria-label="Back">←</a>
       <div class="appbar__titles">
         <div class="appbar__title">Printing Order</div>
         <div class="appbar__subtitle">UPRESSease - WMSU</div>
       </div>
     </div>
   </header>
+>>>>>>> e7c9d7536f10cde73fb3925be51a2d68fc544b70
 
-  <main class="page">
-    <section class="layout">
+<a class="appbar__back" href="#">←</a>
 
-      <!-- LEFT COLUMN -->
-      <div class="col col--main">
+<div class="appbar__titles">
+<div class="appbar__title">Printing Order</div>
+<div class="appbar__subtitle">UPRESSease - WMSU</div>
+</div>
 
-        <!-- Upload Card -->
-        <article class="card">
-          <div class="card__head">
-            <div class="card__title">Upload File</div>
-            <div class="card__subtitle">Upload your document for printing</div>
-          </div>
+</div>
+</header>
 
-          <label class="dropzone">
-            <input class="dropzone__input" type="file" accept=".pdf,.doc,.docx" />
-            <div class="dropzone__icon" aria-hidden="true">📄</div>
-            <div class="dropzone__text">
-              <span class="dropzone__primary">Click to upload</span>
-              <span class="dropzone__secondary">or drag and drop</span>
-              <span class="dropzone__hint">PDF, DOC, DOCX (MAX. 50MB)</span>
-            </div>
-          </label>
 
-          <div class="info">
-            <div class="info__icon" aria-hidden="true">🛡️</div>
-            <div class="info__text">
-              <div class="info__title">Encrypted Upload</div>
-              <div class="info__desc">Your files are securely encrypted and will be automatically deleted 12 hours after completion.</div>
-            </div>
-          </div>
-        </article>
+<main class="page">
 
-        <!-- Order Details Card -->
-        <article class="card">
-          <div class="card__head">
-            <div class="card__title">Order Details</div>
-            <div class="card__subtitle">Configure your printing options</div>
-          </div>
+<section class="layout">
 
-          <form class="form">
+<!-- LEFT COLUMN -->
 
-            <div class="grid-2">
-              <div class="field">
-                <label class="label" for="paperSize">Paper Size</label>
-                <select class="select" id="paperSize" name="paperSize">
-                  <option value="" selected disabled>Select paper size</option>
-                  <option>A4</option>
-                  <option>Letter</option>
-                  <option>Legal</option>
-                </select>
-              </div>
+<div class="col col--main">
 
-              <div class="field">
-                <label class="label" for="colorOption">Color Option</label>
-                <select class="select" id="colorOption" name="colorOption">
-                  <option value="" selected disabled>Select color option</option>
-                  <option>Black & White</option>
-                  <option>Colored</option>
-                </select>
-              </div>
-            </div>
+<article class="card">
 
-            <div class="field">
-              <label class="label" for="qty">Quantity (Number of Copies)</label>
-              <input class="input" id="qty" name="qty" type="number" min="1" value="1" />
-            </div>
+<div class="card__head">
+<div class="card__title">Upload File</div>
+<div class="card__subtitle">Upload your document for printing</div>
+</div>
 
-            <div class="field">
-              <div class="label">Additional Services</div>
+<label class="dropzone">
 
-              <label class="check">
-                <input type="checkbox" name="binding" />
-                <span>Binding - ₱50</span>
-              </label>
+<input class="dropzone__input" type="file">
 
-              <label class="check">
-                <input type="checkbox" name="lamination" />
-                <span>Lamination - ₱10 per page</span>
-              </label>
+<div class="dropzone__icon">📄</div>
 
-              <label class="check">
-                <input type="checkbox" name="rush" />
-                <span>Rush Fee (24hrs) - ₱50</span>
-              </label>
-            </div>
+<div class="dropzone__text">
 
-            <!-- CSS-only Preview toggle -->
-            <div class="previewToggle">
-              <input class="previewToggle__input" type="checkbox" id="showPreview" />
-              <label class="previewToggle__label" for="showPreview">Show Preview</label>
+<span class="dropzone__primary">Click to upload</span>
+<span class="dropzone__secondary">or drag and drop</span>
+<span class="dropzone__hint">PDF, DOC, DOCX (MAX. 50MB)</span>
 
-              <div class="previewPanel">
-                <div class="previewPanel__head">
-                  <div class="previewPanel__title">Print Preview</div>
-                  <div class="previewPanel__note">
-                    (Placeholder only.)
-                  </div>
-                </div>
+</div>
 
-                <div class="previewSheet" aria-label="Preview Sheet">
-                  <div class="previewSheet__badge">PREVIEW</div>
-                  <div class="previewSheet__content">
-                    <div class="fakeLine w80"></div>
-                    <div class="fakeLine w60"></div>
-                    <div class="fakeLine w90"></div>
-                    <div class="fakeLine w55"></div>
-                    <div class="fakeLine w70"></div>
-                    <div class="fakeBox"></div>
-                    <div class="fakeLine w65"></div>
-                    <div class="fakeLine w40"></div>
-                  </div>
-                </div>
+</label>
 
-                <button class="btn btn--primary" type="submit">
-                  Confirm & Print
-                </button>
-              </div>
-            </div>
+</article>
 
-          </form>
-        </article>
 
-      </div>
+<article class="card">
 
-      <!-- RIGHT COLUMN -->
-      <aside class="col col--side">
+<div class="card__head">
+<div class="card__title">Order Details</div>
+<div class="card__subtitle">Configure your printing options</div>
+</div>
 
-        <!-- Order Summary Card -->
-        <article class="card card--sticky">
-          <div class="card__head">
-            <div class="card__title">Order Summary</div>
-          </div>
+<form class="form">
 
-          <div class="summary">
-            <div class="summary__row">
-              <div class="summary__label">Quantity</div>
-              <div class="summary__value">1</div>
-            </div>
+<div class="grid-2">
 
-            <hr class="divider" />
+<div class="field">
+<label class="label">Paper Size</label>
+<select class="select">
+<option>Select paper size</option>
+<option>A4</option>
+<option>Letter</option>
+<option>Legal</option>
+</select>
+</div>
 
-            <div class="summary__row summary__row--big">
-              <div class="summary__label">Total Amount</div>
-              <div class="summary__value summary__value--money">₱0.00</div>
-            </div>
+<div class="field">
+<label class="label">Color Option</label>
+<select class="select">
+<option>Select color option</option>
+<option>Black & White</option>
+<option>Colored</option>
+</select>
+</div>
 
-            <button class="btn btn--accent" type="button">
-              Proceed to Payment
-            </button>
+</div>
 
-            <div class="hint">
-              Tip: Use "Show Preview" below to review before printing.
-            </div>
-          </div>
-        </article>
+<div class="field">
+<label class="label">Quantity</label>
+<input class="input" type="number" value="1">
+</div>
 
-      </aside>
+</form>
 
-    </section>
-  </main>
+</article>
+
+</div>
+
+
+<!-- RIGHT COLUMN -->
+
+<aside class="col col--side">
+
+<article class="card card--sticky">
+
+<div class="card__head">
+<div class="card__title">Order Summary</div>
+</div>
+
+<div class="summary">
+
+<div class="summary__row">
+<div class="summary__label">Quantity</div>
+<div class="summary__value">1</div>
+</div>
+
+<hr class="divider">
+
+<div class="summary__row summary__row--big">
+<div class="summary__label">Total Amount</div>
+<div class="summary__value summary__value--money">₱0.00</div>
+</div>
+
+<a href="printing-details.html" class="proceed-button">
+Proceed to Order
+</a>
+
+<div class="hint">
+Tip: Use preview before printing.
+</div>
+
+</div>
+
+</article>
+
+</aside>
+
+</section>
+
+</main>
 
 </body>
 </html>

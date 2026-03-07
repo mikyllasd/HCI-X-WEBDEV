@@ -2,48 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Section</title>
+    <link rel="stylesheet" href="MAIN.css">
     <link rel="stylesheet" href="lanyard.css">
 </head>
-
 <body>
 
-<header class="order-navbar">
-    <a href="lanyard-details.html" class="back-btn">
+    <header class="order-navbar">
+        
+       <a href="lanyard-details.html" class="back-btn">
         <span class="arrow">&larr;</span>
-    </a>
-    <div class="header-text">
-        <h1 class="main-title">Payment</h1>
-        <p class="sub-title">UPRESSease - WMSU</p>
+       </a>
+
+        <div class="header-text">
+            <h1 class="main-title"> Payment Section</h1>
+            <p class="sub-title">UPRESSease - WMSU </p>
+        </div>
+    </header>
+
+   <section class="payment-section">
+    <div class="payment-card">
+        
+        <form action="success.html" method="POST" enctype="multipart/form-data">
+            
+            <div class="form-group text-left" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <label style="font-size: 16px; margin-bottom: 10px;">Select Payment Method:</label>
+                
+                <div style="margin-bottom: 10px;">
+                    <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked onchange="togglePayment()">
+                    <label for="pay-gcash" style="font-weight: normal; cursor: pointer;"> GCash</label>
+                </div>
+                
+                <div>
+                    <input type="radio" id="pay-cash" name="payment_method" value="Cash" onchange="togglePayment()">
+                    <label for="pay-cash" style="font-weight: normal; cursor: pointer;"> Cash on Pick-up</label>
+                </div>
+            </div>
+
+            <div id="gcash-details">
+                <p>Please scan the QR code below or send your total amount to:</p>
+                <p class="account-details"><strong>UPRESSease | 0912 345 6789</strong></p>
+
+                <div class="qr-code-box">
+                    <img src="gcash-qr.jpg" alt="GCash QR Code" width="200">
+                </div>
+
+                <hr style="border: 1px solid #eee; margin: 20px 0;">
+                
+                <div class="form-group text-left">
+                    <label>GCash Reference Number:</label>
+                    <input type="text" id="ref-number" name="ref_number" placeholder="e.g., 1001 234 567 890" required>
+                </div>
+
+                <div class="form-group text-left">
+                    <label>Upload Proof of Payment:</label>
+                    <input type="file" id="payment-proof" name="payment_proof" accept="image/*" required>
+                </div>
+            </div> 
+            
+             <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
+            <a href="success.html" class="proceed-button-1" >
+            <span class="proceed">PROCEED</span>
+           </a>
+        </div>
+
+        </form>
+
     </div>
-</header>
-
-<section class="payment-container">
-
-    <div class="payment-left">
-        <h3>Method of Payment</h3>
-
-        <label><input type="radio" name="payment"> GCash</label>
-        <label><input type="radio" name="payment"> Cash (Cashier)</label>
-
-        <h4>Downpayment (50%)</h4>
-        <p>Please show 50% of the total.</p>
-
-        <label class="upload-box">
-            Upload Proof of Payment
-            <input type="file">
-        </label>
-
-        <button class="btn-red">Submit Payment</button>
-        <p class="wait-text">Wait for confirmation.</p>
-    </div>
-
-    <div class="payment-right">
-        <h3>Total Payment</h3>
-        <p class="price">₱120.00</p>
-    </div>
-
 </section>
+    
+    <script>
+    function togglePayment() {
+        // Get the radio buttons and the GCash section
+        var cashSelected = document.getElementById("pay-cash").checked;
+        var gcashSection = document.getElementById("gcash-details");
+        var refInput = document.getElementById("ref-number");
+        var proofInput = document.getElementById("payment-proof");
+
+        if (cashSelected) {
+            // Hide the GCash section
+            gcashSection.style.display = "none";
+            // Remove the 'required' rule so they can submit without a screenshot
+            refInput.required = false;
+            proofInput.required = false;
+        } else {
+            // Show the GCash section again
+            gcashSection.style.display = "block";
+            // Make the inputs required again
+            refInput.required = true;
+            proofInput.required = true;
+        }
+    }
+</script>
 
 </body>
 </html>

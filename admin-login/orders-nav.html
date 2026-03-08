@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Orders</title>
+     <link rel="stylesheet" href="Main.css">
+    <link rel="stylesheet" href="orders-nav.css">
+
+</head>
+
+<body>
+
+    <header class="orders-header">
+         <a href="admin-dashboard.html" class="back-btn">
+        <span class="arrow">&larr;</span>
+       </a>
+
+        <div class="header-text">
+            <h1 class="main-title"> Orders Management</h1>
+            <p class="sub-title">View and manage all orders </p>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <section class="card search-card">
+            <h2>Search Orders</h2>
+            <p class="subtitle">Search by Order ID, email, or service type</p>
+            
+            <div class="search-input-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Search orders...">
+            </div>
+        </section>
+
+        <nav class="card tabs-card">
+            <a href="#" class="tab">All Orders (5)</a>
+            <a href="#pending" class="tab">Pending (1)</a>
+            <a href="#" class="tab">Processing (1)</a>
+            <a href="#" class="tab">Ready (1)</a>
+            <a href="#" class="tab">Completed (1)</a>
+        </nav>
+
+        <section id="all-orders" class="card table-card">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Student Email</th>
+                        <th>Service</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ORD-2026-004</td>
+                        <td>anna.lopez@wmsu.edu.ph</td>
+                        <td>Lanyards</td>
+                        <td>₱750.00</td>
+                        <td><span class="badge badge-paid">Paid</span></td>
+                        <td>Online Payment</td>
+                        <td>Feb 19, 2026</td>
+                        <td>
+
+                            <a href="view-orders.html" class="btn-view">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+                                </path><circle cx="12" cy="12" r="3"></circle></svg>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ORD-2026-003</td>
+                        <td>pedro.reyes@wmsu.edu.ph</td>
+                        <td>Printing</td>
+                        <td>₱170.00</td>
+                        <td><span class="badge badge-pending">Pending</span></td>
+                        <td>Not selected</td>
+                        <td>Feb 19, 2026</td>
+                        <td>
+                             <a href="view-orders.html" class="btn-view">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+                                </path><circle cx="12" cy="12" r="3"></circle></svg>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ORD-2026-002</td>
+                        <td>maria.santos@wmsu.edu.ph</td>
+                        <td>Mug Printing</td>
+                        <td>₱400.00</td>
+                        <td><span class="badge badge-processing">Processing</span></td>
+                        <td>Pay Onsite</td>
+                        <td>Feb 19, 2026</td>
+                        <td>
+                             <a href="view-orders.html" class="btn-view">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+                                </path><circle cx="12" cy="12" r="3"></circle></svg>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ORD-2026-001</td>
+                        <td>juan.delacruz@wmsu.edu.ph</td>
+                        <td>Printing</td>
+                        <td>₱150.00</td>
+                        <td><span class="badge badge-ready">Ready for Pickup</span></td>
+                        <td>Online Payment</td>
+                        <td>Feb 19, 2026</td>
+                        <td>
+                             <a href="view-orders.html" class="btn-view">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+                                </path><circle cx="12" cy="12" r="3"></circle></svg>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ORD-2026-005</td>
+                        <td>carlo.garcia@wmsu.edu.ph</td>
+                        <td>Merchandise</td>
+                        <td>₱750.00</td>
+                        <td class="status-completed">Completed</td>
+                        <td>Pay Onsite</td>
+                        <td>Feb 18, 2026</td>
+                        <td>
+                            <a href="view-orders.html" class="btn-view">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+                                </path><circle cx="12" cy="12" r="3"></circle></svg>
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <section id="pending">
+         <table class="orders-table">
+            <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Student Email</th>
+                        <th>Service</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+            <td>ORD-2026-003</td>
+            <td>pedro.reyes@wmsu.edu.ph</td>
+            <td>Printing</td>
+             <td>₱170.00</td>
+            <td><span class="badge badge-pending">Pending</span></td>
+            <td>Not selected</td>
+            <td>Feb 19, 2026</td>
+    <td>
+        <a href="view-orders.html" class="btn-view">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            View
+        </a>
+    </td>
+</tr>
+                </tbody>
+         </table>
+    </section>
+
+
+</body>
+</html>

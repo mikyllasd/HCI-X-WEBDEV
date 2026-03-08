@@ -209,11 +209,27 @@ button.proceed-button {
   cursor: pointer;
 }
 
+.form-group input[type="number"]{
+    width:100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.form-group input[type="number"]:focus{
+    outline:none;
+    border-color:#a63131;
+}
+
 
 /* --- PAYMENT METHOD RADIO BUTTONS --- */
 .radio-group {
     display: flex;
-    gap: 20px; /* Space between GCash and Cash */
+    gap: 10px; /* Space between GCash and Cash */
     margin-top: 5px;
 }
 
@@ -269,78 +285,207 @@ button.proceed-button {
 
 /* this is for customization */
 
-/* Container pushing the two sides apart */
-.form-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 50px; /* Space between the left box and right fields */
+/* --- PAGE SETUP --- */
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+/* --- RED HEADER --- */
+.top-header {
+    background-color: #a63131; /* UPRESSease Maroon */
+    color: white;
+    padding: 20px 40px;
+}
+
+.top-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.top-header p {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* --- MAIN CONTAINER --- */
+.customize-container {
+    max-width: 900px;
     margin: 30px auto;
-    max-width: 800px;
-    flex-wrap: wrap; 
-}
-
-/* --- LEFT SIDE: TALL UPLOAD BOX --- */
-.tall-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 280px;
-    height: 380px; /* Taller height to match your drawing! */
-    border: 3px dashed #a63131; 
+    background: white;
+    padding: 40px;
     border-radius: 12px;
-    background-color: #fcfcfc;
-    cursor: pointer; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* --- STEP 1: SETUP BOX --- */
+.design-setup {
+    background-color: #fffafb;
+    padding: 20px;
+    border: 2px dashed #a63131;
+    border-radius: 8px;
+    margin-bottom: 30px;
     text-align: center;
+}
+
+.design-setup h3 {
+    color: #a63131;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.setup-controls input {
+    padding: 10px;
+    width: 80px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* --- STEP 2: DYNAMIC DESIGN BLOCKS --- */
+.design-block {
+    border: 1px solid #ddd;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start; /* Keeps things aligned to the top */
+}
+
+/* Left side: Upload Area */
+.upload-area {
+    flex: 1;
+    border: 2px dashed #a63131;
+    border-radius: 8px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.2s;
+}
+
+.upload-area:hover {
+    background-color: #fffafb;
+}
+
+.upload-title {
     font-weight: bold;
-    color: #555;
-    transition: 0.3s;
+    color: #a63131;
+    font-size: 16px;
 }
 
-.tall-box:hover {
-    background-color: #f0f0f0;
-    border-color: #852626;
+.hidden-file {
+    display: none;
 }
 
-/* --- RIGHT SIDE: INPUT FIELDS --- */
-.details-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; 
-    width: 100%;
-    max-width: 350px;
+.file-name-text {
+    font-size: 13px;
+    color: #888;
+    margin-top: 15px;
+    text-align: center;
+    padding: 0 15px;
+    word-break: break-all; /* Prevents long file names from breaking the box */
 }
 
+/* Right side: Specific Details */
+.design-details {
+    flex: 1;
+}
+
+.design-details h4 {
+    margin-top: 0;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #a63131;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+/* --- FORM ELEMENTS --- */
 .form-group {
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
+    display: block;
     font-size: 14px;
-    color: #333;
+    margin-bottom: 5px;
+    color: #444;
+    font-weight: bold;
 }
 
-/* Styling both standard inputs and the new textarea */
-.form-group input, 
+.form-group input,
 .form-group textarea {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 14px;
-    font-family: inherit; /* Makes sure the font matches the rest of your site */
+    font-family: inherit;
+    box-sizing: border-box; /* Keeps padding inside the width */
 }
 
-/* Focus styles for when they click inside the box */
-.form-group input:focus, 
+.form-group textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #a63131; 
+    border-color: #a63131;
 }
 
-/* Allow users to drag the corner of the notes box to make it bigger */
-.form-group textarea {
-    resize: vertical; 
+/* --- STEP 3: GLOBAL INFO --- */
+.divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 40px 0;
+}
+
+.global-info h3 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* --- BUTTONS --- */
+.action-btn {
+    padding: 10px 20px;
+    background-color: #a63131;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #852626;
+}
+
+.submit-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.proceed-btn {
+    padding: 15px 50px;
+    font-size: 16px;
+    margin: 0;
 }

@@ -1,34 +1,202 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="MAIN.css">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin-dashboard.css">
 </head>
-
 <body>
 
- <header class="navbar">
-        <div class="nav-left">
-            <img src="images/wmsu.png.jpg" alt="Logo" class="logo">
-            <div class="title">
-                <h1>UPRESSease</h1>
-                <p>Western Mindanao State University</p>
+<header class="navbar">
+    <div class="nav-left">
+        <img src="c:\Users\acer\Music\GIT\HCI-X-WEBDEV\HCI-X-WEBDEV\HCI-X-WEBDEV MAIN\HCI-X-WEBDEV\wmsu.png.jpg" alt="Logo" class="logo">
+        <div class="title">
+            <h1>Admin Dashboard</h1>
+            <p>UPRESSease Management</p>
+        </div>
+    </div>
+
+    <div class="nav-right">
+        <a href="orders-nav.html">Orders</a>
+        <a href="scanner-nav.html">QR Scanner</a>
+        <a href="admin.html">Logout</a>
+    </div>
+</header>
+
+<div class="dashboard-container">
+
+    <div class="stats-row">
+
+        <div class="card card-red">
+            <div class="card-top">
+                <span>Total Orders</span>
+            </div>
+            <div class="card-number">0</div>
+            <div class="card-label">All time</div>
+        </div>
+
+        <div class="card card-green">
+            <div class="card-top">
+                <span>Total Income</span>
+            </div>
+            <div class="card-number">₱0.00</div>
+            <div class="card-label">Completed orders</div>
+        </div>
+
+        <div class="card card-blue">
+            <div class="card-top">
+                <span>Today's Orders</span>
+            </div>
+            <div class="card-number">0</div>
+            <div class="card-label">3/7/2026</div>
+        </div>
+
+        <div class="card card-purple">
+            <div class="card-top">
+                <span>Today's Income</span>
+            </div>
+            <div class="card-number">₱0.00</div>
+            <div class="card-label">From completed orders</div>
+        </div>
+
+    </div>
+
+    <div class="status-row">
+
+        <div class="status-card status-yellow">
+            <div class="status-top">
+                <span>Pending/Paid</span>
+            </div>
+            <div class="status-number">	₱750.00</div>
+        </div>
+
+        <div class="status-card status-lavender">
+            <div class="status-top">
+                <span>Processing</span>
+            </div>
+            <div class="status-number">0</div>
+        </div>
+
+        <div class="status-card status-green">
+            <div class="status-top">
+                <span>Ready for Pickup</span>
+            </div>
+            <div class="status-number">0</div>
+        </div>
+
+        <div class="status-card status-gray">
+            <div class="status-top">
+                <span>Completed</span>
+            </div>
+            <div class="status-number">0</div>
+        </div>
+
+    </div>
+
+        <!-- ================= CHARTS ROW ================= -->
+<div class="charts-row">
+
+    <!-- Bar Chart -->
+    <div class="chart-box">
+        <h3>Orders by Service</h3>
+        <p>Distribution of orders across services</p>
+        <div class="bar-chart">
+            <div class="bar-labels-y">
+                <span>2</span>
+                <span>1.5</span>
+                <span>1</span>
+                <span>0.5</span>
+                <span>0</span>
+            </div>
+            <div class="bar-area">
+                <div class="bar-lines">
+                    <div class="bar-line"></div>
+                    <div class="bar-line"></div>
+                    <div class="bar-line"></div>
+                    <div class="bar-line"></div>
+                    <div class="bar-line"></div>
+                </div>
+                <div class="bars">
+                    <div class="bar-item">
+                        <div class="bar" style="height: 0%;"></div>
+                        <span>Printing</span>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar" style="height: 0%;"></div>
+                        <span>Binding</span>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar" style="height: 0%;"></div>
+                        <span>Lanyards</span>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar" style="height: 0%;"></div>
+                        <span>Mug</span>
+                    </div>
+                
+                </div>
             </div>
         </div>
-
-        <div class="nav-right">
-            <a href="login.html">Logout</a>
-        </div>
-    </header>
-
-  <div class="dashboard-container">
-
-    <!-- Welcome Card -->
-    <div class="welcome-card">
-        <h2>Welcome back!</h2>
-        <p>admin@wmsu.edu.ph</p>
-        <p>Select a service below to get started with your order.</p>
     </div>
+
+    <!-- Pie Chart -->
+    <div class="chart-box">
+        <h3>Order Status Distribution</h3>
+        <p>Current status of all orders</p>
+        <div class="pie-area">
+            <div class="pie-chart">
+                <svg viewBox="0 0 200 200" width="220" height="220">
+                    <circle cx="100" cy="100" r="80" fill="transparent"
+                        stroke="#f5c842" stroke-width="80"
+                        stroke-dasharray="0 502"
+                        stroke-dashoffset="0"
+                        transform="rotate(-90 100 100)"/>
+                    <circle cx="100" cy="100" r="80" fill="transparent"
+                        stroke="#b39ddb" stroke-width="80"
+                        stroke-dasharray="0 502"
+                        stroke-dashoffset="0"
+                        transform="rotate(-90 100 100)"/>
+                    <circle cx="100" cy="100" r="80" fill="transparent"
+                        stroke="#2ecc71" stroke-width="80"
+                        stroke-dasharray="0 502"
+                        stroke-dashoffset="0"
+                        transform="rotate(-90 100 100)"/>
+                    <circle cx="100" cy="100" r="80" fill="transparent"
+                        stroke="#aaa" stroke-width="80"
+                        stroke-dasharray="0 502"
+                        stroke-dashoffset="0"
+                        transform="rotate(-90 100 100)"/>
+                </svg>
+            </div>
+            <div class="pie-labels">
+                <div class="pie-label" style="color: #c8a800;">Pending/Paid: 0</div>
+                <div class="pie-label" style="color: #8e44ad;">Processing: 39</div>
+                <div class="pie-label" style="color: #27ae60;">Ready: 0</div>
+                <div class="pie-label" style="color: #888;">Completed: 0</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= QUICK ACTIONS ================= -->
+<div class="actions-box">
+    <h3>Quick Actions</h3>
+    <p>Manage your orders and system</p>
+    <div class="actions-row">
+        <a href="manage-order.html" class="action-btn btn-dark-red">
+            <span>&#9776;</span>
+            <strong>Manage Orders</strong>
+        </a>
+        <a href="#" class="action-btn btn-dark-red">
+            <span>&#9638;</span>
+            <strong>Scan QR Code</strong>
+        </a>
+        <a href="ready-for-pickup.html" class="action-btn btn-green">
+            <span>&#10003;</span>
+            <strong>Ready for Pickup</strong>
+        </a>
+    </div>
+</div>
 
 </div>
 

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner</title>
+    <link rel="stylesheet" href="scanner-nav.css">
+    <link rel="stylesheet" href="Main.css">
+    
+</head>
+<body>
+
+     <header class="orders-header">
+         <a href="admin-dashboard.html" class="back-btn">
+        <span class="arrow" style="padding:20px">&larr;</span>
+       </a>
+
+        <div class="header-text">
+            <h1 class="main-title"> QR Code Scannert</h1>
+            <p class="sub-title">Scan orders for pick-up </p>
+        </div>
+     </header>
+
+    <main class="scanner-wrapper">
+        
+        <section class="card qr-card">
+            
+            <div class="qr-header">
+                <div class="icon-circle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <path d="M3 14h7v7H3z"></path>
+                    </svg>
+                </div>
+                <h2>Scan QR Code or Enter Order ID</h2>
+                <p>Use your device's camera to scan the QR code or manually enter the order ID</p>
+            </div>
+
+            <div class="camera-box">
+                <div class="camera-icon-large">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#6d2828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                        <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+                    </svg>
+                </div>
+                <h3>Camera Scanner</h3>
+                <p>Position the QR code in front of the camera</p>
+                <button class="btn-activate">Activate Camera</button>
+            </div>
+
+            <div class="divider">
+                <span>Or enter manually</span>
+            </div>
+
+            <div class="manual-entry">
+    <label for="order-id" class="input-label">Order ID</label>
+    
+    <input type="checkbox" id="trigger-search" class="hidden-action">
+    
+    <div class="input-group">
+        <div class="input-wrapper">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="order-id" placeholder="Enter Order ID (e.g., ORD-2026-001)">
+        </div>
+        <label for="trigger-search" class="btn-search" style="display: flex; align-items: center; justify-content: center;">Search</label>
+    </div>
+
+    <div class="result-card">
+        
+        <input type="checkbox" id="trigger-release" class="hidden-action">
+        
+        <div class="result-header">
+            <div>
+                <h4 class="result-title">Order Found</h4>
+                <p class="result-id">ORD-2026-001</p>
+            </div>
+            <span class="badge-ready">Ready for Pickup</span>
+            <span class="badge-completed">Completed</span>
+        </div>
+
+        <div class="result-grid">
+            <div class="grid-item">
+                <span class="item-label">Student Email</span>
+                <span class="item-value">juan.delacruz@wmsu.edu.ph</span>
+            </div>
+            <div class="grid-item">
+                <span class="item-label">Service Type</span>
+                <span class="item-value">Printing</span>
+            </div>
+            <div class="grid-item">
+                <span class="item-label">File Name</span>
+                <span class="item-value">Thesis_Chapter1.pdf</span>
+            </div>
+            <div class="grid-item">
+                <span class="item-label">Order Date</span>
+                <span class="item-value">Feb 19, 2026</span>
+            </div>
+        </div>
+
+        <div class="result-total">
+            <span class="item-label">Total Amount</span>
+            <span class="total-amount">₱150.00</span>
+        </div>
+
+        <div class="alert-box warning">
+            <div class="alert-icon">!</div>
+            <div class="alert-content">
+                <strong>Balance Payment Required</strong>
+                <p>Student needs to pay ₱75.00 before releasing the order.</p>
+            </div>
+        </div>
+
+        <div class="alert-box success alert-ready">
+            <div class="alert-icon">✓</div>
+            <div class="alert-content">
+                <strong>Ready for Release</strong>
+                <p>This order is ready to be released to the student</p>
+            </div>
+        </div>
+
+        <div class="alert-box gray alert-completed">
+            <div class="alert-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <div class="alert-content">
+                <strong>Order Already Completed</strong>
+                <p>This order has already been picked up by the student</p>
+            </div>
+        </div>
+
+        <div class="result-actions">
+
+            <a href="view-orders-1.html" class="btn-ghost">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                View Details
+            </a>
+           
+            <label for="trigger-release" class="btn-release">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Release Order
+            </label>
+        </div>
+    </div>
+
+    </div>
+</div>
+
+        </section>
+
+        <section class="card instructions-card">
+            <div class="instructions-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d2828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <h3>How to Use QR Scanner</h3>
+            </div>
+            <ol class="instructions-list">
+                <li>Ask the student to show their order QR code from the confirmation page.</li>
+                <li>Use the camera scanner above or manually enter the Order ID.</li>
+                <li>Verify the order details and payment status.</li>
+                <li>If payment is complete and order is ready, click "Release Order".</li>
+                <li>Hand over the order to the student and mark it as completed.</li>
+            </ol>
+        </section>
+
+    </main>
+
+</body>
+</html>

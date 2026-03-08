@@ -198,7 +198,8 @@ body {
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    display: flex;
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     transition: opacity 0.2s;
@@ -206,4 +207,20 @@ body {
 
 .btn-view:hover {
     opacity: 0.85;
+}
+
+#pending{
+    display:none;
+}
+
+#pending:target{
+    display:block;
+}
+
+body:has(:target)#all-orders{
+    display:none !important;
+}
+
+#all-orders:target{
+    display:block !important;
 }

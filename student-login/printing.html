@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Printing Order - UPRESSease</title>
-  <link rel="stylesheet" href="printing.css">
+  <link rel="stylesheet" href="printing.css" />
 </head>
 <body>
 
@@ -24,6 +24,7 @@
       <!-- LEFT COLUMN -->
       <div class="col col--main">
 
+        <!-- Upload File -->
         <article class="card">
           <div class="card__head">
             <div class="card__title">Upload File</div>
@@ -31,7 +32,7 @@
           </div>
 
           <label class="dropzone">
-            <input class="dropzone__input" type="file">
+            <input class="dropzone__input" type="file" />
 
             <div class="dropzone__icon">📄</div>
 
@@ -43,17 +44,18 @@
           </label>
         </article>
 
+        <!-- Order Details -->
         <article class="card">
           <div class="card__head">
             <div class="card__title">Order Details</div>
             <div class="card__subtitle">Configure your printing options</div>
           </div>
 
-          <form class="form">
+          <form class="form" action="printing-details.html">
             <div class="grid-2">
               <div class="field">
                 <label class="label">Paper Size</label>
-                <select class="select">
+                <select class="select" name="paper_size">
                   <option>Select paper size</option>
                   <option>A4</option>
                   <option>Letter</option>
@@ -63,7 +65,7 @@
 
               <div class="field">
                 <label class="label">Color Option</label>
-                <select class="select">
+                <select class="select" name="color_option">
                   <option>Select color option</option>
                   <option>Black &amp; White</option>
                   <option>Colored</option>
@@ -73,9 +75,22 @@
 
             <div class="field">
               <label class="label">Quantity</label>
-              <input class="input" type="number" value="1">
+              <input class="input" type="number" name="quantity" value="1" min="1" />
             </div>
           </form>
+        </article>
+
+        <!-- Preview Box sa baba -->
+        <article class="card">
+          <div class="card__head">
+            <div class="card__title">Document Preview</div>
+            <div class="card__subtitle">Preview your uploaded file</div>
+          </div>
+
+          <div class="preview-box">
+            <div class="preview-icon">📄</div>
+            <div class="preview-text">File preview will appear here after upload</div>
+          </div>
         </article>
 
       </div>
@@ -93,7 +108,7 @@
               <div class="summary__value">1</div>
             </div>
 
-            <hr class="divider">
+            <hr class="divider" />
 
             <div class="summary__row summary__row--big">
               <div class="summary__label">Total Amount</div>

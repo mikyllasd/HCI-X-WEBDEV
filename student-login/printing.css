@@ -18,12 +18,10 @@ color:white;
 padding:15px 5px;
 }
 
-.appbar__inner{
-display:flex;
-align-items:center;
-gap:12px;
-max-width:1200px;
-margin:auto;
+.appbar__inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .appbar__back{
@@ -251,4 +249,9 @@ margin-top:5px;
 .card--sticky{
 position:sticky;
 top:20px;
+}
+
+.arrow {
+    font-size: 22px;
+    padding: 0;
 }

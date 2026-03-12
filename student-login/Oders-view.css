@@ -1,0 +1,142 @@
+/* Base and Header */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.details-body {
+    background-color: #EAEBED;
+    color: #333;
+    padding-bottom: 40px;
+}
+
+.orders-header {
+    background-color: #8B1A1A;
+    color: white;
+    padding: 24px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.back-link {
+    color: white;
+    text-decoration: none;
+    margin-top: 4px;
+}
+
+.back-link:hover { opacity: 0.8; }
+.header-text h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.header-text p { font-size: 14px; opacity: 0.9; }
+
+/* Grid Layout */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr; /* Left column is wider */
+    gap: 24px;
+    padding: 0 20px;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card General */
+.card {
+    background-color: #F8F9FA;
+    border: 1px solid #DDE0E3;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: #1A1A1A; }
+.card-subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
+
+/* Order Info Card */
+.card-header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-paid { background-color: #E0F0FF; color: #0066CC; }
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2x2 grid for details */
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #EFEFEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.info-label { display: block; font-size: 12px; color: #666; margin-bottom: 2px; }
+.info-value { display: block; font-size: 14px; font-weight: 500; color: #1A1A1A; }
+
+/* Payment Info Card */
+.payment-title { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+.payment-summary { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #E5E7EB; padding-bottom: 20px; }
+.text-right { text-align: right; }
+.total-amount { display: block; font-size: 20px; font-weight: 700; color: #8B1A1A; margin-top: 4px; }
+
+.payment-breakdown { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.breakdown-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; }
+
+.cancel-btn{
+    display: block;
+    margin: 20px auto;
+    background: #7b1e1e;
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover{
+    background: #a04040;
+}
+
+.next-btn{
+   display: block;
+   width: 100px;
+   margin: 20px auto;
+   text-align: center;
+   padding: 10px 0;
+   background-color: #7b1e1e;
+   color: white;
+   text-decoration: none;
+   border-radius: 5px;   
+}
+
+.return-btn{
+   display: block;
+   width: 100px;
+   margin: 20px auto;
+   text-align: center;
+   padding: 10px 0;
+   background-color: #7b1e1e;
+   color: white;
+   text-decoration: none;
+   border-radius: 5px;
+}

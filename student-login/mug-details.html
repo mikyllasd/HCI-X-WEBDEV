@@ -28,12 +28,32 @@
             <h3>How many do you want to buy?</h3>
             <div class="setup-controls">
                 <input type="number" id="num-designs" min="1" value="1">
-                <button type="button" onclick="generateDesignBlocks()" class="action-btn">SET DESIGNS</button>
+                <button type="button" class="action-btn">SET DESIGNS</button>
             </div>
         </div>
 
         <div id="dynamic-designs-container">
+
+            <div class="design-block">
+                        
+                <div class="upload-area">
+                    <span class="upload-title">UPLOAD CHOSEN DESIGN 1</span>
+                    <input type="file" id="file-1" accept="image/*,.pdf" class="hidden-file">
+                    <p id="file-name-1" class="file-name-text">No file chosen</p>
+                </div>
+                
+                <div class="design-details">
+                    <h4>Details for Design 1</h4>
+                    
+                    <div class="form-group">
+                        <label>Quantity for Design 1:</label>
+                        <input type="number" min="1" value="1" required>
+                    </div>
+                </div>
+
             </div>
+
+        </div>
 
         <hr class="divider">
 
@@ -65,70 +85,10 @@
         </div>
 
         <div class="submit-section">
-            <button type="button" onclick="window.location.href='payment-1.html'" class="action-btn proceed-btn">
-                PROCEED
-            </button>
+            <a href="payment-1.html" class="action-btn proceed-btn">PROCEED</a>
         </div>
 
     </div>
-
-    <script>
-        // Runs automatically when the page loads so "Design 1" is visible immediately
-        window.onload = function() {
-            generateDesignBlocks();
-        };
-
-        function generateDesignBlocks() {
-            var numDesigns = document.getElementById('num-designs').value;
-            var container = document.getElementById('dynamic-designs-container');
-            
-            // Clear current container
-            container.innerHTML = ''; 
-
-            // Loop to create blocks
-            for (let i = 1; i <= numDesigns; i++) {
-                // Notice how clean this is now! Just using CSS classes.
-                var blockHTML = `
-                    <div class="design-block">
-                        
-                        <div class="upload-area" onclick="document.getElementById('file-${i}').click()">
-                            <span class="upload-title">UPLOAD CHOSEN DESIGN ${i}</span>
-                            <input type="file" id="file-${i}" accept="image/*,.pdf" class="hidden-file" onchange="updateFileName(${i})">
-                            <p id="file-name-${i}" class="file-name-text">No file chosen</p>
-                        </div>
-                        
-                        <div class="design-details">
-                            <h4>Details for Design ${i}</h4>
-                            
-                            <div class="form-group">
-                                <label>Quantity for Design ${i}:</label>
-                                <input type="number" min="1" value="1" required>
-                            </div>
-                        </div>
-
-                    </div>
-                `;
-                container.innerHTML += blockHTML;
-            }
-        }
-
-        // Updates the text when they pick a file
-        function updateFileName(designNumber) {
-            var fileInput = document.getElementById('file-' + designNumber);
-            var fileNameText = document.getElementById('file-name-' + designNumber);
-            
-            if (fileInput.files.length > 0) {
-                fileNameText.innerText = "Selected: " + fileInput.files[0].name;
-                fileNameText.style.color = "#4CAF50"; // Green for success
-                fileNameText.style.fontWeight = "bold";
-            }
-        }
-    </script>
-
-
-    </form>
-
-</div>
 
 </body>
 </html>

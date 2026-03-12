@@ -127,27 +127,281 @@ body{
 }
 
 /* ===================== DETAILS PAGE ===================== */
-.details-container{
-    width: 1100px;
-    margin: 60px auto;
+#orders{
+    display:none;
+    background:#f3f4f6;
+    height:100vh;
+}
+
+#orders:target{
+    display:block;
+}
+
+.order-navbar{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #8b1a1a;
+    color: white;
+    padding: 15px 20px;
     display: flex;
-    gap: 50px;
+    align-items: center;
+    box-sizing: border-box;
 }
 
-.details-left, .details-right{
+.back-btn{
+    text-decoration: none;
+    background: none;
+    border: none;
+    color: white;
+}
+
+.header-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title{
+    margin:0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.sub-title{
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+.customize-container {
+    max-width: 900px;
+    margin: 30px auto;
     background: white;
-    padding: 30px;
-    border-radius: 20px;
-    flex: 1;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-.details-left input{
+.design-setup {
+    background-color: #fffafb;
+    padding: 20px;
+    border: 2px dashed #a63131;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.design-setup h3 {
+    color: #a63131;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.setup-controls input {
+    padding: 10px;
+    width: 80px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.design-block {
+    border: 1px solid #ddd;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.upload-area {
+    flex: 1;
+    border: 2px dashed #a63131;
+    border-radius: 8px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.2s;
+}
+
+.upload-area:hover {
+    background-color: #fffafb;
+}
+
+.upload-title {
+    font-weight: bold;
+    color: #a63131;
+    font-size: 16px;
+}
+
+.hidden-file {
+    display: none;
+}
+
+.file-name-text {
+    font-size: 13px;
+    color: #888;
+    margin-top: 15px;
+    text-align: center;
+    padding: 0 15px;
+    word-break: break-all;
+}
+
+.design-details {
+    flex: 1;
+}
+
+.design-details h4 {
+    margin-top: 0;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #a63131;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #444;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
     width: 100%;
     padding: 10px;
-    margin: 10px 0 20px;
-    border-radius: 8px;
     border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #a63131;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 40px 0;
+}
+
+.global-info h3 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    background-color: #a63131;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #852626;
+}
+
+.submit-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.proceed-btn {
+    padding: 15px 50px;
+    font-size: 16px;
+    display: inline-block;
+}
+
+/* Payment section styles */
+.payment-section {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.payment-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 600px;
+}
+
+.account-details {
+    font-size: 15px;
+    background-color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px dashed #a63131;
+    margin-bottom: 15px;
+}
+
+.qr-code-box {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.qr-code-box img {
+    max-width: 150px;
+    border-radius: 8px;
+    border: 2px solid #a63131;
+}
+
+.proceed-button-1 {
+    display: inline-block;
+    background-color: #a63131;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+.proceed-button-1:hover {
+    background-color: #852626;
+    transform: translateY(-2px);
+}
+
+.proceed {
+    letter-spacing: 1px;
 }
 
 /* ===================== PAYMENT PAGE ===================== */

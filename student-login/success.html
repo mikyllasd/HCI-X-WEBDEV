@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="success.css">
     <link rel="stylesheet" href="mug.css">
 </head>
-<body style="background-color: #f4f4f4;"> <section class="success-section">
+<body style="background-color: #f4f4f4;">
+
+<section class="success-section">
         
    <div class="success-container">
         <div class="success-card">
@@ -23,13 +25,13 @@
             <div class="qr-box">
                 <p class="qr-title">Your Claim QR Code</p>
                 
-                <img id="generated-qr" src="" alt="Claim QR Code">
+                <img id="generated-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=UPRESSease+Claim+Ticket" alt="Claim QR Code" style="display:block;">
                 
                 <p class="qr-instruction">Screenshot this or download it to present upon claiming!</p>
 
-                <button onclick="downloadQR()" class="action-btn">
+                <a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=UPRESSease+Claim+Ticket" download="UPRESSease-Claim-Ticket.png" class="action-btn">
                     &#11015; DOWNLOAD QR CODE
-                </button>
+                </a>
             </div>
 
             <div class="whats-next">
@@ -42,37 +44,7 @@
         </div>
     </div>
 
-    <script>
-        // Generates the QR Code automatically
-        window.onload = function() {
-            var randomNum = Math.floor(10000 + Math.random() * 90000);
-            var orderId = "UPRESS-" + randomNum;
-            
-            var qrData = "UPRESSease Claim Ticket | Order ID: " + orderId;
-            var apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(qrData);
-            
-            var qrImage = document.getElementById("generated-qr");
-            qrImage.src = apiUrl;
-            qrImage.style.display = "block";
-        };
-
-        // Downloads the QR Code
-        function downloadQR() {
-            var imgSrc = document.getElementById("generated-qr").src;
-            
-            fetch(imgSrc)
-                .then(response => response.blob()) 
-                .then(blob => {
-                    var link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = 'UPRESSease-Claim-Ticket.png'; 
-                    document.body.appendChild(link);
-                    link.click(); 
-                    document.body.removeChild(link);
-                })
-                .catch(error => console.error('Error downloading:', error)); 
-        }
-    </script>
+</section>
 
 </body>
 </html>

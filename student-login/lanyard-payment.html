@@ -30,12 +30,12 @@
                 <label style="font-size: 16px; margin-bottom: 10px;">Select Payment Method:</label>
                 
                 <div style="margin-bottom: 10px;">
-                    <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked onchange="togglePayment()">
+                    <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked>
                     <label for="pay-gcash" style="font-weight: normal; cursor: pointer;"> GCash</label>
                 </div>
                 
                 <div>
-                    <input type="radio" id="pay-cash" name="payment_method" value="Cash" onchange="togglePayment()">
+                    <input type="radio" id="pay-cash" name="payment_method" value="Cash">
                     <label for="pay-cash" style="font-weight: normal; cursor: pointer;"> Cash on Pick-up</label>
                 </div>
             </div>
@@ -61,40 +61,16 @@
                 </div>
             </div> 
             
-             <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
-            <a href="success.html" class="proceed-button-1" >
-            <span class="proceed">PROCEED</span>
-           </a>
-        </div>
+            <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
+                <a href="success.html" class="proceed-button-1">
+                    <span class="proceed">PROCEED</span>
+                </a>
+            </div>
 
         </form>
 
     </div>
 </section>
-    
-    <script>
-    function togglePayment() {
-        // Get the radio buttons and the GCash section
-        var cashSelected = document.getElementById("pay-cash").checked;
-        var gcashSection = document.getElementById("gcash-details");
-        var refInput = document.getElementById("ref-number");
-        var proofInput = document.getElementById("payment-proof");
-
-        if (cashSelected) {
-            // Hide the GCash section
-            gcashSection.style.display = "none";
-            // Remove the 'required' rule so they can submit without a screenshot
-            refInput.required = false;
-            proofInput.required = false;
-        } else {
-            // Show the GCash section again
-            gcashSection.style.display = "block";
-            // Make the inputs required again
-            refInput.required = true;
-            proofInput.required = true;
-        }
-    }
-</script>
 
 </body>
 </html>

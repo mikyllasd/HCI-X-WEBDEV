@@ -27,9 +27,10 @@ margin:auto;
 }
 
 .appbar__back{
-color:white;
-text-decoration:none;
-font-size:20px;
+  color:white;
+  text-decoration:none;
+  font-size:20px;
+  margin-right:10px;
 }
 
 .appbar__titles{

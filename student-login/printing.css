@@ -13,7 +13,7 @@ color:#333;
 /* ================= APP BAR ================= */
 
 .appbar{
-background:#a30000;
+background:#990000;
 color:white;
 padding:15px 5px;
 }
@@ -224,7 +224,7 @@ border-top:1px solid #eee;
 .proceed-button{
 display:block;
 text-align:center;
-background:#c0392b;
+background:#990000;
 color:white;
 padding:12px;
 border-radius:8px;

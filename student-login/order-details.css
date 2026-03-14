@@ -188,3 +188,25 @@
     .details-grid { grid-template-columns: 1fr; }
     .info-grid { grid-template-columns: 1fr; }
 }
+
+.cancel-btn{
+    display: block;
+    margin: 20px auto;
+    background: #7a0000;
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover{
+    background-color: #5a0000;
+}
+
+.cancel-note{
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+}

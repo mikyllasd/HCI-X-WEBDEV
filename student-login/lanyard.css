@@ -12,13 +12,15 @@ body{
 
 /* ===================== HEADER (ALL PAGES) ===================== */
 .order-navbar{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
     background: #990000; /* red */
     color: white;
     padding: 15px 20px;
     display: flex;
     align-items: center;
-    position: sticky;
-    top: 0;
 }
 
 .back-btn{

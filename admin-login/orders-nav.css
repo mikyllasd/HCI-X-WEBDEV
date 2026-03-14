@@ -24,8 +24,8 @@ body {
     padding: 20px 40px;
     display: flex;
     position: sticky;
-    top:0;
-    z-index:100;
+    top: 0;
+    z-index: 1000;
     width: 100%;
     align-items: center; /* Vertically centers the arrow with the text */
     gap: 20px;           /* Adds space between the arrow and the text */

@@ -1,0 +1,212 @@
+/* Base and Header */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.details-body {
+    background-color: #EAEBED;
+    color: #333;
+    padding-bottom: 40px;
+}
+
+.orders-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #8B1A1A;
+    color: white;
+    padding: 24px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.back-link {
+    color: white;
+    text-decoration: none;
+    margin-top: 4px;
+}
+
+.back-link:hover { opacity: 0.8; }
+.header-text h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.header-text p { font-size: 14px; opacity: 0.9; }
+
+/* Grid Layout */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr; /* Left column is wider */
+    gap: 24px;
+    padding: 0 20px;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card General */
+.card {
+    background-color: #F8F9FA;
+    border: 1px solid #DDE0E3;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: #1A1A1A; }
+.card-subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
+
+/* Order Info Card */
+.card-header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-paid { background-color: #E0F0FF; color: #0066CC; }
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2x2 grid for details */
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #EFEFEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.info-label { display: block; font-size: 12px; color: #666; margin-bottom: 2px; }
+.info-value { display: block; font-size: 14px; font-weight: 500; color: #1A1A1A; }
+
+/* Payment Info Card */
+.payment-title { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+.payment-summary { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #E5E7EB; padding-bottom: 20px; }
+.text-right { text-align: right; }
+.total-amount { display: block; font-size: 20px; font-weight: 700; color: #8B1A1A; margin-top: 4px; }
+
+.payment-breakdown { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.breakdown-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; }
+
+/* Alert Box */
+.alert-box {
+    background-color: #F0F7FF; /* Light blue */
+    border: 1px solid #BDE0FF;
+    border-radius: 8px;
+    padding: 16px;
+    color: #004A99;
+}
+.alert-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; }
+.alert-box p { font-size: 13px; color: #336699; margin-left: 24px; }
+
+/* Forms & Buttons */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; color: #333; font-weight: 500; margin-bottom: 8px; }
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #CCC;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #FFF;
+    outline: none;
+}
+.form-control:focus { border-color: #8B1A1A; }
+
+.btn-primary {
+    background-color: #5C1111; /* Dark red matching "Update Order Status" */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-primary:hover { opacity: 0.9; }
+.w-100 { width: 100%; }
+
+/* Timeline */
+.timeline { margin-top: 20px; display: flex; flex-direction: column; }
+.timeline-item { display: flex; gap: 16px; }
+.timeline-marker { display: flex; flex-direction: column; align-items: center; }
+
+.circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #E5E7EB;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+}
+.circle.active { background-color: #8B1A1A; color: white; }
+
+.line { width: 2px; height: 30px; background-color: #E5E7EB; margin: 4px 0; }
+.timeline-content { font-size: 14px; color: #555; padding-top: 2px; }
+
+/* Quick Actions */
+.quick-actions-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #DDE0E3;
+    color: #555;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s;
+}
+.btn-secondary:hover { background-color: #EAEBED; color: #1A1A1A; }
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr; }
+}
+
+.cancel-btn{
+    display: block;
+    margin: 20px auto;
+    background: #7a0000;
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover{
+    background-color: #5a0000;
+}
+
+.cancel-note{
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+}

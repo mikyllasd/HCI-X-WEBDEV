@@ -256,34 +256,8 @@ body {
     text-align:center;
 }
 
-/* ICON */
-.cube{
-    font-size:50px;
-    opacity:0.5;
-    margin-bottom:20px;
-}
 
-/* TEXT */
-.orders-box h3{
-    font-size:20px;
-    margin-bottom:10px;
-}
 
-.orders-box p{
-    font-size:14px;
-    color:#666;
-    margin-bottom:20px;
-}
-
-/* BUTTON */
-.browse-btn{
-    background:#990000;
-    color:white;
-    border:none;
-    padding:12px 28px;
-    border-radius:10px;
-    cursor:pointer;
-}
 
 /* ================= CORRECTED ORDER NOW BUTTON ================= */
 .btn-red{

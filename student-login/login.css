@@ -18,13 +18,15 @@ body {
     min-height: 100vh;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 /* LOGIN CARD */
 .login-card {
     background: white;
     padding: 2.5rem;
-    width: 420px;
+    width: 100%;
+    max-width: 420px;
     border-radius: 15px;
     text-align: center;
 }
@@ -51,10 +53,10 @@ body {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: none; 
     outline: none;
     box-sizing: border-box;
 }
+
 .login-bg label {
     font-weight: bold;
 }
@@ -78,6 +80,7 @@ body {
     transition: 0.3s ease;
     text-align: center;
     text-decoration: none;
+    display: block;
 }
 
 .btn-red:hover {
@@ -100,8 +103,12 @@ body {
 .signup-text a:hover {
     text-decoration: underline;
 }
+
+/* ADMIN BUTTON */
 .btn-admin {
-    margin-top: 10px; /* space below user login */
+    margin-top: 10px;
+    display: block;
+    text-align: center;
 }
 
 .btn-admin:hover {
@@ -110,8 +117,87 @@ body {
     border: 1px solid #a32020;
 }
 
-.btn-admin {
-    margin-top: 10px; /* ensures Admin button is below Login button */
-    display: block;    /* makes sure it behaves like a button, full width */
-    text-align: center;
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1250px) {
+    .login-card {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 900px) {
+    .login-card {
+        max-width: 380px;
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .login-bg {
+        align-items: center;
+        padding: 20px 15px;
+    }
+
+    .login-card {
+        max-width: 100%;
+        padding: 1.8rem;
+        border-radius: 12px;
+    }
+
+    .login-card h2 {
+        font-size: 18px;
+    }
+
+    .login-card p {
+        font-size: 13px;
+    }
+
+    .login-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .login-bg input {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .btn-red {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .signup-text {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-card {
+        padding: 1.2rem;
+        border-radius: 10px;
+    }
+
+    .login-card h2 {
+        font-size: 16px;
+    }
+
+    .login-card p {
+        font-size: 12px;
+    }
+
+    .login-bg input {
+        font-size: 12px;
+        padding: 9px;
+    }
+
+    .btn-red {
+        font-size: 13px;
+        padding: 9px;
+    }
+
+    .signup-text {
+        font-size: 12px;
+    }
 }

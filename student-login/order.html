@@ -3,7 +3,9 @@
 <head>
     <title>MY Orders</title>
     <link rel="stylesheet" href="MAIN.css">
-    
+    <link rel="stylesheet" href="manage-order.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </head>
 <body>
     <!--HEADER-->
@@ -19,29 +21,62 @@
 
       
     <!--TABS-->
-    <div class="orders-tabs">
-        <span>All (0)</span>
-        <span>Pending (0)</span>
-        <span>Processing (0)</span>
-        <span>Ready (0)</span>
-        <span>Completed (0)</span>
+    <div class="manage-tabs">
+        <a href="#" class="manage-tab active">All Orders (4)</a>
+        <a href="#" class="manage-tab">Pending (1)</a>
+        <a href="#" class="manage-tab">Processing (1)</a>
+        <a href="#" class="manage-tab">Ready (1)</a>
+        <a href="#" class="manage-tab">Completed (1)</a>
     </div>
     
     <!--CONTENT-->
-    <div class="orders-container">
-         <div class="orders-box">
-            <div class="cube">
-                📦
-            </div>
-            <div class="orders-container">
-        <h3>No orders yet</h3>
-        <p>Start by placing your first order!</p>
-                 <a href="dashboard.html">
-            <button  class="browse-btn">Browse Services</button>
-        </a>
-    </div>
-        
-    </main>
+           <div class="manage-table-box">
+        <table class="manage-table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Printing</td>
+                    <td class="manage-amount">₱170.00</td>
+                    <td><span class="mbadge mbadge-pending">Pending</span></td>
+                    <td>Not selected</td>
+                    <td>Feb 19, 2026</td>
+                    <td><a href="Order-details.html" class="manage-view-btn">&#128065; View</a></td>
+                </tr>
+                <tr>
+                    <td>Binding</td>
+                    <td class="manage-amount">₱150.00</td>
+                    <td><span class="mbadge mbadge-ready">Ready for Pickup</span></td>
+                    <td>Online Payment</td>
+                    <td>Feb 19, 2026</td>
+                    <td><a href="order-detail.html" class="manage-view-btn">&#128065; View</a></td>
+                </tr>
+                <tr>
+                    <td>Lanyards</td>
+                    <td class="manage-amount">₱750.00</td>
+                    <td><span class="mbadge mbadge-completed">Completed</span></td>
+                    <td>Online Payment</td>
+                    <td>Feb 19, 2026</td>
+                    <td><a href="order-detail.html" class="manage-view-btn">&#128065; View</a></td>
+                </tr>
+                <tr>
+                    <td>Mug Printing</td>
+                    <td class="manage-amount">₱400.00</td>
+                    <td><span class="mbadge mbadge-processing">Processing</span></td>
+                    <td>Pay Onsite</td>
+                    <td>Feb 19, 2026</td>
+                    <td><a href="Order-details.html" class="manage-view-btn">&#128065; View</a></td>
+                </tr>
+            </tbody>
+        </table>
 
    
 </body>

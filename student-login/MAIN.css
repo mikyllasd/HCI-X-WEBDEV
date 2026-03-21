@@ -134,6 +134,141 @@ body {
     margin-bottom: 1.5rem;
 }
 
+<<<<<<< HEAD
+=======
+/* MY ORDERS */
+#orders{
+    display:none;
+    background:#f3f4f6;
+    height:100vh;
+      background: linear-gradient(to right, #7b0000, #b30000);
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+}
+
+#orders:target{
+    display:block;
+}
+
+.orders-header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #8b1a1a;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.back-btn{
+    text-decoration: none;
+    background: none;
+    border: none;
+    color: white;
+}
+
+.header-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title{
+    margin:0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.sub-title{
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.header-content{
+    width:1200px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    color:white;
+}
+
+.arrow{
+    font-size:22px;
+}
+
+/* TITLE */
+.orders-header h2{
+    font-size:22px;
+}
+
+.orders-header p{
+    font-size:14px;
+}
+
+/* TABS */
+.orders-tabs{
+    width:1200px;
+    margin:30px auto;
+    background:#eeeeee;
+    padding:15px 40px;
+    border-radius:30px;
+    display:flex;
+    justify-content:space-between;
+    box-shadow:0px 2px 6px rgba(0,0,0,0.15);
+    font-size:15px;
+}
+
+/* CENTER BOX */
+.orders-container{
+    width:1200px;
+    margin:auto;
+}
+
+.orders-box{
+    background:#e9e9e9;
+    height:420px;
+    border-radius:20px;
+    box-shadow:0px 4px 12px rgba(0,0,0,0.15);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+
+
+
+/* ================= CORRECTED ORDER NOW BUTTON ================= */
+.btn-red{
+    width: 100%;
+    padding: 12px;
+    background-color: #a32020;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: inline-block;       /* ensures it behaves like a button */
+    margin-top: 15px;            /* space below the paragraph */
+    text-align: center;           /* center text */
+    text-decoration: none;        /* remove underline if used on <a> */
+}
+
+.btn-red:hover {
+    background-color: #871a1a;
+}
+
+/* LOGIN INPUTS */
+>>>>>>> eefc0197dd8535d20f9b357811d2011961612a3b
 .login-bg input {
     width: 100%;
     padding: 12px;

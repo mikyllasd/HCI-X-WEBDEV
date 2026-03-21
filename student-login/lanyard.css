@@ -1,86 +1,82 @@
 /* ===================== GENERAL ===================== */
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", sans-serif;
 }
 
-body{
+body {
     background: #f3f3f3;
+    padding-bottom: 50px;
 }
 
-/* ===================== HEADER (ALL PAGES) ===================== */
-.order-navbar{
+/* ===================== HEADER ===================== */
+.order-navbar {
     position: sticky;
     top: 0;
     z-index: 1000;
     width: 100%;
-    background: #990000; /* red */
+    background: #990000;
     color: white;
     padding: 15px 20px;
     display: flex;
     align-items: center;
 }
 
-.back-btn{
+.back-btn {
     color: white;
     text-decoration: none;
     margin-right: 15px;
+    flex-shrink: 0;
 }
 
-.arrow{
+.arrow {
     font-size: 22px;
-    padding: 10px;
+    padding: 0;
 }
 
-.header-text{
+.header-text {
     display: flex;
     flex-direction: column;
 }
 
-.main-title{
+.main-title {
+    margin: 0;
     font-size: 20px;
     font-weight: bold;
 }
 
-.sub-title{
+.sub-title {
+    margin: 0;
     font-size: 13px;
     opacity: 0.8;
 }
 
-/* ===================== BUTTONS (ALL PAGES) ===================== */
-.btn-red{
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 25px;
-    background: #990000; /* red */
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.btn-red:hover{
-    background: #7a0000;
-}
-
-/* ===================== SAMPLE PAGE ===================== */
-.sample-section{
-    width: 1100px;
+/* ===================== SAMPLE SECTION ===================== */
+.sample-section {
+    width: 100%;
+    max-width: 1100px;
     margin: 50px auto;
     text-align: center;
+    padding: 0 20px;
 }
 
-.sample-grid{
+.section-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.sample-grid {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 40px;
     margin: 30px 0;
 }
 
-.sample-card{
+.sample-card {
     background: white;
     padding: 20px;
     border-radius: 15px;
@@ -89,26 +85,53 @@ body{
     transition: 0.3s;
 }
 
-.sample-card:hover{
+.sample-card:hover {
     transform: translateY(-5px);
 }
 
-.sample-card img{
+.sample-card img {
     width: 100%;
     height: 200px;
     object-fit: contain;
 }
 
-/* ===================== ORDER PAGE ===================== */
-.order-section{
-    width: 1100px;
-    margin: 60px auto;
-    display: flex;
-    gap: 60px;
-    justify-content: center;
+.sample-card p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #444;
 }
 
-.order-card{
+/* ===================== BUTTONS ===================== */
+.btn-red {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: #990000;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.btn-red:hover {
+    background: #7a0000;
+}
+
+/* ===================== ORDER PAGE ===================== */
+.order-section {
+    width: 100%;
+    max-width: 1100px;
+    margin: 60px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.order-card {
     background: white;
     padding: 30px;
     border-radius: 20px;
@@ -117,71 +140,18 @@ body{
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.order-card img{
+.order-card img {
     width: 100%;
     height: 220px;
     object-fit: contain;
 }
 
-.price{
+.price {
     font-weight: bold;
     margin: 15px 0;
 }
 
-/* ===================== DETAILS PAGE ===================== */
-#orders{
-    display:none;
-    background:#f3f4f6;
-    height:100vh;
-}
-
-#orders:target{
-    display:block;
-}
-
-.order-navbar{
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: #8b1a1a;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.back-btn{
-    text-decoration: none;
-    background: none;
-    border: none;
-    color: white;
-}
-
-.header-text{
-    display: flex;
-    flex-direction: column;
-}
-
-.main-title{
-    margin:0;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.sub-title{
-    margin: 0;
-    font-size: 0.85rem;
-    opacity: 0.8;
-}
-
-body {
-    background-color: #f4f4f4;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding-bottom: 50px;
-}
-
+/* ===================== CUSTOMIZE CONTAINER ===================== */
 .customize-container {
     max-width: 900px;
     margin: 30px auto;
@@ -222,12 +192,14 @@ body {
     border-radius: 8px;
     background-color: #fafafa;
     display: flex;
+    flex-wrap: wrap;
     gap: 30px;
     align-items: flex-start;
 }
 
 .upload-area {
     flex: 1;
+    min-width: 200px;
     border: 2px dashed #a63131;
     border-radius: 8px;
     height: 220px;
@@ -265,6 +237,7 @@ body {
 
 .design-details {
     flex: 1;
+    min-width: 200px;
 }
 
 .design-details h4 {
@@ -276,8 +249,11 @@ body {
     display: inline-block;
 }
 
+/* ===================== FORM GROUPS ===================== */
 .form-group {
     margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group label {
@@ -296,12 +272,14 @@ body {
     border-radius: 6px;
     font-family: inherit;
     box-sizing: border-box;
+    font-size: 14px;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #a63131;
+    border-color: #990000;
+    box-shadow: 0 0 5px rgba(153,0,0,0.3);
 }
 
 .divider {
@@ -321,6 +299,7 @@ body {
     gap: 20px;
 }
 
+/* ===================== ACTION BUTTONS ===================== */
 .action-btn {
     padding: 10px 20px;
     background-color: #a63131;
@@ -331,6 +310,7 @@ body {
     font-weight: bold;
     text-decoration: none;
     transition: background-color 0.3s;
+    display: inline-block;
 }
 
 .action-btn:hover {
@@ -345,10 +325,9 @@ body {
 .proceed-btn {
     padding: 15px 50px;
     font-size: 16px;
-    display: inline-block;
 }
 
-/* Payment section styles */
+/* ===================== PAYMENT ===================== */
 .payment-section {
     display: flex;
     justify-content: center;
@@ -370,7 +349,7 @@ body {
     padding: 8px 12px;
     border-radius: 5px;
     display: inline-block;
-    border: 1px dashed #a63131;
+    border: 1px dashed #990000;
     margin-bottom: 15px;
 }
 
@@ -382,162 +361,42 @@ body {
 .qr-code-box img {
     max-width: 150px;
     border-radius: 8px;
-    border: 2px solid #a63131;
+    border: 2px solid #990000;
 }
 
+.proceed-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.proceed-button,
 .proceed-button-1 {
     display: inline-block;
-    background-color: #a63131;
+    background-color: #990000;
     color: white;
-    padding: 12px 30px;
+    padding: 12px 35px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.proceed-button:hover,
 .proceed-button-1:hover {
-    background-color: #852626;
-    transform: translateY(-2px);
+    background-color: #7a0000;
+    transform: scale(1.05);
 }
 
 .proceed {
     letter-spacing: 1px;
 }
 
-/* ===================== PAYMENT PAGE ===================== */
-.payment-container{
-    width: 1100px;
-    margin: 60px auto;
-    display: flex;
-    gap: 50px;
-}
-
-.payment-left, .payment-right{
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    flex: 1;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.upload-box{
-    border: 2px dashed #990000; /* red */
-    padding: 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: inline-block;
-    margin-top: 15px;
-}
-
-.upload-box input{
-    display: none;
-}
-
-.wait-text{
-    margin-top: 15px;
-    font-size: 14px;
-    color: gray;
-}
-
-/* ===================== FORM LAYOUT (DETAILS & PAYMENT) ===================== */
-.form-wrapper{
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    gap:50px;
-    margin:30px auto;
-    max-width:800px;
-    flex-wrap:wrap;
-}
-
-/* ===================== UPLOAD BOX ===================== */
-.tall-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 280px;
-    height: 380px;
-    border: 3px dashed #990000; /* red */
-    border-radius: 12px;
-    background-color: #fcfcfc;
-    cursor: pointer;
-    text-align: center;
-    font-weight: bold;
-    color: #555;
-    transition: 0.3s;
-}
-
-.tall-box:hover {
-    background-color: #f0f0f0;
-    border-color: #852626;
-}
-
-/* ===================== INPUT FIELDS ===================== */
-.details-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; 
-    width: 100%;
-    max-width: 350px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 14px;
-    color: #333;
-}
-
-.form-group input{
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:5px;
-    font-size:14px;
-}
-
-.form-group input:focus{
-    outline:none;
-    border-color:#990000; /* red */
-    box-shadow:0 0 5px rgba(153,0,0,0.3);
-}
-
-/* ===================== PROCEED BUTTON ===================== */
-.proceed-container{
-    display:flex;
-    justify-content:center;
-    margin:30px;
-}
-
-.proceed-button,
-.proceed-button-1{
-    display: inline-block;
-    background-color: #990000; /* red */
-    color:white;
-    padding:12px 35px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.proceed-button:hover,
-.proceed-button-1:hover{
-    background-color: #7a0000; /* darker red */
-    transform: scale(1.05);
-}
-
-/* ===================== RADIO BUTTONS (PAYMENT) ===================== */
 .radio-group {
     display: flex;
     gap: 20px;
     margin-top: 5px;
+    flex-wrap: wrap;
 }
 
 .radio-group label {
@@ -547,11 +406,6 @@ body {
     font-weight: normal;
     cursor: pointer;
     font-size: 14px;
-}
-
-/* ===================== GCASH SECTION ===================== */
-.hidden {
-    display: none;
 }
 
 #gcash-details {
@@ -568,23 +422,144 @@ body {
     color: #444;
 }
 
-.account-details {
-    font-size: 15px;
-    background-color: #fff;
-    padding: 8px 12px;
-    border-radius: 5px;
-    display: inline-block;
-    border: 1px dashed #990000; /* red */
-    margin-bottom: 15px;
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    margin: 30px auto;
+    max-width: 800px;
+    flex-wrap: wrap;
+    padding: 0 20px;
 }
 
-.qr-code-box {
-    text-align: center;
-    margin-bottom: 15px;
+.details-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 350px;
 }
 
-.qr-code-box img {
-    max-width: 150px;
-    border-radius: 8px;
-    border: 2px solid #990000; /* red */
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1100px) {
+    .sample-section,
+    .order-section {
+        padding: 0 30px;
+    }
+
+    .customize-container {
+        margin: 30px 20px;
+    }
+}
+
+@media (max-width: 900px) {
+    .sample-grid {
+        gap: 25px;
+    }
+
+    .sample-card {
+        width: 180px;
+    }
+
+    .order-card {
+        width: 280px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .customize-container {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sample-section {
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .sample-grid {
+        gap: 15px;
+    }
+
+    .sample-card {
+        width: 150px;
+        padding: 15px;
+    }
+
+    .sample-card img {
+        height: 150px;
+    }
+
+    .order-section {
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .order-card {
+        width: 100%;
+    }
+
+    .customize-container {
+        margin: 15px;
+        padding: 20px;
+    }
+
+    .design-block {
+        flex-direction: column;
+    }
+
+    .upload-area {
+        width: 100%;
+        height: 160px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-card {
+        padding: 20px;
+    }
+
+    .proceed-btn {
+        padding: 12px 30px;
+    }
+}
+
+@media (max-width: 360px) {
+    .sample-card {
+        width: 130px;
+        padding: 10px;
+    }
+
+    .sample-card img {
+        height: 120px;
+    }
+
+    .main-title {
+        font-size: 16px;
+    }
+
+    .sub-title {
+        font-size: 11px;
+    }
+
+    .customize-container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .proceed-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
 }

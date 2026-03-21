@@ -1,4 +1,4 @@
-/* Base and Header */
+/* ===================== RESET ===================== */
 * {
     margin: 0;
     padding: 0;
@@ -6,12 +6,14 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* ===================== BODY ===================== */
 .details-body {
     background-color: #EAEBED;
     color: #333;
     padding-bottom: 40px;
 }
 
+/* ===================== HEADER ===================== */
 .orders-header {
     position: sticky;
     top: 0;
@@ -29,23 +31,24 @@
     color: white;
     text-decoration: none;
     margin-top: 4px;
+    flex-shrink: 0;
 }
 
 .back-link:hover { opacity: 0.8; }
 .header-text h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
 .header-text p { font-size: 14px; opacity: 0.9; }
 
-/* Grid Layout */
+/* ===================== GRID LAYOUT ===================== */
 .dashboard-container {
     max-width: 1200px;
     margin: 20px auto;
+    padding: 0 20px;
 }
 
 .details-grid {
     display: grid;
-    grid-template-columns: 1.8fr 1fr; /* Left column is wider */
+    grid-template-columns: 1.8fr 1fr;
     gap: 24px;
-    padding: 0 20px;
 }
 
 .left-column, .right-column {
@@ -54,7 +57,7 @@
     gap: 20px;
 }
 
-/* Card General */
+/* ===================== CARD ===================== */
 .card {
     background-color: #F8F9FA;
     border: 1px solid #DDE0E3;
@@ -65,14 +68,22 @@
 .card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: #1A1A1A; }
 .card-subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
 
-/* Order Info Card */
-.card-header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+/* ===================== ORDER INFO ===================== */
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
 .badge-paid { background-color: #E0F0FF; color: #0066CC; }
 
 .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2x2 grid for details */
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
@@ -91,34 +102,53 @@
     align-items: center;
     justify-content: center;
     color: #666;
+    flex-shrink: 0;
 }
 
 .info-label { display: block; font-size: 12px; color: #666; margin-bottom: 2px; }
 .info-value { display: block; font-size: 14px; font-weight: 500; color: #1A1A1A; }
 
-/* Payment Info Card */
+/* ===================== PAYMENT INFO ===================== */
 .payment-title { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
-.payment-summary { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #E5E7EB; padding-bottom: 20px; }
+
+.payment-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .text-right { text-align: right; }
 .total-amount { display: block; font-size: 20px; font-weight: 700; color: #8B1A1A; margin-top: 4px; }
 
-.payment-breakdown { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.payment-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
 .breakdown-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; }
 
-/* Alert Box */
+/* ===================== ALERT BOX ===================== */
 .alert-box {
-    background-color: #F0F7FF; /* Light blue */
+    background-color: #F0F7FF;
     border: 1px solid #BDE0FF;
     border-radius: 8px;
     padding: 16px;
     color: #004A99;
 }
+
 .alert-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 14px; }
 .alert-box p { font-size: 13px; color: #336699; margin-left: 24px; }
 
-/* Forms & Buttons */
+/* ===================== FORMS ===================== */
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; font-size: 13px; color: #333; font-weight: 500; margin-bottom: 8px; }
+
 .form-control {
     width: 100%;
     padding: 10px 12px;
@@ -128,10 +158,12 @@
     background-color: #FFF;
     outline: none;
 }
+
 .form-control:focus { border-color: #8B1A1A; }
 
+/* ===================== BUTTONS ===================== */
 .btn-primary {
-    background-color: #5C1111; /* Dark red matching "Update Order Status" */
+    background-color: #5C1111;
     color: white;
     border: none;
     border-radius: 6px;
@@ -141,13 +173,55 @@
     cursor: pointer;
     transition: 0.2s;
 }
+
 .btn-primary:hover { opacity: 0.9; }
 .w-100 { width: 100%; }
 
-/* Timeline */
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #DDE0E3;
+    color: #555;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.btn-secondary:hover { background-color: #EAEBED; color: #1A1A1A; }
+
+.cancel-btn {
+    display: block;
+    margin: 20px auto;
+    background: #7a0000;
+    color: white;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover { background-color: #5a0000; }
+
+.cancel-note {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+}
+
+/* ===================== TIMELINE ===================== */
 .timeline { margin-top: 20px; display: flex; flex-direction: column; }
 .timeline-item { display: flex; gap: 16px; }
-.timeline-marker { display: flex; flex-direction: column; align-items: center; }
+
+.timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .circle {
     width: 24px;
@@ -161,52 +235,111 @@
     font-size: 12px;
     font-weight: 600;
     z-index: 2;
+    flex-shrink: 0;
 }
-.circle.active { background-color: #8B1A1A; color: white; }
 
+.circle.active { background-color: #8B1A1A; color: white; }
 .line { width: 2px; height: 30px; background-color: #E5E7EB; margin: 4px 0; }
 .timeline-content { font-size: 14px; color: #555; padding-top: 2px; }
 
-/* Quick Actions */
+/* ===================== QUICK ACTIONS ===================== */
 .quick-actions-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid #DDE0E3;
-    color: #555;
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: left;
-    transition: 0.2s;
-}
-.btn-secondary:hover { background-color: #EAEBED; color: #1A1A1A; }
 
-/* Responsive adjustments for smaller screens */
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1100px) {
+    .dashboard-container {
+        padding: 0 15px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1.5fr 1fr;
+    }
+}
+
 @media (max-width: 900px) {
-    .details-grid { grid-template-columns: 1fr; }
-    .info-grid { grid-template-columns: 1fr; }
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .orders-header {
+        padding: 16px 20px;
+    }
 }
 
-.cancel-btn{
-    display: block;
-    margin: 20px auto;
-    background: #7a0000;
-    color: white;
-    border: none;
-    padding: 8px 25px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
+@media (max-width: 600px) {
+    .orders-header {
+        padding: 14px 15px;
+        gap: 10px;
+    }
+
+    .header-text h1 {
+        font-size: 17px;
+    }
+
+    .header-text p {
+        font-size: 12px;
+    }
+
+    .dashboard-container {
+        margin: 15px auto;
+        padding: 0 12px;
+    }
+
+    .details-grid {
+        gap: 15px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-title {
+        font-size: 15px;
+    }
+
+    .total-amount {
+        font-size: 18px;
+    }
+
+    .payment-summary {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .text-right {
+        text-align: left;
+    }
+
+    .alert-box p {
+        margin-left: 0;
+    }
 }
 
-.cancel-btn:hover{
-    background-color: #5a0000;
-}
+@media (max-width: 360px) {
+    .header-text h1 {
+        font-size: 15px;
+    }
 
-.cancel-note{
-    text-align: center;
-    font-size: 14px;
-    color: #555;
+    .card {
+        padding: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .total-amount {
+        font-size: 16px;
+    }
 }

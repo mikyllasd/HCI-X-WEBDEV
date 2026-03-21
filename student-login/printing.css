@@ -1,21 +1,22 @@
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:Arial, Helvetica, sans-serif;
+/* ===================== RESET ===================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
-background:#f5f5f5;
-color:#333;
+body {
+    background: #f5f5f5;
+    color: #333;
 }
 
-/* ================= APP BAR ================= */
-
-.appbar{
-background:#990000;
-color:white;
-padding:15px 5px;
+/* ===================== APP BAR ===================== */
+.appbar {
+    background: #990000;
+    color: white;
+    padding: 15px 20px;
+    width: 100%;
 }
 
 .appbar__inner {
@@ -24,236 +25,344 @@ padding:15px 5px;
     gap: 12px;
 }
 
-.appbar__back{
-  color:white;
-  text-decoration:none;
-  font-size:24px;
-  padding: 10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.arrow{
-  display:inline-block;
-  line-height:1;
-  padding: 10px;
-}
-
-.appbar__titles{
-display:flex;
-flex-direction:column;
-}
-
-.appbar__title{
-font-size:20px;
-font-weight:bold;
-}
-
-.appbar__subtitle{
-font-size:12px;
-opacity:0.8;
-}
-
-/* ================= PAGE ================= */
-
-.page{
-padding:30px 20px;
-}
-
-.layout{
-max-width:1200px;
-margin:auto;
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:25px;
-}
-
-.col{
-display:flex;
-flex-direction:column;
-gap:20px;
-}
-
-/* ================= CARD ================= */
-
-.card{
-background:white;
-border-radius:12px;
-padding:20px;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
-}
-
-.card__head{
-margin-bottom:15px;
-}
-
-.card__title{
-font-size:18px;
-font-weight:bold;
-}
-
-.card__subtitle{
-font-size:13px;
-color:#777;
-margin-top:4px;
-}
-
-/* ================= DROPZONE ================= */
-
-.dropzone{
-border:2px dashed #d9d9d9;
-border-radius:10px;
-padding:40px;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-cursor:pointer;
-background:#fafafa;
-}
-
-.dropzone__input{
-display:none;
-}
-
-.dropzone__icon{
-font-size:40px;
-margin-bottom:10px;
-}
-
-.dropzone__text{
-display:flex;
-flex-direction:column;
-gap:4px;
-}
-
-.dropzone__primary{
-color:#a30000;
-font-weight:bold;
-}
-
-.dropzone__secondary{
-color:#666;
-}
-
-.dropzone__hint{
-font-size:12px;
-color:#999;
-}
-
-/* ================= FORM ================= */
-
-.grid-2{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-}
-
-.field{
-display:flex;
-flex-direction:column;
-gap:5px;
-margin-top:10px;
-}
-
-.label{
-font-size:13px;
-color:#555;
-}
-
-.select,
-.input{
-padding:10px;
-border-radius:6px;
-border:1px solid #ccc;
-font-size:14px;
-}
-
-/* ================= PREVIEW BOX ================= */
-
-.preview-box{
-border:2px dashed #d9d9d9;
-border-radius:10px;
-padding:40px;
-text-align:center;
-background:#fafafa;
-}
-
-.preview-icon{
-font-size:50px;
-margin-bottom:10px;
-}
-
-.preview-text{
-color:#777;
-font-size:14px;
-}
-
-/* ================= SUMMARY ================= */
-
-.summary{
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-
-.summary__row{
-display:flex;
-justify-content:space-between;
-font-size:14px;
-}
-
-.summary__row--big{
-font-size:18px;
-font-weight:bold;
-}
-
-.summary__value--money{
-color:#a30000;
-}
-
-.divider{
-border:none;
-border-top:1px solid #eee;
-}
-
-/* ================= BUTTON ================= */
-
-.proceed-button{
-display:block;
-text-align:center;
-background:#990000;
-color:white;
-padding:12px;
-border-radius:8px;
-text-decoration:none;
-font-weight:bold;
-margin-top:10px;
-}
-
-.proceed-button:hover{
-background:#a93226;
-}
-
-/* ================= HINT ================= */
-
-.hint{
-font-size:12px;
-color:#888;
-text-align:center;
-margin-top:5px;
-}
-
-/* ================= STICKY ================= */
-
-.card--sticky{
-position:sticky;
-top:20px;
+.appbar__back {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .arrow {
     font-size: 22px;
     padding: 0;
+    display: inline-block;
+    line-height: 1;
+}
+
+.appbar__titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.appbar__title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.appbar__subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* ===================== PAGE ===================== */
+.page {
+    padding: 30px 20px;
+}
+
+.layout {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===================== CARD ===================== */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.card__head {
+    margin-bottom: 15px;
+}
+
+.card__title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card__subtitle {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+}
+
+/* ===================== DROPZONE ===================== */
+.dropzone {
+    border: 2px dashed #d9d9d9;
+    border-radius: 10px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    background: #fafafa;
+}
+
+.dropzone__input {
+    display: none;
+}
+
+.dropzone__icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.dropzone__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dropzone__primary {
+    color: #a30000;
+    font-weight: bold;
+}
+
+.dropzone__secondary {
+    color: #666;
+}
+
+.dropzone__hint {
+    font-size: 12px;
+    color: #999;
+}
+
+/* ===================== FORM ===================== */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.label {
+    font-size: 13px;
+    color: #555;
+}
+
+.select,
+.input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+}
+
+/* ===================== PREVIEW BOX ===================== */
+.preview-box {
+    border: 2px dashed #d9d9d9;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.preview-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.preview-text {
+    color: #777;
+    font-size: 14px;
+}
+
+/* ===================== SUMMARY ===================== */
+.summary {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.summary__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.summary__row--big {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.summary__value--money {
+    color: #a30000;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+/* ===================== BUTTON ===================== */
+.proceed-button {
+    display: block;
+    text-align: center;
+    background: #990000;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.proceed-button:hover {
+    background: #a93226;
+}
+
+/* ===================== HINT ===================== */
+.hint {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* ===================== STICKY ===================== */
+.card--sticky {
+    position: sticky;
+    top: 20px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1100px) {
+    .layout {
+        max-width: 100%;
+        padding: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .appbar__title {
+        font-size: 18px;
+    }
+
+    .card__title {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 700px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .card--sticky {
+        position: static;
+    }
+
+    .page {
+        padding: 20px 15px;
+    }
+
+    .dropzone {
+        padding: 25px 15px;
+    }
+
+    .preview-box {
+        padding: 25px 15px;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .appbar__title {
+        font-size: 17px;
+    }
+
+    .summary__row--big {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .appbar {
+        padding: 12px 15px;
+    }
+
+    .appbar__title {
+        font-size: 15px;
+    }
+
+    .appbar__subtitle {
+        font-size: 11px;
+    }
+
+    .page {
+        padding: 15px 12px;
+    }
+
+    .card {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .card__title {
+        font-size: 15px;
+    }
+
+    .dropzone {
+        padding: 20px 10px;
+    }
+
+    .dropzone__icon {
+        font-size: 30px;
+    }
+
+    .preview-icon {
+        font-size: 35px;
+    }
+
+    .proceed-button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .appbar__title {
+        font-size: 14px;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .card__title {
+        font-size: 14px;
+    }
+
+    .summary__row--big {
+        font-size: 15px;
+    }
 }

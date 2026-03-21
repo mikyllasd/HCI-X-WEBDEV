@@ -1,4 +1,4 @@
-/* Reset & base styles */
+/* ===================== RESET ===================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -11,25 +11,25 @@ body {
     color: #333;
 }
 
-/* LOGIN SECTION CENTERED */
+/* ===================== LOGIN ===================== */
 .login-bg {
     display: flex;
     background: #8B0000;
     min-height: 100vh;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
-/* LOGIN CARD */
 .login-card {
     background: white;
     padding: 2.5rem;
-    width: 420px;
+    width: 100%;
+    max-width: 420px;
     border-radius: 15px;
     text-align: center;
 }
 
-/* LOGIN ICON */
 .login-icon {
     background: #8B0000;
     color: white;
@@ -43,7 +43,6 @@ body {
     margin-bottom: 1rem;
 }
 
-/* LOGIN INPUTS */
 .login-bg input {
     width: 100%;
     padding: 12px;
@@ -51,10 +50,10 @@ body {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: none; 
     outline: none;
     box-sizing: border-box;
 }
+
 .login-bg label {
     font-weight: bold;
 }
@@ -64,7 +63,7 @@ body {
     box-shadow: 0 0 5px rgba(163, 32, 32, 0.3);
 }
 
-/* LOGIN BUTTON */
+/* ===================== BUTTONS ===================== */
 .btn-red {
     width: 100%;
     padding: 12px;
@@ -78,13 +77,26 @@ body {
     transition: 0.3s ease;
     text-align: center;
     text-decoration: none;
+    display: block;
 }
 
 .btn-red:hover {
     background-color: #871a1a;
 }
 
-/* SIGNUP LINK */
+.btn-admin {
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+}
+
+.btn-admin:hover {
+    background-color: white;
+    color: #a32020;
+    border: 1px solid #a32020;
+}
+
+/* ===================== SIGNUP ===================== */
 .signup-text {
     text-align: center;
     margin-top: 15px;
@@ -100,18 +112,111 @@ body {
 .signup-text a:hover {
     text-decoration: underline;
 }
-.btn-admin {
-    margin-top: 10px; /* space below user login */
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 900px) {
+    .login-card {
+        max-width: 380px;
+        padding: 2rem;
+    }
 }
 
-.btn-admin:hover {
-    background-color: white;
-    color: #a32020;
-    border: 1px solid #a32020;
+@media (max-width: 600px) {
+    .login-bg {
+        padding: 20px 15px;
+        align-items: center;
+    }
+
+    .login-card {
+        max-width: 100%;
+        padding: 1.8rem;
+        border-radius: 12px;
+    }
+
+    .login-card h2 {
+        font-size: 18px;
+    }
+
+    .login-card p {
+        font-size: 13px;
+    }
+
+    .login-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .login-bg input {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .btn-red {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .signup-text {
+        font-size: 13px;
+    }
 }
 
-.btn-admin {
-    margin-top: 10px; /* ensures Admin button is below Login button */
-    display: block;    /* makes sure it behaves like a button, full width */
-    text-align: center;
+@media (max-width: 480px) {
+    .login-bg {
+        padding: 15px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+
+    .login-card {
+        padding: 1.5rem;
+    }
+
+    .login-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .login-bg input {
+        padding: 9px;
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    .btn-red {
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-card {
+        padding: 1.2rem;
+        border-radius: 10px;
+    }
+
+    .login-card h2 {
+        font-size: 16px;
+    }
+
+    .login-card p {
+        font-size: 12px;
+    }
+
+    .login-bg input {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .btn-red {
+        font-size: 12px;
+        padding: 9px;
+    }
+
+    .signup-text {
+        font-size: 12px;
+    }
 }

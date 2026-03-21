@@ -1,28 +1,37 @@
-/* --- PAGE SETUP --- */
+/* ===================== RESET ===================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* ===================== BODY ===================== */
 body {
-    background-color: #f4f4f4; /* Light gray background */
+    background-color: #f4f4f4;
     font-family: Arial, sans-serif;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
-/* --- MAIN WHITE CARD --- */
+/* ===================== MAIN CARD ===================== */
 .success-card {
     background-color: white;
     width: 100%;
     max-width: 500px;
     padding: 50px 40px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     text-align: center;
 }
 
-/* --- CHECKMARK --- */
+/* ===================== CHECKMARK ===================== */
 .checkmark-circle {
-    background-color: #61b346; /* Matching your exact green */
+    background-color: #61b346;
     color: white;
     font-size: 45px;
     width: 80px;
@@ -32,7 +41,7 @@ body {
     margin: 0 auto 20px auto;
 }
 
-/* --- TYPOGRAPHY --- */
+/* ===================== TYPOGRAPHY ===================== */
 h2 {
     color: #333;
     font-size: 22px;
@@ -47,11 +56,11 @@ h2 {
     max-width: 90%;
 }
 
-/* --- DASHED QR BOX --- */
+/* ===================== QR BOX ===================== */
 .qr-box {
     margin: 30px 0;
     padding: 25px 20px;
-    border: 1px dashed #a63131; /* Thin dashed maroon line */
+    border: 1px dashed #a63131;
     border-radius: 8px;
     background-color: transparent;
 }
@@ -65,7 +74,7 @@ h2 {
 }
 
 #generated-qr {
-    display: none; 
+    display: block;
     margin: 0 auto 15px auto;
     border-radius: 8px;
     width: 150px;
@@ -78,9 +87,9 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* --- BUTTONS --- */
+/* ===================== BUTTONS ===================== */
 .action-btn {
-    background-color: #a63131; /* UPRESSease Maroon */
+    background-color: #a63131;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -89,7 +98,7 @@ h2 {
     font-weight: bold;
     font-family: inherit;
     cursor: pointer;
-    text-decoration: none; /* For the link button */
+    text-decoration: none;
     display: inline-block;
     transition: 0.3s;
 }
@@ -102,7 +111,7 @@ h2 {
     margin-top: 10px;
 }
 
-/* --- WHAT'S NEXT SECTION --- */
+/* ===================== WHATS NEXT ===================== */
 .whats-next {
     margin-top: 30px;
     margin-bottom: 25px;
@@ -113,4 +122,106 @@ h2 {
     color: #555;
     margin-bottom: 10px;
     font-size: 15px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 600px) {
+    .success-card {
+        padding: 35px 25px;
+        border-radius: 10px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .checkmark-circle {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        font-size: 38px;
+    }
+
+    .qr-box {
+        padding: 20px 15px;
+    }
+
+    #generated-qr {
+        width: 130px;
+        height: 130px;
+    }
+
+    .action-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+        align-items: flex-start;
+        padding-top: 30px;
+    }
+
+    .success-card {
+        padding: 25px 18px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .sub-text {
+        font-size: 13px;
+    }
+
+    .checkmark-circle {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        font-size: 32px;
+    }
+
+    .qr-title {
+        font-size: 14px;
+    }
+
+    #generated-qr {
+        width: 120px;
+        height: 120px;
+    }
+
+    .qr-instruction {
+        font-size: 12px;
+    }
+
+    .next-title {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .success-card {
+        padding: 20px 14px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    .sub-text {
+        font-size: 12px;
+    }
+
+    .action-btn {
+        padding: 9px 16px;
+        font-size: 12px;
+    }
+
+    #generated-qr {
+        width: 100px;
+        height: 100px;
+    }
 }

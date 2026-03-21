@@ -1,3 +1,4 @@
+/* ===================== RESET ===================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,15 +11,16 @@ body {
     color: #333;
 }
 
-/* ================= BACK BUTTON ================= */
+/* ===================== BACK BUTTON ===================== */
 .back-btn {
     color: white;
     text-decoration: none;
     font-size: 20px;
     margin-right: 10px;
+    flex-shrink: 0;
 }
 
-/* ================= CONTAINER ================= */
+/* ===================== CONTAINER ===================== */
 .manage-container {
     width: 1100px;
     margin: 40px auto;
@@ -27,7 +29,7 @@ body {
     gap: 20px;
 }
 
-/* ================= SEARCH BOX ================= */
+/* ===================== SEARCH BOX ===================== */
 .manage-search-box {
     background: white;
     border-radius: 16px;
@@ -66,7 +68,7 @@ body {
     color: #333;
 }
 
-/* ================= TABS ================= */
+/* ===================== TABS ===================== */
 .manage-tabs {
     background: white;
     border-radius: 16px;
@@ -74,6 +76,7 @@ body {
     display: flex;
     gap: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    flex-wrap: wrap;
 }
 
 .manage-tab {
@@ -86,6 +89,7 @@ body {
     color: #555;
     border-radius: 10px;
     transition: 0.2s;
+    white-space: nowrap;
 }
 
 .manage-tab:hover {
@@ -98,7 +102,7 @@ body {
     font-weight: 700;
 }
 
-/* ================= TABLE BOX ================= */
+/* ===================== TABLE BOX ===================== */
 .manage-table-box {
     background: white;
     border-radius: 16px;
@@ -110,6 +114,7 @@ body {
 .manage-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
 }
 
 .manage-table th {
@@ -133,7 +138,7 @@ body {
     font-weight: 700;
 }
 
-/* ================= BADGES ================= */
+/* ===================== BADGES ===================== */
 .mbadge {
     padding: 5px 14px;
     border-radius: 20px;
@@ -166,7 +171,7 @@ body {
     border: 1px solid #ccc;
 }
 
-/* ================= VIEW BUTTON ================= */
+/* ===================== VIEW BUTTON ===================== */
 .manage-view-btn {
     background-color: #7a0000;
     color: white;
@@ -179,30 +184,158 @@ body {
     align-items: center;
     gap: 6px;
     transition: 0.2s;
+    white-space: nowrap;
 }
 
 .manage-view-btn:hover {
     background-color: #5a0000;
 }
 
-/* ================= SUMMARY ================= */
-.manage-summary {
-    margin-top: 24px;
-    border-top: 2px solid #eee;
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1150px) {
+    .manage-container {
+        width: 100%;
+        padding: 0 30px;
+    }
 }
 
-.manage-summary h3 {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 6px;
-    color: #333;
+@media (max-width: 900px) {
+    .manage-container {
+        padding: 0 20px;
+        margin: 30px auto;
+    }
+
+    .manage-search-box {
+        padding: 20px;
+    }
+
+    .manage-table-box {
+        padding: 20px;
+    }
+
+    .manage-tabs {
+        padding: 10px 15px;
+        gap: 8px;
+    }
+
+    .manage-tab {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
 }
 
-.manage-summary p {
-    font-size: 14px;
-    color: #444;
+@media (max-width: 600px) {
+    .manage-container {
+        padding: 0 15px;
+        margin: 20px auto;
+        gap: 15px;
+    }
+
+    .manage-search-box {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .manage-search-box h3 {
+        font-size: 16px;
+    }
+
+    .manage-search-wrap {
+        padding: 8px 12px;
+    }
+
+    .manage-search-input {
+        font-size: 14px;
+    }
+
+    .manage-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 10px;
+        gap: 8px;
+        border-radius: 12px;
+    }
+
+    .manage-tab {
+        flex: unset;
+        font-size: 13px;
+        padding: 10px 6px;
+        text-align: center;
+    }
+
+    .manage-table-box {
+        padding: 15px;
+        border-radius: 12px;
+        overflow-x: auto;
+    }
+
+    .manage-table {
+        min-width: 700px;
+    }
+
+    .manage-table th {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+
+    .manage-table td {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .mbadge {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .manage-view-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .manage-tabs {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+
+    .manage-tab {
+        font-size: 12px;
+        padding: 9px 4px;
+    }
+
+    .manage-table {
+        min-width: 650px;
+    }
+}
+
+@media (max-width: 360px) {
+    .manage-container {
+        padding: 0 10px;
+    }
+
+    .manage-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .manage-tab {
+        font-size: 12px;
+    }
+
+    .manage-search-box h3 {
+        font-size: 15px;
+    }
+
+    .manage-table th,
+    .manage-table td {
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+
+    .manage-view-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
 }

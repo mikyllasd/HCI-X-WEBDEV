@@ -1,8 +1,9 @@
-*{
+/* ===================== RESET ===================== */
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI, sans serif";
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -10,15 +11,7 @@ body {
     color: #333;
 }
 
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-/* --- Container & Cards --- */
+/* ===================== WRAPPER ===================== */
 .scanner-wrapper {
     width: 100%;
     max-width: 700px;
@@ -28,16 +21,19 @@ body {
     justify-content: center;
     flex-direction: column;
     gap: 20px;
+    padding: 0 20px;
 }
 
+/* ===================== CARD ===================== */
 .card {
     background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     padding: 40px;
+    width: 100%;
 }
 
-/* --- Top Header Section --- */
+/* ===================== HEADER ===================== */
 .qr-header {
     text-align: center;
     margin-bottom: 30px;
@@ -66,7 +62,7 @@ body {
     font-size: 0.95rem;
 }
 
-/* --- Camera Box (Dashed) --- */
+/* ===================== CAMERA BOX ===================== */
 .camera-box {
     border: 2px dashed #cbd5e1;
     border-radius: 12px;
@@ -117,7 +113,7 @@ body {
     border-color: #9ca3af;
 }
 
-/* --- Divider line --- */
+/* ===================== DIVIDER ===================== */
 .divider {
     display: flex;
     align-items: center;
@@ -138,7 +134,7 @@ body {
     padding: 0 15px;
 }
 
-/* --- Manual Entry Form --- */
+/* ===================== MANUAL ENTRY ===================== */
 .manual-entry label {
     display: block;
     font-weight: 600;
@@ -149,11 +145,13 @@ body {
 .input-group {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .input-wrapper {
     position: relative;
     flex: 1;
+    min-width: 200px;
 }
 
 .search-icon {
@@ -188,16 +186,19 @@ body {
     font-size: 0.95rem;
     cursor: pointer;
     transition: background-color 0.2s;
+    white-space: nowrap;
 }
 
 .btn-search:hover {
-    background-color: burlywood; /* Slightly darker on hover */
+    background-color: burlywood;
 }
 
-/* --- Instructions Card --- */
+/* ===================== INSTRUCTIONS ===================== */
 .instructions-card {
     background-color: whitesmoke;
     padding: 30px 40px;
+    width: 100%;
+    border-radius: 12px;
 }
 
 .instructions-header {
@@ -224,34 +225,34 @@ body {
     padding-left: 5px;
 }
 
-/* --- Checkbox Hack for Search Button --- */
+/* ===================== CHECKBOX HACK ===================== */
 .hidden-action {
-    display: none; /* Hide the checkbox */
+    display: none;
 }
 
 .result-card {
-    display: none; /* Hide the result card by default */
+    display: none;
 }
 
-/* MAGIC: When checkbox is checked, find the sibling result-card and show it */
 #trigger-search:checked ~ .result-card {
-    display: block; 
-    animation: fadeIn 0.3s ease-in-out; /* Optional smooth appearance */
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Result Card Styling --- */
+/* ===================== RESULT CARD ===================== */
 .result-card {
     margin-top: 25px;
     border: 1px solid #d1d5db;
     border-radius: 12px;
     padding: 24px;
     background-color: #ffffff;
-    text-align: left; /* Fixes centering bleed from parent elements */
+    text-align: left;
+    width: 100%;
 }
 
 .result-header {
@@ -259,6 +260,8 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .result-title {
@@ -281,9 +284,10 @@ body {
     font-size: 0.8rem;
     font-weight: 600;
     border: 1px solid #bbf7d0;
+    white-space: nowrap;
 }
 
-/* Grid Layout for Details */
+/* ===================== RESULT GRID ===================== */
 .result-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -310,12 +314,14 @@ body {
     font-weight: 500;
 }
 
-/* Total Amount */
+/* ===================== TOTAL ===================== */
 .result-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .total-amount {
@@ -324,7 +330,7 @@ body {
     color: var(--primary-color);
 }
 
-/* Alerts Box */
+/* ===================== ALERTS ===================== */
 .alert-box {
     display: flex;
     gap: 12px;
@@ -349,6 +355,7 @@ body {
     background-color: #fef9c3;
     border: 1px solid #fef08a;
 }
+
 .alert-box.warning .alert-icon {
     border: 2px solid #ca8a04;
     color: #ca8a04;
@@ -358,6 +365,7 @@ body {
     background-color: #f0fdf4;
     border: 1px solid #bbf7d0;
 }
+
 .alert-box.success .alert-icon {
     border: 2px solid #166534;
     color: #166534;
@@ -376,12 +384,13 @@ body {
     margin: 0;
 }
 
-/* Buttons */
+/* ===================== RESULT ACTIONS ===================== */
 .result-actions {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .btn-ghost {
@@ -403,7 +412,7 @@ body {
 }
 
 .btn-release {
-    background-color: #16a34a; /* Green from the picture */
+    background-color: #16a34a;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -419,10 +428,10 @@ body {
     background-color: #15803d;
 }
 
-/* --- Styling the new "Completed" elements (Hidden by default) --- */
+/* ===================== COMPLETED STATE ===================== */
 .badge-completed,
 .alert-completed {
-    display: none; 
+    display: none;
 }
 
 .badge-completed {
@@ -445,16 +454,156 @@ body {
     color: #6b7280;
 }
 
-
-/* --- MAGIC TRICK #2: Swapping elements when Release is clicked --- */
-
-/* 1. Hide the green "Ready" badge, show the gray "Completed" badge */
-#trigger-release:checked ~ .result-header .badge-ready { display: none; }
+#trigger-release:checked ~ .result-header .badge-ready     { display: none; }
 #trigger-release:checked ~ .result-header .badge-completed { display: inline-block; }
+#trigger-release:checked ~ .alert-ready                    { display: none; }
+#trigger-release:checked ~ .alert-completed                { display: flex; }
+#trigger-release:checked ~ .result-actions                 { display: none; }
 
-/* 2. Hide the green alert, show the gray completed alert */
-#trigger-release:checked ~ .alert-ready { display: none; }
-#trigger-release:checked ~ .alert-completed { display: flex; }
+/* ===================== RESPONSIVE ===================== */
 
-/* 3. Hide the buttons completely */
-#trigger-release:checked ~ .result-actions { display: none; }
+@media (max-width: 900px) {
+    .scanner-wrapper {
+        margin: 30px auto;
+    }
+
+    .card {
+        padding: 30px;
+    }
+
+    .instructions-card {
+        padding: 24px 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .scanner-wrapper {
+        margin: 20px auto;
+        padding: 0 15px;
+        gap: 15px;
+    }
+
+    .card {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .qr-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .qr-header p {
+        font-size: 0.88rem;
+    }
+
+    .camera-box {
+        padding: 25px 15px;
+    }
+
+    .camera-icon-large {
+        width: 60px;
+        height: 60px;
+    }
+
+    .camera-box h3 {
+        font-size: 1rem;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .input-wrapper {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .btn-search {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    .instructions-card {
+        padding: 20px;
+    }
+
+    .instructions-header h3 {
+        font-size: 1rem;
+    }
+
+    .instructions-list {
+        font-size: 0.88rem;
+    }
+
+    .result-card {
+        padding: 18px;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-actions {
+        justify-content: stretch;
+    }
+
+    .btn-release,
+    .btn-ghost {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .total-amount {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 16px;
+    }
+
+    .camera-box {
+        padding: 20px 12px;
+    }
+
+    .qr-header h2 {
+        font-size: 1rem;
+    }
+
+    .result-title {
+        font-size: 1rem;
+    }
+
+    .alert-content strong {
+        font-size: 0.85rem;
+    }
+
+    .alert-content p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .scanner-wrapper {
+        padding: 0 10px;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .instructions-card {
+        padding: 15px;
+    }
+
+    .btn-activate {
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
+
+    .total-amount {
+        font-size: 1rem;
+    }
+}

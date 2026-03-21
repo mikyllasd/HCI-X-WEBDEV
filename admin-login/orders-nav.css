@@ -1,8 +1,9 @@
-*{
+/* ===================== RESET ===================== */
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI, sans serif";
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -10,16 +11,9 @@ body {
     color: #333;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-/* Container for the whole red area */
+/* ===================== HEADER ===================== */
 .orders-header {
-    background-color: #8B1A1A; /* Deep red color from your UI */
+    background-color: #8B1A1A;
     color: white;
     padding: 20px 40px;
     display: flex;
@@ -27,20 +21,19 @@ body {
     top: 0;
     z-index: 1000;
     width: 100%;
-    align-items: center; /* Vertically centers the arrow with the text */
-    gap: 20px;           /* Adds space between the arrow and the text */
+    align-items: center;
+    gap: 20px;
 }
 
-/* The arrow button */
 .back-btn {
     text-decoration: none;
     color: white;
     font-size: 24px;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
-/* Text styling */
 .main-title {
     font-size: 20px;
     margin: 0;
@@ -52,22 +45,24 @@ body {
     opacity: 0.9;
 }
 
+/* ===================== CONTAINER ===================== */
 .dashboard-container {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto;
+    padding: 0 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Spacing between the three main blocks */
+    gap: 16px;
 }
 
-/* Reusable Card Style for the white rounded boxes */
+/* ===================== CARD ===================== */
 .card {
-    background-color: #F8F9FA; /* Slightly off-white to match image */
+    background-color: #F8F9FA;
     border-radius: 12px;
     border: 1px solid #DDE0E3;
 }
 
-/* --- Search Section --- */
+/* ===================== SEARCH ===================== */
 .search-card {
     padding: 24px 32px;
 }
@@ -88,6 +83,7 @@ body {
 .search-input-wrapper {
     position: relative;
     max-width: 600px;
+    width: 100%;
 }
 
 .search-icon {
@@ -100,7 +96,7 @@ body {
 
 .search-input-wrapper input {
     width: 100%;
-    padding: 12px 16px 12px 42px; /* Extra left padding for the icon */
+    padding: 12px 16px 12px 42px;
     border: 1px solid #E0E0E0;
     border-radius: 8px;
     background-color: #F3F4F6;
@@ -113,12 +109,14 @@ body {
     border-color: #8B1A1A;
 }
 
-/* --- Tabs Section --- */
+/* ===================== TABS ===================== */
 .tabs-card {
     display: flex;
     justify-content: space-between;
     padding: 0 32px;
     background-color: #F8F9FA;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
 .tab {
@@ -128,17 +126,18 @@ body {
     font-weight: 500;
     padding: 16px 0;
     position: relative;
+    white-space: nowrap;
 }
 
 .tab:hover {
     color: #1A1A1A;
 }
 
-/* --- Table Section --- */
+/* ===================== TABLE ===================== */
 .table-card {
     background-color: #F8F9FA;
     padding: 16px 32px 32px 32px;
-    overflow-x: auto; /* Keeps it clean on smaller screens */
+    overflow-x: auto;
 }
 
 .orders-table {
@@ -146,6 +145,7 @@ body {
     border-collapse: collapse;
     text-align: left;
     font-size: 14px;
+    min-width: 600px;
 }
 
 .orders-table th {
@@ -162,42 +162,37 @@ body {
     vertical-align: middle;
 }
 
-/* Remove bottom border from the very last row */
 .orders-table tr:last-child td {
     border-bottom: none;
 }
 
-/* --- Status Badges --- */
+/* ===================== BADGES ===================== */
 .badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
+    white-space: nowrap;
 }
 
-.badge-paid { 
-    background-color: #E0F0FF; color: #0066CC; 
-}
-.badge-pending { 
-    background-color: #FFF3CD; color: #856404; 
-}
-.badge-processing {
-     background-color: #F3E8FF; color: #6B21A8;
-     }
-.badge-ready { 
-    background-color: #DCFCE7; color: #166534;
- }
-.status-completed { 
-    color: #666; font-size: 13px; padding-left: 8px;
-} /* Text only, no pill */
+.badge-paid       { background-color: #E0F0FF; color: #0066CC; }
+.badge-pending    { background-color: #FFF3CD; color: #856404; }
+.badge-processing { background-color: #F3E8FF; color: #6B21A8; }
+.badge-ready      { background-color: #DCFCE7; color: #166534; }
 
-/* --- Action Button --- */
+.status-completed {
+    color: #666;
+    font-size: 13px;
+    padding-left: 8px;
+}
+
+/* ===================== BUTTONS ===================== */
 .btn-view {
-    background-color: #8B1A1A; /* Deep red */
+    background-color: #8B1A1A;
     color: white;
     border: none;
-    border-radius: 16px; /* Pill shape */
+    border-radius: 16px;
     padding: 6px 14px;
     font-size: 13px;
     font-weight: 500;
@@ -207,24 +202,173 @@ body {
     align-items: center;
     gap: 6px;
     transition: opacity 0.2s;
+    white-space: nowrap;
 }
 
 .btn-view:hover {
     opacity: 0.85;
 }
 
-#pending{
-    display:none;
+/* ===================== TARGET SECTIONS ===================== */
+#pending {
+    display: none;
 }
 
-#pending:target{
-    display:block;
+#pending:target {
+    display: block;
 }
 
-body:has(:target)#all-orders{
-    display:none !important;
+body:has(:target) #all-orders {
+    display: none !important;
 }
 
-#all-orders:target{
-    display:block !important;
+#all-orders:target {
+    display: block !important;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1250px) {
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 30px;
+    }
+}
+
+@media (max-width: 900px) {
+    .orders-header {
+        padding: 16px 20px;
+    }
+
+    .dashboard-container {
+        padding: 0 20px;
+    }
+
+    .search-card {
+        padding: 20px 24px;
+    }
+
+    .tabs-card {
+        padding: 0 24px;
+        gap: 0;
+    }
+
+    .tab {
+        font-size: 13px;
+        padding: 14px 0;
+    }
+
+    .table-card {
+        padding: 16px 24px 24px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .orders-header {
+        padding: 14px 15px;
+        gap: 12px;
+    }
+
+    .main-title {
+        font-size: 17px;
+    }
+
+    .sub-title {
+        font-size: 12px;
+    }
+
+    .dashboard-container {
+        padding: 0 15px;
+        margin: 15px auto;
+        gap: 12px;
+    }
+
+    .search-card {
+        padding: 16px 18px;
+        border-radius: 10px;
+    }
+
+    .search-card h2 {
+        font-size: 15px;
+    }
+
+    .tabs-card {
+        padding: 0 15px;
+        border-radius: 10px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 15px;
+    }
+
+    .tab {
+        font-size: 13px;
+        padding: 12px 0;
+        flex-shrink: 0;
+    }
+
+    .table-card {
+        padding: 12px 15px 20px 15px;
+        border-radius: 10px;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        font-size: 13px;
+        padding: 12px 6px 12px 0;
+    }
+
+    .badge {
+        font-size: 11px;
+        padding: 3px 9px;
+    }
+
+    .btn-view {
+        padding: 5px 11px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .orders-header {
+        padding: 12px;
+    }
+
+    .main-title {
+        font-size: 15px;
+    }
+
+    .search-input-wrapper input {
+        font-size: 13px;
+        padding: 10px 12px 10px 38px;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        font-size: 12px;
+        padding: 10px 5px 10px 0;
+    }
+}
+
+@media (max-width: 360px) {
+    .main-title {
+        font-size: 14px;
+    }
+
+    .sub-title {
+        font-size: 11px;
+    }
+
+    .search-card h2 {
+        font-size: 14px;
+    }
+
+    .btn-view {
+        padding: 4px 9px;
+        font-size: 11px;
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 3px 7px;
+    }
 }

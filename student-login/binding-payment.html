@@ -29,14 +29,12 @@
             <div class="form-group text-left" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                 <label style="font-size: 16px; margin-bottom: 10px;">Select Payment Method:</label>
                 
-                <div style="margin-bottom: 10px;">
-                    <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked>
-                    <label for="pay-gcash" style="font-weight: normal; cursor: pointer;"> GCash</label>
-                </div>
-                
-                <div>
-                    <input type="radio" id="pay-cash" name="payment_method" value="Cash">
-                    <label for="pay-cash" style="font-weight: normal; cursor: pointer;"> Cash on Pick-up</label>
+                <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked>
+                <input type="radio" id="pay-cash" name="payment_method" value="Cash">
+
+                <div class="radio-group" style="margin-bottom: 20px;">
+                    <label for="pay-gcash" style="font-weight: normal; cursor: pointer;">GCash</label>
+                    <label for="pay-cash" style="font-weight: normal; cursor: pointer;">Cash on Pick-up</label>
                 </div>
             </div>
 
@@ -52,12 +50,12 @@
                 
                 <div class="form-group text-left">
                     <label>GCash Reference Number:</label>
-                    <input type="text" id="ref-number" name="ref_number" placeholder="e.g., 1001 234 567 890" required>
+                    <input type="text" id="ref-number" name="ref_number" placeholder="e.g., 1001 234 567 890">
                 </div>
 
                 <div class="form-group text-left">
                     <label>Upload Proof of Payment:</label>
-                    <input type="file" id="payment-proof" name="payment_proof" accept="image/*" required>
+                    <input type="file" id="payment-proof" name="payment_proof" accept="image/*">
                 </div>
             </div> 
             

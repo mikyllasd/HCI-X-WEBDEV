@@ -15,54 +15,56 @@ body {
 .back-btn {
     color: white;
     text-decoration: none;
-    font-size: 20px;
-    margin-right: 10px;
+    font-size: 1.25rem;
+    margin-right: 0.625rem;
     flex-shrink: 0;
 }
 
 /* ===================== CONTAINER ===================== */
 .manage-container {
-    width: 1100px;
-    margin: 40px auto;
+    max-width: 1100px;
+    width: 100%;
+    margin: 2.5rem auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.25rem;
+    padding: 0 1rem;
 }
 
 /* ===================== SEARCH BOX ===================== */
 .manage-search-box {
     background: white;
-    border-radius: 16px;
-    padding: 28px;
+    border-radius: 1rem;
+    padding: 1.75rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.07);
 }
 
 .manage-search-box h3 {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
 }
 
 .manage-search-box p {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: #888;
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem;
 }
 
 .manage-search-wrap {
     display: flex;
     align-items: center;
     border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px 16px;
+    border-radius: 0.625rem;
+    padding: 0.625rem 1rem;
     background: #fafafa;
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .manage-search-input {
     border: none;
     outline: none;
-    font-size: 15px;
+    font-size: 0.9375rem;
     background: transparent;
     width: 100%;
     color: #333;
@@ -71,25 +73,26 @@ body {
 /* ===================== TABS ===================== */
 .manage-tabs {
     background: white;
-    border-radius: 16px;
-    padding: 10px 20px;
+    border-radius: 1rem;
+    padding: 0.625rem 1.25rem;
     display: flex;
-    gap: 10px;
+    gap: 0.625rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     flex-wrap: wrap;
 }
 
 .manage-tab {
     flex: 1;
-    padding: 12px;
+    padding: 0.75rem;
     text-align: center;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #555;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     transition: 0.2s;
     white-space: nowrap;
+    min-width: 6rem;
 }
 
 .manage-tab:hover {
@@ -105,8 +108,8 @@ body {
 /* ===================== TABLE BOX ===================== */
 .manage-table-box {
     background: white;
-    border-radius: 16px;
-    padding: 28px;
+    border-radius: 1rem;
+    padding: 1.75rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     overflow-x: auto;
 }
@@ -114,21 +117,21 @@ body {
 .manage-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
+    min-width: 37.5rem;
 }
 
 .manage-table th {
     text-align: left;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 700;
     color: #333;
-    padding: 12px 16px;
+    padding: 0.75rem 1rem;
     border-bottom: 2px solid #eee;
 }
 
 .manage-table td {
-    padding: 16px;
-    font-size: 14px;
+    padding: 1rem;
+    font-size: 0.875rem;
     color: #444;
     border-bottom: 1px solid #f0f0f0;
 }
@@ -140,9 +143,9 @@ body {
 
 /* ===================== BADGES ===================== */
 .mbadge {
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 0.3125rem 0.875rem;
+    border-radius: 1.25rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     white-space: nowrap;
 }
@@ -176,13 +179,13 @@ body {
     background-color: #7a0000;
     color: white;
     text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 0.375rem;
     transition: 0.2s;
     white-space: nowrap;
 }
@@ -202,118 +205,118 @@ body {
 
 @media (max-width: 900px) {
     .manage-container {
-        padding: 0 20px;
-        margin: 30px auto;
+        padding: 0 1.25rem;
+        margin: 1.875rem auto;
     }
 
     .manage-search-box {
-        padding: 20px;
+        padding: 1.25rem;
     }
 
     .manage-table-box {
-        padding: 20px;
+        padding: 1.25rem;
     }
 
     .manage-tabs {
-        padding: 10px 15px;
-        gap: 8px;
+        padding: 0.625rem 0.9375rem;
+        gap: 0.5rem;
     }
 
     .manage-tab {
-        font-size: 13px;
-        padding: 10px 8px;
+        font-size: 0.8125rem;
+        padding: 0.625rem 0.5rem;
     }
 }
 
 @media (max-width: 600px) {
     .manage-container {
-        padding: 0 15px;
-        margin: 20px auto;
-        gap: 15px;
+        padding: 0 0.9375rem;
+        margin: 1.25rem auto;
+        gap: 0.9375rem;
     }
 
     .manage-search-box {
-        padding: 16px;
-        border-radius: 12px;
+        padding: 1rem;
+        border-radius: 0.75rem;
     }
 
     .manage-search-box h3 {
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     .manage-search-wrap {
-        padding: 8px 12px;
+        padding: 0.5rem 0.75rem;
     }
 
     .manage-search-input {
-        font-size: 14px;
+        font-size: 0.875rem;
     }
 
     .manage-tabs {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        padding: 10px;
-        gap: 8px;
-        border-radius: 12px;
+        padding: 0.625rem;
+        gap: 0.5rem;
+        border-radius: 0.75rem;
     }
 
     .manage-tab {
         flex: unset;
-        font-size: 13px;
-        padding: 10px 6px;
+        font-size: 0.8125rem;
+        padding: 0.625rem 0.375rem;
         text-align: center;
     }
 
     .manage-table-box {
-        padding: 15px;
-        border-radius: 12px;
+        padding: 0.9375rem;
+        border-radius: 0.75rem;
         overflow-x: auto;
     }
 
     .manage-table {
-        min-width: 700px;
+        min-width: 43.75rem;
     }
 
     .manage-table th {
-        font-size: 13px;
-        padding: 10px 12px;
+        font-size: 0.8125rem;
+        padding: 0.625rem 0.75rem;
     }
 
     .manage-table td {
-        padding: 12px;
-        font-size: 13px;
+        padding: 0.75rem;
+        font-size: 0.8125rem;
     }
 
     .mbadge {
-        font-size: 11px;
-        padding: 4px 10px;
+        font-size: 0.6875rem;
+        padding: 0.25rem 0.625rem;
     }
 
     .manage-view-btn {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
     }
 }
 
 @media (max-width: 480px) {
     .manage-tabs {
         grid-template-columns: 1fr 1fr;
-        gap: 6px;
+        gap: 0.375rem;
     }
 
     .manage-tab {
-        font-size: 12px;
-        padding: 9px 4px;
+        font-size: 0.75rem;
+        padding: 0.5625rem 0.25rem;
     }
 
     .manage-table {
-        min-width: 650px;
+        min-width: 40.625rem;
     }
 }
 
 @media (max-width: 360px) {
     .manage-container {
-        padding: 0 10px;
+        padding: 0 0.625rem;
     }
 
     .manage-tabs {
@@ -321,21 +324,21 @@ body {
     }
 
     .manage-tab {
-        font-size: 12px;
+        font-size: 0.75rem;
     }
 
     .manage-search-box h3 {
-        font-size: 15px;
+        font-size: 0.9375rem;
     }
 
     .manage-table th,
     .manage-table td {
-        font-size: 12px;
-        padding: 10px 8px;
+        font-size: 0.75rem;
+        padding: 0.625rem 0.5rem;
     }
 
     .manage-view-btn {
-        padding: 5px 10px;
-        font-size: 11px;
+        padding: 0.3125rem 0.625rem;
+        font-size: 0.6875rem;
     }
 }

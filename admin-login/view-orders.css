@@ -185,8 +185,739 @@
 }
 .btn-secondary:hover { background-color: #EAEBED; color: #1A1A1A; }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 900px) {
-    .details-grid { grid-template-columns: 1fr; }
-    .info-grid { grid-template-columns: 1fr; }
+/* Responsive adjustments for different screen sizes */
+
+/* Extra Large Screens (1200px and up) */
+@media (min-width: 1200px) {
+    .dashboard-container {
+        max-width: 1200px;
+        padding: 0 1.5rem;
+    }
+
+    .details-grid {
+        grid-template-columns: 1.8fr 1fr;
+        gap: 2rem;
+    }
+
+    .orders-header {
+        padding: 1.75rem 2.5rem;
+    }
+}
+
+/* Large Screens (1000px to 1199px) */
+@media (max-width: 1199px) and (min-width: 1000px) {
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 1.25rem;
+    }
+
+    .details-grid {
+        grid-template-columns: 1.6fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .orders-header {
+        padding: 1.5rem 1.75rem;
+    }
+
+    .header-text h1 {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        padding: 1.4rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Medium Screens (900px to 999px) */
+@media (max-width: 999px) and (min-width: 900px) {
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 0 1rem;
+    }
+
+    .orders-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .header-text h1 {
+        font-size: 1.15rem;
+    }
+
+    .card {
+        padding: 1.3rem;
+        border-radius: 0.7rem;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .info-item {
+        gap: 0.65rem;
+    }
+
+    .icon-circle {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .form-control {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.7rem;
+    }
+
+    .btn-primary {
+        padding: 0.65rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Tablets (768px to 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
+    .details-body {
+        padding-bottom: 2rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 0.9rem;
+        margin: 0.9rem auto;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 1.1rem;
+        padding: 0 0.9rem;
+    }
+
+    .orders-header {
+        padding: 1.1rem 1.2rem;
+        gap: 0.8rem;
+    }
+
+    .back-link {
+        font-size: 1.1rem;
+    }
+
+    .header-text h1 {
+        font-size: 1.1rem;
+    }
+
+    .header-text p {
+        font-size: 0.8rem;
+    }
+
+    .card {
+        padding: 1.2rem;
+        border-radius: 0.65rem;
+    }
+
+    .card-title {
+        font-size: 0.9rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+    }
+
+    .info-item {
+        gap: 0.6rem;
+    }
+
+    .icon-circle {
+        width: 1.9rem;
+        height: 1.9rem;
+        font-size: 0.85rem;
+    }
+
+    .info-label {
+        font-size: 0.7rem;
+    }
+
+    .info-value {
+        font-size: 0.85rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.85rem;
+    }
+
+    .form-group label {
+        font-size: 0.8rem;
+    }
+
+    .form-control {
+        font-size: 0.8rem;
+        padding: 0.55rem 0.65rem;
+    }
+
+    .btn-primary {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .btn-secondary {
+        font-size: 0.8rem;
+        padding: 0.55rem;
+    }
+
+    .timeline-item {
+        gap: 0.8rem;
+    }
+
+    .circle {
+        width: 1.35rem;
+        height: 1.35rem;
+        font-size: 0.7rem;
+    }
+
+    .line {
+        height: 1.7rem;
+    }
+
+    .timeline-content {
+        font-size: 0.8rem;
+    }
+
+    .alert-box {
+        padding: 0.9rem;
+    }
+
+    .alert-header {
+        font-size: 0.8rem;
+    }
+
+    .alert-box p {
+        font-size: 0.8rem;
+    }
+
+    .payment-breakdown {
+        gap: 0.65rem;
+    }
+
+    .breakdown-row {
+        font-size: 0.8rem;
+    }
+
+    .total-amount {
+        font-size: 1.1rem;
+    }
+}
+
+/* Small Devices (600px to 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
+    .details-body {
+        padding-bottom: 1.5rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 0.75rem;
+        margin: 0.75rem auto;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.75rem;
+    }
+
+    .orders-header {
+        padding: 1rem 1rem;
+        gap: 0.7rem;
+        flex-direction: column;
+    }
+
+    .back-link {
+        font-size: 1rem;
+        margin-top: 0;
+    }
+
+    .header-text h1 {
+        font-size: 1rem;
+    }
+
+    .header-text p {
+        font-size: 0.75rem;
+    }
+
+    .card {
+        padding: 1rem;
+        border-radius: 0.6rem;
+    }
+
+    .card-title {
+        font-size: 0.85rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-header-flex {
+        flex-direction: column;
+        gap: 0.65rem;
+        margin-bottom: 1rem;
+    }
+
+    .badge {
+        padding: 0.2rem 0.65rem;
+        font-size: 0.7rem;
+        width: fit-content;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+    }
+
+    .info-item {
+        gap: 0.55rem;
+    }
+
+    .icon-circle {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+
+    .info-label {
+        font-size: 0.68rem;
+    }
+
+    .info-value {
+        font-size: 0.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.8rem;
+    }
+
+    .form-group label {
+        font-size: 0.75rem;
+    }
+
+    .form-control {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .btn-primary {
+        padding: 0.55rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-secondary {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+
+    .quick-actions-list {
+        gap: 0.55rem;
+        margin-top: 0.85rem;
+    }
+
+    .timeline-item {
+        gap: 0.7rem;
+    }
+
+    .circle {
+        width: 1.25rem;
+        height: 1.25rem;
+        font-size: 0.65rem;
+    }
+
+    .line {
+        height: 1.6rem;
+    }
+
+    .timeline-content {
+        font-size: 0.75rem;
+    }
+
+    .alert-box {
+        padding: 0.8rem;
+    }
+
+    .alert-header {
+        font-size: 0.75rem;
+    }
+
+    .alert-box p {
+        font-size: 0.75rem;
+        margin-left: 1.3rem;
+    }
+
+    .payment-summary {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        flex-direction: column;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .text-right {
+        text-align: left;
+    }
+
+    .total-amount {
+        font-size: 1rem;
+    }
+
+    .payment-breakdown {
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .breakdown-row {
+        font-size: 0.75rem;
+    }
+}
+
+/* Extra Small Devices (480px to 599px) */
+@media (max-width: 599px) and (min-width: 480px) {
+    .details-body {
+        padding-bottom: 1.25rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 0.6rem;
+        margin: 0.6rem auto;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+        padding: 0 0.6rem;
+    }
+
+    .orders-header {
+        padding: 0.9rem 0.9rem;
+        gap: 0.6rem;
+        flex-direction: column;
+    }
+
+    .back-link {
+        font-size: 0.95rem;
+    }
+
+    .header-text h1 {
+        font-size: 0.95rem;
+    }
+
+    .header-text p {
+        font-size: 0.7rem;
+    }
+
+    .card {
+        padding: 0.9rem;
+        border-radius: 0.55rem;
+    }
+
+    .card-title {
+        font-size: 0.8rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.72rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .info-item {
+        gap: 0.5rem;
+    }
+
+    .icon-circle {
+        width: 1.7rem;
+        height: 1.7rem;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .info-label {
+        font-size: 0.65rem;
+    }
+
+    .info-value {
+        font-size: 0.75rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.7rem;
+    }
+
+    .form-group label {
+        font-size: 0.7rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+        font-size: 0.7rem;
+        padding: 0.45rem 0.55rem;
+    }
+
+    .btn-primary {
+        padding: 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-secondary {
+        font-size: 0.7rem;
+        padding: 0.45rem;
+    }
+
+    .timeline-item {
+        gap: 0.6rem;
+    }
+
+    .circle {
+        width: 1.2rem;
+        height: 1.2rem;
+        font-size: 0.6rem;
+    }
+
+    .line {
+        height: 1.5rem;
+    }
+
+    .timeline-content {
+        font-size: 0.7rem;
+    }
+
+    .alert-box {
+        padding: 0.75rem;
+    }
+
+    .alert-header {
+        font-size: 0.7rem;
+    }
+
+    .alert-box p {
+        font-size: 0.7rem;
+        margin-left: 1.2rem;
+    }
+
+    .total-amount {
+        font-size: 0.95rem;
+    }
+
+    .payment-breakdown {
+        gap: 0.55rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .breakdown-row {
+        font-size: 0.7rem;
+    }
+
+    .badge {
+        padding: 0.18rem 0.6rem;
+        font-size: 0.65rem;
+    }
+}
+
+/* Tiny Devices (below 480px) */
+@media (max-width: 479px) {
+    .details-body {
+        padding-bottom: 1rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0 0.5rem;
+        margin: 0.5rem auto;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+        padding: 0 0.5rem;
+    }
+
+    .orders-header {
+        padding: 0.8rem 0.75rem;
+        gap: 0.5rem;
+        flex-direction: column;
+    }
+
+    .back-link {
+        font-size: 0.9rem;
+        margin-top: 0;
+    }
+
+    .header-text h1 {
+        font-size: 0.9rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .header-text p {
+        font-size: 0.65rem;
+    }
+
+    .card {
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+    }
+
+    .card-title {
+        font-size: 0.75rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.65rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-header-flex {
+        gap: 0.5rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.7rem;
+    }
+
+    .info-item {
+        gap: 0.45rem;
+    }
+
+    .icon-circle {
+        width: 1.6rem;
+        height: 1.6rem;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+
+    .info-label {
+        font-size: 0.6rem;
+    }
+
+    .info-value {
+        font-size: 0.7rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.65rem;
+    }
+
+    .form-group label {
+        font-size: 0.65rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .form-control {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.5rem;
+        border-radius: 0.3rem;
+    }
+
+    .btn-primary {
+        padding: 0.45rem;
+        font-size: 0.65rem;
+    }
+
+    .btn-secondary {
+        font-size: 0.65rem;
+        padding: 0.4rem;
+    }
+
+    .quick-actions-list {
+        gap: 0.4rem;
+        margin-top: 0.7rem;
+    }
+
+    .timeline-item {
+        gap: 0.55rem;
+    }
+
+    .circle {
+        width: 1.15rem;
+        height: 1.15rem;
+        font-size: 0.55rem;
+    }
+
+    .line {
+        height: 1.4rem;
+        margin: 0.2rem 0;
+    }
+
+    .timeline-content {
+        font-size: 0.65rem;
+    }
+
+    .alert-box {
+        padding: 0.65rem;
+        border-radius: 0.4rem;
+    }
+
+    .alert-header {
+        font-size: 0.65rem;
+        gap: 0.35rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .alert-box p {
+        font-size: 0.65rem;
+        margin-left: 1rem;
+    }
+
+    .total-amount {
+        font-size: 0.9rem;
+    }
+
+    .payment-summary {
+        margin-bottom: 0.85rem;
+        padding-bottom: 0;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .payment-breakdown {
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .breakdown-row {
+        font-size: 0.65rem;
+    }
+
+    .badge {
+        padding: 0.15rem 0.5rem;
+        font-size: 0.6rem;
+    }
+
+    .left-column, .right-column {
+        gap: 0.75rem;
+    }
 }

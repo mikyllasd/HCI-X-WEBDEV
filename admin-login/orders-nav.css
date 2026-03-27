@@ -228,5 +228,553 @@ body:has(:target)#all-orders{
 }
 
 #all-orders:target{
+#pending:target{
+    display:block;
+}
+
+body:has(:target)#all-orders{
+    display:none !important;
+}
+
+#all-orders:target{
     display:block !important;
+}
+
+/* ===================== RESPONSIVE DESIGN ===================== */
+
+/* Extra Large Screens (1200px and up) */
+@media (min-width: 1200px) {
+    .orders-header {
+        padding: 1.5rem 2.5rem;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        padding: 1.5rem;
+    }
+
+    .search-card {
+        padding: 1.75rem 2.25rem;
+    }
+
+    .tabs-card {
+        padding: 0 2.25rem;
+    }
+
+    .table-card {
+        padding: 1.25rem 2.25rem 2.25rem 2.25rem;
+    }
+}
+
+/* Large Screens (1000px to 1199px) */
+@media (max-width: 1199px) and (min-width: 1000px) {
+    .orders-header {
+        padding: 1.25rem 2rem;
+        gap: 1rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 1.25rem;
+        gap: 0.9rem;
+    }
+
+    .search-card {
+        padding: 1.5rem 1.75rem;
+    }
+
+    .search-input-wrapper {
+        max-width: 100%;
+    }
+
+    .tabs-card {
+        padding: 0 1.75rem;
+    }
+
+    .table-card {
+        padding: 1rem 1.75rem 1.75rem 1.75rem;
+    }
+
+    .main-title {
+        font-size: 1.2rem;
+    }
+
+    .sub-title {
+        font-size: 0.85rem;
+    }
+
+    .orders-table {
+        font-size: 0.85rem;
+    }
+
+    .tab {
+        font-size: 0.85rem;
+    }
+}
+
+/* Medium Screens (900px to 999px) */
+@media (max-width: 999px) and (min-width: 900px) {
+    .orders-header {
+        padding: 1.1rem 1.5rem;
+        gap: 0.9rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 1rem;
+        gap: 0.85rem;
+    }
+
+    .search-card {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .search-input-wrapper {
+        max-width: 100%;
+    }
+
+    .search-input-wrapper input {
+        padding: 0.65rem 0.9rem 0.65rem 2.3rem;
+        font-size: 0.8rem;
+    }
+
+    .tabs-card {
+        padding: 0 1.5rem;
+    }
+
+    .tab {
+        font-size: 0.8rem;
+        padding: 0.85rem 0;
+    }
+
+    .table-card {
+        padding: 0.9rem 1.5rem 1.5rem 1.5rem;
+    }
+
+    .orders-table {
+        font-size: 0.8rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.8rem 0.4rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .btn-view {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .main-title {
+        font-size: 1.15rem;
+    }
+
+    .sub-title {
+        font-size: 0.8rem;
+    }
+}
+
+/* Tablets (768px to 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
+    .orders-header {
+        padding: 1rem 1.2rem;
+        gap: 0.8rem;
+    }
+
+    .back-btn {
+        font-size: 1.3rem;
+    }
+
+    .main-title {
+        font-size: 1.1rem;
+    }
+
+    .sub-title {
+        font-size: 0.8rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0.9rem;
+        gap: 0.8rem;
+    }
+
+    .search-card {
+        padding: 1.1rem 1.25rem;
+    }
+
+    .search-card h2 {
+        font-size: 0.95rem;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-input-wrapper {
+        max-width: 100%;
+    }
+
+    .search-input-wrapper input {
+        padding: 0.6rem 0.85rem 0.6rem 2.2rem;
+        font-size: 0.8rem;
+    }
+
+    .search-icon {
+        left: 0.85rem;
+    }
+
+    .tabs-card {
+        padding: 0 1.25rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tab {
+        font-size: 0.8rem;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .table-card {
+        padding: 0.85rem 1.25rem 1.25rem 1.25rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .orders-table {
+        font-size: 0.8rem;
+        min-width: 42rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.75rem 0.35rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.55rem;
+    }
+
+    .btn-view {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.75rem;
+    }
+
+    .card {
+        border-radius: 0.65rem;
+    }
+}
+
+/* Small Devices (600px to 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
+    .orders-header {
+        padding: 0.9rem 1rem;
+        gap: 0.7rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .back-btn {
+        font-size: 1.2rem;
+    }
+
+    .main-title {
+        font-size: 1rem;
+    }
+
+    .sub-title {
+        font-size: 0.75rem;
+        margin: 0;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0.8rem;
+        gap: 0.75rem;
+    }
+
+    .search-card {
+        padding: 1rem 1.1rem;
+    }
+
+    .search-card h2 {
+        font-size: 0.9rem;
+    }
+
+    .subtitle {
+        font-size: 0.75rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .search-input-wrapper {
+        max-width: 100%;
+    }
+
+    .search-input-wrapper input {
+        padding: 0.55rem 0.8rem 0.55rem 2.1rem;
+        font-size: 0.75rem;
+    }
+
+    .search-icon {
+        left: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .tabs-card {
+        padding: 0 1.1rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: flex-start;
+    }
+
+    .tab {
+        font-size: 0.75rem;
+        padding: 0.7rem 0;
+    }
+
+    .table-card {
+        padding: 0.8rem 1.1rem 1.1rem 1.1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .orders-table {
+        font-size: 0.75rem;
+        min-width: 45rem;
+    }
+
+    .orders-table th {
+        padding: 0.7rem 0.3rem;
+    }
+
+    .orders-table td {
+        padding: 0.7rem 0.3rem;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.18rem 0.5rem;
+    }
+
+    .btn-view {
+        padding: 0.28rem 0.65rem;
+        font-size: 0.7rem;
+        gap: 0.3rem;
+    }
+
+    .card {
+        border-radius: 0.6rem;
+    }
+}
+
+/* Extra Small Devices (480px to 599px) */
+@media (max-width: 599px) and (min-width: 480px) {
+    .orders-header {
+        padding: 0.8rem 0.8rem;
+        gap: 0.6rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .back-btn {
+        font-size: 1.1rem;
+    }
+
+    .main-title {
+        font-size: 0.95rem;
+    }
+
+    .sub-title {
+        font-size: 0.7rem;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0.7rem;
+        gap: 0.65rem;
+    }
+
+    .search-card {
+        padding: 0.9rem 1rem;
+    }
+
+    .search-card h2 {
+        font-size: 0.85rem;
+    }
+
+    .subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .search-input-wrapper input {
+        padding: 0.5rem 0.75rem 0.5rem 2rem;
+        font-size: 0.7rem;
+    }
+
+    .search-icon {
+        left: 0.75rem;
+    }
+
+    .tabs-card {
+        padding: 0 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tab {
+        font-size: 0.7rem;
+        padding: 0.65rem 0;
+    }
+
+    .table-card {
+        padding: 0.75rem 1rem 1rem 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .orders-table {
+        font-size: 0.7rem;
+        min-width: 48rem;
+    }
+
+    .orders-table th {
+        padding: 0.65rem 0.25rem;
+        font-size: 0.7rem;
+    }
+
+    .orders-table td {
+        padding: 0.65rem 0.25rem;
+        font-size: 0.7rem;
+    }
+
+    .badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.45rem;
+    }
+
+    .btn-view {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.65rem;
+    }
+
+    .card {
+        border-radius: 0.55rem;
+    }
+}
+
+/* Tiny Devices (below 480px) */
+@media (max-width: 479px) {
+    .orders-header {
+        padding: 0.75rem 0.6rem;
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .back-btn {
+        font-size: 1rem;
+    }
+
+    .main-title {
+        font-size: 0.9rem;
+    }
+
+    .sub-title {
+        font-size: 0.65rem;
+        margin: 0;
+    }
+
+    .dashboard-container {
+        max-width: 100%;
+        padding: 0.6rem;
+        gap: 0.5rem;
+        margin: 0 auto;
+    }
+
+    .search-card {
+        padding: 0.8rem 0.9rem;
+    }
+
+    .search-card h2 {
+        font-size: 0.8rem;
+    }
+
+    .subtitle {
+        font-size: 0.65rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .search-input-wrapper {
+        max-width: 100%;
+    }
+
+    .search-input-wrapper input {
+        padding: 0.45rem 0.7rem 0.45rem 1.9rem;
+        font-size: 0.65rem;
+        border-radius: 0.4rem;
+    }
+
+    .search-icon {
+        left: 0.65rem;
+        font-size: 0.9rem;
+    }
+
+    .tabs-card {
+        padding: 0 0.9rem;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .tab {
+        font-size: 0.65rem;
+        padding: 0.6rem 0.25rem;
+    }
+
+    .table-card {
+        padding: 0.65rem 0.9rem 0.9rem 0.9rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .orders-table {
+        font-size: 0.65rem;
+        min-width: 50rem;
+    }
+
+    .orders-table th {
+        padding: 0.6rem 0.2rem;
+        font-weight: 600;
+    }
+
+    .orders-table td {
+        padding: 0.6rem 0.2rem;
+    }
+
+    .badge {
+        font-size: 0.55rem;
+        padding: 0.12rem 0.4rem;
+    }
+
+    .btn-view {
+        padding: 0.2rem 0.55rem;
+        font-size: 0.6rem;
+        gap: 0.2rem;
+        border-radius: 0.8rem;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+    }
+
+    .status-completed {
+        font-size: 0.65rem;
+    }
 }

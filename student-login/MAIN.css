@@ -453,29 +453,75 @@ body {
     text-decoration: underline;
 }
 
-/* ===================== RESPONSIVE ===================== */
+/* ===================== RESPONSIVE DESIGN ===================== */
 
-@media (max-width: 1100px) {
+/* Extra Large Screens (1200px and up) */
+@media (min-width: 1200px) {
     .navbar {
-        padding: 0.9375rem 1.5rem;
+        padding: 0.9375rem 2.5rem;
     }
     
     .dashboard-container {
-        padding: 0 1rem;
+        max-width: 75rem;
+        padding: 0 2rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+    
+    .orders-tabs {
+        padding: 0.9375rem 2.5rem;
+    }
+}
+
+/* Large Screens (1100px to 1199px) */
+@media (max-width: 1199px) and (min-width: 900px) {
+    .navbar {
+        padding: 0.9375rem 1.5rem;
+        justify-content: space-between;
+    }
+    
+    .dashboard-container {
+        padding: 0 1.5rem;
     }
     
     .services-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .orders-tabs {
+        padding: 0.9375rem 1.5rem;
     }
 }
 
-@media (max-width: 900px) {
+/* Medium Screens (768px to 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
     .navbar {
         padding: 0.9375rem 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .nav-left {
+        width: 100%;
+        margin-bottom: 0.5rem;
     }
     
     .nav-right {
-        gap: 1rem;
+        width: 100%;
+        gap: 0.75rem;
+        justify-content: flex-start;
+    }
+    
+    .nav-right a {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .dashboard-container {
+        padding: 0 1rem;
     }
     
     .services-grid {
@@ -485,25 +531,43 @@ body {
     
     .login-card {
         max-width: 23.75rem;
-        padding: 1.875rem;
+        padding: 1.75rem;
+    }
+    
+    .orders-tabs {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
     }
 }
 
-@media (max-width: 600px) {
+/* Tablets (600px to 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
     .navbar {
         flex-direction: column;
-        padding: 0.9375rem;
-        gap: 0.9375rem;
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+    
+    .nav-left {
+        width: 100%;
+        justify-content: center;
+        gap: 0.5rem;
     }
     
     .nav-right {
+        width: 100%;
         flex-wrap: wrap;
-        gap: 0.625rem;
+        gap: 0.5rem;
         justify-content: center;
     }
     
+    .nav-right a {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
     .dashboard-container {
-        margin: 1.5rem auto;
+        margin: 1rem auto;
         padding: 0 0.75rem;
     }
     
@@ -521,53 +585,320 @@ body {
         padding: 1.25rem;
     }
     
+    .service-icon {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+    
     .login-card {
         max-width: 100%;
-        padding: 1.125rem;
+        padding: 1.25rem;
         border-radius: 0.75rem;
     }
     
     .login-bg input {
-        padding: 0.625rem;
-        font-size: 0.8125rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar {
-        padding: 0.625rem;
-        gap: 0.625rem;
+        padding: 0.7rem;
+        font-size: 0.85rem;
     }
     
-    .nav-right {
+    .orders-tabs {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+        flex-wrap: wrap;
         gap: 0.5rem;
     }
     
+    .orders-box {
+        height: 20rem;
+    }
+    
+    .button-container {
+        gap: 1rem;
+    }
+}
+
+/* Small Devices (480px to 599px) */
+@media (max-width: 599px) and (min-width: 480px) {
+    .navbar {
+        padding: 0.625rem;
+        gap: 0.625rem;
+        flex-direction: column;
+    }
+    
+    .nav-left {
+        width: 100%;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+    
+    .nav-right {
+        width: 100%;
+        gap: 0.4rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
     .nav-right a {
-        font-size: 0.75rem;
-        padding: 0.3125rem 0.5rem;
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .logo {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    
+    .title h1 {
+        font-size: 1rem;
+    }
+    
+    .title p {
+        font-size: 0.65rem;
     }
     
     .dashboard-container {
-        margin: 1rem auto;
+        margin: 0.75rem auto;
         padding: 0 0.5rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
     }
     
     .welcome-card {
         padding: 1rem;
+        margin-bottom: 1rem;
     }
     
     .service-card {
         padding: 1rem;
     }
     
+    .service-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+    }
+    
     .login-card {
-        padding: 0.75rem;
+        max-width: 100%;
+        padding: 0.9rem;
         border-radius: 0.625rem;
     }
     
+    .login-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .login-bg input {
+        padding: 0.55rem;
+        font-size: 0.75rem;
+        margin-bottom: 0.6rem;
+    }
+    
     .btn-red {
-        font-size: 0.8125rem;
-        padding: 0.625rem;
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        width: 100%;
+    }
+    
+    .button-container {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    
+    .orders-tabs {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.7rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .orders-box {
+        height: 15rem;
+    }
+    
+    .cube {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .orders-box h3 {
+        font-size: 1rem;
+    }
+    
+    .orders-box p {
+        font-size: 0.7rem;
+    }
+    
+    .browse-btn {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Extra Small Devices (below 480px) */
+@media (max-width: 479px) {
+    * {
+        font-size: 14px;
+    }
+    
+    .navbar {
+        padding: 0.4rem;
+        gap: 0.4rem;
+        flex-direction: column;
+    }
+    
+    .nav-left {
+        gap: 0.2rem;
+    }
+    
+    .nav-right {
+        gap: 0.3rem;
+    }
+    
+    .nav-right a {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .logo {
+        width: 2rem;
+        height: 2rem;
+    }
+    
+    .title h1 {
+        font-size: 0.9rem;
+    }
+    
+    .title p {
+        font-size: 0.6rem;
+    }
+    
+    .orders-header {
+        padding: 0.5rem;
+    }
+    
+    .back-btn {
+        padding: 0.3rem;
+    }
+    
+    .arrow {
+        font-size: 1rem;
+    }
+    
+    .main-title {
+        font-size: 1rem;
+    }
+    
+    .sub-title {
+        font-size: 0.65rem;
+    }
+    
+    .dashboard-container {
+        margin: 0.5rem auto;
+        padding: 0 0.4rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .welcome-card {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .service-card {
+        padding: 0.75rem;
+    }
+    
+    .service-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-card {
+        max-width: 100%;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+    }
+    
+    .login-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .login-sub {
+        font-size: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .login-bg input {
+        padding: 0.4rem;
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-red {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.75rem;
+        width: 100%;
+        margin-top: 0.6rem;
+    }
+    
+    .button-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem 0;
+    }
+    
+    .signup-text {
+        margin-top: 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    .orders-tabs {
+        padding: 0.4rem;
+        font-size: 0.65rem;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin: 1rem auto;
+    }
+    
+    .orders-container {
+        padding: 0 0.4rem;
+    }
+    
+    .orders-box {
+        height: 12rem;
+        border-radius: 0.75rem;
+    }
+    
+    .cube {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .orders-box h3 {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .orders-box p {
+        font-size: 0.65rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .browse-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.65rem;
     }
 }

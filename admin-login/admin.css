@@ -113,16 +113,102 @@ body {
     text-decoration: underline;
 }
 
-/* ===================== RESPONSIVE ===================== */
+/* ===================== RESPONSIVE DESIGN ===================== */
 
-@media (max-width: 900px) {
+/* Extra Large Screens (1200px and up) */
+@media (min-width: 1200px) {
+    .login-bg {
+        padding: 1.25rem;
+    }
+
     .login-card {
-        max-width: 23.75rem;
-        padding: 2rem;
+        max-width: 26.25rem;
+        padding: 2.5rem;
+    }
+
+    .login-bg input {
+        font-size: 0.875rem;
+    }
+
+    .btn-red {
+        font-size: 1rem;
+        padding: 0.75rem;
     }
 }
 
-@media (max-width: 600px) {
+/* Large Screens (1100px to 1199px) */
+@media (max-width: 1199px) and (min-width: 900px) {
+    .login-bg {
+        padding: 1.25rem;
+    }
+
+    .login-card {
+        max-width: 24rem;
+        padding: 2.25rem;
+    }
+
+    .login-bg input {
+        font-size: 0.9rem;
+        padding: 0.7rem;
+    }
+
+    .btn-red {
+        font-size: 0.95rem;
+        padding: 0.7rem;
+    }
+}
+
+/* Medium Screens (768px to 899px) */
+@media (max-width: 899px) and (min-width: 768px) {
+    .login-bg {
+        padding: 1.25rem 1rem;
+        align-items: center;
+    }
+
+    .login-card {
+        max-width: 22rem;
+        padding: 2rem;
+        border-radius: 0.85rem;
+    }
+
+    .login-card h2 {
+        font-size: 1.1rem;
+    }
+
+    .login-card p {
+        font-size: 0.85rem;
+    }
+
+    .login-icon {
+        width: 3.3rem;
+        height: 3.3rem;
+        font-size: 1.4rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .login-bg input {
+        padding: 0.65rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .login-bg label {
+        font-size: 0.85rem;
+    }
+
+    .btn-red {
+        font-size: 0.9rem;
+        padding: 0.65rem;
+    }
+
+    .signup-text {
+        font-size: 0.8rem;
+        margin-top: 0.8rem;
+    }
+}
+
+/* Tablets (600px to 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
     .login-bg {
         padding: 1.25rem 0.9375rem;
         align-items: center;
@@ -135,88 +221,179 @@ body {
     }
 
     .login-card h2 {
-        font-size: 1.125rem;
+        font-size: 1.15rem;
     }
 
     .login-card p {
-        font-size: 0.8125rem;
+        font-size: 0.82rem;
     }
 
     .login-icon {
-        width: 3.125rem;
-        height: 3.125rem;
-        font-size: 1.25rem;
+        width: 3.2rem;
+        height: 3.2rem;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
     }
 
     .login-bg input {
-        padding: 0.625rem;
-        font-size: 0.8125rem;
-    }
-
-    .btn-red {
-        font-size: 0.875rem;
-        padding: 0.625rem;
-    }
-
-    .signup-text {
-        font-size: 0.8125rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .login-bg {
-        padding: 0.9375rem;
-        align-items: flex-start;
-        padding-top: 2.5rem;
-    }
-
-    .login-card {
-        padding: 1.5rem;
-    }
-
-    .login-icon {
-        width: 2.8125rem;
-        height: 2.8125rem;
-        font-size: 1.125rem;
-    }
-
-    .login-bg input {
-        padding: 0.5625rem;
-        font-size: 0.8125rem;
+        padding: 0.65rem;
+        font-size: 0.8rem;
         margin-bottom: 0.75rem;
     }
 
+    .login-bg label {
+        font-size: 0.8rem;
+    }
+
     .btn-red {
-        font-size: 0.8125rem;
-        padding: 0.625rem;
+        font-size: 0.85rem;
+        padding: 0.65rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn-admin {
+        margin-top: 0.5rem;
+    }
+
+    .signup-text {
+        font-size: 0.8rem;
+        margin-top: 0.75rem;
+    }
+
+    .signup-text a {
+        font-size: 0.8rem;
     }
 }
 
-@media (max-width: 360px) {
+/* Small Devices (480px to 599px) */
+@media (max-width: 599px) and (min-width: 480px) {
+    .login-bg {
+        padding: 1rem 0.75rem;
+        align-items: center;
+        min-height: 100vh;
+    }
+
     .login-card {
-        padding: 1.2rem;
-        border-radius: 0.625rem;
+        max-width: 100%;
+        padding: 1.6rem;
+        border-radius: 0.7rem;
     }
 
     .login-card h2 {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-card p {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-icon {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.2rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .login-bg input {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.7rem;
+        border-radius: 0.4rem;
+    }
+
+    .login-bg label {
+        font-size: 0.8rem;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .btn-red {
+        font-size: 0.82rem;
+        padding: 0.6rem;
+        margin-top: 0.5rem;
+        border-radius: 0.4rem;
+    }
+
+    .btn-admin {
+        margin-top: 0.4rem;
+        font-size: 0.82rem;
+    }
+
+    .signup-text {
+        font-size: 0.78rem;
+        margin-top: 0.7rem;
+    }
+
+    .signup-text a {
+        font-size: 0.78rem;
+    }
+}
+
+/* Extra Small Devices (below 480px) */
+@media (max-width: 479px) {
+    .login-bg {
+        padding: 0.75rem 0.5rem;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .login-card {
+        max-width: 100%;
+        padding: 1.3rem;
+        border-radius: 0.6rem;
+        margin: 0 0.25rem;
+    }
+
+    .login-card h2 {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
     }
 
     .login-card p {
         font-size: 0.75rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .login-icon {
+        width: 2.8rem;
+        height: 2.8rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
     }
 
     .login-bg input {
+        padding: 0.55rem;
         font-size: 0.75rem;
-        padding: 0.5rem;
+        margin-bottom: 0.6rem;
+        border-radius: 0.35rem;
+    }
+
+    .login-bg label {
+        font-size: 0.75rem;
+        display: block;
+        margin-bottom: 0.25rem;
     }
 
     .btn-red {
+        font-size: 0.78rem;
+        padding: 0.55rem;
+        margin-top: 0.4rem;
+        border-radius: 0.35rem;
+    }
+
+    .btn-admin {
+        margin-top: 0.35rem;
         font-size: 0.75rem;
-        padding: 0.5625rem;
     }
 
     .signup-text {
-        font-size: 0.75rem;
+        font-size: 0.73rem;
+        margin-top: 0.6rem;
+    }
+
+    .signup-text a {
+        font-size: 0.73rem;
     }
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Service - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+    <div style="display:flex; min-height:100vh;">
+        <aside style="width:250px; background:#13294B; color:#fff; padding:20px; box-sizing:border-box;">
+            <h2>Admin Menu</h2>
+            <nav style="display:flex; flex-direction:column; gap:10px;">
+                <a href="admin-dashboard.html" style="color:#fff; text-decoration:none;">Dashboard</a>
+                <a href="manage-order.html" style="color:#fff; text-decoration:none;">Manage Orders</a>
+                <a href="reports.html" style="color:#fff; text-decoration:none;">Reports</a>
+                <a href="add-service.html" style="color:#fff; text-decoration:none;">Add Service</a>
+            </nav>
+        </aside>
+        <main style="flex:1; padding:22px; background:#f4f7fb; overflow:auto;">
+            <h1>Add New Service</h1>
+            <form onsubmit="return addService()" style="background:#fff;border-radius:8px;padding:16px;max-width:480px;">
+                <label>Service Name <input type="text" id="service-name" required></label><br><br>
+                <label>Description <textarea id="service-desc" rows="3" required></textarea></label><br><br>
+                <label>Price <input type="number" id="service-price" min="0" step="0.01" required></label><br><br>
+                <button type="submit" style="padding:8px 14px;">Add Service</button>
+                <p id="result" style="margin-top:10px; color:#2a7f2a;"></p>
+            </form>
+        </main>
+    </div>
+<script>
+function addService(){
+    const n=document.getElementById('service-name').value.trim();
+    const p=document.getElementById('service-price').value;
+    if(!n||!p){return false;}
+    document.getElementById('result').textContent='Service "'+n+'" added (demo).';
+    return false;
+}
+</script>
+</body>
+</html>

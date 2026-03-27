@@ -30,6 +30,24 @@
         </div>
     </div>
 
+    <div class="manage-filter-box" style="margin:14px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <label>College: <select id="admin-college-filter" onchange="filterOrdersByCollege()">
+            <option value="all">All</option>
+            <option>College of Arts and Sciences</option>
+            <option>College of Education</option>
+            <option>College of Engineering</option>
+            <option>College of Business Administration</option>
+        </select></label>
+        <label>Service: <select id="admin-service-filter" onchange="filterOrdersByCollege()">
+            <option value="all">All</option>
+            <option>Printing</option>
+            <option>Binding</option>
+            <option>Lanyards</option>
+            <option>Mug Printing</option>
+        </select></label>
+        <button type="button" onclick="filterOrdersByCollege()" style="padding:6px 10px;">Apply Filter</button>
+    </div>
+
     <div class="manage-tabs">
         <a href="#" class="manage-tab active">All Orders (4)</a>
         <a href="#" class="manage-tab">Pending (1)</a>
@@ -47,6 +65,7 @@
                     <th>Service</th>
                     <th>Amount</th>
                     <th>Status</th>
+                    <th>Status Update</th>
                     <th>Payment</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -59,6 +78,13 @@
                     <td>Printing</td>
                     <td class="manage-amount">₱170.00</td>
                     <td><span class="mbadge mbadge-pending">Pending</span></td>
+                    <td>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" onclick="updateOrderStatus(this,'Processing')">Processing</button>
+                            <button type="button" onclick="updateOrderStatus(this,'Ready for Pickup')">Ready</button>
+                            <button type="button" onclick="updateOrderStatus(this,'Completed')">Complete</button>
+                        </div>
+                    </td>
                     <td>Not selected</td>
                     <td>Feb 19, 2026</td>
                     <td><a href="view-orders.html" class="btn-view">
@@ -76,6 +102,12 @@
                     <td>Binding</td>
                     <td class="manage-amount">₱400.00</td>
                     <td><span class="mbadge mbadge-processing">Processing</span></td>
+                    <td>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" onclick="updateOrderStatus(this,'Ready for Pickup')">Ready</button>
+                            <button type="button" onclick="updateOrderStatus(this,'Completed')">Complete</button>
+                        </div>
+                    </td>
                     <td>Pay Onsite</td>
                     <td>Feb 19, 2026</td>
                     <td>
@@ -93,6 +125,11 @@
                     <td>Lanyards</td>
                     <td class="manage-amount">₱150.00</td>
                     <td><span class="mbadge mbadge-ready">Ready for Pickup</span></td>
+                    <td>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" onclick="updateOrderStatus(this,'Completed')">Complete</button>
+                        </div>
+                    </td>
                     <td>Online Payment</td>
                     <td>Feb 19, 2026</td>
                     <td>
@@ -111,6 +148,11 @@
                     <td>Mug Printing</td>
                     <td class="manage-amount">₱750.00</td>
                     <td><span class="mbadge mbadge-completed">Completed</span></td>
+                    <td>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" onclick="updateOrderStatus(this,'Completed')">Completed</button>
+                        </div>
+                    </td>
                     <td>Online Payment</td>
                     <td>Feb 19, 2026</td>
                     <td>
@@ -126,6 +168,40 @@
         </table>
 
 </div>
+<script>
+function updateOrderStatus(button,newStatus){
+    const row=button.closest('tr');
+    if(!row)return;
+    const statusCell=row.querySelector('td:nth-child(5) span');
+    if(statusCell){
+        statusCell.textContent=newStatus;
+        statusCell.className='mbadge mbadge-'+newStatus.toLowerCase().replace(/\s+/g,'-');
+    }
+    alert('Status updated to '+newStatus+' (demo).');
+}
+
+function filterOrdersByCollege(){
+    const college = document.getElementById('admin-college-filter').value;
+    const service = document.getElementById('admin-service-filter').value;
+    const rows = document.querySelectorAll('.manage-table tbody tr');
+    rows.forEach(row => {
+        let collegeAccept = true;
+        let serviceAccept = true;
+        const serviceCell = row.cells[2].innerText.trim();
+        // Demo: attach college based on email domain (for sample)
+        const emailCell = row.cells[1].innerText.trim();
+        let rowCollege = 'College of Arts and Sciences';
+        if(emailCell.includes('santos')) rowCollege='College of Education';
+        else if(emailCell.includes('delacruz')) rowCollege='College of Engineering';
+        else if(emailCell.includes('anna')) rowCollege='College of Business Administration';
+
+        if (college !== 'all' && rowCollege !== college) collegeAccept=false;
+        if (service !== 'all' && serviceCell !== service) serviceAccept=false;
+
+        row.style.display = (collegeAccept && serviceAccept) ? '' : 'none';
+    });
+}
+</script>
 
 </body>
 </html>

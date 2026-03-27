@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Reports</title>
+    <link rel="stylesheet" href="admin-dashboard.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div style="display:flex; min-height:100vh;">
+        <aside style="width:250px; background:#13294B; color:#fff; padding:20px; box-sizing:border-box;">
+            <h2>Admin Menu</h2>
+            <nav style="display:flex; flex-direction:column; gap:10px;">
+                <a href="admin-dashboard.html" style="color:#fff; text-decoration:none;">Dashboard</a>
+                <a href="manage-order.html" style="color:#fff; text-decoration:none;">Manage Orders</a>
+                <a href="reports.html" style="color:#fff; text-decoration:none;">Reports</a>
+                <a href="active-accounts.html" style="color:#fff; text-decoration:none;">Active Accounts</a>
+                <a href="add-service.html" style="color:#fff; text-decoration:none;">Add Service</a>
+            </nav>
+        </aside>
+        <main style="flex:1; padding:24px; background:#f4f7fb; overflow:auto;">
+            <h1>Reports</h1>
+
+            <section style="background:#fff; border-radius:10px; padding:16px; margin-bottom:16px;">
+                <h2>Time-filtered income</h2>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <label>From <input type="date" id="income-from"></label>
+                    <label>To <input type="date" id="income-to"></label>
+                    <button onclick="updateIncomeReport()">Apply</button>
+                </div>
+                <div id="income-report" style="margin-top:14px; color:#333;">Daily: ₱760, Monthly: ₱18,500 (sample)</div>
+            </section>
+
+            <section style="background:#fff; border-radius:10px; padding:16px; margin-bottom:16px;">
+                <h2>Transaction history by college</h2>
+                <label>College <select id="college-filter">
+                    <option value="all">All</option>
+                    <option>College of Arts and Sciences</option>
+                    <option>College of Education</option>
+                    <option>College of Engineering</option>
+                    <option>College of Business Administration</option>
+                </select></label>
+                <button onclick="filterCollegeReport()">Filter</button>
+                <div id="college-report" style="margin-top:14px; color:#333;">Showing student usage metrics per college.</div>
+            </section>
+
+            <section style="background:#fff; border-radius:10px; padding:16px;">
+                <h2>Active accounts</h2>
+                <p>Total active accounts: <strong>1,240</strong></p>
+            </section>
+        </main>
+    </div>
+    <script>
+        function updateIncomeReport(){
+            const f=document.getElementById('income-from').value;
+            const t=document.getElementById('income-to').value;
+            document.getElementById('income-report').textContent='Income filtered from '+(f||'start')+' to '+(t||'end')+' (sample data).';
+        }
+        function filterCollegeReport(){
+            const c=document.getElementById('college-filter').value;
+            document.getElementById('college-report').textContent='Filtered factors for '+c+'.';
+        }
+    </script>
+</body>
+</html>

@@ -5,6 +5,16 @@
     font-family: "Segoe UI, sans serif";
 }
 
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    height: 100%;
+    overflow: auto;
+}
+
 body {
     background: #f3f3f3;
     color: #333;

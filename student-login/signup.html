@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="mug.css">
     <link rel="stylesheet" href="signup.css">
 </head>
-<body>
-
-    <body style="background-color: #f4f4f4;">
+<body style="background-color: #f4f4f4;">
 
        <header class="navbar">
         <div class="nav-left">
@@ -25,26 +23,51 @@
     <div class="signup-container">
         <h2>SIGN-UP PAGE</h2>
 
-        <form action="login.html" method="POST" enctype="multipart/form-data">
+        <form id="signup-form" action="login.html" method="POST" enctype="multipart/form-data" onsubmit="return validateSignup()">
             
             <div class="form-row">
                 <label>Name:</label>
-                <input type="text" name="full_name" required>
+                <input type="text" id="full_name" name="full_name" required>
+            </div>
+
+            <div class="form-row">
+                <label>Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-row">
+                <label>Phone Number:</label>
+                <input type="tel" id="phone" name="phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required>
             </div>
 
             <div class="form-row">
                 <label>College:</label>
-                <input type="text" name="college" required>
+                <select id="college" name="college" required onchange="updateCourses()">
+                    <option value="">-- Select College --</option>
+                    <option value="College of Arts and Sciences">College of Arts and Sciences</option>
+                    <option value="College of Education">College of Education</option>
+                    <option value="College of Engineering">College of Engineering</option>
+                    <option value="College of Business Administration">College of Business Administration</option>
+                </select>
             </div>
 
             <div class="form-row">
                 <label>Course:</label>
-                <input type="text" name="course" required>
+                <select id="course" name="course" required>
+                    <option value="">-- Select Course --</option>
+                </select>
             </div>
 
             <div class="form-row">
                 <label>Year:</label>
-                <input type="text" name="year" required>
+                <select id="year" name="year" required>
+                    <option value="">-- Select Year --</option>
+                    <option>1st Year</option>
+                    <option>2nd Year</option>
+                    <option>3rd Year</option>
+                    <option>4th Year</option>
+                    <option>5th Year</option>
+                </select>
             </div>
 
             <hr style="border: 0.5px solid #eee; margin: 25px 0;">
@@ -59,19 +82,94 @@
                 <input type="file" name="cor" accept="image/*,.pdf" class="file-input" required>
             </div>
 
+            <div class="form-row" style="gap:12px; flex-wrap:wrap;">
+                <button type="button" class="proceed-button-1" style="padding:10px 16px;" onclick="sendOtp()">Send OTP to Email/Phone</button>
+                <input type="text" id="user-otp" name="user_otp" placeholder="Enter OTP" style="max-width:220px;" disabled required>
+                <button type="button" class="proceed-button-1" style="padding:10px 16px;" onclick="verifyOtp()">Verify OTP</button>
+                <span id="otp-status" style="font-size:0.9rem;color:#d43434;"></span>
+            </div>
+
             <div class="terms-container">
                 <input type="checkbox" id="terms" name="terms" required>
                 <label for="terms">I agree to the <a href="terms.html">terms and conditions</a>.</label>
             </div>
 
             <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
-            <a href="login.html" class="proceed-button-1" >
-            <span class="proceed">PROCEED</span>
-           </a>
-        </div>
+                <button type="submit" class="proceed-button-1" style="cursor:pointer;"><span class="proceed">PROCEED</span></button>
+            </div>
 
         </form>
     </div>
+
+    <script>
+        const courseByCollege = {
+            'College of Arts and Sciences': ['BA English', 'BA Psychology', 'BS Biology'],
+            'College of Education': ['BEEd', 'BSEd Math', 'BSEd Science'],
+            'College of Engineering': ['BEng Civil', 'BEng Mechanical', 'BEng Electrical'],
+            'College of Business Administration': ['BSBA Marketing', 'BSBA Finance', 'BSBA Management']
+        };
+
+        function updateCourses() {
+            const college = document.getElementById('college').value;
+            const courseSelect = document.getElementById('course');
+            courseSelect.innerHTML = '<option value="">-- Select Course --</option>';
+            if (courseByCollege[college]) {
+                courseByCollege[college].forEach(c => {
+                    const o = document.createElement('option');
+                    o.value = c;
+                    o.textContent = c;
+                    courseSelect.appendChild(o);
+                });
+            }
+        }
+
+        let currentOtp = null;
+        let otpVerified = false;
+
+        function sendOtp() {
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            if (!email || !phone) {
+                alert('Please enter email and phone number before OTP.');
+                return;
+            }
+            currentOtp = '123456';
+            document.getElementById('user-otp').disabled = false;
+            document.getElementById('otp-status').textContent = 'OTP sent (demo code: 123456).';
+            otpVerified = false;
+        }
+
+        function verifyOtp() {
+            const otp = document.getElementById('user-otp').value.trim();
+            if (otp === currentOtp) {
+                document.getElementById('otp-status').textContent = 'OTP verified.';
+                document.getElementById('otp-status').style.color = 'green';
+                otpVerified = true;
+            } else {
+                document.getElementById('otp-status').textContent = 'Invalid OTP. Please try again.';
+                document.getElementById('otp-status').style.color = '#d43434';
+                otpVerified = false;
+            }
+        }
+
+        function validateSignup() {
+            if (!otpVerified) {
+                alert('Please verify OTP before proceeding.');
+                return false;
+            }
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const name = document.getElementById('full_name').value.trim();
+            if (!name || !email || !phone) {
+                alert('Please fill all required fields.');
+                return false;
+            }
+            localStorage.setItem('signed_email', email);
+            localStorage.setItem('signed_phone', phone);
+            localStorage.setItem('signed_name', name);
+            return true;
+        }
+    </script>
 
 </body>
 </html>

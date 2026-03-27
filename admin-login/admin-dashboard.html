@@ -6,23 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+<div style="display:flex; min-height:100vh;">
+    <aside style="width:250px; background:#13294B; color:#fff; padding:20px; box-sizing:border-box;">
+        <h2 style="margin-top:0;">Admin Menu</h2>
+        <nav style="display:flex; flex-direction:column; gap:10px;">
+            <a href="admin-dashboard.html" style="color:#fff; text-decoration:none;">Dashboard</a>
+            <a href="manage-order.html" style="color:#fff; text-decoration:none;">Manage Orders</a>
+            <a href="reports.html" style="color:#fff; text-decoration:none;">Reports</a>
+            <a href="active-accounts.html" style="color:#fff; text-decoration:none;">Active Accounts</a>
+            <a href="add-service.html" style="color:#fff; text-decoration:none;">Add Service</a>
+            <a href="scanner-nav.html" style="color:#fff; text-decoration:none;">QR Scanner</a>
+            <a href="admin.html" style="color:#fff; text-decoration:none;">Logout</a>
+        </nav>
+    </aside>
+    <main style="flex:1; background:#f4f7fb; padding:20px; overflow:auto;">
+        <header style="background:#fff; border-radius:10px; padding:14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h1 style="margin:0;">Admin Dashboard</h1>
+                <p style="margin:2px 0 0; color:#555;">UPRESSease Management</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <label for="report-date-from">From:</label>
+                <input id="report-date-from" type="date" />
+                <label for="report-date-to">To:</label>
+                <input id="report-date-to" type="date" />
+                <button onclick="applyAdminDateFilter()" style="padding:5px 10px;">Filter</button>
+            </div>
+        </header>
 
-<header class="navbar">
-    <div class="nav-left" style="display:flex; justify-content: flex-start;">
-        <img src="c:\Users\acer\Music\GIT\HCI-X-WEBDEV\HCI-X-WEBDEV\HCI-X-WEBDEV MAIN\HCI-X-WEBDEV\wmsu.png.jpg" alt="Logo" class="logo">
-        <div class="title">
-            <h1>Admin Dashboard</h1>
-            <p>UPRESSease Management</p>
-        </div>
-    </div>
-    <div class="nav-right" style="display:flex; justify-content: flex-end;">
-        <a href="manage-order.html">Orders</a>
-        <a href="scanner-nav.html">QR Scanner</a>
-        <a href="admin.html">Logout</a>
-    </div>
-</header>
-
-<div class="dashboard-container">
+        <div class="dashboard-container">
 
     <!-- Stats Row -->
     <div class="stats-row">
@@ -57,6 +69,14 @@
             </div>
             <div class="card-number">₱750.00</div>
             <div class="card-label">From completed orders</div>
+        </div>
+
+        <div class="card card-blue">
+            <div class="card-top">
+                <span>Active Accounts</span>
+            </div>
+            <div class="card-number">1,240</div>
+            <div class="card-label">Live active users</div>
         </div>
 
     </div>
@@ -95,88 +115,9 @@
     </div>
 
     <!-- Charts Row -->
-    <div class="charts-row">
-
-        <!-- Bar Chart -->
-        <div class="chart-box">
-            <h3>Orders by Service</h3>
-            <p>Distribution of orders across services</p>
-            <div class="bar-chart">
-                <div class="bar-labels-y">
-                    <span>2</span>
-                    <span>1.5</span>
-                    <span>1</span>
-                    <span>0.5</span>
-                    <span>0</span>
-                </div>
-                <div class="bar-area">
-                    <div class="bar-lines">
-                        <div class="bar-line"></div>
-                        <div class="bar-line"></div>
-                        <div class="bar-line"></div>
-                        <div class="bar-line"></div>
-                        <div class="bar-line"></div>
-                    </div>
-                    <div class="bars">
-                        <div class="bar-item">
-                            <div class="bar" style="height: 50%;"></div>
-                            <span>Printing</span>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 50%;"></div>
-                            <span>Binding</span>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 50%;"></div>
-                            <span>Lanyards</span>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: 50%;"></div>
-                            <span>Mug</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pie Chart -->
-        <div class="chart-box">
-            <h3>Order Status Distribution</h3>
-            <p>Current status of all orders</p>
-            <div class="pie-area">
-                <div class="pie-chart">
-                    <svg viewBox="0 0 200 200" width="220" height="220">
-                        <circle cx="100" cy="100" r="80" fill="transparent"
-                            stroke="#f5c842" stroke-width="80"
-                            stroke-dasharray="126 502"
-                            stroke-dashoffset="0"
-                            transform="rotate(-90 100 100)"/>
-                        <circle cx="100" cy="100" r="80" fill="transparent"
-                            stroke="#b39ddb" stroke-width="80"
-                            stroke-dasharray="126 502"
-                            stroke-dashoffset="-126"
-                            transform="rotate(-90 100 100)"/>
-                        <circle cx="100" cy="100" r="80" fill="transparent"
-                            stroke="#2ecc71" stroke-width="80"
-                            stroke-dasharray="126 502"
-                            stroke-dashoffset="-252"
-                            transform="rotate(-90 100 100)"/>
-                        <circle cx="100" cy="100" r="80" fill="transparent"
-                            stroke="#aaa" stroke-width="80"
-                            stroke-dasharray="126 502"
-                            stroke-dashoffset="-378"
-                            transform="rotate(-90 100 100)"/>
-                    </svg>
-                </div>
-                <div class="pie-labels">
-                    <div class="pie-label" style="color: #c8a800;">Pending/Paid: 1</div>
-                    <div class="pie-label" style="color: #8e44ad;">Processing: 1</div>
-                    <div class="pie-label" style="color: #27ae60;">Ready: 1</div>
-                    <div class="pie-label" style="color: #888;">Completed: 1</div>
-                </div>
-            </div>
-        </div>
-
+    <div style="background:#fff; border-radius:10px; padding:16px; margin-bottom:16px;">
+        <h3>Reporting is available in the Reports menu</h3>
+        <p>Go to <a href="reports.html" style="color:#1f4f82;">Reports</a> for date filters, income summary (daily/monthly), and transaction history by college.</p>
     </div>
 
     <!-- Quick Actions -->
@@ -200,6 +141,17 @@
     </div>
 
 </div>
-
-</body>
+    </main>
+</div>
+<script>
+function applyAdminDateFilter(){
+    const from = document.getElementById('report-date-from').value;
+    const to = document.getElementById('report-date-to').value;
+    if(from && to && from>to){
+        alert('Date from must be earlier than date to.');
+        return;
+    }
+    alert('Report filter applied (demo): ' + (from||'any') + ' to ' + (to||'any'));
+}
+</script>
 </html>

@@ -30,7 +30,30 @@
     </div>
     
     <!--CONTENT-->
-           <div class="manage-table-box">
+    <section style="background:#fff;padding:18px;margin:18px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.08);">
+        <h3>Quick Add Services (one transaction supports many services)</h3>
+        <form id="joint-order" onsubmit="return addTransaction();" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+            <label>Service <select id="service-select"><option value="Printing">Printing</option><option value="Binding">Binding</option><option value="Lanyards">Lanyards</option><option value="Mug Printing">Mug Printing</option></select></label>
+            <label>Amount <input type="number" id="service-amount" min="1" value="100" required></label>
+            <button type="submit" style="padding:8px 12px;">Add</button>
+            <div id="service-added" style="color:#237a23;font-weight:bold;"></div>
+        </form>
+
+        <div style="margin-top:16px;">
+            <h4>Current Transaction</h4>
+            <table class="manage-table" id="service-cart" style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr><th>Service</th><th>Amount</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="2" style="text-align:center;color:#777;">No services added yet.</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:10px;font-weight:bold;">Total: ₱<span id="cart-total">0</span></p>
+            <button type="button" style="padding:8px 14px;" onclick="checkout();">Proceed to Payment</button>
+        </div>
+    </section>
+    <div class="manage-table-box">
         <table class="manage-table">
             <thead>
                 <tr>
@@ -79,5 +102,48 @@
         </table>
 
    
+<script>
+const transactionItems = [];
+function refreshCart() {
+    const tbody = document.querySelector('#service-cart tbody');
+    tbody.innerHTML = '';
+    let total = 0;
+    if (transactionItems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#777;">No services added yet.</td></tr>';
+    } else {
+        transactionItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td>' + item.service + '</td><td>₱' + item.amount.toFixed(2) + '</td>';
+            tbody.appendChild(row);
+            total += item.amount;
+        });
+    }
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+
+function addTransaction(){
+    const service = document.getElementById('service-select').value;
+    const amount = parseFloat(document.getElementById('service-amount').value);
+    if (!service || !amount || amount <= 0) {
+        alert('Select service and enter valid amount.');
+        return false;
+    }
+    transactionItems.push({service, amount});
+    document.getElementById('service-added').textContent = 'Added ' + service + ' (₱' + amount.toFixed(2) + ') to current transaction.';
+    refreshCart();
+    return false;
+}
+
+function checkout() {
+    if (transactionItems.length === 0) {
+        alert('Add at least one service before checkout.');
+        return;
+    }
+    localStorage.setItem('pending_transaction', JSON.stringify(transactionItems));
+    window.location = 'payment.html';
+}
+
+refreshCart();
+</script>
 </body>
 </html>

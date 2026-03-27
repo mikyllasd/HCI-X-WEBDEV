@@ -23,65 +23,120 @@
 
    <section class="payment-section">
     <div class="payment-card">
-        
-        <form action="success.html" method="POST" enctype="multipart/form-data">
+        <div id="transaction-summary" style="background:#fff1c8;border:1px solid #eedf9f;padding:12px;margin-bottom:16px;border-radius:8px;">
+            <h3>Transaction Summary</h3>
+            <ul id="transaction-items" style="margin:0;padding-left:20px; color:#333;"></ul>
+            <p>Total amount: <strong id="transaction-total">₱0.00</strong></p>
+        </div>
+        <form id="payment-form" action="success.html" method="POST" enctype="multipart/form-data" onsubmit="return validatePayment()">
             
             <div class="form-group text-left" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <label style="font-size: 16px; margin-bottom: 10px;">Select Payment Method:</label>
+                <label style="font-size: 16px; margin-bottom: 10px;">Name:</label>
+                <input type="text" name="payer_name" id="payer_name" required>
+            </div>
 
-               <div class="radio-group" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
-    
-    <div style="display: flex; align-items: center; gap: 8px;">
-        <input type="radio" id="pay-gcash" name="payment_method" value="GCash" checked>
-        <label for="pay-gcash" style="cursor: pointer; margin: 0; text-indent: 10px;">GCash</label>
-    </div>
+            <div class="form-group text-left" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <label style="font-size: 16px; margin-bottom: 10px;">Delivery Date:</label>
+                <input type="date" name="delivery_date" id="delivery_date" required>
+            </div>
 
-    <div style="display: flex; align-items: center; gap: 8px;">
-        <input type="radio" id="pay-cash" name="payment_method" value="Cash">
-        <label for="pay-cash" style="cursor: pointer; margin: 0; text-indent: 10px;">Cash on Pick-up</label>
-    </div>
+            <div class="form-group text-left" style="margin-bottom:20px;">
+                <p>Registered phone number: <strong id="registered-phone">09123456789</strong></p>
+                <p>Use this number?</p>
+                <label><input type="radio" name="use_registered" value="yes" checked onchange="toggleCustomPhone(false)"> Yes</label>
+                <label><input type="radio" name="use_registered" value="no" onchange="toggleCustomPhone(true)"> No</label>
+            </div>
 
-    <div id="gcash-details" style="margin-top: 15px; background: #f0f0f0; padding: 10px; border-radius: 5px;">
-        <p><em>Please scan the QR code below...</em></p>
-        <p><strong>UPRESSease | 0912 345 6789</strong></p>
-        </div>
-
-</div>
-
-</div>
-
-            <div id="gcash-details">
-                 <p><em>If Cash on pick-up, skip this part.<br></em></p>
-                <p>Please scan the QR code below or send your total amount to:</p>
-                <p class="account-details"><strong>UPRESSease | 0912 345 6789</strong></p>
-
-                <div class="qr-code-box">
-                    <img src="gcash-qr.jpg" alt="GCash QR Code" width="200">
-                </div>
-
-                <hr style="border: 1px solid #eee; margin: 20px 0;">
-                
+            <div id="custom-phone-block" style="display:none;">
                 <div class="form-group text-left">
-                    <label>GCash Reference Number:</label>
-                    <input type="text" id="ref-number" name="ref_number" placeholder="e.g., 1001 234 567 890">
+                    <label>New Phone Number:</label>
+                    <input type="tel" id="new_phone" name="new_phone" pattern="09[0-9]{9}">
                 </div>
+                <div class="form-group text-left" style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" onclick="sendPhoneOtp()" style="padding:6px 10px;">Send OTP</button>
+                    <input type="text" id="phone_otp" placeholder="Enter OTP" style="max-width:140px;" disabled>
+                    <button type="button" onclick="verifyPhoneOtp()" style="padding:6px 10px;">Verify</button>
+                    <span id="phone-otp-status" style="font-size:0.9rem;color:#d43434;"></span>
+                </div>
+            </div>
 
-                <div class="form-group text-left">
-                    <label>Upload Proof of Payment:</label>
-                    <input type="file" id="payment-proof" name="payment_proof" accept="image/*">
-                </div>
-            </div> 
-            
             <div style="display:flex; justify-content: center; width: 100%; margin: 30px 0;">
-                <a href="success.html" class="proceed-button-1">
-                    <span class="proceed">PROCEED</span>
-                </a>
+                <button type="submit" class="proceed-button-1" style="cursor:pointer;"><span class="proceed">PROCEED</span></button>
             </div>
 
         </form>
 
     </div>
 </section>
+
+<script>
+    let customPhoneVerified = false;
+    let phoneOtpCode = null;
+
+    function toggleCustomPhone(show) {
+        const block = document.getElementById('custom-phone-block');
+        block.style.display = show ? 'block' : 'none';
+        customPhoneVerified = !show;
+    }
+
+    function sendPhoneOtp() {
+        const phone = document.getElementById('new_phone').value.trim();
+        if (!phone) {
+            alert('Enter a new phone number first');
+            return;
+        }
+        phoneOtpCode = '654321';
+        document.getElementById('phone_otp').disabled = false;
+        document.getElementById('phone-otp-status').textContent = 'OTP sent (demo: 654321)';
+        customPhoneVerified = false;
+    }
+
+    function verifyPhoneOtp() {
+        if (document.getElementById('phone_otp').value.trim() === phoneOtpCode) {
+            document.getElementById('phone-otp-status').textContent = 'Verified';
+            document.getElementById('phone-otp-status').style.color = 'green';
+            customPhoneVerified = true;
+        } else {
+            document.getElementById('phone-otp-status').textContent = 'Invalid OTP';
+            document.getElementById('phone-otp-status').style.color = '#d43434';
+            customPhoneVerified = false;
+        }
+    }
+
+    function validatePayment() {
+        const useRegistered = document.querySelector('input[name="use_registered"]:checked').value;
+        if (useRegistered === 'no' && !customPhoneVerified) {
+            alert('Please verify the new phone number to proceed.');
+            return false;
+        }
+        return true;
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const savedPhone = localStorage.getItem('signed_phone');
+        if (savedPhone) {
+            document.getElementById('registered-phone').textContent = savedPhone;
+        }
+
+        const pending = localStorage.getItem('pending_transaction');
+        const itemsEl = document.getElementById('transaction-items');
+        const totalEl = document.getElementById('transaction-total');
+        if (pending) {
+            const items = JSON.parse(pending);
+            let total = 0;
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.service + ' - ₱' + Number(item.amount).toFixed(2);
+                itemsEl.appendChild(li);
+                total += Number(item.amount);
+            });
+            totalEl.textContent = '₱' + total.toFixed(2);
+        } else {
+            itemsEl.innerHTML = '<li>No services added. Please add services first in My Orders.</li>';
+            totalEl.textContent = '₱0.00';
+        }
+    });
+</script>
 
 </body>
 </html>

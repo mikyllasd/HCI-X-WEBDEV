@@ -9,6 +9,11 @@
 body{
     background:#f3f3f3;
     box-sizing: border-box;
+    overflow: hidden;
+    height: 100vh;
+}
+main {
+    overflow: auto;
 }
 
 .navbar {

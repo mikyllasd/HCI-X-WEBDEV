@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - UPRESSease</title>
+    <link rel="stylesheet" href="STUDENT_NAVBAR_ORDER_MAIN.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="orders-header">
+        <a href="STUDENT_DASHBOARD_MAIN.html" class="back-btn">←</a>
+        <div class="header-text">
+            <h2>My Orders</h2>
+            <p class="subtitle">Track and manage your orders</p>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="manage-tabs" id="tabs-bar">
+        <a href="#" class="manage-tab active" data-filter="all">All (<span class="tab-count" data-status="all">0</span>)</a>
+        <a href="#" class="manage-tab" data-filter="Pending">Pending (<span class="tab-count" data-status="Pending">0</span>)</a>
+        <a href="#" class="manage-tab" data-filter="Processing">Processing (<span class="tab-count" data-status="Processing">0</span>)</a>
+        <a href="#" class="manage-tab" data-filter="Ready">Ready (<span class="tab-count" data-status="Ready">0</span>)</a>
+        <a href="#" class="manage-tab" data-filter="Completed">Completed (<span class="tab-count" data-status="Completed">0</span>)</a>
+    </div>
+
+    <!-- ORDERS LIST -->
+    <div id="orders-list"></div>
+
+    <script src="cart.js"></script>
+    <script>
+        let allOrders = JSON.parse(localStorage.getItem('allOrders') || '[]');
+        let currentFilter = 'all';
+
+        const statusColors = {
+            'Pending':    { bg:'#fffde7', color:'#c8a800', border:'#f9e79f' },
+            'Processing': { bg:'#f3e5f5', color:'#8e44ad', border:'#d7bde2' },
+            'Ready':      { bg:'#e8f8f5', color:'#27ae60', border:'#a9dfbf' },
+            'Completed':  { bg:'#f0f0f0', color:'#555',    border:'#ccc' }
+        };
+
+        function updateCounts() {
+            document.querySelector('[data-status="all"]').textContent = allOrders.length;
+            ['Pending','Processing','Ready','Completed'].forEach(s => {
+                const count = allOrders.filter(o => o.status === s).length;
+                document.querySelector(`[data-status="${s}"]`).textContent = count;
+            });
+        }
+
+        function renderOrders() {
+            const list = document.getElementById('orders-list');
+            const filtered = currentFilter === 'all'
+                ? allOrders
+                : allOrders.filter(o => o.status === currentFilter);
+
+            if (filtered.length === 0) {
+                list.innerHTML = `
+                    <div class="orders-card empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>No orders here</h3>
+                        <p>${currentFilter === 'all' ? "You haven't placed any orders yet." : `No ${currentFilter} orders.`}</p>
+                        <a href="STUDENT_DASHBOARD_MAIN.html" class="browse-btn">Browse Services</a>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(order => {
+                const sc = statusColors[order.status] || statusColors['Pending'];
+                const badge = `<span style="display:inline-block;padding:0.25rem 0.875rem;border-radius:1.25rem;font-size:0.8125rem;font-weight:600;background:${sc.bg};color:${sc.color};border:1px solid ${sc.border};">${order.status}</span>`;
+
+                const customerRow = order.customer ? `
+                    <div style="font-size:0.8rem;color:#888;margin-top:0.25rem;">
+                        👤 ${order.customer.name || ''} &nbsp;📞 ${order.customer.phone || ''} &nbsp;🗓 Pickup: ${order.customer.date || ''}
+                    </div>` : '';
+
+                const addonsRow = (order.addons && order.addons.length) ?
+                    `<div style="font-size:0.8rem;color:#888;">Add-ons: ${order.addons.join(', ')}</div>` : '';
+
+                const refRow = order.refNumber ? 
+                    `<div style="font-size:0.8rem;color:#888;">GCash Ref: ${order.refNumber}</div>` : '';
+
+                return `
+                <div class="orders-card">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+                        <div style="flex:1;">
+                            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.375rem;">
+                                <span style="font-weight:700;font-size:1rem;color:#333;">${order.service}</span>
+                                ${badge}
+                                <span style="font-size:0.8rem;color:#aaa;">${order.orderId || ''}</span>
+                            </div>
+                            <div style="font-size:0.875rem;color:#555;margin-bottom:0.25rem;">${order.desc}</div>
+                            ${addonsRow}
+                            ${customerRow}
+                            ${refRow}
+                            <div style="font-size:0.8rem;color:#aaa;margin-top:0.375rem;">
+                                📅 ${order.dateOrdered || '—'} &nbsp;|&nbsp; 💳 ${order.paymentMethod || '—'}
+                            </div>
+                        </div>
+                        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:0.625rem;">
+                            <span style="font-weight:700;font-size:1.25rem;color:#a32020;">₱${order.total}</span>
+                            <button onclick="deleteOrder('${order.orderId}')" style="background:none;border:1px solid #e0e0e0;border-radius:0.5rem;padding:0.375rem 0.75rem;cursor:pointer;font-size:0.8125rem;color:#888;transition:all 0.2s;"
+                                onmouseover="this.style.borderColor='#a32020';this.style.color='#a32020';"
+                                onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#888';">
+                                🗑 Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ✅ USE built-in confirm instead of missing showConfirm
+        function deleteOrder(orderId) {
+            const ok = confirm('Are you sure you want to remove this order from your history?');
+            if (ok) {
+                allOrders = allOrders.filter(o => o.orderId !== orderId);
+                localStorage.setItem('allOrders', JSON.stringify(allOrders));
+                updateCounts();
+                renderOrders();
+            }
+        }
+
+        document.querySelectorAll('.manage-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.manage-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderOrders();
+            });
+        });
+
+        updateCounts();
+        renderOrders();
+    </script>
+</body>
+</html>

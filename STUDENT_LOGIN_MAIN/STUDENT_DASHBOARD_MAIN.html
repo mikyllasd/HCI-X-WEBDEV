@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - UPRESSease</title>
+    <link rel="stylesheet" href="STUDENT_DASHBOARD_MAIN.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <img src="c:\Users\acer\Music\GIT\HCI-X-WEBDEV\HCI-X-WEBDEV\HCI-X-WEBDEV MAIN\HCI-X-WEBDEV\wmsu.png.jpg" alt="Logo" class="logo">
+            <div class="title">
+                <h1>UPRESSease</h1>
+                <p>Western Mindanao State University</p>
+            </div>
+        </div>
+        <div class="nav-right">
+            <a href="STUDENT_NAVBAR_ORDER_MAIN.html">My Orders</a>
+            <a href="STUDENT_LOGIN_MAIN.html" onclick="localStorage.removeItem('signed_name');localStorage.removeItem('signed_email');">Logout</a>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+
+        <div class="welcome-card">
+            <h2>Welcome back, <span id="welcome-name">Student</span>!</h2>
+            <p id="welcome-email">student@wmsu.edu.ph</p>
+            <p>Select a service below to get started with your order.</p>
+        </div>
+
+        <h2 class="services-title">Our Services</h2>
+
+        <div class="services-grid">
+
+            <div class="service-card">
+                <div class="service-icon">🖨️</div>
+                <h3>Printing</h3>
+                <p>Document printing services</p>
+                <a href="STUDENT_PRINTING.html" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📖</div>
+                <h3>Binding</h3>
+                <p>Professional binding services</p>
+                <a href="STUDENT_BINDING.html" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎟️</div>
+                <h3>Lanyards</h3>
+                <p>Custom lanyards</p>
+                <a href="STUDENT_LANYARD.html" class="btn-red">Order Now</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">☕</div>
+                <h3>Mug Printing</h3>
+                <p>Customized mug printing services</p>
+                <a href="STUDENT_MUG.html" class="btn-red">Order Now</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const name = localStorage.getItem('signed_name') || 'Student';
+        const email = localStorage.getItem('signed_email') || 'student@wmsu.edu.ph';
+        document.getElementById('welcome-name').textContent = name;
+        document.getElementById('welcome-email').textContent = email;
+    </script>
+
+</body>
+</html>

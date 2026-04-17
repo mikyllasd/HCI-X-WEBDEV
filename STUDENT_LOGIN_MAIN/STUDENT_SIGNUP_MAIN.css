@@ -1,0 +1,257 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background-color: #f3f3f3;
+    color: #333;
+}
+
+/* NAVBAR */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #8B0000;
+    color: white;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.9375rem 1.25rem;
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.18);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.9375rem;
+}
+
+.logo {
+    width: 3.125rem;
+    height: 3.125rem;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.title h1 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+}
+
+.title p {
+    font-size: 0.75rem;
+    color: #f0f0f0;
+}
+
+/* SIGNUP CONTAINER */
+.signup-container {
+    background-color: white;
+    max-width: 31.25rem;
+    margin: 3.125rem auto;
+    padding: 2.5rem 1.875rem;
+    border-radius: 0.9375rem;
+    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.1);
+    border-top: 0.3125rem solid #8B0000;
+}
+
+.signup-container h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 1.875rem;
+    letter-spacing: 1px;
+}
+
+/* FORM ROWS */
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.9375rem;
+    gap: 0.5rem;
+}
+
+.form-row label {
+    width: 10rem;
+    font-weight: bold;
+    color: #444;
+    font-size: 0.9375rem;
+    flex-shrink: 0;
+}
+
+.form-row input,
+.form-row select {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-family: "Segoe UI", sans-serif;
+    outline: none;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+    border-color: #a32020;
+    box-shadow: 0 0 0.3125rem rgba(163, 32, 32, 0.3);
+}
+
+.file-input {
+    flex: 1;
+    font-size: 0.875rem;
+    font-family: "Segoe UI", sans-serif;
+}
+
+hr {
+    border: none;
+    border-top: 0.5px solid #e0e0e0;
+    margin: 1.5625rem 0;
+}
+
+/* OTP */
+#otp-status {
+    font-size: 0.875rem;
+    color: #a32020;
+}
+
+/* TERMS */
+.terms-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.875rem;
+    font-size: 0.875rem;
+    color: #333;
+}
+
+.terms-container a {
+    color: #b30000;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.terms-container a:hover {
+    color: #a32020;
+}
+
+/* BUTTON */
+.proceed-button-1 {
+    display: inline-block;
+    background-color: #a32020;
+    color: white;
+    padding: 0.75rem 1.875rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: "Segoe UI", sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.proceed-button-1:hover {
+    background-color: #871a1a;
+    transform: translateY(-0.125rem);
+}
+
+.proceed {
+    letter-spacing: 1px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .signup-container {
+        max-width: 28rem;
+        margin: 2rem auto;
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .signup-container {
+        max-width: 100%;
+        margin: 1.5rem 1rem;
+        padding: 1.5rem 1.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .signup-container h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .form-row label {
+        width: 100%;
+        margin-bottom: 0.3125rem;
+        font-size: 0.875rem;
+    }
+
+    .form-row input,
+    .form-row select,
+    .file-input {
+        width: 100%;
+        font-size: 0.8125rem;
+    }
+
+    .proceed-button-1 {
+        width: 100%;
+        text-align: center;
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
+
+    .terms-container {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .signup-container {
+        margin: 1rem 0.75rem;
+        padding: 1.25rem 1rem;
+    }
+
+    .signup-container h2 {
+        font-size: 1.125rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .form-row label {
+        font-size: 0.8125rem;
+    }
+
+    .form-row input,
+    .form-row select,
+    .file-input {
+        font-size: 0.75rem;
+        padding: 0.625rem;
+    }
+
+    .proceed-button-1 {
+        font-size: 0.8125rem;
+        padding: 0.625rem;
+    }
+
+    .terms-container {
+        font-size: 0.75rem;
+        flex-wrap: wrap;
+    }
+}

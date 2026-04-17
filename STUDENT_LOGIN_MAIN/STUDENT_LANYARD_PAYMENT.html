@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Information - UPRESSease</title>
+    <link rel="stylesheet" href="STUDENT_PAYMENT.css">
+</head>
+<body>
+
+    <header class="appbar">
+        <a href="STUDENT_LANYARD.html" class="back-btn">←</a>
+        <div class="appbar-titles">
+            <span class="appbar-title">Customer Information</span>
+            <span class="appbar-subtitle">Step 1 of 3</span>
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="layout">
+
+            <div class="col-left">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🛒 Your Cart (1 item)</div>
+                        <div class="card-subtitle">Review your items before checkout</div>
+                    </div>
+                    <div class="cart-item">
+                        <div class="cart-item-top">
+                            <span class="cart-item-name" id="cart-service">—</span>
+                            <span class="cart-item-price" id="cart-price">₱0.00</span>
+                        </div>
+                        <div class="cart-item-bottom">
+                            <span class="cart-item-desc" id="cart-desc">—</span>
+                            <span class="cart-item-qty" id="cart-qty">x1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">Order Summary</div>
+                    </div>
+                    <div class="summary-service">
+                        <div class="summary-service-row">
+                            <span class="summary-service-label">Service</span>
+                            <span class="summary-service-name" id="sum-service">—</span>
+                        </div>
+                        <div class="summary-service-desc" id="sum-desc">—</div>
+                        <div class="summary-service-price" id="sum-price">₱0.00</div>
+                    </div>
+                    <hr class="divider">
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">Total Amount</span>
+                        <span class="summary-total-money" id="sum-total">₱0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="card card-sticky">
+                    <div class="card-head">
+                        <div class="card-title">Customer Information</div>
+                        <div class="card-subtitle">Required for order processing</div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Full Name *</label>
+                        <input class="input" type="text" id="full-name" placeholder="Your full name">
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Preferred Delivery Date *</label>
+                        <input class="input" type="date" id="delivery-date">
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Contact Number *</label>
+                        <div class="input-icon-wrap">
+                            <span class="input-icon">📞</span>
+                            <input class="input input-with-icon" type="tel" id="contact-num" placeholder="09xxxxxxxxx">
+                        </div>
+                    </div>
+
+                    <div class="use-number-row">
+                        <span class="use-number-label">Use this number?</span>
+                        <div class="toggle-btns">
+                            <button class="toggle-btn toggle-btn--active" id="yes-btn" onclick="toggleNumber(true)">Yes</button>
+                            <button class="toggle-btn" id="no-btn" onclick="toggleNumber(false)">No</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-proceed" onclick="proceedToMethod()">PROCEED TO PAYMENT</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const order = JSON.parse(localStorage.getItem('printOrder') || '{}');
+
+        document.getElementById('cart-service').textContent = order.service || '—';
+        document.getElementById('cart-price').textContent = '₱' + (order.total || '0.00');
+        document.getElementById('cart-desc').textContent = order.desc || '—';
+        document.getElementById('cart-qty').textContent = 'x' + (order.qty || 1);
+        document.getElementById('sum-service').textContent = order.service || '—';
+        document.getElementById('sum-desc').textContent = order.desc || '—';
+        document.getElementById('sum-price').textContent = '₱' + (order.total || '0.00');
+        document.getElementById('sum-total').textContent = '₱' + (order.total || '0.00');
+
+        const savedName = localStorage.getItem('signed_name') || '';
+        const savedPhone = localStorage.getItem('signed_phone') || '';
+        document.getElementById('full-name').value = savedName;
+        document.getElementById('contact-num').value = savedPhone;
+
+        function toggleNumber(useIt) {
+            document.getElementById('yes-btn').classList.toggle('toggle-btn--active', useIt);
+            document.getElementById('no-btn').classList.toggle('toggle-btn--active', !useIt);
+            document.getElementById('contact-num').value = useIt ? savedPhone : '';
+        }
+
+        function proceedToMethod() {
+            const name = document.getElementById('full-name').value.trim();
+            const date = document.getElementById('delivery-date').value;
+            const phone = document.getElementById('contact-num').value.trim();
+            if (!name || !date || !phone) {
+                alert('Please fill all required fields.');
+                return;
+            }
+            localStorage.setItem('customerInfo', JSON.stringify({ name, date, phone }));
+            window.location.href = 'STUDENT_LANYARD_PAYMENT_METHOD.html';
+        }
+    </script>
+
+</body>
+</html>

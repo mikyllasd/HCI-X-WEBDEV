@@ -1,0 +1,424 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f3f3f3;
+    color: #333;
+}
+
+/* ===================== HEADER ===================== */
+.appbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: #8B0000;
+    color: white;
+    padding: 0.9375rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.18);
+}
+
+.back-btn {
+    color: white;
+    text-decoration: none;
+    font-size: 1.375rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.back-btn:hover {
+    opacity: 0.8;
+}
+
+.appbar-titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.appbar-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+}
+
+.appbar-subtitle {
+    font-size: 0.75rem;
+    color: #f0f0f0;
+    opacity: 0.9;
+}
+
+.appbar-action {
+    margin-left: auto;
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: opacity 0.2s;
+}
+
+.appbar-action:hover {
+    opacity: 0.75;
+}
+
+/* ===================== PAGE ===================== */
+.page {
+    padding: 1.5rem 2.5rem;
+}
+
+.layout {
+    max-width: 90rem;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.col-left,
+.col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* ===================== CARD ===================== */
+.card {
+    background: white;
+    border-radius: 0.9375rem;
+    padding: 1.75rem;
+    box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.06);
+}
+
+.card-sticky {
+    position: sticky;
+    top: 5rem;
+}
+
+.card-head {
+    margin-bottom: 1.25rem;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.card-subtitle {
+    font-size: 0.8125rem;
+    color: #777;
+    margin-top: 0.25rem;
+}
+
+/* ===================== SERVICES GRID ===================== */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.service-option {
+    border: 2px solid #e0e0e0;
+    border-radius: 0.9375rem;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.service-option:hover {
+    border-color: #a32020;
+}
+
+.service-option.selected {
+    border-color: #a32020;
+    background: #fff5f5;
+}
+
+.service-icon-box {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: #8B0000;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.875rem;
+    font-size: 1.5rem;
+}
+
+.service-option h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.375rem;
+}
+
+.service-option p {
+    font-size: 0.8125rem;
+    color: #777;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.service-price {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #a32020;
+}
+
+/* ===================== QUANTITY ===================== */
+.quantity-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.qty-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    border: 1.5px solid #e0e0e0;
+    background: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a32020;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.qty-btn:hover {
+    border-color: #a32020;
+    background: #fff5f5;
+}
+
+.qty-display {
+    font-size: 1rem;
+    font-weight: 700;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.qty-label {
+    font-size: 0.875rem;
+    color: #777;
+    margin-left: 0.5rem;
+}
+
+/* ===================== FORM ===================== */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.field:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.input {
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-family: "Segoe UI", sans-serif;
+    background: #f8f8f8;
+    outline: none;
+    color: #333;
+    width: 100%;
+}
+
+.input:focus {
+    border-color: #a32020;
+    box-shadow: 0 0 0.3125rem rgba(163, 32, 32, 0.2);
+    background: white;
+}
+
+/* ===================== ORDER SUMMARY ===================== */
+.summary-service {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 0.9375rem;
+}
+
+.summary-service-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-service-label {
+    font-size: 0.875rem;
+    color: #777;
+}
+
+.summary-service-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.summary-service-desc {
+    font-size: 0.8125rem;
+    color: #777;
+}
+
+.summary-service-price {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #a32020;
+    text-align: right;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 0.9375rem 0;
+}
+
+.summary-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-total-label {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.summary-total-money {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #a32020;
+}
+
+/* ===================== BUTTONS ===================== */
+.btn-order {
+    width: 100%;
+    padding: 1rem;
+    background-color: #8B0000;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: "Segoe UI", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-order:hover {
+    background-color: #6e0000;
+}
+
+.btn-cart {
+    width: 100%;
+    padding: 1rem;
+    background: white;
+    color: #a32020;
+    border: 2px solid #a32020;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: "Segoe UI", sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-cart:hover {
+    background: #fff5f5;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+    .page {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .card-sticky {
+        position: static;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .page {
+        padding: 1rem 0.75rem;
+    }
+
+    .appbar {
+        padding: 0.9375rem 1.25rem;
+    }
+
+    .card {
+        padding: 1.25rem;
+    }
+
+    .appbar-title {
+        font-size: 1.125rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-total-money {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .appbar {
+        padding: 0.75rem 1rem;
+    }
+
+    .appbar-title {
+        font-size: 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+        border-radius: 0.75rem;
+    }
+}

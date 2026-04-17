@@ -1,0 +1,153 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background-color: #f3f3f3;
+    color: #333;
+    padding: 1.25rem;
+}
+
+/* CONTAINER */
+.terms-container {
+    background-color: white;
+    max-width: 43.75rem;
+    margin: 1.25rem auto;
+    padding: 2.5rem;
+    border-radius: 0.9375rem;
+    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.1);
+    border-top: 0.3125rem solid #8B0000;
+}
+
+/* HEADER */
+.terms-header {
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.9375rem;
+    margin-bottom: 1.5625rem;
+}
+
+.terms-header h2 {
+    color: #8B0000;
+    margin-bottom: 0.3125rem;
+    font-size: 1.75rem;
+}
+
+.terms-header p {
+    color: #888;
+    font-size: 0.875rem;
+}
+
+/* CONTENT */
+.terms-content {
+    color: #444;
+    line-height: 1.6;
+    font-size: 0.9375rem;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 0.9375rem;
+}
+
+.terms-content h3 {
+    color: #333;
+    margin-top: 1.5625rem;
+    margin-bottom: 0.625rem;
+    font-size: 1.125rem;
+}
+
+.terms-content p {
+    margin-bottom: 0.9375rem;
+    text-align: justify;
+}
+
+/* SCROLLBAR */
+.terms-content::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.terms-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0.25rem;
+}
+
+.terms-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 0.25rem;
+}
+
+.terms-content::-webkit-scrollbar-thumb:hover {
+    background: #a32020;
+}
+
+/* BUTTON */
+.button-container {
+    text-align: center;
+    margin-top: 1.875rem;
+}
+
+.proceed-button {
+    display: inline-block;
+    background-color: #a32020;
+    color: white;
+    padding: 0.75rem 1.875rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: "Segoe UI", sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.proceed-button:hover {
+    background-color: #871a1a;
+    transform: translateY(-0.125rem);
+}
+
+.proceed {
+    letter-spacing: 1px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .terms-container {
+        padding: 1.5rem 1.25rem;
+        margin: 1rem 0.5rem;
+    }
+
+    .terms-header h2 {
+        font-size: 1.375rem;
+    }
+
+    .terms-content {
+        font-size: 0.875rem;
+    }
+
+    .proceed-button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-container {
+        padding: 1.25rem 1rem;
+    }
+
+    .terms-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .terms-content {
+        font-size: 0.8125rem;
+    }
+
+    .proceed-button {
+        font-size: 0.875rem;
+        padding: 0.625rem;
+    }
+}

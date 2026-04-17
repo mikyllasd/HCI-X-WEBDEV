@@ -1,0 +1,203 @@
+/* Reset & base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f3f3f3;
+    color: #333;
+}
+
+/* LOGIN SECTION CENTERED */
+.login-bg {
+    display: flex;
+    background: #8B0000;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem;
+}
+
+/* LOGIN CARD */
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 26.25rem;
+    border-radius: 0.9375rem;
+    text-align: center;
+}
+
+/* LOGIN ICON */
+.login-icon {
+    background: #8B0000;
+    color: white;
+    width: 3.75rem;
+    height: 3.75rem;
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+/* LOGIN INPUTS */
+.login-bg input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.9375rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.login-bg label {
+    font-weight: bold;
+}
+
+.login-bg input:focus {
+    border-color: #a32020;
+    box-shadow: 0 0 0.3125rem rgba(163, 32, 32, 0.3);
+}
+
+/* LOGIN BUTTON */
+.btn-red {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #a32020;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+}
+
+.btn-red:hover {
+    background-color: #871a1a;
+}
+
+/* SIGNUP LINK */
+.signup-text {
+    text-align: center;
+    margin-top: 0.9375rem;
+    font-size: 0.875rem;
+}
+
+.signup-text a {
+    color: #b30000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
+
+/* ADMIN BUTTON */
+.btn-admin {
+    margin-top: 0.625rem;
+    display: block;
+    text-align: center;
+}
+
+.btn-admin:hover {
+    background-color: white;
+    color: #a32020;
+    border: 1px solid #a32020;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1250px) {
+    .login-card {
+        max-width: 25rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .login-card {
+        max-width: 23.75rem;
+        padding: 1.875rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .login-bg {
+        align-items: center;
+        padding: 0.9375rem 0.9375rem;
+    }
+
+    .login-card {
+        max-width: 100%;
+        padding: 1.125rem;
+        border-radius: 0.75rem;
+    }
+
+    .login-card h2 {
+        font-size: 1.125rem;
+    }
+
+    .login-card p {
+        font-size: 0.8125rem;
+    }
+
+    .login-icon {
+        width: 3.125rem;
+        height: 3.125rem;
+        font-size: 1.25rem;
+    }
+
+    .login-bg input {
+        padding: 0.625rem;
+        font-size: 0.8125rem;
+    }
+
+    .btn-red {
+        font-size: 0.875rem;
+        padding: 0.625rem;
+    }
+
+    .signup-text {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-card {
+        padding: 0.75rem;
+        border-radius: 0.625rem;
+    }
+
+    .login-card h2 {
+        font-size: 1rem;
+    }
+
+    .login-card p {
+        font-size: 0.75rem;
+    }
+
+    .login-bg input {
+        font-size: 0.75rem;
+        padding: 0.5625rem;
+    }
+
+    .btn-red {
+        font-size: 0.8125rem;
+        padding: 0.5625rem;
+    }
+
+    .signup-text {
+        font-size: 0.75rem;
+    }
+}

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPRESSease | WMSU Printing & Merchandise</title>
+    <link rel="stylesheet" href="css/student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body data-page="landing">
+
+<!-- ============================================================
+     PAGE: LANDING
+     ============================================================ -->
+<div class="spa-page" id="page-landing" style="display:block;">
+    <header class="landing-navbar">
+        <nav class="landing-nav-wrapper">
+            <div class="landing-logo">
+                <i class="fas fa-user-graduate"></i>
+                <div class="landing-logo-text">
+                    <h1>UPRESSease</h1>
+                    <span>WMSU Printing &amp; Merchandise System</span>
+                </div>
+            </div>
+            <div class="landing-nav-actions">
+                <button class="btn btn-outline" onclick="showPage('login')">Student Login</button>
+                <button class="btn btn-filled" onclick="showPage('login')">Admin Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="landing-hero">
+        <div class="landing-hero-content reveal">
+            <h1>Welcome to UPRESSease</h1>
+            <p>Your one-stop solution for printing, binding, and merchandise services at Western Mindanao State University</p>
+            <button class="btn btn-white" onclick="document.getElementById('landing-how').scrollIntoView({behavior:'smooth'})">Get Started Now</button>
+        </div>
+    </section>
+
+    <section class="landing-section">
+        <div class="landing-container">
+            <h2 class="section-title reveal">Why Choose UPRESSease?</h2>
+            <p class="section-subtitle reveal">Experience seamless ordering, real-time tracking, and convenient pickup</p>
+            <div class="landing-grid">
+                <div class="feature-card reveal"><i class="fas fa-mobile-alt"></i><h3>Easy Online Ordering</h3><p>Place your orders from anywhere, anytime</p></div>
+                <div class="feature-card reveal"><i class="fas fa-clock"></i><h3>Real-Time Tracking</h3><p>Monitor your order status with live updates</p></div>
+                <div class="feature-card reveal"><i class="fas fa-qrcode"></i><h3>QR Code Pickup</h3><p>Quick and secure order pickup using QR code</p></div>
+                <div class="feature-card reveal"><i class="fas fa-shield-alt"></i><h3>Secure Payments</h3><p>Multiple payment options with secure verification</p></div>
+                <div class="feature-card reveal"><i class="fas fa-sync"></i><h3>Order Flexibility</h3><p>15-minute cancellation window</p></div>
+                <div class="feature-card reveal"><i class="fas fa-print"></i><h3>Quality Services</h3><p>Professional printing and binding services</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-section landing-services-bg">
+        <div class="landing-container">
+            <h2 class="section-title reveal">Our Services</h2>
+            <p class="section-subtitle reveal">Comprehensive printing and merchandise solutions for all your academic needs</p>
+            <div class="landing-grid">
+                <div class="service-card-landing reveal"><div class="icon-sq"><i class="fas fa-print"></i></div><h3>Printing Services</h3><ul><li>✓ Black &amp; White / Color</li><li>✓ Multiple paper sizes</li><li>✓ Single/Double-sided</li><li>✓ Rush orders available</li></ul></div>
+                <div class="service-card-landing reveal"><div class="icon-sq"><i class="fas fa-book"></i></div><h3>Binding Services</h3><ul><li>✓ Spiral binding</li><li>✓ Hard bound</li><li>✓ Soft bound</li><li>✓ Professional finish</li></ul></div>
+                <div class="service-card-landing reveal"><div class="icon-sq"><i class="fas fa-award"></i></div><h3>Custom Lanyards</h3><ul><li>✓ Personalized designs</li><li>✓ Bulk orders</li><li>✓ High-quality materials</li><li>✓ Organization events</li></ul></div>
+                <div class="service-card-landing reveal"><div class="icon-sq"><i class="fas fa-coffee"></i></div><h3>Mug Printing</h3><ul><li>✓ Photo printing</li><li>✓ Custom designs</li><li>✓ Gift ready packaging</li><li>✓ Durable prints</li></ul></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="landing-how" class="landing-section">
+        <div class="landing-container">
+            <h2 class="section-title reveal">How It Works</h2>
+            <p class="section-subtitle reveal">Simple steps to get your orders processed quickly</p>
+            <div class="steps-grid">
+                <div class="step-item reveal"><div class="step-num">1</div><h3>Sign Up</h3><p>Create your account with WMSU email verification</p></div>
+                <div class="step-item reveal"><div class="step-num">2</div><h3>Place Order</h3><p>Select services, upload files, and customize</p></div>
+                <div class="step-item reveal"><div class="step-num">3</div><h3>Track Order</h3><p>Monitor progress from processing to pickup</p></div>
+                <div class="step-item reveal"><div class="step-num">4</div><h3>Pick Up</h3><p>Show your QR code and collect at UPRESS</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-cta">
+        <div class="landing-container reveal">
+            <h2>Ready to Get Started?</h2>
+            <p>Join hundreds of WMSU students already using UPRESSease</p>
+            <div class="cta-actions">
+                <button class="btn btn-white" onclick="showPage('signup')">Create Account</button>
+                <button class="btn btn-outline-white" onclick="showPage('login')">Login</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <div class="landing-container">
+            <div class="footer-logo"><i class="fas fa-user-graduate"></i><h2>UPRESSease</h2></div>
+            <p>Western Mindanao State University - University Press</p>
+            <p>&copy; 2026 UPRESSease. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<!-- ============================================================
+     PAGE: TERMS
+     ============================================================ -->
+<div class="spa-page" id="page-terms">
+    <div class="terms-wrapper">
+        <div class="terms-container">
+            <div class="terms-header"><h2>Terms and Conditions</h2><p>Last Updated: March 2026</p></div>
+            <div class="terms-content">
+                <h3>1. Introduction</h3><p>Welcome to UPRESSease. By signing up and using our custom printing services, you agree to comply with and be bound by the following terms and conditions.</p>
+                <h3>2. User Verification</h3><p>All users are required to upload a Validated Student ID and 1st Semester COR every after one year. UPRESSease reserves the right to reject accounts with falsified documents.</p>
+                <h3>3. Customization and Copyright</h3><p>You are solely responsible for the designs, logos, and images you upload for printing. UPRESSease reserves the right to refuse printing any material that is deemed offensive or violates copyright laws.</p>
+                <h3>4. Payment and Production</h3><p>All orders are final once production begins. For GCash payments, production will only start once the proof of payment is verified.</p>
+                <h3>5. Claiming of Orders</h3><p>Users will be notified via SMS or through the portal once their order is ready. Unclaimed orders after 30 days may be disposed of, and no refunds will be issued for customized items.</p>
+            </div>
+            <div style="text-align:center;margin-top:30px;">
+                <button class="proceed-button" onclick="showPage('signup')">← Back to Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     PAGE: LOGIN
+     ============================================================ -->
+<div class="spa-page" id="page-login">
+    <section class="login-bg">
+        <div class="login-card">
+            <div class="login-icon">🎓</div>
+            <h2>UPRESSease</h2>
+            <p>Western Mindanao State University<br>Printing &amp; Merchandise Reservation System</p>
+            <br>
+            <form id="login-form">
+                <label class="login-label">Email</label>
+                <input type="email" id="login-email" placeholder="student@wmsu.edu.ph" required>
+                <label class="login-label">Password</label>
+                <input type="password" id="login-password" placeholder="Enter password" required>
+                <button type="submit" class="btn-red">Login</button>
+            </form>
+            <p class="signup-link">Don't have an account? <a href="#" onclick="showPage('signup');return false;">Sign up</a></p>
+        </div>
+    </section>
+</div>
+
+<!-- ============================================================
+     PAGE: SIGN UP
+     ============================================================ -->
+<div class="spa-page" id="page-signup">
+    <div style="background-color:#f4f4f4;min-height:100vh;">
+        <header style="position:sticky;top:0;z-index:1000;width:100%;background-color:#8B0000;color:white;display:flex;align-items:center;padding:0.9375rem 1.25rem;gap:0.9375rem;box-shadow:0 2px 5px rgba(0,0,0,0.18);">
+            <div style="font-size:1.5rem;">🎓</div>
+            <div>
+                <div style="font-size:1.25rem;font-weight:bold;">UPRESSease</div>
+                <div style="font-size:0.75rem;color:#f0f0f0;">Western Mindanao State University</div>
+            </div>
+        </header>
+        <div class="signup-container">
+            <h2>SIGN-UP PAGE</h2>
+            <form id="signup-form" onsubmit="return validateSignup(event)">
+                <div class="form-row"><label>Name:</label><input type="text" id="signup-name" required></div>
+                <div class="form-row"><label>Email:</label><input type="email" id="signup-email" required></div>
+                <div class="form-row"><label>Phone Number:</label><input type="tel" id="signup-phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required></div>
+                <div class="form-row">
+                    <label>College:</label>
+                    <select id="signup-college" required onchange="populateCourses('signup-college','signup-course')">
+                        <option value="">-- Select College --</option>
+                        <option>College of Arts and Sciences</option>
+                        <option>College of Education</option>
+                        <option>College of Engineering</option>
+                        <option>College of Business Administration</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Course:</label>
+                    <select id="signup-course" required>
+                        <option value="">-- Select Course --</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Year:</label>
+                    <select id="signup-year" required>
+                        <option value="">-- Select Year --</option>
+                        <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>5th Year</option>
+                    </select>
+                </div>
+                <hr style="border:0.5px solid #eee;margin:25px 0;">
+                <div class="form-row"><label>Validated ID:</label><input type="file" id="signup-id" accept="image/*,.pdf" required></div>
+                <div class="form-row"><label>1st Sem COR:</label><input type="file" id="signup-cor" accept="image/*,.pdf" required></div>
+                <div class="form-row" style="gap:12px;flex-wrap:wrap;">
+                    <button type="button" class="proceed-button" style="padding:10px 16px;" onclick="sendOtp()">Send OTP</button>
+                    <input type="text" id="user-otp" placeholder="Enter OTP" style="max-width:180px;flex:1;" disabled>
+                    <button type="button" class="proceed-button" style="padding:10px 16px;" onclick="verifyOtp()">Verify OTP</button>
+                    <span id="otp-status" style="font-size:0.9rem;color:#d43434;"></span>
+                </div>
+                <div class="signup-terms-row">
+                    <input type="checkbox" id="terms-check" required>
+                    <label for="terms-check">I agree to the <a href="#" onclick="showPage('terms');return false;">terms and conditions</a>.</label>
+                </div>
+                <div style="display:flex;justify-content:center;width:100%;margin:30px 0;">
+                    <button type="submit" class="proceed-button">PROCEED</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     PAGE: DASHBOARD
+     ============================================================ -->
+<div class="spa-page" id="page-dashboard">
+    <header class="dashboard-navbar">
+        <div class="nav-left">
+            <div class="nav-logo">🎓</div>
+            <div class="nav-title"><h1>UPRESSease</h1><p>Western Mindanao State University</p></div>
+        </div>
+        <div class="nav-right">
+            <button onclick="showPage('cart')" class="nav-cart-btn">
+                🛒 Cart <span id="dash-cart-badge" class="dash-cart-badge" style="display:none;">0</span>
+            </button>
+            <button onclick="showPage('orders')">My Orders</button>
+            <button onclick="doLogout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="welcome-card">
+            <h2>Welcome back, <span id="welcome-name">Student</span>!</h2>
+            <p id="welcome-email">student@wmsu.edu.ph</p>
+            <p>Select a service below to get started with your order.</p>
+        </div>
+
+        <!-- Cart Preview -->
+        <div id="dash-cart-preview" style="display:none;" class="dash-cart-preview-box">
+            <div class="dash-cart-preview-header">
+                <span>🛒 Cart Preview</span>
+                <button onclick="showPage('cart')" class="dash-view-cart-btn">View Full Cart →</button>
+            </div>
+            <div id="dash-cart-preview-items"></div>
+            <div class="dash-cart-preview-total">
+                Total: <strong id="dash-cart-preview-total">₱0.00</strong>
+            </div>
+        </div>
+
+        <h2 class="services-title">Our Services</h2>
+        <div class="services-grid-dash">
+            <div class="service-card-dash"><div class="service-icon-dash">🖨️</div><h3>Printing</h3><p>Document printing services</p><button class="btn-red" onclick="showPage('printing')">Order Now</button></div>
+            <div class="service-card-dash"><div class="service-icon-dash">📖</div><h3>Binding</h3><p>Professional binding services</p><button class="btn-red" onclick="showPage('binding')">Order Now</button></div>
+            <div class="service-card-dash"><div class="service-icon-dash">🎟️</div><h3>Lanyards</h3><p>Custom lanyards</p><button class="btn-red" onclick="showPage('lanyard')">Order Now</button></div>
+            <div class="service-card-dash"><div class="service-icon-dash">☕</div><h3>Mug Printing</h3><p>Customized mug printing services</p><button class="btn-red" onclick="showPage('mug')">Order Now</button></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     PAGE: CART
+     ============================================================ -->
+<div class="spa-page" id="page-cart">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="appbar-titles">
+            <span class="appbar-title">My Cart</span>
+            <span class="appbar-subtitle">UPRESSease - WMSU</span>
+        </div>
+    </header>
+    <main class="page">
+        <div class="cart-page-wrapper">
+            <div class="cart-items-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🛒 Cart Items</div>
+                        <div class="card-subtitle" id="cart-item-count">0 item(s)</div>
+                    </div>
+                    <div id="cart-items-list"></div>
+                    <div id="cart-empty-state" style="display:none;text-align:center;padding:2rem;">
+                        <div style="font-size:3rem;margin-bottom:1rem;">🛒</div>
+                        <h3 style="color:#777;margin-bottom:0.5rem;">Your cart is empty</h3>
+                        <p style="color:#aaa;margin-bottom:1.5rem;">Add items from our services to get started</p>
+                        <button class="btn-red" onclick="showPage('dashboard')" style="width:auto;padding:0.75rem 2rem;">Browse Services</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-summary-col">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <div class="summary">
+                        <div class="summary-row"><span class="summary-label">Items</span><span class="summary-value" id="cart-sum-count">0</span></div>
+                        <div class="summary-row"><span class="summary-label">Subtotal</span><span class="summary-value" id="cart-sum-subtotal">₱0.00</span></div>
+                        <hr class="divider">
+                        <div class="summary-row">
+                            <span class="summary-label summary-total-label">Total</span>
+                            <span class="summary-money" id="cart-sum-total">₱0.00</span>
+                        </div>
+                        <button class="btn-order" id="cart-checkout-btn" onclick="cartProceedCheckout()">🛍 Proceed to Checkout</button>
+                        <button class="btn-cart" onclick="cartClearAll()">🗑 Clear Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: PRINTING ORDER
+     ============================================================ -->
+<div class="spa-page" id="page-printing">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="appbar-titles">
+            <span class="appbar-title">Printing Order</span>
+            <span class="appbar-subtitle">UPRESSease - WMSU</span>
+        </div>
+        <button class="appbar-action" onclick="showPage('cart')">
+            🛒 Cart <span class="cart-badge"></span>
+        </button>
+    </header>
+    <main class="page">
+        <div class="layout-2col">
+            <div class="col-main">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">⬆ Upload File</div><div class="card-subtitle">Upload your document for printing</div></div>
+                    <label class="dropzone">
+                        <input type="file" style="display:none;" id="print-file-input" accept=".pdf,.doc,.docx">
+                        <div class="dropzone-icon">📄</div>
+                        <div class="dropzone-primary">Click to upload</div>
+                        <div class="dropzone-secondary">or drag and drop</div>
+                        <div class="dropzone-hint">PDF, DOC, DOCX (MAX. 50MB)</div>
+                    </label>
+                    <div id="print-file-name" style="display:none;margin-top:0.75rem;font-size:0.875rem;color:#555;"></div>
+                    <div class="encrypt-notice">
+                        <span class="encrypt-icon">🛡</span>
+                        <div class="encrypt-text"><strong>Encrypted Upload</strong><span>Files are securely encrypted and deleted 12 hours after completion.</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Order Details</div><div class="card-subtitle">Configure your printing options</div></div>
+                    <div class="grid-2">
+                        <div class="field">
+                            <label class="label">Paper Size</label>
+                            <select class="select" id="print-paper" onchange="calcPrintTotal()">
+                                <option value="">Select paper size</option>
+                                <option value="Short (8.5x11in)">Short (8.5 x 11 in)</option>
+                                <option value="A4 (8.27x11.69in)">A4 (8.27 x 11.69 in)</option>
+                                <option value="Long (8.5x13in)">Long (8.5 x 13 in)</option>
+                                <option value="Legal (8.5x14in)">Legal (8.5 x 14 in)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label class="label">Color Option</label>
+                            <select class="select" id="print-color" onchange="calcPrintTotal()">
+                                <option value="" data-price="0">Select color option</option>
+                                <option value="Black &amp; White" data-price="3">Black &amp; White — ₱3/page</option>
+                                <option value="Colored" data-price="6">Colored — ₱6/page</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field"><label class="label">Number of Pages</label><input class="input" type="number" id="print-pages" value="1" min="1" oninput="calcPrintTotal()"></div>
+                        <div class="field"><label class="label">Number of Copies</label><input class="input" type="number" id="print-qty" value="1" min="1" oninput="calcPrintTotal()"></div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Additional Services</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-row"><input type="checkbox" id="print-binding" data-price="50" onchange="calcPrintTotal()"> Binding — ₱50</label>
+                            <label class="checkbox-row"><input type="checkbox" id="print-lamination" data-price="10" onchange="calcPrintTotal()"> Lamination — ₱10/page</label>
+                            <label class="checkbox-row"><input type="checkbox" id="print-rush" data-price="100" onchange="calcPrintTotal()"> Rush Fee (24hrs) — ₱100</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="col-side">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <div class="summary">
+                        <div class="summary-row"><span class="summary-label">Paper Size</span><span class="summary-value" id="sum-print-paper">—</span></div>
+                        <div class="summary-row"><span class="summary-label">Color</span><span class="summary-value" id="sum-print-color">—</span></div>
+                        <div class="summary-row"><span class="summary-label">Pages</span><span class="summary-value" id="sum-print-pages">1</span></div>
+                        <div class="summary-row"><span class="summary-label">Copies</span><span class="summary-value" id="sum-print-qty">1</span></div>
+                        <div class="summary-row" id="print-addons-row" style="display:none;"><span class="summary-label">Add-ons</span><span class="summary-value" id="sum-print-addons" style="font-size:0.75rem;text-align:right;max-width:60%;"></span></div>
+                        <hr class="divider">
+                        <div class="summary-row"><span class="summary-label summary-total-label">Total</span><span class="summary-money" id="sum-print-total">₱0.00</span></div>
+                        <button class="btn-order" onclick="printOrderNow()">🛒 Order Now</button>
+                        <button class="btn-cart" onclick="printAddToCart()">+ Add to Cart</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: BINDING ORDER
+     ============================================================ -->
+<div class="spa-page" id="page-binding">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Binding Order</span><span class="appbar-subtitle">UPRESSease - WMSU</span></div>
+        <button class="appbar-action" onclick="showPage('cart')">🛒 Cart <span class="cart-badge"></span></button>
+    </header>
+    <main class="binding-page" id="binding-page">
+        <div class="card">
+            <div class="card-head"><div class="card-title">Our Services</div><div class="card-subtitle">Choose your preferred binding type</div></div>
+            <div class="services-grid-bind">
+                <div class="service-option" onclick="selectBinding(this, 'Thesis Binding', 150)"><div class="service-icon-box">📖</div><h3>Thesis Binding</h3><p>High-quality binding for research papers</p><div class="service-price">₱150</div></div>
+                <div class="service-option" onclick="selectBinding(this, 'Hardcover Binding', 200)"><div class="service-icon-box">📖</div><h3>Hardcover Binding</h3><p>Durable hardcover for books and documents</p><div class="service-price">₱200</div></div>
+                <div class="service-option" onclick="selectBinding(this, 'Spiral Binding', 80)"><div class="service-icon-box">📖</div><h3>Spiral Binding</h3><p>Perfect for reports, manuals, notebooks</p><div class="service-price">₱80</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-head"><div class="card-title">Quantity</div><div class="card-subtitle">How many copies do you need?</div></div>
+            <div class="quantity-row">
+                <button class="qty-btn" onclick="changeBindingQty(-1)">−</button>
+                <span class="qty-display" id="binding-qty-display">1</span>
+                <button class="qty-btn" onclick="changeBindingQty(1)">+</button>
+                <span class="qty-label">copies</span>
+            </div>
+        </div>
+    </main>
+    <div class="bottom-bar">
+        <div class="bottom-summary">
+            <span class="bottom-type" id="binding-bottom-type">No binding selected</span>
+            <span class="bottom-total" id="binding-bottom-total">₱0.00</span>
+        </div>
+        <button class="btn-next" onclick="bindingGoNext()">PROCEED</button>
+    </div>
+</div>
+
+<!-- ============================================================
+     PAGE: BINDING DETAILS
+     ============================================================ -->
+<div class="spa-page" id="page-binding-details">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('binding')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Your Details</span><span class="appbar-subtitle">UPRESSease - WMSU</span></div>
+        <button class="appbar-action" onclick="showPage('cart')">🛒 Cart <span class="cart-badge"></span></button>
+    </header>
+    <main class="page">
+        <div class="layout-half">
+            <div class="col-left">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Your Details</div><div class="card-subtitle">Required for processing your order</div></div>
+                    <div class="field"><label class="label">Full Name *</label><input class="input" type="text" id="binding-d-name" placeholder="Enter your full name"></div>
+                    <div class="field"><label class="label">Phone Number *</label><input class="input" type="tel" id="binding-d-phone" placeholder="09xxxxxxxxx"></div>
+                    <div class="grid-2">
+                        <div class="field"><label class="label">Course and Year</label><input class="input" type="text" id="binding-d-course" placeholder="e.g. BSCS 3rd Year"></div>
+                        <div class="field"><label class="label">College</label><input class="input" type="text" id="binding-d-college" placeholder="Enter college"></div>
+                    </div>
+                    <div class="field"><label class="label">Preferred Pick-up Date *</label><input class="input" type="date" id="binding-d-date"></div>
+                </div>
+            </div>
+            <div class="col-right">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <div class="summary">
+                        <div class="summary-row"><span class="summary-label">Binding Type</span><span class="summary-value" id="binding-sum-type">—</span></div>
+                        <div class="summary-row"><span class="summary-label">Qty</span><span class="summary-value" id="binding-sum-qty">—</span></div>
+                        <div class="summary-row"><span class="summary-label">Price / copy</span><span class="summary-value" id="binding-sum-unit">₱0.00</span></div>
+                        <hr class="divider">
+                        <div class="summary-row"><span class="summary-label summary-total-label">Total</span><span class="summary-money" id="binding-sum-total">₱0.00</span></div>
+                        <button class="btn-order" onclick="bindingOrderNow()">🛍 Order Now</button>
+                        <button class="btn-cart" onclick="bindingAddToCart()">+ Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: MUG ORDER
+     ============================================================ -->
+<div class="spa-page" id="page-mug">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Mug Order</span><span class="appbar-subtitle">UPRESSease - WMSU</span></div>
+        <button class="appbar-action" onclick="showPage('cart')">🛒 Cart <span class="cart-badge"></span></button>
+    </header>
+    <main class="page" id="mug-page">
+        <div class="layout-2col">
+            <div class="col-main">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Our Mug Designs</div><div class="card-subtitle">Choose from our sample designs or upload your custom design</div></div>
+                    <div class="options">
+                        <div class="option active" onclick="selectMugType('wmsu', this)"><div class="option-img-box"><span class="option-img-icon">☕</span></div><div class="option-name">WMSU Logo Mug</div><div class="option-desc">Classic white mug with WMSU official logo</div><div class="option-price">₱200</div></div>
+                        <div class="option" onclick="selectMugType('department', this)"><div class="option-img-box"><span class="option-img-icon">☕</span></div><div class="option-name">Department Mug</div><div class="option-desc">Customized with department name and logo</div><div class="option-price">₱220</div></div>
+                        <div class="option" onclick="selectMugType('photo', this)"><div class="option-img-box"><span class="option-img-icon">☕</span></div><div class="option-name">Photo Print Mug</div><div class="option-desc">Full-color photo printing on ceramic mug</div><div class="option-price">₱250</div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Order Details</div><div class="card-subtitle">Fill in the details for your mug order</div></div>
+                    <div class="grid-2">
+                        <div class="field"><label class="label">Mug Size *</label><select class="select" id="mug-size" onchange="updateMugSummary()"><option value="standard">Standard (11oz)</option><option value="large">Large (15oz) +₱30</option></select></div>
+                        <div class="field"><label class="label">Quantity *</label><input class="input" type="number" value="1" min="1" id="mug-qty" oninput="onMugQtyChange()"></div>
+                    </div>
+                    <div class="field hidden" id="mug-dept-field"><label class="label">Select Department *</label><select class="select" id="mug-dept-select"><option value="">Choose department</option><option>IT</option><option>Education</option><option>Engineering</option><option>Business Administration</option><option>Arts and Sciences</option></select></div>
+                    <div id="mug-photo-forms"></div>
+                    <div class="field"><label class="label">Special Instructions (optional)</label><textarea class="input textarea" id="mug-special" placeholder="e.g. specific colors, text to include..."></textarea></div>
+                </div>
+            </div>
+            <aside class="col-side">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <div class="summary">
+                        <div class="summary-row"><span class="summary-label">Design</span><span class="summary-value" id="mug-sum-type">WMSU Logo Mug</span></div>
+                        <div class="summary-row"><span class="summary-label">Size</span><span class="summary-value" id="mug-sum-size">Standard (11oz)</span></div>
+                        <div class="summary-row"><span class="summary-label">Price/piece</span><span class="summary-value" id="mug-sum-unit">₱200.00</span></div>
+                        <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="mug-sum-qty">1</span></div>
+                        <hr class="divider">
+                        <div class="summary-row"><span class="summary-label summary-total-label">Total</span><span class="summary-money" id="mug-sum-total">₱200.00</span></div>
+                        <button class="btn-order" onclick="mugOrderNow()">🛒 Order Now</button>
+                        <button class="btn-cart" onclick="mugAddToCart()">+ Add to Cart</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: LANYARD ORDER
+     ============================================================ -->
+<div class="spa-page" id="page-lanyard">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Lanyard Order</span><span class="appbar-subtitle">UPRESSease - WMSU</span></div>
+        <button class="appbar-action" onclick="showPage('cart')">🛒 Cart <span class="cart-badge"></span></button>
+    </header>
+    <main class="page" id="lanyard-page">
+        <div class="layout-2col">
+            <div class="col-main">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Our Lanyard Designs</div><div class="card-subtitle">Choose from our official designs or create your own</div></div>
+                    <div class="options">
+                        <div class="option active" onclick="selectLanyardType('wmsu', this)"><div class="option-icon">🎓</div><div class="option-name">WMSU Official Lanyard</div><div class="option-desc">Standard WMSU lanyard</div><div class="option-price">₱120</div></div>
+                        <div class="option" onclick="selectLanyardType('department', this)"><div class="option-icon">🏛</div><div class="option-name">Department Lanyard</div><div class="option-desc">Customized with department</div><div class="option-price">₱150</div></div>
+                        <div class="option" onclick="selectLanyardType('custom', this)"><div class="option-icon">✏️</div><div class="option-name">Customize</div><div class="option-desc">Create your own design</div><div class="option-price">₱200</div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Order Details</div><div class="card-subtitle">Fill in the details for your lanyard order</div></div>
+                    <div class="field"><label class="label">Quantity *</label><input class="input" type="number" value="1" min="1" id="lanyard-qty" oninput="onLanyardQtyChange()"></div>
+                    <div class="field hidden" id="lanyard-dept-field"><label class="label">Select Department *</label><select class="select" id="lanyard-dept-select"><option value="">Choose department</option><option>IT</option><option>Education</option><option>Engineering</option><option>Business Administration</option><option>Arts and Sciences</option></select></div>
+                    <div id="lanyard-custom-forms"></div>
+                </div>
+            </div>
+            <aside class="col-side">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <div class="summary">
+                        <div class="summary-row"><span class="summary-label">Type</span><span class="summary-value" id="lanyard-sum-type">WMSU Official</span></div>
+                        <div class="summary-row"><span class="summary-label">Price/piece</span><span class="summary-value" id="lanyard-sum-unit">₱120.00</span></div>
+                        <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="lanyard-sum-qty">1</span></div>
+                        <hr class="divider">
+                        <div class="summary-row"><span class="summary-label summary-total-label">Total</span><span class="summary-money" id="lanyard-sum-total">₱120.00</span></div>
+                        <button class="btn-order" onclick="lanyardOrderNow()">🛒 Order Now</button>
+                        <button class="btn-cart" onclick="lanyardAddToCart()">+ Add to Cart</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: PAYMENT — Step 1 of 3
+     ============================================================ -->
+<div class="spa-page" id="page-payment">
+    <header class="appbar">
+        <button class="back-btn" id="pay-back-btn" onclick="showPage('cart')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Customer Information</span><span class="appbar-subtitle">Step 1 of 3</span></div>
+    </header>
+    <main class="page">
+        <div class="layout-half">
+            <div class="col-left">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🛒 Your Cart</div>
+                        <div class="card-subtitle" id="pay-cart-count">Review your items before checkout</div>
+                    </div>
+                    <div id="pay-cart-items-list"></div>
+                </div>
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <hr class="divider">
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">Total Amount</span>
+                        <span class="summary-total-money" id="pay-sum-total">₱0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-right">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Customer Information</div><div class="card-subtitle">Required for order processing</div></div>
+                    <div class="field"><label class="label">Full Name *</label><input class="input" type="text" id="pay-full-name" placeholder="Your full name"></div>
+                    <div class="field"><label class="label">Preferred Delivery Date *</label><input class="input" type="date" id="pay-date"></div>
+                    <div class="field">
+                        <label class="label">Contact Number *</label>
+                        <div class="input-icon-wrap">
+                            <span class="input-icon">📞</span>
+                            <input class="input input-with-icon" type="tel" id="pay-contact" placeholder="09xxxxxxxxx">
+                        </div>
+                    </div>
+                    <div class="use-number-row" id="pay-number-toggle-row" style="display:none;">
+                        <span class="use-number-label">Use your registered number?</span>
+                        <div class="toggle-btns">
+                            <button class="toggle-btn toggle-btn--active" id="pay-yes-btn" onclick="togglePayNumber(true)">Yes</button>
+                            <button class="toggle-btn" id="pay-no-btn" onclick="togglePayNumber(false)">No</button>
+                        </div>
+                    </div>
+                    <button class="btn-proceed" onclick="proceedToPayMethod()">PROCEED TO PAYMENT</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: PAYMENT METHOD — Step 2 of 3
+     ============================================================ -->
+<div class="spa-page" id="page-pay-method">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('payment')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Select Payment Method</span><span class="appbar-subtitle">Step 2 of 3</span></div>
+    </header>
+    <main class="page">
+        <div class="layout-half">
+            <div class="col-left">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Order Summary</div><div class="card-subtitle" id="pm-cart-count">1 service(s) in cart</div></div>
+                    <div id="pm-cart-items-list"></div>
+                    <hr class="divider" style="margin:1rem 0;">
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">Total Amount</span>
+                        <span class="summary-total-money" id="pm-sum-total">₱0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-right">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Select Payment Method:</div></div>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="gcash" class="payment-radio">
+                            <div class="payment-icon payment-icon--blue">💳</div>
+                            <div class="payment-text"><span class="payment-name">GCash</span><span class="payment-desc">Pay now via GCash</span></div>
+                            <div class="payment-check">✓</div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cash" class="payment-radio">
+                            <div class="payment-icon payment-icon--green">👛</div>
+                            <div class="payment-text"><span class="payment-name">Cash on Pick-up</span><span class="payment-desc">Pay when you pick up your order</span></div>
+                            <div class="payment-check">✓</div>
+                        </label>
+                    </div>
+                </div>
+                <button class="btn-proceed" onclick="proceedPayment()">PROCEED</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: GCASH PAYMENT — Step 3 of 3
+     ============================================================ -->
+<div class="spa-page" id="page-gcash">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('pay-method')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">GCash Payment</span><span class="appbar-subtitle">Step 3 of 3</span></div>
+    </header>
+    <main class="page">
+        <div class="layout-half">
+            <div class="col-left">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">Order Summary</div></div>
+                    <div id="gcash-cart-items-list"></div>
+                    <hr class="divider" style="margin:1rem 0;">
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">Total Amount</span>
+                        <span class="summary-total-money" id="gcash-sum-total">₱0.00</span>
+                    </div>
+                </div>
+                <div class="card card-blue">
+                    <div class="card-head"><div class="card-title">Payment Instructions</div><div class="card-subtitle">Scan the QR code or send to:</div></div>
+                    <div class="gcash-number">UPRESSease | 0912 345 6789</div>
+                    <div class="gcash-amount">Amount to send: <strong id="gcash-amount">₱0.00</strong></div>
+                    <div class="qr-wrapper">
+                        <div class="qr-box">
+                            <div class="qr-placeholder"><span>📱</span><span>GCash QR Code</span></div>
+                            <div class="qr-label">GCash QR Code</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-right">
+                <div class="card card-sticky">
+                    <div class="card-head"><div class="card-title">Payment Details</div><div class="card-subtitle">Enter your GCash reference number after payment</div></div>
+                    <div class="field"><label class="label">GCash Reference Number: *</label><input class="input" type="text" id="gcash-ref" placeholder="e.g., 1001 234 567 890"></div>
+                    <div class="field"><label class="label">Upload Proof of Payment: *</label><input class="input" type="file" id="gcash-proof" accept="image/*,.pdf"></div>
+                    <div class="order-info-box">
+                        <div class="order-info-row"><span>Name:</span><span id="gcash-info-name">—</span></div>
+                        <div class="order-info-row"><span>Contact:</span><span id="gcash-info-phone">—</span></div>
+                        <div class="order-info-row"><span>Delivery Date:</span><span id="gcash-info-date">—</span></div>
+                    </div>
+                    <button class="btn-proceed" onclick="submitGcashPayment()">SUBMIT ORDER</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: ORDER CONFIRMATION
+     ============================================================ -->
+<div class="spa-page" id="page-confirm">
+    <header class="appbar">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="appbar-titles"><span class="appbar-title">Order Confirmed</span><span class="appbar-subtitle">UPRESSease - WMSU</span></div>
+    </header>
+    <main class="page">
+        <div class="confirm-wrapper">
+            <div class="confirm-card">
+                <div class="confirm-icon">✅</div>
+                <h2>Order Submitted!</h2>
+                <p>Your order has been received and is now pending processing. We'll notify you when it's ready for pickup.</p>
+                <div class="confirm-details" id="confirm-details-list"></div>
+                <button class="btn-red" onclick="showPage('orders')" style="margin-bottom:0.75rem;">View My Orders</button>
+                <br>
+                <button class="btn-red" onclick="showPage('dashboard')" style="background:#555;margin-top:0.5rem;">Back to Dashboard</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============================================================
+     PAGE: MY ORDERS
+     ============================================================ -->
+<div class="spa-page" id="page-orders">
+    <div class="orders-header">
+        <button class="back-btn" onclick="showPage('dashboard')">←</button>
+        <div class="header-text"><h2>My Orders</h2><p class="subtitle">Track and manage your orders</p></div>
+    </div>
+    <div class="manage-tabs" id="tabs-bar">
+        <button class="manage-tab active" data-filter="all">All (<span class="tab-count" data-status="all">0</span>)</button>
+        <button class="manage-tab" data-filter="Pending">Pending (<span class="tab-count" data-status="Pending">0</span>)</button>
+        <button class="manage-tab" data-filter="Processing">Processing (<span class="tab-count" data-status="Processing">0</span>)</button>
+        <button class="manage-tab" data-filter="Ready">Ready (<span class="tab-count" data-status="Ready">0</span>)</button>
+        <button class="manage-tab" data-filter="Completed">Completed (<span class="tab-count" data-status="Completed">0</span>)</button>
+    </div>
+    <div id="orders-list"></div>
+</div>
+
+<script src="js/student.js"></script>
+</body>
+</html>

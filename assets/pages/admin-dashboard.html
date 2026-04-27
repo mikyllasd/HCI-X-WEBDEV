@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UPRESSease – Admin Dashboard</title>
+  <link rel="stylesheet" href="../css/admin-dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+ 
+  <!-- ══════════════════════════════════
+       MOBILE TOP BAR (hidden on desktop)
+  ══════════════════════════════════ -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>UPRESSease</span>
+    </div>
+    <button class="topbar-toggle" id="sidebarToggle" aria-label="Open menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </header>
+ 
+  <!-- ══════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+ 
+    <div class="sidebar-profile">
+      <div class="profile-avatar">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2 class="profile-name">UPRESSease</h2>
+      <p class="profile-role">Admin Portal</p>
+      <div class="profile-badge">
+        <i class="fa-solid fa-user-shield"></i>
+        <span>Admin</span>
+      </div>
+      <p class="profile-handle">@admin</p>
+    </div>
+ 
+    <nav class="sidebar-nav">
+      <!-- Main nav -->
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-page="verification">
+        <i class="fa-solid fa-user-check"></i>
+        <span>Student Verification</span>
+      </a>
+      <a href="#" class="nav-item" data-page="orders">
+        <i class="fa-solid fa-cube"></i>
+        <span>Orders</span>
+      </a>
+      <a href="#" class="nav-item" data-page="qr">
+        <i class="fa-solid fa-qrcode"></i>
+        <span>QR Scanner</span>
+      </a>
+ 
+      <!-- Performance Analytics -->
+      <div class="nav-section-label">Performance Analytics</div>
+ 
+      <a href="#" class="nav-item" data-page="daily">
+        <i class="fa-regular fa-clock"></i>
+        <span>Daily Analytics</span>
+      </a>
+      <a href="#" class="nav-item" data-page="monthly">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Monthly Analytics</span>
+      </a>
+ 
+      <!-- Reports & Management -->
+      <div class="nav-section-label">Reports &amp; Management</div>
+ 
+      <a href="#" class="nav-item" data-page="reports">
+        <i class="fa-solid fa-chart-bar"></i>
+        <span>Reports</span>
+      </a>
+      <a href="#" class="nav-item" data-page="history">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>Transaction History</span>
+      </a>
+ 
+      <!-- Logout always last -->
+      <div class="nav-section-label">Account</div>
+ 
+      <a href="#" class="nav-item logout" id="logoutBtn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </nav>
+  </aside>
+ 
+  <!-- ══════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════ -->
+  <main class="main-content">
+ 
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle" id="todayDate">Today's Overview</p>
+      </div>
+    </div>
+ 
+    <!-- Stats Row 1 -->
+    <div class="stats-grid">
+      <div class="stat-card border-red">
+        <div class="stat-header">
+          <span class="stat-label">Today's Orders</span>
+          <div class="stat-icon icon-red"><i class="fa-solid fa-cube"></i></div>
+        </div>
+        <div class="stat-value" id="todayOrders">0</div>
+        <div class="stat-desc">Total orders today</div>
+      </div>
+ 
+      <div class="stat-card border-green">
+        <div class="stat-header">
+          <span class="stat-label">Today's Income</span>
+          <div class="stat-icon icon-green"><i class="fa-solid fa-dollar-sign"></i></div>
+        </div>
+        <div class="stat-value peso" id="todayIncome">₱0.00</div>
+        <div class="stat-desc">From completed orders</div>
+      </div>
+ 
+      <div class="stat-card border-yellow">
+        <div class="stat-header">
+          <span class="stat-label">Pending/Paid</span>
+          <div class="stat-icon icon-yellow"><i class="fa-regular fa-clock"></i></div>
+        </div>
+        <div class="stat-value" id="pendingPaid">0</div>
+        <div class="stat-desc">Awaiting processing</div>
+      </div>
+    </div>
+ 
+    <!-- Stats Row 2 -->
+    <div class="stats-grid">
+      <div class="stat-card border-purple">
+        <div class="stat-header">
+          <span class="stat-label">Processing</span>
+          <div class="stat-icon icon-purple"><i class="fa-solid fa-cube"></i></div>
+        </div>
+        <div class="stat-value" id="processing">0</div>
+        <div class="stat-desc">Currently being processed</div>
+      </div>
+ 
+      <div class="stat-card border-green">
+        <div class="stat-header">
+          <span class="stat-label">Ready for Pickup</span>
+          <div class="stat-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+        <div class="stat-value" id="readyPickup">0</div>
+        <div class="stat-desc">Ready to be claimed</div>
+      </div>
+ 
+      <div class="stat-card border-slate">
+        <div class="stat-header">
+          <span class="stat-label">Completed</span>
+          <div class="stat-icon icon-slate"><i class="fa-solid fa-check-double"></i></div>
+        </div>
+        <div class="stat-value" id="completed">0</div>
+        <div class="stat-desc">Successfully completed</div>
+      </div>
+    </div>
+ 
+    <!-- Recent Orders -->
+    <div class="table-card">
+      <div class="table-header">
+        <h2 class="table-title">Recent Orders</h2>
+        <button class="btn-view-all" id="viewAllBtn">View All</button>
+      </div>
+      <div class="table-scroll-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Student</th>
+              <th>Document</th>
+              <th>Status</th>
+              <th>Amount</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr class="empty-row">
+              <td colspan="6">
+                <div class="empty-state">
+                  <i class="fa-solid fa-inbox"></i>
+                  <p>No orders yet today</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+  </main>
+ 
+  <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>

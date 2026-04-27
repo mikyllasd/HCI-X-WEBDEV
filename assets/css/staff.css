@@ -109,7 +109,7 @@ button:hover {
   height: auto;
   min-height: 100vh;
   overflow: auto;
-  background: #eef3f8;
+  background: #f3f3f3;
   display: block;
   justify-content: unset;
   align-items: unset;
@@ -136,7 +136,7 @@ button:hover {
 .staff-sidebar {
   width: 220px;
   flex-shrink: 0;
-  background: #0f4c5c;
+  background: #990000;
   color: #fff;
   padding: 28px 16px;
   display: flex;
@@ -155,7 +155,7 @@ button:hover {
 }
 
 .staff-sidebar > p {
-  color: #b2d8e0;
+  color: #f5c0c0;
   font-size: 12px;
   margin: 0 0 20px 0;
 }
@@ -167,7 +167,7 @@ button:hover {
 }
 
 .staff-nav a {
-  color: #d5ecf1;
+  color: #fddcdc;
   text-decoration: none;
   padding: 10px 12px;
   border-radius: 8px;
@@ -177,7 +177,7 @@ button:hover {
 
 .staff-nav a:hover,
 .staff-nav a.active {
-  background: #1e6f82;
+  background: #b30000;
   color: #fff;
 }
 
@@ -201,7 +201,7 @@ button:hover {
 .staff-header h1 {
   margin: 0;
   font-size: 22px;
-  color: #12343b;
+  color: #111;
 }
 
 .staff-header p {
@@ -223,13 +223,13 @@ button:hover {
   border-radius: 12px;
   padding: 18px 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  border-left: 5px solid #0f4c5c;
+  border-left: 5px solid #990000;
 }
 
 .staff-card h3 {
   margin: 0 0 8px 0;
   font-size: 14px;
-  color: #24444d;
+  color: #333;
   font-weight: 600;
 }
 
@@ -237,7 +237,7 @@ button:hover {
   display: block;
   font-size: 32px;
   font-weight: 700;
-  color: #0f4c5c;
+  color: #990000;
   line-height: 1;
   margin-bottom: 6px;
 }
@@ -265,7 +265,7 @@ button:hover {
   margin: 0 0 14px 0;
   font-size: 16px;
   font-weight: 700;
-  color: #12343b;
+  color: #111;
 }
 
 .staff-panel ul {
@@ -302,7 +302,7 @@ button:hover {
 }
 
 .staff-panel th {
-  color: #1b4f5c;
+  color: #990000;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;

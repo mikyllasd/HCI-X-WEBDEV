@@ -1,178 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UPRESSease | Staff Portal</title>
-  <link rel="stylesheet" href="../css/staff.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Login</title>
+  <link rel="stylesheet" href="../css/staff.css">
 </head>
 <body>
 
-  <!-- LOGIN -->
-  <div class="login-bg" id="login-page">
-    <div class="login-card">
-      <div class="login-icon">🎓</div>
-      <h2>UPRESSease</h2>
-      <p>Western Mindanao State University<br>Staff Management Portal</p>
-
-      <input type="email" id="email" placeholder="staff@wmsu.edu.ph" />
-      <input type="password" id="password" placeholder="Enter password" />
-
-      <button onclick="login()">Login</button>
+<div class="container">
+  <div class="login-card">
+    
+    <div class="logo">
+      🎓
     </div>
+
+    <h2>UPRESSease</h2>
+    <p>Western Mindanao State University<br>
+    Printing & Merchandise Reservation System</p>
+
+    <form id="loginForm">
+      <label>Username</label>
+      <input type="text" id="staff-username" placeholder="staff" required>
+
+      <label>Password</label>
+      <input type="password" id="staff-password" placeholder="Enter password" required>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="signup">
+      Don't have an account? <a href="#">Sign up</a>
+    </p>
+
   </div>
+</div>
 
-  <!-- STAFF DASHBOARD -->
-  <div class="admin-layout" id="admin-page">
-
-    <aside class="sidebar">
-      <h2>Admin Menu</h2>
-      <button onclick="showPage('dashboard')" class="active">Dashboard</button>
-      <button onclick="showPage('orders')">Manage Orders</button>
-      <button onclick="showPage('payments')">Verify Payments</button>
-      <button onclick="showPage('accounts')">Active Accounts</button>
-      <button onclick="showPage('reports')">Reports</button>
-      <button onclick="logout()">Logout</button>
-    </aside>
-
-    <main class="main-content">
-
-      <!-- DASHBOARD -->
-      <section id="dashboard" class="page active">
-        <h1>Admin Dashboard</h1>
-        <p class="subtitle">UPRESSease Management Overview</p>
-
-        <div class="stats-grid">
-          <div class="card red">
-            <h4>Total Orders</h4>
-            <h2 id="total-orders">0</h2>
-          </div>
-
-          <div class="card green">
-            <h4>Total Income</h4>
-            <h2 id="total-income">₱0.00</h2>
-          </div>
-
-          <div class="card blue">
-            <h4>Today's Orders</h4>
-            <h2 id="today-orders">0</h2>
-          </div>
-
-          <div class="card purple">
-            <h4>Today's Income</h4>
-            <h2 id="today-income">₱0.00</h2>
-          </div>
-        </div>
-
-        <div class="stats-grid">
-          <div class="card yellow">
-            <h4>Pending / Paid</h4>
-            <h2 id="pending-count">0</h2>
-          </div>
-
-          <div class="card violet">
-            <h4>Processing</h4>
-            <h2 id="processing-count">0</h2>
-          </div>
-
-          <div class="card green">
-            <h4>Ready for Pickup</h4>
-            <h2 id="ready-count">0</h2>
-          </div>
-
-          <div class="card gray">
-            <h4>Completed</h4>
-            <h2 id="completed-count">0</h2>
-          </div>
-        </div>
-
-        <div class="quick-card">
-          <h3>Quick Actions</h3>
-          <button onclick="showPage('orders')">Manage Orders</button>
-          <button onclick="showPage('payments')">Verify Payments</button>
-          <button onclick="showPage('reports')">View Reports</button>
-        </div>
-      </section>
-
-      <!-- ORDERS -->
-      <section id="orders" class="page">
-        <h1>Manage Orders</h1>
-        <p class="subtitle">Update order status and monitor student orders.</p>
-
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Student</th>
-                <th>Service</th>
-                <th>Total</th>
-                <th>Payment</th>
-                <th>Status</th>
-                <th>Update</th>
-              </tr>
-            </thead>
-            <tbody id="orders-table"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PAYMENTS -->
-      <section id="payments" class="page">
-        <h1>Verify Payments</h1>
-        <p class="subtitle">Check GCash reference and proof of payment.</p>
-
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Student</th>
-                <th>Amount</th>
-                <th>Reference No.</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="payments-table"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ACCOUNTS -->
-      <section id="accounts" class="page">
-        <h1>Active Accounts</h1>
-        <p class="subtitle">View verified student accounts.</p>
-
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>College</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="accounts-table"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- REPORTS -->
-      <section id="reports" class="page">
-        <h1>Reports</h1>
-        <p class="subtitle">Summary of orders and income.</p>
-
-        <div class="quick-card">
-          <h3>Income Summary</h3>
-          <p>Total completed income: <strong id="report-income">₱0.00</strong></p>
-          <p>Total completed orders: <strong id="report-completed">0</strong></p>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <script src="js/staff.js"></script>
+<script src="../js/staff.js"></script>
 </body>
 </html>

@@ -1,20 +1,19 @@
-document.getElementById('staffLoginForm').addEventListener('submit', function(e) {
+document.getElementById("loginForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
+  const email = document.querySelector("input[type='email']").value;
+  const password = document.querySelector("input[type='password']").value;
 
-  // Basic check (you can later connect to backend/login API)
-  if (email === '' || password === '') {
-    alert('Please enter both email and password.');
+  if (!email || !password) {
+    alert("Please fill in all fields.");
     return;
   }
 
-  // Example validation (placeholder logic)
-  if (email.endsWith('@wmsu.edu.ph')) {
-    alert('Login successful! Redirecting...');
-    window.location.href = 'staff_dashboard.html';
+  // SAMPLE LOGIN LOGIC (replace with backend)
+  if (email === "staff@wmsu.edu.ph" && password === "1234") {
+    alert("Login successful!");
+    // window.location.href = "dashboard.html";
   } else {
-    alert('Invalid email domain. Use your WMSU staff email.');
+    alert("Invalid credentials.");
   }
 });

@@ -5,177 +5,198 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Staff Dashboard</title>
   <link rel="stylesheet" href="../css/staff.css">
-  <style>
-    /* ---- SPA page sections ---- */
-    .staff-page { display: none; }
-    .staff-page.active { display: block; }
-
-    /* ---- Status badge colors ---- */
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .badge-pending  { background: #fff3cd; color: #856404; }
-    .badge-process  { background: #cfe2ff; color: #084298; }
-    .badge-ready    { background: #d1e7dd; color: #0f5132; }
-    .badge-complete { background: #e2e3e5; color: #41464b; }
-
-    /* ---- Page header ---- */
-    .page-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .page-heading h2 {
-      margin: 0;
-      font-size: 20px;
-      color: #111;
-    }
-    .page-heading span {
-      font-size: 13px;
-      color: #5b6870;
-    }
-
-    /* ---- Full-width table panel ---- */
-    .staff-panel-full {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-    .staff-panel-full h3 {
-      margin: 0 0 16px 0;
-      font-size: 16px;
-      font-weight: 700;
-      color: #111;
-    }
-    .staff-panel-full table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .staff-panel-full th,
-    .staff-panel-full td {
-      text-align: left;
-      padding: 11px 12px;
-      border-bottom: 1px solid #e6ecef;
-      font-size: 14px;
-    }
-    .staff-panel-full th {
-      color: #990000;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .staff-panel-full td { color: #3a4a50; }
-
-    /* ---- Action button in table ---- */
-    .btn-action {
-      padding: 5px 14px;
-      border: none;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      background: #990000;
-      color: #fff;
-      transition: background 0.2s;
-    }
-    .btn-action:hover { background: #b30000; }
-    .btn-action.release { background: #198754; }
-    .btn-action.release:hover { background: #146c43; }
-
-    /* ---- Empty state ---- */
-    .empty-state {
-      text-align: center;
-      padding: 48px 20px;
-      color: #8a9aa3;
-      font-size: 14px;
-    }
-    .empty-state i { font-size: 36px; margin-bottom: 12px; display: block; }
-  </style>
 </head>
 <body class="staff-dashboard-body">
-  <div class="staff-layout">
+  <div class="staff-layout sd-layout">
 
     <!-- ======== SIDEBAR ======== -->
-    <aside class="staff-sidebar">
-      <h2>Staff Panel</h2>
-      <p>UPRESSease</p>
-      <nav class="staff-nav">
-        <a href="#" class="nav-link active" data-page="dashboard">&#9632; Dashboard</a>
-        <a href="#" class="nav-link" data-page="order-queue">&#9632; Order Queue</a>
-        <a href="#" class="nav-link" data-page="ready-release">&#9632; Ready to Release</a>
-        <a href="#" class="nav-link" data-page="completed">&#9632; Completed</a>
-        <a href="staff.html" style="margin-top:auto; color:#f28b8b;">&#9632; Logout</a>
+    <aside class="staff-sidebar sd-sidebar">
+      <div class="sd-sidebarTop">
+        <div class="sd-brand">
+          <div class="sd-brand__logo" aria-hidden="true">
+            <span class="sd-brand__mark">U</span>
+          </div>
+          <div class="sd-brand__text">
+            <div class="sd-brand__name">UPRESSease</div>
+            <div class="sd-brand__sub">Admin Portal</div>
+          </div>
+        </div>
+
+        <div class="sd-user">
+          <div class="sd-user__label">Staff</div>
+          <div class="sd-user__handle">@staff</div>
+        </div>
+      </div>
+
+      <nav class="staff-nav sd-nav" aria-label="Staff navigation">
+        <a href="#" class="nav-link active sd-nav__link" data-page="dashboard">
+          <span class="sd-nav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="sd-nav__label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-link sd-nav__link" data-page="order-queue">
+          <span class="sd-nav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 7h14M7 12h14M7 17h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M3.5 7h.01M3.5 12h.01M3.5 17h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="sd-nav__label">Orders</span>
+        </a>
+        <a href="#" class="nav-link sd-nav__link" data-page="qr-scanner">
+          <span class="sd-nav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 7h3v3H7V7zm7 0h3v3h-3V7zM7 14h3v3H7v-3zm7 7h3v-3h-3v3z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M4 9V6a2 2 0 0 1 2-2h3M20 9V6a2 2 0 0 0-2-2h-3M4 15v3a2 2 0 0 0 2 2h3M20 15v3a2 2 0 0 1-2 2h-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="sd-nav__label">QR Scanner</span>
+        </a>
+
+        <div class="logout-container">
+          <a class="sd-logout" href="staff.html" aria-label="Logout">
+            <span class="sd-logout__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M10 7V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M13 12H3m0 0 3-3M3 12l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="sd-logout__label">Logout</span>
+          </a>
+        </div>
       </nav>
     </aside>
 
     <!-- ======== MAIN ======== -->
-    <main class="staff-main">
+    <main class="staff-main sd-main">
 
       <!-- -------- PAGE: DASHBOARD -------- -->
       <div class="staff-page active" id="page-dashboard">
-        <header class="staff-header">
-          <h1>Staff Dashboard</h1>
-          <p>Simple daily monitoring for staff operations</p>
+        <header class="sd-header">
+          <h1 class="sd-title">Dashboard</h1>
+          <div class="sd-subtitle">Today's Overview - Monday, April 27, 2026</div>
         </header>
 
-        <section class="staff-card-grid">
-          <div class="staff-card">
-            <h3>Pending Orders</h3>
-            <span class="staff-number">8</span>
-            <span>Needs checking</span>
+        <section class="sd-metrics" aria-label="Dashboard metrics">
+          <article class="sd-card sd-card--red">
+            <div class="sd-card__top">
+              <div class="sd-card__label">Today's Orders</div>
+              <div class="sd-card__icon sd-card__icon--ring" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 21a9 9 0 1 0-9-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M12 7v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="sd-card__value">0</div>
+            <div class="sd-card__hint">Total orders today</div>
+          </article>
+
+          <article class="sd-card sd-card--green">
+            <div class="sd-card__top">
+              <div class="sd-card__label">Today's Income</div>
+              <div class="sd-card__icon sd-card__icon--money" aria-hidden="true">$</div>
+            </div>
+            <div class="sd-card__value">₱0.00</div>
+            <div class="sd-card__hint">From completed orders</div>
+          </article>
+
+          <article class="sd-card sd-card--amber">
+            <div class="sd-card__top">
+              <div class="sd-card__label">Pending/Paid</div>
+              <div class="sd-card__icon sd-card__icon--ring" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 21a9 9 0 1 0-9-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M12 7v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="sd-card__value">0</div>
+            <div class="sd-card__hint">Awaiting processing</div>
+          </article>
+
+          <article class="sd-card sd-card--purple">
+            <div class="sd-card__top">
+              <div class="sd-card__label">Processing</div>
+              <div class="sd-card__icon sd-card__icon--spark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="sd-card__value">0</div>
+            <div class="sd-card__hint">Currently being processed</div>
+          </article>
+
+          <article class="sd-card sd-card--teal">
+            <div class="sd-card__top">
+              <div class="sd-card__label">Ready for Pickup</div>
+              <div class="sd-card__icon sd-card__icon--check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="sd-card__value">0</div>
+            <div class="sd-card__hint">Ready to be claimed</div>
+          </article>
+
+          <article class="sd-card sd-card--gray">
+            <div class="sd-card__top">
+              <div class="sd-card__label">Completed</div>
+              <div class="sd-card__icon sd-card__icon--check muted" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="sd-card__value">0</div>
+            <div class="sd-card__hint">Successfully completed</div>
+          </article>
+        </section>
+
+        <section class="sd-panel" aria-label="Today's transactions">
+          <div class="sd-panel__head">
+            <div>
+              <div class="sd-panel__title">
+                <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+                <span>Today's Transactions</span>
+              </div>
+              <div class="sd-panel__sub">All orders placed today</div>
+            </div>
+            <button class="sd-panel__cta" type="button">
+              <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
+              <span>View All Orders</span>
+            </button>
           </div>
-          <div class="staff-card">
-            <h3>On Process</h3>
-            <span class="staff-number">5</span>
-            <span>Being printed</span>
-          </div>
-          <div class="staff-card">
-            <h3>Ready for Pickup</h3>
-            <span class="staff-number">6</span>
-            <span>Waiting for claim</span>
-          </div>
-          <div class="staff-card">
-            <h3>Completed Today</h3>
-            <span class="staff-number">12</span>
-            <span>Released successfully</span>
+
+          <div class="sd-empty">
+            <div class="sd-empty__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M3.27 6.96 12 12l8.73-5.04M12 22V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="sd-empty__title">No transactions today</div>
+            <div class="sd-empty__sub">Orders placed today will appear here</div>
           </div>
         </section>
 
-        <section class="staff-panels">
-          <div class="staff-panel">
-            <h3>Today's Tasks</h3>
-            <ul>
-              <li>Check new uploads from students</li>
-              <li>Confirm payment screenshots</li>
-              <li>Prepare ready-for-pickup batch</li>
-              <li>Update completed order status</li>
-            </ul>
+        <section class="sd-hero" aria-label="Performance analytics">
+          <div class="sd-hero__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 16l5-6 4 3 7-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </div>
-          <div class="staff-panel">
-            <h3>Recent Orders</h3>
-            <div class="staff-table-wrap">
-              <table>
-                <thead>
-                  <tr><th>Order ID</th><th>Service</th><th>Status</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>#1021</td><td>Document Printing</td><td><span class="badge badge-pending">Pending</span></td></tr>
-                  <tr><td>#1022</td><td>ID Lace</td><td><span class="badge badge-process">Processing</span></td></tr>
-                  <tr><td>#1023</td><td>Mug Printing</td><td><span class="badge badge-ready">Ready</span></td></tr>
-                  <tr><td>#1024</td><td>Book Binding</td><td><span class="badge badge-complete">Completed</span></td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="sd-hero__text">
+            <div class="sd-hero__title">Performance Analytics</div>
+            <div class="sd-hero__sub">View detailed daily, monthly, and yearly performance reports</div>
           </div>
+          <button class="sd-hero__cta" type="button">View Analytics</button>
         </section>
       </div>
 
@@ -246,6 +267,21 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- -------- PAGE: QR SCANNER -------- -->
+      <div class="staff-page" id="page-qr-scanner">
+        <header class="staff-header">
+          <h1>QR Scanner</h1>
+          <p>Scan student QR codes to confirm release</p>
+        </header>
+        <div class="staff-panel-full">
+          <h3>Scanner</h3>
+          <div class="empty-state">
+            <i aria-hidden="true">⌁</i>
+            QR scanner UI coming soon
           </div>
         </div>
       </div>
@@ -394,25 +430,6 @@
     </main>
   </div>
 
-  <script>
-    const navLinks = document.querySelectorAll('.nav-link[data-page]');
-    const pages    = document.querySelectorAll('.staff-page');
-
-    navLinks.forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = this.dataset.page;
-
-        // Update active nav link
-        navLinks.forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-
-        // Show the matching page, hide others
-        pages.forEach(page => {
-          page.classList.toggle('active', page.id === 'page-' + target);
-        });
-      });
-    });
-  </script>
+  <script src="../js/staff.js"></script>
 </body>
 </html>

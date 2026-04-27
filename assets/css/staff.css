@@ -1,0 +1,97 @@
+/* General page background */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #7b1f1f; /* same maroon tone */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Login Container */
+.login-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Login Card */
+.login-box {
+  background-color: white;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo circle */
+.logo img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+/* Headings */
+h2 {
+  margin: 10px 0 0;
+  color: #7b1f1f;
+}
+p {
+  color: #444;
+  margin-bottom: 20px;
+}
+.role {
+  color: #7b1f1f;
+  margin-bottom: 20px;
+}
+
+/* Form Styles */
+form {
+  text-align: left;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #7b1f1f;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #5c1616;
+}
+
+/* Footer link */
+.footer-text {
+  margin-top: 15px;
+  font-size: 14px;
+}
+.footer-text a {
+  color: #7b1f1f;
+  text-decoration: none;
+  font-weight: bold;
+}
+.footer-text a:hover {
+  text-decoration: underline;
+}

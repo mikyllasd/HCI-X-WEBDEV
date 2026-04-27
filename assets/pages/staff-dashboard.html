@@ -5,100 +5,414 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Staff Dashboard</title>
   <link rel="stylesheet" href="../css/staff.css">
+  <style>
+    /* ---- SPA page sections ---- */
+    .staff-page { display: none; }
+    .staff-page.active { display: block; }
+
+    /* ---- Status badge colors ---- */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-pending  { background: #fff3cd; color: #856404; }
+    .badge-process  { background: #cfe2ff; color: #084298; }
+    .badge-ready    { background: #d1e7dd; color: #0f5132; }
+    .badge-complete { background: #e2e3e5; color: #41464b; }
+
+    /* ---- Page header ---- */
+    .page-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .page-heading h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #111;
+    }
+    .page-heading span {
+      font-size: 13px;
+      color: #5b6870;
+    }
+
+    /* ---- Full-width table panel ---- */
+    .staff-panel-full {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .staff-panel-full h3 {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+    }
+    .staff-panel-full table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .staff-panel-full th,
+    .staff-panel-full td {
+      text-align: left;
+      padding: 11px 12px;
+      border-bottom: 1px solid #e6ecef;
+      font-size: 14px;
+    }
+    .staff-panel-full th {
+      color: #990000;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .staff-panel-full td { color: #3a4a50; }
+
+    /* ---- Action button in table ---- */
+    .btn-action {
+      padding: 5px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #990000;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .btn-action:hover { background: #b30000; }
+    .btn-action.release { background: #198754; }
+    .btn-action.release:hover { background: #146c43; }
+
+    /* ---- Empty state ---- */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: #8a9aa3;
+      font-size: 14px;
+    }
+    .empty-state i { font-size: 36px; margin-bottom: 12px; display: block; }
+  </style>
 </head>
 <body class="staff-dashboard-body">
   <div class="staff-layout">
+
+    <!-- ======== SIDEBAR ======== -->
     <aside class="staff-sidebar">
       <h2>Staff Panel</h2>
       <p>UPRESSease</p>
-
       <nav class="staff-nav">
-        <a href="staff-dashboard.html" class="active">Dashboard</a>
-        <a href="#">Order Queue</a>
-        <a href="#">Ready to Release</a>
-        <a href="#">Completed</a>
-        <a href="staff.html">Logout</a>
+        <a href="#" class="nav-link active" data-page="dashboard">&#9632; Dashboard</a>
+        <a href="#" class="nav-link" data-page="order-queue">&#9632; Order Queue</a>
+        <a href="#" class="nav-link" data-page="ready-release">&#9632; Ready to Release</a>
+        <a href="#" class="nav-link" data-page="completed">&#9632; Completed</a>
+        <a href="staff.html" style="margin-top:auto; color:#f28b8b;">&#9632; Logout</a>
       </nav>
     </aside>
 
+    <!-- ======== MAIN ======== -->
     <main class="staff-main">
-      <header class="staff-header">
-        <h1>Staff Dashboard</h1>
-        <p>Simple daily monitoring for staff operations</p>
-      </header>
 
-      <section class="staff-card-grid">
-        <div class="staff-card">
-          <h3>Pending Orders</h3>
-          <span class="staff-number">8</span>
-          <span>Needs checking</span>
-        </div>
-        <div class="staff-card">
-          <h3>On Process</h3>
-          <span class="staff-number">5</span>
-          <span>Being printed</span>
-        </div>
-        <div class="staff-card">
-          <h3>Ready for Pickup</h3>
-          <span class="staff-number">6</span>
-          <span>Waiting for claim</span>
-        </div>
-        <div class="staff-card">
-          <h3>Completed Today</h3>
-          <span class="staff-number">12</span>
-          <span>Released successfully</span>
-        </div>
-      </section>
+      <!-- -------- PAGE: DASHBOARD -------- -->
+      <div class="staff-page active" id="page-dashboard">
+        <header class="staff-header">
+          <h1>Staff Dashboard</h1>
+          <p>Simple daily monitoring for staff operations</p>
+        </header>
 
-      <section class="staff-panels">
-        <div class="staff-panel">
-          <h3>Today Tasks</h3>
-          <ul>
-            <li>Check new uploads from students</li>
-            <li>Confirm payment screenshots</li>
-            <li>Prepare ready-for-pickup batch</li>
-            <li>Update completed order status</li>
-          </ul>
-        </div>
+        <section class="staff-card-grid">
+          <div class="staff-card">
+            <h3>Pending Orders</h3>
+            <span class="staff-number">8</span>
+            <span>Needs checking</span>
+          </div>
+          <div class="staff-card">
+            <h3>On Process</h3>
+            <span class="staff-number">5</span>
+            <span>Being printed</span>
+          </div>
+          <div class="staff-card">
+            <h3>Ready for Pickup</h3>
+            <span class="staff-number">6</span>
+            <span>Waiting for claim</span>
+          </div>
+          <div class="staff-card">
+            <h3>Completed Today</h3>
+            <span class="staff-number">12</span>
+            <span>Released successfully</span>
+          </div>
+        </section>
 
-        <div class="staff-panel">
-          <h3>Recent Orders</h3>
-          <div class="staff-table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Service</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>#1021</td>
-                <td>Document Printing</td>
-                <td>Pending</td>
-              </tr>
-              <tr>
-                <td>#1022</td>
-                <td>ID Lace</td>
-                <td>Processing</td>
-              </tr>
-              <tr>
-                <td>#1023</td>
-                <td>Mug Printing</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td>#1024</td>
-                <td>Book Binding</td>
-                <td>Completed</td>
-              </tr>
-            </tbody>
-          </table>
+        <section class="staff-panels">
+          <div class="staff-panel">
+            <h3>Today's Tasks</h3>
+            <ul>
+              <li>Check new uploads from students</li>
+              <li>Confirm payment screenshots</li>
+              <li>Prepare ready-for-pickup batch</li>
+              <li>Update completed order status</li>
+            </ul>
+          </div>
+          <div class="staff-panel">
+            <h3>Recent Orders</h3>
+            <div class="staff-table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Order ID</th><th>Service</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>#1021</td><td>Document Printing</td><td><span class="badge badge-pending">Pending</span></td></tr>
+                  <tr><td>#1022</td><td>ID Lace</td><td><span class="badge badge-process">Processing</span></td></tr>
+                  <tr><td>#1023</td><td>Mug Printing</td><td><span class="badge badge-ready">Ready</span></td></tr>
+                  <tr><td>#1024</td><td>Book Binding</td><td><span class="badge badge-complete">Completed</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- -------- PAGE: ORDER QUEUE -------- -->
+      <div class="staff-page" id="page-order-queue">
+        <header class="staff-header">
+          <h1>Order Queue</h1>
+          <p>All incoming orders that need to be processed</p>
+        </header>
+
+        <div class="staff-card-grid" style="margin-bottom:18px;">
+          <div class="staff-card">
+            <h3>New Orders</h3>
+            <span class="staff-number">3</span>
+            <span>Just received</span>
+          </div>
+          <div class="staff-card">
+            <h3>Pending Payment</h3>
+            <span class="staff-number">5</span>
+            <span>Awaiting confirmation</span>
+          </div>
+          <div class="staff-card">
+            <h3>In Production</h3>
+            <span class="staff-number">4</span>
+            <span>Being prepared</span>
+          </div>
+          <div class="staff-card">
+            <h3>On Hold</h3>
+            <span class="staff-number">1</span>
+            <span>Needs attention</span>
           </div>
         </div>
-      </section>
+
+        <div class="staff-panel-full">
+          <h3>Queue List</h3>
+          <div class="staff-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th><th>Student</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#1025</td><td>Juan dela Cruz</td><td>Document Printing</td><td>Apr 27, 2026</td>
+                  <td><span class="badge badge-pending">Pending</span></td>
+                  <td><button class="btn-action">Process</button></td>
+                </tr>
+                <tr>
+                  <td>#1026</td><td>Maria Santos</td><td>Tarpaulin Print</td><td>Apr 27, 2026</td>
+                  <td><span class="badge badge-pending">Pending</span></td>
+                  <td><button class="btn-action">Process</button></td>
+                </tr>
+                <tr>
+                  <td>#1027</td><td>Pedro Reyes</td><td>Book Binding</td><td>Apr 27, 2026</td>
+                  <td><span class="badge badge-process">Processing</span></td>
+                  <td><button class="btn-action">View</button></td>
+                </tr>
+                <tr>
+                  <td>#1028</td><td>Ana Lim</td><td>ID Lace</td><td>Apr 27, 2026</td>
+                  <td><span class="badge badge-process">Processing</span></td>
+                  <td><button class="btn-action">View</button></td>
+                </tr>
+                <tr>
+                  <td>#1029</td><td>Carlo Bautista</td><td>Mug Printing</td><td>Apr 26, 2026</td>
+                  <td><span class="badge badge-pending">Pending</span></td>
+                  <td><button class="btn-action">Process</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- -------- PAGE: READY TO RELEASE -------- -->
+      <div class="staff-page" id="page-ready-release">
+        <header class="staff-header">
+          <h1>Ready to Release</h1>
+          <p>Orders finished and waiting for student pickup</p>
+        </header>
+
+        <div class="staff-card-grid" style="margin-bottom:18px;">
+          <div class="staff-card">
+            <h3>Ready Today</h3>
+            <span class="staff-number">6</span>
+            <span>Waiting for pickup</span>
+          </div>
+          <div class="staff-card">
+            <h3>Overdue Pickup</h3>
+            <span class="staff-number">2</span>
+            <span>More than 2 days</span>
+          </div>
+          <div class="staff-card">
+            <h3>Claimed Today</h3>
+            <span class="staff-number">4</span>
+            <span>Successfully released</span>
+          </div>
+          <div class="staff-card">
+            <h3>Pending QR Scan</h3>
+            <span class="staff-number">3</span>
+            <span>QR not yet scanned</span>
+          </div>
+        </div>
+
+        <div class="staff-panel-full">
+          <h3>Ready for Pickup List</h3>
+          <div class="staff-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th><th>Student</th><th>Service</th><th>Ready Since</th><th>Status</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#1018</td><td>Lea Garcia</td><td>Document Printing</td><td>Apr 26, 2026</td>
+                  <td><span class="badge badge-ready">Ready</span></td>
+                  <td><button class="btn-action release">Release</button></td>
+                </tr>
+                <tr>
+                  <td>#1019</td><td>Mark Torres</td><td>Tarpaulin Print</td><td>Apr 26, 2026</td>
+                  <td><span class="badge badge-ready">Ready</span></td>
+                  <td><button class="btn-action release">Release</button></td>
+                </tr>
+                <tr>
+                  <td>#1020</td><td>Nina Cruz</td><td>Mug Printing</td><td>Apr 27, 2026</td>
+                  <td><span class="badge badge-ready">Ready</span></td>
+                  <td><button class="btn-action release">Release</button></td>
+                </tr>
+                <tr>
+                  <td>#1016</td><td>Ben Marcos</td><td>ID Lace</td><td>Apr 25, 2026</td>
+                  <td><span class="badge badge-ready">Ready</span></td>
+                  <td><button class="btn-action release">Release</button></td>
+                </tr>
+                <tr>
+                  <td>#1015</td><td>Cathy Ramos</td><td>Book Binding</td><td>Apr 25, 2026</td>
+                  <td><span class="badge badge-ready">Ready</span></td>
+                  <td><button class="btn-action release">Release</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- -------- PAGE: COMPLETED -------- -->
+      <div class="staff-page" id="page-completed">
+        <header class="staff-header">
+          <h1>Completed Orders</h1>
+          <p>All orders that have been successfully released</p>
+        </header>
+
+        <div class="staff-card-grid" style="margin-bottom:18px;">
+          <div class="staff-card">
+            <h3>Today</h3>
+            <span class="staff-number">12</span>
+            <span>Completed</span>
+          </div>
+          <div class="staff-card">
+            <h3>This Week</h3>
+            <span class="staff-number">47</span>
+            <span>Total releases</span>
+          </div>
+          <div class="staff-card">
+            <h3>This Month</h3>
+            <span class="staff-number">183</span>
+            <span>Total releases</span>
+          </div>
+          <div class="staff-card">
+            <h3>All Time</h3>
+            <span class="staff-number">1,240</span>
+            <span>Total releases</span>
+          </div>
+        </div>
+
+        <div class="staff-panel-full">
+          <h3>Completed Order History</h3>
+          <div class="staff-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th><th>Student</th><th>Service</th><th>Completed</th><th>Released By</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#1024</td><td>Rosa Diaz</td><td>Book Binding</td><td>Apr 27, 2026</td><td>Staff A</td>
+                  <td><span class="badge badge-complete">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>#1023</td><td>Luis Tan</td><td>Mug Printing</td><td>Apr 27, 2026</td><td>Staff B</td>
+                  <td><span class="badge badge-complete">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>#1022</td><td>Gina Uy</td><td>Tarpaulin Print</td><td>Apr 26, 2026</td><td>Staff A</td>
+                  <td><span class="badge badge-complete">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>#1021</td><td>Roy Aquino</td><td>Document Printing</td><td>Apr 26, 2026</td><td>Staff B</td>
+                  <td><span class="badge badge-complete">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>#1020</td><td>Cel Reyes</td><td>ID Lace</td><td>Apr 25, 2026</td><td>Staff A</td>
+                  <td><span class="badge badge-complete">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>#1019</td><td>Dan Flores</td><td>Book Binding</td><td>Apr 25, 2026</td><td>Staff B</td>
+                  <td><span class="badge badge-complete">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
+
+  <script>
+    const navLinks = document.querySelectorAll('.nav-link[data-page]');
+    const pages    = document.querySelectorAll('.staff-page');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.dataset.page;
+
+        // Update active nav link
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+
+        // Show the matching page, hide others
+        pages.forEach(page => {
+          page.classList.toggle('active', page.id === 'page-' + target);
+        });
+      });
+    });
+  </script>
 </body>
 </html>

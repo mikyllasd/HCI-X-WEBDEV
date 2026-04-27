@@ -56,8 +56,13 @@ function handleLogin() {
     const record = CREDENTIALS[username.toLowerCase()];
     if (record && record.password === password) {
       showAlert(`✓ Welcome, ${record.role}! Redirecting to dashboard…`, 'success');
-      // TODO: redirect to your dashboard route
-      // window.location.href = '/dashboard';
+      setTimeout(() => {
+        if (username.toLowerCase() === 'staff') {
+          window.location.href = '../assets/pages/staff-dashboard.html';
+        } else {
+          window.location.href = '../admin-login/admin-dashboard.html';
+        }
+      }, 900);
     } else {
       showAlert('Invalid username or password. Please try again.', 'error');
       pwInput.value = '';
@@ -87,8 +92,7 @@ loginBtn.addEventListener('click', handleLogin);
  
 // ── Student Login Link ──
 studentLink.addEventListener('click', () => {
-  alert('Redirecting to Student Login...');
-  // TODO: window.location.href = '/student-login';
+  window.location.href = '../assets/pages/student.html';
 });
  
 // ── Enter Key Submits Form ──

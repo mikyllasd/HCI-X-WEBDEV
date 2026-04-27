@@ -1,0 +1,404 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: #8b0000; /* darker red para staff */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  background: #8b0000;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+h2 {
+  margin-bottom: 5px;
+}
+
+p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+form {
+  text-align: left;
+}
+
+label {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #8b0000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #a30000;
+}
+
+.signup {
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.signup a {
+  color: #8b0000;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* ===================== STAFF DASHBOARD ===================== */
+
+/* Reset conflicting body styles for the dashboard page */
+.staff-dashboard-body,
+.staff-dashboard-body * {
+  box-sizing: border-box;
+}
+
+.staff-dashboard-body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  min-height: 100vh;
+  overflow: auto;
+  background: #eef3f8;
+  display: block;
+  justify-content: unset;
+  align-items: unset;
+}
+
+/* Override global p/h2 inside the dashboard */
+.staff-dashboard-body p {
+  color: inherit;
+  font-size: inherit;
+  margin-bottom: 0;
+}
+
+.staff-dashboard-body h2 {
+  margin-bottom: 0;
+}
+
+/* Layout */
+.staff-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.staff-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #0f4c5c;
+  color: #fff;
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.staff-sidebar h2 {
+  margin: 0 0 2px 0;
+  font-size: 20px;
+  color: #fff;
+}
+
+.staff-sidebar > p {
+  color: #b2d8e0;
+  font-size: 12px;
+  margin: 0 0 20px 0;
+}
+
+.staff-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.staff-nav a {
+  color: #d5ecf1;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.staff-nav a:hover,
+.staff-nav a.active {
+  background: #1e6f82;
+  color: #fff;
+}
+
+/* Main content area */
+.staff-main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* Header bar */
+.staff-header {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.staff-header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: #12343b;
+}
+
+.staff-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #5b6870;
+}
+
+/* Stat cards */
+.staff-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.staff-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border-left: 5px solid #0f4c5c;
+}
+
+.staff-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #24444d;
+  font-weight: 600;
+}
+
+.staff-number {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f4c5c;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.staff-card span {
+  font-size: 12px;
+  color: #7a8e95;
+}
+
+/* Bottom panels */
+.staff-panels {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 14px;
+}
+
+.staff-panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.staff-panel h3 {
+  margin: 0 0 14px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #12343b;
+}
+
+.staff-panel ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.staff-panel li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #34444b;
+  line-height: 1.5;
+}
+
+/* Table wrapper prevents horizontal bleed */
+.staff-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.staff-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 280px;
+}
+
+.staff-panel th,
+.staff-panel td {
+  text-align: left;
+  padding: 10px 10px;
+  border-bottom: 1px solid #e6ecef;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.staff-panel th {
+  color: #1b4f5c;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.staff-panel td {
+  color: #3a4a50;
+}
+
+/* -------- Responsive breakpoints -------- */
+
+/* Tablet: 4 cards → 2×2, sidebar still visible */
+@media (max-width: 1100px) {
+  .staff-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Small tablet / large phone: collapse sidebar to top bar */
+@media (max-width: 768px) {
+  .staff-layout {
+    flex-direction: column;
+  }
+
+  .staff-sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 8px;
+  }
+
+  .staff-sidebar h2 {
+    font-size: 17px;
+    margin-right: 6px;
+  }
+
+  .staff-sidebar > p {
+    margin: 0;
+    font-size: 12px;
+  }
+
+  .staff-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .staff-nav a {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .staff-main {
+    padding: 16px;
+  }
+
+  .staff-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .staff-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phone: 1 column cards */
+@media (max-width: 480px) {
+  .staff-card-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .staff-card {
+    padding: 14px 12px;
+  }
+
+  .staff-number {
+    font-size: 26px;
+  }
+
+  .staff-main {
+    padding: 12px;
+  }
+
+  .staff-header {
+    padding: 14px;
+  }
+
+  .staff-header h1 {
+    font-size: 18px;
+  }
+}

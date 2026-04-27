@@ -969,6 +969,40 @@ button:hover {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.sd-sortBtn {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  border-radius: 0;
+}
+.sd-sortBtn:hover,
+.sd-sortBtn:active {
+  background: transparent;
+  color: inherit;
+}
+.sd-sortBtn:focus-visible {
+  outline: 3px solid rgba(153, 0, 0, 0.22);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+.sd-sortIcon {
+  font-size: 12px;
+  color: rgba(153, 0, 0, 0.75);
+}
+.sd-sortTh[aria-sort="ascending"] .sd-sortIcon,
+.sd-sortTh[aria-sort="descending"] .sd-sortIcon {
+  color: #990000;
+}
 .staff-panel-full td { color: #3a4a50; }
 
 .btn-action {

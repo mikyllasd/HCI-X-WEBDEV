@@ -543,8 +543,97 @@ function renderDashboardMetricsAndTransactions() {
 document.addEventListener('DOMContentLoaded', () => {
   renderDashboardMetricsAndTransactions();
   renderAnalyticsMockCharts();
+  setupOrderQueueSorting();
   setupQrScanner();
 });
+
+function setupOrderQueueSorting() {
+  const table = document.getElementById('orderQueueTable');
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  if (!tbody) return;
+
+  const headers = Array.from(table.querySelectorAll('th[data-sort-key]'));
+  if (!headers.length) return;
+
+  const getCellText = (tr, idx) => (tr.querySelectorAll('td')[idx]?.textContent || '').trim();
+  const parseOrderId = (s) => {
+    const n = Number(String(s).replace(/[^\d]/g, ''));
+    return Number.isFinite(n) ? n : 0;
+  };
+  const parseDate = (s) => {
+    const t = Date.parse(s);
+    return Number.isFinite(t) ? t : 0;
+  };
+  const parseStatusRank = (s) => {
+    const v = String(s || '').toLowerCase();
+    if (v.includes('pending')) return 1;
+    if (v.includes('processing')) return 2;
+    if (v.includes('ready')) return 3;
+    if (v.includes('completed')) return 4;
+    return 99;
+  };
+
+  const colIndexByKey = {
+    orderId: 0,
+    student: 1,
+    service: 2,
+    date: 3,
+    status: 4,
+  };
+
+  const setSortVisual = (activeTh, dir) => {
+    headers.forEach(th => {
+      if (th === activeTh) {
+        th.setAttribute('aria-sort', dir === 'asc' ? 'ascending' : 'descending');
+        const icon = th.querySelector('.sd-sortIcon');
+        if (icon) icon.textContent = dir === 'asc' ? '↑' : '↓';
+      } else {
+        th.setAttribute('aria-sort', 'none');
+        const icon = th.querySelector('.sd-sortIcon');
+        if (icon) icon.textContent = '↕';
+      }
+    });
+  };
+
+  headers.forEach(th => {
+    const btn = th.querySelector('button');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const key = th.getAttribute('data-sort-key') || '';
+      const idx = colIndexByKey[key];
+      if (idx === undefined) return;
+
+      const current = th.getAttribute('data-sort-dir') || '';
+      const dir = current === 'asc' ? 'desc' : 'asc';
+      headers.forEach(h => h.removeAttribute('data-sort-dir'));
+      th.setAttribute('data-sort-dir', dir);
+
+      const rows = Array.from(tbody.querySelectorAll('tr')).map((tr, i) => ({ tr, i }));
+
+      const getValue = (tr) => {
+        if (key === 'orderId') return parseOrderId(getCellText(tr, idx));
+        if (key === 'date') return parseDate(getCellText(tr, idx));
+        if (key === 'status') return parseStatusRank(getCellText(tr, idx));
+        return getCellText(tr, idx).toLowerCase();
+      };
+
+      rows.sort((a, b) => {
+        const va = getValue(a.tr);
+        const vb = getValue(b.tr);
+        if (va < vb) return dir === 'asc' ? -1 : 1;
+        if (va > vb) return dir === 'asc' ? 1 : -1;
+        return a.i - b.i;
+      });
+
+      const frag = document.createDocumentFragment();
+      rows.forEach(r => frag.appendChild(r.tr));
+      tbody.appendChild(frag);
+
+      setSortVisual(th, dir);
+    });
+  });
+}
 
 function renderAnalyticsMockCharts() {
   const barsEl = document.getElementById('weeklyIncomeBars');

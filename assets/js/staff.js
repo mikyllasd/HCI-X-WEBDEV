@@ -187,3 +187,50 @@ function renderReports() {
   document.getElementById("report-income").textContent = `₱${totalIncome.toFixed(2)}`;
   document.getElementById("report-completed").textContent = completedOrders.length;
 }
+
+
+
+
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById("staff-username").value.trim();
+    const password = document.getElementById("staff-password").value;
+
+    if (!username || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    // SAMPLE LOGIN LOGIC (replace with backend)
+    if (username === "staff" && password === "staff123") {
+      alert("Login successful!");
+      window.location.href = "staff-dashboard.html";
+    } else {
+      alert("Invalid credentials.");
+    }
+  });
+}
+
+// ===================== STAFF DASHBOARD =====================
+
+const navLinks = document.querySelectorAll('.nav-link[data-page]');
+const pages    = document.querySelectorAll('.staff-page');
+
+navLinks.forEach(link => {
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = this.dataset.page;
+
+    // Update active nav link
+    navLinks.forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+
+    // Show the matching page, hide others
+    pages.forEach(page => {
+      page.classList.toggle('active', page.id === 'page-' + target);
+    });
+  });
+});

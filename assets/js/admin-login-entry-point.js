@@ -58,9 +58,9 @@ function handleLogin() {
       showAlert(`✓ Welcome, ${record.role}! Redirecting to dashboard…`, 'success');
       setTimeout(() => {
         if (username.toLowerCase() === 'staff') {
-          window.location.href = '../assets/pages/staff-dashboard.html';
+          window.location.href = 'staff.html';
         } else {
-          window.location.href = '../admin-login/admin-dashboard.html';
+          window.location.href = '/assets/pages/admin-dashboard.html';
         }
       }, 900);
     } else {

@@ -271,10 +271,40 @@
         <div class="staff-panel-full">
           <h3>Queue List</h3>
           <div class="staff-table-wrap">
-            <table>
+            <table id="orderQueueTable">
               <thead>
                 <tr>
-                  <th>Order ID</th><th>Student</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th>
+                  <th class="sd-sortTh" data-sort-key="orderId" aria-sort="none">
+                    <button class="sd-sortBtn" type="button">
+                      <span>Order ID</span>
+                      <span class="sd-sortIcon" aria-hidden="true">↕</span>
+                    </button>
+                  </th>
+                  <th class="sd-sortTh" data-sort-key="student" aria-sort="none">
+                    <button class="sd-sortBtn" type="button">
+                      <span>Student</span>
+                      <span class="sd-sortIcon" aria-hidden="true">↕</span>
+                    </button>
+                  </th>
+                  <th class="sd-sortTh" data-sort-key="service" aria-sort="none">
+                    <button class="sd-sortBtn" type="button">
+                      <span>Service</span>
+                      <span class="sd-sortIcon" aria-hidden="true">↕</span>
+                    </button>
+                  </th>
+                  <th class="sd-sortTh" data-sort-key="date" aria-sort="none">
+                    <button class="sd-sortBtn" type="button">
+                      <span>Date</span>
+                      <span class="sd-sortIcon" aria-hidden="true">↕</span>
+                    </button>
+                  </th>
+                  <th class="sd-sortTh" data-sort-key="status" aria-sort="none">
+                    <button class="sd-sortBtn" type="button">
+                      <span>Status</span>
+                      <span class="sd-sortIcon" aria-hidden="true">↕</span>
+                    </button>
+                  </th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

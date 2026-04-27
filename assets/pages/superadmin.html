@@ -1,0 +1,1451 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Admin Portal</title>
+
+    <!-- Google Fonts: DM Sans -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Chart.js for analytics graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Separated stylesheet -->
+    <link rel="stylesheet" href="../css/superadmin.css" />
+  </head>
+  <body>
+    <!-- ============================================================
+     APP WRAPPER — flex container holding sidebar + main column
+     ============================================================ -->
+    <div class="app-wrapper">
+      <!-- ==========================================================
+       SIDEBAR — sticky, stays fixed while main content scrolls
+       ========================================================== -->
+      <aside
+        class="sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Admin sidebar"
+      >
+        <!-- Brand block -->
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Admin Portal</span>
+          </div>
+        </div>
+
+        <!-- Logged-in user -->
+        <div class="sidebar-user">
+          <button class="user-pill" aria-label="Logged in as Superadmin">
+            <i data-lucide="crown" aria-hidden="true"></i>
+            <span>Superadmin</span>
+          </button>
+          <p class="user-handle">@superadmin</p>
+        </div>
+
+        <!-- Navigation links -->
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <!-- Core pages -->
+          <ul class="nav-list" role="list">
+            <li>
+              <a
+                href="#"
+                class="nav-link active"
+                data-page="dashboard"
+                aria-current="page"
+              >
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="student-verification">
+                <i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Student Verification</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="orders">
+                <i data-lucide="package" aria-hidden="true"></i
+                ><span>Orders</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="qr-scanner">
+                <i data-lucide="scan-qr-code" aria-hidden="true"></i
+                ><span>QR Scanner</span></a
+              >
+            </li>
+          </ul>
+
+          <!-- Performance Analytics section -->
+          <p class="nav-section-label">Performance Analytics</p>
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="#" class="nav-link" data-page="daily-analytics">
+                <i data-lucide="clock" aria-hidden="true"></i
+                ><span>Daily Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="monthly-analytics">
+                <i data-lucide="calendar-days" aria-hidden="true"></i
+                ><span>Monthly Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="yearly-analytics">
+                <i data-lucide="calendar-range" aria-hidden="true"></i
+                ><span>Yearly Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="annual-statistics">
+                <i data-lucide="trending-up" aria-hidden="true"></i
+                ><span>Annual Statistics</span></a
+              >
+            </li>
+          </ul>
+
+          <!-- Reports & Management section -->
+          <p class="nav-section-label">Reports &amp; Management</p>
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="#" class="nav-link" data-page="transaction-history">
+                <i data-lucide="file-text" aria-hidden="true"></i
+                ><span>Transaction History</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="active-accounts">
+                <i data-lucide="users" aria-hidden="true"></i
+                ><span>Active Accounts</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="add-service">
+                <i data-lucide="circle-plus" aria-hidden="true"></i
+                ><span>Add Service</span></a
+              >
+            </li>
+          </ul>
+
+          <!-- Logout (danger) -->
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="#"
+                class="nav-link nav-link--logout"
+                data-page="logout"
+                id="logout-btn"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <!-- /sidebar -->
+
+      <!-- ==========================================================
+       MAIN CONTENT — sticky topbar + all page sections
+       ========================================================== -->
+      <main class="main-content" id="main-content" role="main">
+        <!-- Sticky top navigation bar -->
+        <header class="topbar" role="banner">
+          <button
+            class="hamburger"
+            id="hamburger-btn"
+            aria-label="Toggle sidebar"
+            aria-expanded="false"
+          >
+            <i data-lucide="menu" aria-hidden="true"></i>
+          </button>
+          <div class="topbar-title" id="topbar-title">Dashboard</div>
+          <div class="topbar-actions">
+            <button class="topbar-icon-btn" aria-label="Notifications">
+              <i data-lucide="bell" aria-hidden="true"></i>
+              <span class="notif-dot" aria-hidden="true"></span>
+            </button>
+            <div
+              class="topbar-avatar"
+              title="Superadmin"
+              aria-label="Admin avatar"
+            >
+              SA
+            </div>
+          </div>
+        </header>
+
+        <!-- ==========================================================
+         PAGE: DASHBOARD
+         Today's order stats + recent transactions table
+         ========================================================== -->
+        <section
+          class="page-section active"
+          id="page-dashboard"
+          aria-labelledby="dash-heading"
+        >
+          <div class="page-header">
+            <h1 id="dash-heading">Dashboard</h1>
+            <p class="page-subtitle" id="dash-date">Today's Overview</p>
+          </div>
+
+          <!-- Order status cards (6 cards, 3 columns) -->
+          <div class="stats-grid stats-grid--3 sp">
+            <article
+              class="stat-card stat-card--red"
+              aria-label="Today's Orders"
+            >
+              <div class="stat-card__header">
+                <span>Today's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="dash-orders">0</p>
+              <p class="stat-card__label">Total orders today</p>
+            </article>
+            <article
+              class="stat-card stat-card--green"
+              aria-label="Today's Income"
+            >
+              <div class="stat-card__header">
+                <span>Today's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="dash-income">₱0.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+            <article
+              class="stat-card stat-card--yellow"
+              aria-label="Pending or Paid"
+            >
+              <div class="stat-card__header">
+                <span>Pending/Paid</span
+                ><i data-lucide="clock" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="dash-pending">0</p>
+              <p class="stat-card__label">Awaiting processing</p>
+            </article>
+            <article
+              class="stat-card stat-card--purple"
+              aria-label="Processing"
+            >
+              <div class="stat-card__header">
+                <span>Processing</span
+                ><i data-lucide="package-open" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="dash-processing">0</p>
+              <p class="stat-card__label">Currently being processed</p>
+            </article>
+            <article
+              class="stat-card stat-card--teal"
+              aria-label="Ready for Pickup"
+            >
+              <div class="stat-card__header">
+                <span>Ready for Pickup</span
+                ><i data-lucide="circle-check" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="dash-ready">0</p>
+              <p class="stat-card__label">Ready to be claimed</p>
+            </article>
+            <article class="stat-card stat-card--gray" aria-label="Completed">
+              <div class="stat-card__header">
+                <span>Completed</span
+                ><i data-lucide="check" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="dash-completed">0</p>
+              <p class="stat-card__label">Successfully completed</p>
+            </article>
+          </div>
+
+          <!-- Today's transactions card -->
+          <div class="card sp">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="list" aria-hidden="true"></i>
+                <h2 class="card-title">Today's Transactions</h2>
+              </div>
+              <button class="btn btn--primary" onclick="navigateTo('orders')">
+                <i data-lucide="list" aria-hidden="true"></i> View All Orders
+              </button>
+            </div>
+            <p class="card-subtitle">All orders placed today</p>
+            <!-- Empty state -->
+            <div class="empty-state" id="dash-empty">
+              <i data-lucide="package" aria-hidden="true"></i>
+              <p class="empty-state__title">No transactions today</p>
+              <p class="empty-state__sub">
+                Orders placed today will appear here
+              </p>
+            </div>
+            <!-- Table hidden when empty -->
+            <div class="table-wrapper hidden" id="dash-table">
+              <table class="data-table" aria-label="Today's transactions">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Student Email</th>
+                    <th>Service</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Analytics promo banner -->
+          <div class="promo-banner sp">
+            <div class="promo-banner__icon" aria-hidden="true">
+              <i data-lucide="trending-up"></i>
+            </div>
+            <div class="promo-banner__text">
+              <h3>Performance Analytics</h3>
+              <p>
+                View detailed daily, monthly, and yearly performance reports
+              </p>
+            </div>
+            <button
+              class="btn btn--light"
+              onclick="navigateTo('daily-analytics')"
+            >
+              View Analytics
+            </button>
+          </div>
+        </section>
+        <!-- /page-dashboard -->
+
+        <!-- ==========================================================
+         PAGE: STUDENT VERIFICATION
+         Review, approve, or reject student registration requests
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-student-verification"
+          aria-labelledby="sv-heading"
+        >
+          <div class="page-header">
+            <h1 id="sv-heading">Student Verification</h1>
+            <p class="page-subtitle">
+              Review and manage student registration requests
+            </p>
+          </div>
+
+          <!-- Summary stats -->
+          <div class="stats-grid stats-grid--4 sp">
+            <article
+              class="stat-card stat-card--blue"
+              aria-label="Total Requests"
+            >
+              <div class="stat-card__header">
+                <span>Total Requests</span
+                ><i data-lucide="filter" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-total">4</p>
+            </article>
+            <article class="stat-card stat-card--yellow" aria-label="Pending">
+              <div class="stat-card__header">
+                <span>Pending</span
+                ><i data-lucide="clock" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-pending">2</p>
+            </article>
+            <article class="stat-card stat-card--green" aria-label="Approved">
+              <div class="stat-card__header">
+                <span>Approved</span
+                ><i data-lucide="circle-check" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-approved">1</p>
+            </article>
+            <article
+              class="stat-card stat-card--red-solid"
+              aria-label="Rejected"
+            >
+              <div class="stat-card__header">
+                <span>Rejected</span
+                ><i data-lucide="x-circle" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-rejected">1</p>
+            </article>
+          </div>
+
+          <!-- Search + filter -->
+          <div class="card sp">
+            <div class="search-filter-row">
+              <div class="search-box">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <input
+                  type="search"
+                  id="sv-search"
+                  placeholder="Search by name, student ID, or email..."
+                  aria-label="Search verification requests"
+                />
+              </div>
+              <div
+                class="filter-tabs"
+                role="tablist"
+                aria-label="Filter by status"
+              >
+                <button
+                  class="filter-tab active"
+                  data-filter="all"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  All
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="pending"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Pending
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="approved"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Approved
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="rejected"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Rejected
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Request list -->
+          <div class="card sp">
+            <h2 class="card-title">Verification Requests</h2>
+            <p class="card-subtitle" id="sv-count">4 requests found</p>
+            <ul
+              class="request-list"
+              id="sv-list"
+              aria-label="Verification requests"
+            ></ul>
+          </div>
+        </section>
+        <!-- /page-student-verification -->
+
+        <!-- ==========================================================
+         PAGE: ORDERS MANAGEMENT
+         View, search, and filter all student orders
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-orders"
+          aria-labelledby="orders-heading"
+        >
+          <div class="page-dark-header">
+            <button
+              class="back-btn"
+              onclick="navigateTo('dashboard')"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+              <h1 id="orders-heading">Orders Management</h1>
+              <p>View and manage all orders</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <div class="card">
+              <h2 class="card-title">Search Orders</h2>
+              <p class="card-subtitle">
+                Search by Order ID, email, or service type
+              </p>
+              <div class="search-box mt-3">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <input
+                  type="search"
+                  id="orders-search"
+                  placeholder="Search orders..."
+                  aria-label="Search orders"
+                />
+              </div>
+            </div>
+            <div
+              class="tab-bar mt-4"
+              role="tablist"
+              aria-label="Filter orders by status"
+            >
+              <button
+                class="tab-btn active"
+                data-status="all"
+                role="tab"
+                aria-selected="true"
+              >
+                All Orders (9)
+              </button>
+              <button
+                class="tab-btn"
+                data-status="pending"
+                role="tab"
+                aria-selected="false"
+              >
+                Pending (3)
+              </button>
+              <button
+                class="tab-btn"
+                data-status="processing"
+                role="tab"
+                aria-selected="false"
+              >
+                Processing (2)
+              </button>
+              <button
+                class="tab-btn"
+                data-status="ready"
+                role="tab"
+                aria-selected="false"
+              >
+                Ready (2)
+              </button>
+              <button
+                class="tab-btn"
+                data-status="completed"
+                role="tab"
+                aria-selected="false"
+              >
+                Completed (2)
+              </button>
+            </div>
+            <div class="card mt-2">
+              <div class="table-wrapper">
+                <table class="data-table" aria-label="Orders list">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Student Email</th>
+                      <th>Service</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Payment</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-orders -->
+
+        <!-- ==========================================================
+         PAGE: QR CODE SCANNER
+         Camera or manual Order ID entry for quick pickup
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-qr-scanner"
+          aria-labelledby="qr-heading"
+        >
+          <div class="page-dark-header">
+            <button
+              class="back-btn"
+              onclick="navigateTo('dashboard')"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+              <h1 id="qr-heading">QR Code Scanner</h1>
+              <p>Scan orders for quick pickup</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <div class="card qr-card">
+              <div class="qr-icon-wrap" aria-hidden="true">
+                <i data-lucide="qr-code"></i>
+              </div>
+              <h2 class="text-center">Scan QR Code or Enter Order ID</h2>
+              <p class="text-center text-muted mt-1">
+                Use your device's camera to scan the QR code or manually enter
+                the order ID
+              </p>
+
+              <!-- Camera area -->
+              <div
+                class="qr-camera-area"
+                id="qr-camera-area"
+                role="region"
+                aria-label="Camera scanner area"
+              >
+                <div class="qr-placeholder" aria-hidden="true">
+                  <i data-lucide="qr-code"></i>
+                </div>
+                <p class="qr-camera-label"><strong>Camera Scanner</strong></p>
+                <p class="text-muted small">
+                  Position the QR code in front of the camera
+                </p>
+                <button class="btn btn--outline mt-3" id="activate-camera-btn">
+                  Activate Camera
+                </button>
+                <video
+                  id="qr-video"
+                  autoplay
+                  playsinline
+                  class="hidden"
+                  aria-label="Camera feed"
+                ></video>
+              </div>
+
+              <div class="qr-divider"><span>Or enter manually</span></div>
+              <label class="form-label" for="qr-order-input">Order ID</label>
+              <div class="qr-input-row">
+                <div class="search-box">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="text"
+                    id="qr-order-input"
+                    placeholder="Enter Order ID (e.g., ORD-2026-001)"
+                    aria-label="Order ID input"
+                  />
+                </div>
+                <button class="btn btn--primary" id="qr-search-btn">
+                  Search
+                </button>
+              </div>
+              <div
+                id="qr-result"
+                class="qr-result hidden"
+                role="alert"
+                aria-live="polite"
+              ></div>
+            </div>
+
+            <!-- How-to guide -->
+            <div class="card info-card mt-4">
+              <h3>
+                <i data-lucide="package" aria-hidden="true"></i> How to Use QR
+                Scanner
+              </h3>
+              <ol class="how-to-list">
+                <li>
+                  Ask the student to show their order QR code from the
+                  confirmation page.
+                </li>
+                <li>
+                  Use the camera scanner above or manually enter the Order ID.
+                </li>
+                <li>Verify the order details and payment status.</li>
+                <li>
+                  If payment is complete and order is ready, click "Release
+                  Order".
+                </li>
+                <li>
+                  Hand over the order to the student and mark it as completed.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+        <!-- /page-qr-scanner -->
+
+        <!-- ==========================================================
+         PAGE: DAILY ANALYTICS
+         Today's metrics + last 7 days line chart
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-daily-analytics"
+          aria-labelledby="da-heading"
+        >
+          <div class="page-header">
+            <h1 id="da-heading">Daily Analytics</h1>
+            <p class="page-subtitle">
+              Performance overview and trends for daily operations
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--2 sp">
+            <article class="stat-card stat-card--blue-soft">
+              <div class="stat-card__header">
+                <span>Today's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">0</p>
+              <p class="stat-card__label" id="da-date">
+                Sunday, April 26, 2026
+              </p>
+            </article>
+            <article class="stat-card stat-card--green-soft">
+              <div class="stat-card__header">
+                <span>Today's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱0.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="clock" aria-hidden="true"></i>
+              <h2 class="card-title">Last 7 Days Performance</h2>
+            </div>
+            <p class="card-subtitle">
+              Orders and income trends for the past week
+            </p>
+            <div class="chart-container">
+              <canvas id="daily-chart"></canvas>
+            </div>
+          </div>
+        </section>
+        <!-- /page-daily-analytics -->
+
+        <!-- ==========================================================
+         PAGE: MONTHLY ANALYTICS
+         Month totals + last 12 months bar chart
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-monthly-analytics"
+          aria-labelledby="ma-heading"
+        >
+          <div class="page-header">
+            <h1 id="ma-heading">Monthly Analytics</h1>
+            <p class="page-subtitle">
+              Performance overview and trends for monthly operations
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--2 sp">
+            <article class="stat-card stat-card--purple-soft">
+              <div class="stat-card__header">
+                <span>This Month's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">4</p>
+              <p class="stat-card__label">April 2026</p>
+            </article>
+            <article class="stat-card stat-card--green-soft">
+              <div class="stat-card__header">
+                <span>This Month's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱1,000.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="calendar-days" aria-hidden="true"></i>
+              <h2 class="card-title">Last 12 Months Performance</h2>
+            </div>
+            <p class="card-subtitle">Monthly orders and income trends</p>
+            <div class="chart-container">
+              <canvas id="monthly-chart"></canvas>
+            </div>
+          </div>
+        </section>
+        <!-- /page-monthly-analytics -->
+
+        <!-- ==========================================================
+         PAGE: YEARLY ANALYTICS
+         Year totals + last 5 years bar chart
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-yearly-analytics"
+          aria-labelledby="ya-heading"
+        >
+          <div class="page-header">
+            <h1 id="ya-heading">Yearly Analytics</h1>
+            <p class="page-subtitle">
+              Performance overview and trends for yearly operations
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--2 sp">
+            <article class="stat-card stat-card--orange-soft">
+              <div class="stat-card__header">
+                <span>This Year's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">9</p>
+              <p class="stat-card__label">2026</p>
+            </article>
+            <article class="stat-card stat-card--green-soft">
+              <div class="stat-card__header">
+                <span>This Year's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱1,750.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="calendar-range" aria-hidden="true"></i>
+              <h2 class="card-title">Last 5 Years Performance</h2>
+            </div>
+            <p class="card-subtitle">Yearly orders and income comparison</p>
+            <div class="chart-container">
+              <canvas id="yearly-chart"></canvas>
+            </div>
+          </div>
+        </section>
+        <!-- /page-yearly-analytics -->
+
+        <!-- ==========================================================
+         PAGE: ANNUAL STATISTICS
+         All-time KPIs, charts, year-by-year breakdown table
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-annual-statistics"
+          aria-labelledby="as-heading"
+        >
+          <div class="page-dark-header">
+            <button
+              class="back-btn"
+              onclick="navigateTo('dashboard')"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+              <h1 id="as-heading">Annual Statistics</h1>
+              <p>Yearly performance metrics and trends</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <div class="stats-grid stats-grid--4">
+              <article class="stat-card stat-card--red">
+                <div class="stat-card__header">
+                  <span>Total Transactions</span
+                  ><i data-lucide="trending-up" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value">9</p>
+                <p class="stat-card__label">All years combined</p>
+              </article>
+              <article class="stat-card stat-card--green">
+                <div class="stat-card__header">
+                  <span>Total Revenue</span
+                  ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value">₱1,750.00</p>
+                <p class="stat-card__label">All time</p>
+              </article>
+              <article class="stat-card stat-card--blue">
+                <div class="stat-card__header">
+                  <span>Total Users</span
+                  ><i data-lucide="users" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value">48</p>
+                <p class="stat-card__label">Registered accounts</p>
+              </article>
+              <article class="stat-card stat-card--purple">
+                <div class="stat-card__header">
+                  <span>YoY Growth</span
+                  ><i data-lucide="calendar-days" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value positive">+0%</p>
+                <p class="stat-card__label">Transaction growth</p>
+              </article>
+            </div>
+            <div class="card mt-6">
+              <h2 class="card-title">Transactions by Year</h2>
+              <p class="card-subtitle">
+                Annual transaction volume and revenue trends
+              </p>
+              <div class="chart-container">
+                <canvas id="annual-line-chart"></canvas>
+              </div>
+            </div>
+            <div class="two-col-grid mt-4">
+              <div class="card">
+                <h2 class="card-title">Annual Transaction Volume</h2>
+                <p class="card-subtitle">Number of transactions per year</p>
+                <div class="chart-container chart-container--sm">
+                  <canvas id="annual-volume-chart"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <h2 class="card-title">User Registrations by Year</h2>
+                <p class="card-subtitle">New student account registrations</p>
+                <div class="chart-container chart-container--sm">
+                  <canvas id="annual-users-chart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card mt-4">
+              <h2 class="card-title">Year-by-Year Breakdown</h2>
+              <p class="card-subtitle">Detailed annual performance metrics</p>
+              <div class="table-wrapper mt-3">
+                <table class="data-table" aria-label="Year-by-year breakdown">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Transactions</th>
+                      <th>Revenue</th>
+                      <th>Avg Order Value</th>
+                      <th>New Users</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2026</td>
+                      <td>9</td>
+                      <td class="text-green font-semibold">₱1,750.00</td>
+                      <td>₱194.44</td>
+                      <td>8</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-annual-statistics -->
+
+        <!-- ==========================================================
+         PAGE: TRANSACTION HISTORY
+         Filterable list of all completed transactions
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-transaction-history"
+          aria-labelledby="th-heading"
+        >
+          <div class="page-header">
+            <h1 id="th-heading">Transaction History</h1>
+            <p class="page-subtitle">
+              Complete record of all completed transactions
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--3 sp">
+            <article class="stat-card stat-card--red">
+              <div class="stat-card__header">
+                <span>Total Transactions</span
+                ><i data-lucide="file-text" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">2</p>
+              <p class="stat-card__label">Completed orders</p>
+            </article>
+            <article class="stat-card stat-card--green">
+              <div class="stat-card__header">
+                <span>Total Revenue</span
+                ><i data-lucide="download" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱1,750.00</p>
+              <p class="stat-card__label">From selected filters</p>
+            </article>
+            <article class="stat-card stat-card--blue">
+              <div class="stat-card__header">
+                <span>Average Order</span
+                ><i data-lucide="file" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱875.00</p>
+              <p class="stat-card__label">Per transaction</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <h2 class="card-title">Filter Transactions</h2>
+            <p class="card-subtitle">Search and filter transaction history</p>
+            <div class="filter-row mt-3">
+              <div class="search-box">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <input
+                  type="search"
+                  id="th-search"
+                  placeholder="Search by Order ID or Email..."
+                  aria-label="Search transactions"
+                />
+              </div>
+              <select
+                class="select-input"
+                id="th-service"
+                aria-label="Filter by service"
+              >
+                <option value="">All Services</option>
+                <option>Printing</option>
+                <option>Binding</option>
+                <option>Lanyards</option>
+                <option>Mug Printing</option>
+                <option>Merchandise</option>
+              </select>
+              <select
+                class="select-input"
+                id="th-college"
+                aria-label="Filter by college"
+              >
+                <option value="">All Colleges</option>
+                <option>CAS</option>
+                <option>CBA</option>
+                <option>CCS</option>
+                <option>COE</option>
+              </select>
+            </div>
+          </div>
+          <div class="card sp">
+            <h2 class="card-title">Transaction Records</h2>
+            <p class="card-subtitle">Sorted by date (newest first)</p>
+            <div class="table-wrapper mt-3">
+              <table class="data-table" aria-label="Transaction records">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date &amp; Time</th>
+                    <th>Student Email</th>
+                    <th>Service Type</th>
+                    <th>Items</th>
+                    <th>Payment Method</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>ORD-2026-104</strong></td>
+                    <td>Apr 1, 2026, 11:45 AM</td>
+                    <td>student@wmsu.edu.ph</td>
+                    <td><span class="badge badge--mug">Mug Printing</span></td>
+                    <td>Custom Mug Print (×5)</td>
+                    <td>
+                      <span class="badge badge--online">Online Payment</span>
+                    </td>
+                    <td class="font-semibold">₱1,000.00</td>
+                  </tr>
+                  <tr>
+                    <td><strong>ORD-2026-005</strong></td>
+                    <td>Feb 18, 2026, 2:00 PM</td>
+                    <td>carlo.garcia@wmsu.edu.ph</td>
+                    <td><span class="badge badge--merch">Merchandise</span></td>
+                    <td>WMSU T-Shirt (Large) (×3)</td>
+                    <td><span class="badge badge--onsite">Pay Onsite</span></td>
+                    <td class="font-semibold">₱750.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <!-- /page-transaction-history -->
+
+        <!-- ==========================================================
+         PAGE: ACTIVE ACCOUNTS
+         Student account expiration management
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-active-accounts"
+          aria-labelledby="aa-heading"
+        >
+          <div class="page-dark-header">
+            <button
+              class="back-btn"
+              onclick="navigateTo('dashboard')"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+              <h1 id="aa-heading">Active Accounts</h1>
+              <p>Manage student account status and expiration</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <!-- Expiration policy notice -->
+            <div class="policy-notice" role="note">
+              <i data-lucide="info" aria-hidden="true"></i>
+              <div>
+                <strong>Account Expiration Policy:</strong>
+                All student accounts expire after 1 year from registration or
+                last COR upload. Students must upload their first semester COR
+                for the next academic year to renew their account.
+              </div>
+            </div>
+
+            <!-- Summary cards -->
+            <div class="stats-grid stats-grid--4 mt-4">
+              <article class="stat-card stat-card--red">
+                <div class="stat-card__header">
+                  <span>Total Accounts</span
+                  ><i data-lucide="users" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="aa-total">5</p>
+                <p class="stat-card__label">All registered users</p>
+              </article>
+              <article class="stat-card stat-card--green">
+                <div class="stat-card__header">
+                  <span>Active</span
+                  ><i data-lucide="user-check" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="aa-active">2</p>
+                <p class="stat-card__label">Valid accounts</p>
+              </article>
+              <article class="stat-card stat-card--yellow">
+                <div class="stat-card__header">
+                  <span>Expiring Soon</span
+                  ><i data-lucide="alert-circle" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="aa-expiring">0</p>
+                <p class="stat-card__label">Within 30 days</p>
+              </article>
+              <article class="stat-card stat-card--red-solid">
+                <div class="stat-card__header">
+                  <span>Expired</span
+                  ><i data-lucide="alert-circle" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="aa-expired">3</p>
+                <p class="stat-card__label">Need renewal</p>
+              </article>
+            </div>
+
+            <!-- Search + filter -->
+            <div class="card mt-4">
+              <h2 class="card-title">Filter Accounts</h2>
+              <p class="card-subtitle">Search and filter student accounts</p>
+              <div class="aa-filter-row mt-3">
+                <!-- Prominent red-bordered search (matches screenshot) -->
+                <input
+                  type="search"
+                  id="aa-search"
+                  class="aa-search-input"
+                  placeholder="Search by name or email..."
+                  aria-label="Search accounts"
+                />
+                <div
+                  class="filter-tabs"
+                  role="tablist"
+                  aria-label="Filter by account status"
+                >
+                  <button
+                    class="filter-tab active"
+                    data-aa-filter="all"
+                    role="tab"
+                    aria-selected="true"
+                  >
+                    All
+                  </button>
+                  <button
+                    class="filter-tab"
+                    data-aa-filter="active"
+                    role="tab"
+                    aria-selected="false"
+                  >
+                    Active
+                  </button>
+                  <button
+                    class="filter-tab"
+                    data-aa-filter="expiring"
+                    role="tab"
+                    aria-selected="false"
+                  >
+                    Expiring
+                  </button>
+                  <button
+                    class="filter-tab"
+                    data-aa-filter="expired"
+                    role="tab"
+                    aria-selected="false"
+                  >
+                    Expired
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accounts table -->
+            <div class="card mt-4">
+              <h2 class="card-title">Student Accounts</h2>
+              <p class="card-subtitle">
+                All registered student accounts with expiration status
+              </p>
+              <div class="table-wrapper mt-3">
+                <table
+                  class="data-table"
+                  aria-label="Student accounts with expiration"
+                >
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Registration Date</th>
+                      <th>Last COR Upload</th>
+                      <th>Days Until Expiration</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aa-table-body">
+                    <!-- Populated by renderAccountsTable() in app.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-active-accounts -->
+
+        <!-- ==========================================================
+         PAGE: ADD SERVICE
+         Form to create a new service offering for students
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-add-service"
+          aria-labelledby="addSvc-heading"
+        >
+          <!-- Inline back + title header (matches screenshot — not dark bar) -->
+          <div class="add-service-header">
+            <button
+              class="add-service-back"
+              onclick="navigateTo('dashboard')"
+              aria-label="Back to Dashboard"
+            >
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+              <span>Back</span>
+            </button>
+            <div>
+              <h1 id="addSvc-heading">Add New Service</h1>
+              <p class="page-subtitle">
+                Create a new service offering for students
+              </p>
+            </div>
+          </div>
+
+          <div class="add-service-body">
+            <div class="card">
+              <!-- Form section heading with icon -->
+              <div class="form-section-title">
+                <i data-lucide="circle-plus" aria-hidden="true"></i>
+                <div>
+                  <h2>Service Information</h2>
+                  <p class="card-subtitle">
+                    Fill in the details for the new service
+                  </p>
+                </div>
+              </div>
+
+              <!-- Service Name + Category (two columns) -->
+              <div class="form-row mt-4">
+                <div class="form-group">
+                  <label class="form-label" for="svc-name">
+                    Service Name
+                    <span class="required" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="svc-name"
+                    class="form-input"
+                    placeholder="e.g., T-Shirt Printing"
+                    aria-required="true"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="svc-category">
+                    Category <span class="required" aria-hidden="true">*</span>
+                  </label>
+                  <select
+                    id="svc-category"
+                    class="form-input"
+                    aria-required="true"
+                  >
+                    <option value="">Select category</option>
+                    <option value="printing">Printing</option>
+                    <option value="binding">Binding</option>
+                    <option value="lanyards">Lanyards</option>
+                    <option value="merchandise">Merchandise</option>
+                    <option value="mug-printing">Mug Printing</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Description textarea -->
+              <div class="form-group mt-4">
+                <label class="form-label" for="svc-description"
+                  >Description</label
+                >
+                <textarea
+                  id="svc-description"
+                  class="form-textarea"
+                  rows="3"
+                  placeholder="Describe the service and what it includes..."
+                ></textarea>
+              </div>
+
+              <!-- Base price -->
+              <div class="form-group mt-4">
+                <label class="form-label" for="svc-price">
+                  Base Price (₱)
+                  <span class="required" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="svc-price"
+                  class="form-input"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                  aria-required="true"
+                />
+              </div>
+
+              <!-- Service Options & Pricing (dynamic rows added by JS) -->
+              <div class="form-group mt-4">
+                <div class="options-header">
+                  <div>
+                    <p class="form-label mb-0">Service Options &amp; Pricing</p>
+                    <p class="card-subtitle">
+                      Add customization options with their prices
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="add-option-btn"
+                    aria-label="Add a pricing option"
+                  >
+                    <i data-lucide="plus" aria-hidden="true"></i> Add Option
+                  </button>
+                </div>
+                <!-- Dynamic option rows injected here by addServiceOption() -->
+                <div id="options-container" class="options-container mt-3">
+                  <div class="option-row" data-index="0">
+                    <input
+                      type="text"
+                      class="form-input option-name"
+                      placeholder="Option name (e.g., Size: Small)"
+                      aria-label="Option name"
+                    />
+                    <input
+                      type="number"
+                      class="form-input option-price"
+                      placeholder="Price"
+                      min="0"
+                      step="0.01"
+                      aria-label="Option price"
+                    />
+                    <button
+                      type="button"
+                      class="option-remove hidden"
+                      aria-label="Remove option"
+                    >
+                      <i data-lucide="x" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cancel / Create buttons -->
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn btn--outline"
+                  id="svc-cancel-btn"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--primary"
+                  id="svc-create-btn"
+                >
+                  <i data-lucide="check" aria-hidden="true"></i> Create Service
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-add-service -->
+      </main>
+      <!-- /main-content -->
+    </div>
+    <!-- /app-wrapper -->
+
+    <!-- ==========================================================
+     MODAL: STUDENT VERIFICATION DETAIL
+     Opened when admin clicks the eye icon on a request
+     ========================================================== -->
+    <div
+      class="modal-overlay hidden"
+      id="sv-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sv-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="sv-modal-title">Student Details</h2>
+          <button
+            class="modal-close"
+            id="sv-modal-close"
+            aria-label="Close modal"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="sv-modal-body"></div>
+        <div class="modal-footer" id="sv-modal-footer"></div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+     MODAL: ORDER DETAIL
+     Opened when admin clicks "View" on an order row
+     ========================================================== -->
+    <div
+      class="modal-overlay hidden"
+      id="order-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="order-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="order-modal-title">Order Details</h2>
+          <button
+            class="modal-close"
+            id="order-modal-close"
+            aria-label="Close modal"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="order-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+     TOAST NOTIFICATION
+     Appears briefly after successful actions (e.g. Create Service)
+     ========================================================== -->
+    <div class="toast hidden" id="toast" role="status" aria-live="polite">
+      <i data-lucide="check-circle" aria-hidden="true"></i>
+      <span id="toast-message">Action completed.</span>
+    </div>
+
+    <!-- Mobile sidebar backdrop -->
+    <div
+      class="sidebar-overlay hidden"
+      id="sidebar-overlay"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Separated JavaScript -->
+    <script src="../js/superadmin.js"></script>
+  </body>
+</html>

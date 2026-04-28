@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | UPRESSease Admin Portal</title>
+    <title>Student Verification | UPRESSease Admin Portal</title>
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
       rel="stylesheet"
@@ -11,7 +11,10 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <link rel="stylesheet" href="../../css/superadmin/variables.css" />
     <link rel="stylesheet" href="../../css/superadmin/superadmin.css" />
-    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/superadmin/student-verification.css"
+    />
   </head>
   <body>
     <div class="app-wrapper">
@@ -41,16 +44,16 @@
         <nav class="sidebar-nav" aria-label="Main navigation">
           <ul class="nav-list" role="list">
             <li>
-              <a
-                href="dashboard.html"
-                class="nav-link active"
-                aria-current="page"
+              <a href="dashboard.html" class="nav-link"
                 ><i data-lucide="layout-dashboard" aria-hidden="true"></i
                 ><span>Dashboard</span></a
               >
             </li>
             <li>
-              <a href="student-verification.html" class="nav-link"
+              <a
+                href="student-verification.html"
+                class="nav-link active"
+                aria-current="page"
                 ><i data-lucide="user-check" aria-hidden="true"></i
                 ><span>Student Verification</span></a
               >
@@ -138,155 +141,152 @@
           >
             <i data-lucide="menu" aria-hidden="true"></i>
           </button>
-          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-title">Student Verification</div>
           <div class="topbar-actions">
             <button class="topbar-icon-btn" aria-label="Notifications">
               <i data-lucide="bell" aria-hidden="true"></i>
               <span class="notif-dot" aria-hidden="true"></span>
             </button>
-            <div
-              class="topbar-avatar"
-              title="Superadmin"
-              aria-label="Admin avatar"
-            >
-              SA
-            </div>
+            <div class="topbar-avatar" title="Superadmin">SA</div>
           </div>
         </header>
 
         <section
           class="page-section active"
-          id="page-dashboard"
-          aria-labelledby="dash-heading"
+          id="page-student-verification"
+          aria-labelledby="sv-heading"
         >
           <div class="page-header">
-            <h1 id="dash-heading">Dashboard</h1>
-            <p class="page-subtitle" id="dash-date">Today's Overview</p>
+            <h1 id="sv-heading">Student Verification</h1>
+            <p class="page-subtitle">
+              Review and manage student registration requests
+            </p>
           </div>
 
-          <div class="stats-grid stats-grid--3 sp">
+          <div class="stats-grid stats-grid--4 sp">
             <article
-              class="stat-card stat-card--red"
-              aria-label="Today's Orders"
+              class="stat-card stat-card--blue"
+              aria-label="Total Requests"
             >
               <div class="stat-card__header">
-                <span>Today's Orders</span
-                ><i data-lucide="package" aria-hidden="true"></i>
+                <span>Total Requests</span
+                ><i data-lucide="filter" aria-hidden="true"></i>
               </div>
-              <p class="stat-card__value" id="dash-orders">0</p>
-              <p class="stat-card__label">Total orders today</p>
+              <p class="stat-card__value" id="sv-total">4</p>
             </article>
-            <article
-              class="stat-card stat-card--green"
-              aria-label="Today's Income"
-            >
+            <article class="stat-card stat-card--yellow" aria-label="Pending">
               <div class="stat-card__header">
-                <span>Today's Income</span
-                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-income">₱0.00</p>
-              <p class="stat-card__label">From completed orders</p>
-            </article>
-            <article
-              class="stat-card stat-card--yellow"
-              aria-label="Pending or Paid"
-            >
-              <div class="stat-card__header">
-                <span>Pending/Paid</span
+                <span>Pending</span
                 ><i data-lucide="clock" aria-hidden="true"></i>
               </div>
-              <p class="stat-card__value" id="dash-pending">0</p>
-              <p class="stat-card__label">Awaiting processing</p>
+              <p class="stat-card__value" id="sv-pending">2</p>
             </article>
-            <article
-              class="stat-card stat-card--purple"
-              aria-label="Processing"
-            >
+            <article class="stat-card stat-card--green" aria-label="Approved">
               <div class="stat-card__header">
-                <span>Processing</span
-                ><i data-lucide="package-open" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-processing">0</p>
-              <p class="stat-card__label">Currently being processed</p>
-            </article>
-            <article
-              class="stat-card stat-card--teal"
-              aria-label="Ready for Pickup"
-            >
-              <div class="stat-card__header">
-                <span>Ready for Pickup</span
+                <span>Approved</span
                 ><i data-lucide="circle-check" aria-hidden="true"></i>
               </div>
-              <p class="stat-card__value" id="dash-ready">0</p>
-              <p class="stat-card__label">Ready to be claimed</p>
+              <p class="stat-card__value" id="sv-approved">1</p>
             </article>
-            <article class="stat-card stat-card--gray" aria-label="Completed">
+            <article
+              class="stat-card stat-card--red-solid"
+              aria-label="Rejected"
+            >
               <div class="stat-card__header">
-                <span>Completed</span
-                ><i data-lucide="check" aria-hidden="true"></i>
+                <span>Rejected</span
+                ><i data-lucide="x-circle" aria-hidden="true"></i>
               </div>
-              <p class="stat-card__value" id="dash-completed">0</p>
-              <p class="stat-card__label">Successfully completed</p>
+              <p class="stat-card__value" id="sv-rejected">1</p>
             </article>
           </div>
 
           <div class="card sp">
-            <div class="card-header">
-              <div class="card-title-group">
-                <i data-lucide="list" aria-hidden="true"></i>
-                <h2 class="card-title">Today's Transactions</h2>
+            <div class="search-filter-row">
+              <div class="search-box">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <input
+                  type="search"
+                  id="sv-search"
+                  placeholder="Search by name, student ID, or email..."
+                  aria-label="Search verification requests"
+                />
               </div>
-              <button
-                class="btn btn--primary"
-                onclick="window.location.href = 'orders.html'"
+              <div
+                class="filter-tabs"
+                role="tablist"
+                aria-label="Filter by status"
               >
-                <i data-lucide="list" aria-hidden="true"></i> View All Orders
-              </button>
-            </div>
-            <p class="card-subtitle">All orders placed today</p>
-            <div class="empty-state" id="dash-empty">
-              <i data-lucide="package" aria-hidden="true"></i>
-              <p class="empty-state__title">No transactions today</p>
-              <p class="empty-state__sub">
-                Orders placed today will appear here
-              </p>
-            </div>
-            <div class="table-wrapper hidden" id="dash-table">
-              <table class="data-table" aria-label="Today's transactions">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Student Email</th>
-                    <th>Service</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Payment</th>
-                  </tr>
-                </thead>
-                <tbody id="dash-table-body"></tbody>
-              </table>
+                <button
+                  class="filter-tab active"
+                  data-filter="all"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  All
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="pending"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Pending
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="approved"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Approved
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="rejected"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Rejected
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="promo-banner sp">
-            <div class="promo-banner__icon" aria-hidden="true">
-              <i data-lucide="trending-up"></i>
-            </div>
-            <div class="promo-banner__text">
-              <h3>Performance Analytics</h3>
-              <p>
-                View detailed daily, monthly, and yearly performance reports
-              </p>
-            </div>
-            <button
-              class="btn btn--light"
-              onclick="window.location.href = 'daily-analytics.html'"
-            >
-              View Analytics
-            </button>
+          <div class="card sp">
+            <h2 class="card-title">Verification Requests</h2>
+            <p class="card-subtitle" id="sv-count">4 requests found</p>
+            <ul
+              class="request-list"
+              id="sv-list"
+              aria-label="Verification requests"
+            ></ul>
           </div>
         </section>
       </main>
+    </div>
+
+    <!-- MODAL: STUDENT VERIFICATION DETAIL -->
+    <div
+      class="modal-overlay hidden"
+      id="sv-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sv-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="sv-modal-title">Student Details</h2>
+          <button
+            class="modal-close"
+            id="sv-modal-close"
+            aria-label="Close modal"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="sv-modal-body"></div>
+        <div class="modal-footer" id="sv-modal-footer"></div>
+      </div>
     </div>
 
     <div class="toast hidden" id="toast" role="status" aria-live="polite">
@@ -301,6 +301,6 @@
 
     <script src="../../js/superadmin/data.js"></script>
     <script src="../../js/superadmin/global.js"></script>
-    <script src="../../js/superadmin/dashboard.js"></script>
+    <script src="../../js/superadmin/student-verification.js"></script>
   </body>
 </html>

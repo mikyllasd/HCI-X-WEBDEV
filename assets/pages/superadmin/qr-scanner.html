@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | UPRESSease Admin Portal</title>
+    <title>QR Scanner | UPRESSease Admin Portal</title>
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
       rel="stylesheet"
@@ -11,7 +11,7 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <link rel="stylesheet" href="../../css/superadmin/variables.css" />
     <link rel="stylesheet" href="../../css/superadmin/superadmin.css" />
-    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+    <link rel="stylesheet" href="../../css/superadmin/qr-scanner.css" />
   </head>
   <body>
     <div class="app-wrapper">
@@ -41,10 +41,7 @@
         <nav class="sidebar-nav" aria-label="Main navigation">
           <ul class="nav-list" role="list">
             <li>
-              <a
-                href="dashboard.html"
-                class="nav-link active"
-                aria-current="page"
+              <a href="dashboard.html" class="nav-link"
                 ><i data-lucide="layout-dashboard" aria-hidden="true"></i
                 ><span>Dashboard</span></a
               >
@@ -62,7 +59,10 @@
               >
             </li>
             <li>
-              <a href="qr-scanner.html" class="nav-link"
+              <a
+                href="qr-scanner.html"
+                class="nav-link active"
+                aria-current="page"
                 ><i data-lucide="scan-qr-code" aria-hidden="true"></i
                 ><span>QR Scanner</span></a
               >
@@ -138,152 +138,117 @@
           >
             <i data-lucide="menu" aria-hidden="true"></i>
           </button>
-          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-title">QR Code Scanner</div>
           <div class="topbar-actions">
             <button class="topbar-icon-btn" aria-label="Notifications">
               <i data-lucide="bell" aria-hidden="true"></i>
               <span class="notif-dot" aria-hidden="true"></span>
             </button>
-            <div
-              class="topbar-avatar"
-              title="Superadmin"
-              aria-label="Admin avatar"
-            >
-              SA
-            </div>
+            <div class="topbar-avatar" title="Superadmin">SA</div>
           </div>
         </header>
 
         <section
           class="page-section active"
-          id="page-dashboard"
-          aria-labelledby="dash-heading"
+          id="page-qr-scanner"
+          aria-labelledby="qr-heading"
         >
-          <div class="page-header">
-            <h1 id="dash-heading">Dashboard</h1>
-            <p class="page-subtitle" id="dash-date">Today's Overview</p>
-          </div>
-
-          <div class="stats-grid stats-grid--3 sp">
-            <article
-              class="stat-card stat-card--red"
-              aria-label="Today's Orders"
-            >
-              <div class="stat-card__header">
-                <span>Today's Orders</span
-                ><i data-lucide="package" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-orders">0</p>
-              <p class="stat-card__label">Total orders today</p>
-            </article>
-            <article
-              class="stat-card stat-card--green"
-              aria-label="Today's Income"
-            >
-              <div class="stat-card__header">
-                <span>Today's Income</span
-                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-income">₱0.00</p>
-              <p class="stat-card__label">From completed orders</p>
-            </article>
-            <article
-              class="stat-card stat-card--yellow"
-              aria-label="Pending or Paid"
-            >
-              <div class="stat-card__header">
-                <span>Pending/Paid</span
-                ><i data-lucide="clock" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-pending">0</p>
-              <p class="stat-card__label">Awaiting processing</p>
-            </article>
-            <article
-              class="stat-card stat-card--purple"
-              aria-label="Processing"
-            >
-              <div class="stat-card__header">
-                <span>Processing</span
-                ><i data-lucide="package-open" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-processing">0</p>
-              <p class="stat-card__label">Currently being processed</p>
-            </article>
-            <article
-              class="stat-card stat-card--teal"
-              aria-label="Ready for Pickup"
-            >
-              <div class="stat-card__header">
-                <span>Ready for Pickup</span
-                ><i data-lucide="circle-check" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-ready">0</p>
-              <p class="stat-card__label">Ready to be claimed</p>
-            </article>
-            <article class="stat-card stat-card--gray" aria-label="Completed">
-              <div class="stat-card__header">
-                <span>Completed</span
-                ><i data-lucide="check" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-completed">0</p>
-              <p class="stat-card__label">Successfully completed</p>
-            </article>
-          </div>
-
-          <div class="card sp">
-            <div class="card-header">
-              <div class="card-title-group">
-                <i data-lucide="list" aria-hidden="true"></i>
-                <h2 class="card-title">Today's Transactions</h2>
-              </div>
-              <button
-                class="btn btn--primary"
-                onclick="window.location.href = 'orders.html'"
-              >
-                <i data-lucide="list" aria-hidden="true"></i> View All Orders
-              </button>
-            </div>
-            <p class="card-subtitle">All orders placed today</p>
-            <div class="empty-state" id="dash-empty">
-              <i data-lucide="package" aria-hidden="true"></i>
-              <p class="empty-state__title">No transactions today</p>
-              <p class="empty-state__sub">
-                Orders placed today will appear here
-              </p>
-            </div>
-            <div class="table-wrapper hidden" id="dash-table">
-              <table class="data-table" aria-label="Today's transactions">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Student Email</th>
-                    <th>Service</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Payment</th>
-                  </tr>
-                </thead>
-                <tbody id="dash-table-body"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="promo-banner sp">
-            <div class="promo-banner__icon" aria-hidden="true">
-              <i data-lucide="trending-up"></i>
-            </div>
-            <div class="promo-banner__text">
-              <h3>Performance Analytics</h3>
-              <p>
-                View detailed daily, monthly, and yearly performance reports
-              </p>
-            </div>
+          <div class="page-dark-header">
             <button
-              class="btn btn--light"
-              onclick="window.location.href = 'daily-analytics.html'"
+              class="back-btn"
+              onclick="window.location.href = 'dashboard.html'"
+              aria-label="Back"
             >
-              View Analytics
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
             </button>
+            <div>
+              <h1 id="qr-heading">QR Code Scanner</h1>
+              <p>Scan orders for quick pickup</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <div class="card qr-card">
+              <div class="qr-icon-wrap" aria-hidden="true">
+                <i data-lucide="qr-code"></i>
+              </div>
+              <h2 class="text-center">Scan QR Code or Enter Order ID</h2>
+              <p class="text-center text-muted mt-1">
+                Use your device's camera to scan the QR code or manually enter
+                the order ID
+              </p>
+
+              <div
+                class="qr-camera-area"
+                id="qr-camera-area"
+                role="region"
+                aria-label="Camera scanner area"
+              >
+                <div class="qr-placeholder" aria-hidden="true">
+                  <i data-lucide="qr-code"></i>
+                </div>
+                <p class="qr-camera-label"><strong>Camera Scanner</strong></p>
+                <p class="text-muted small">
+                  Position the QR code in front of the camera
+                </p>
+                <button class="btn btn--outline mt-3" id="activate-camera-btn">
+                  Activate Camera
+                </button>
+                <video
+                  id="qr-video"
+                  autoplay
+                  playsinline
+                  class="hidden"
+                  aria-label="Camera feed"
+                ></video>
+              </div>
+
+              <div class="qr-divider"><span>Or enter manually</span></div>
+              <label class="form-label" for="qr-order-input">Order ID</label>
+              <div class="qr-input-row">
+                <div class="search-box">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="text"
+                    id="qr-order-input"
+                    placeholder="Enter Order ID (e.g., ORD-2026-001)"
+                    aria-label="Order ID input"
+                  />
+                </div>
+                <button class="btn btn--primary" id="qr-search-btn">
+                  Search
+                </button>
+              </div>
+              <div
+                id="qr-result"
+                class="qr-result hidden"
+                role="alert"
+                aria-live="polite"
+              ></div>
+            </div>
+
+            <div class="card info-card mt-4">
+              <h3>
+                <i data-lucide="package" aria-hidden="true"></i> How to Use QR
+                Scanner
+              </h3>
+              <ol class="how-to-list">
+                <li>
+                  Ask the student to show their order QR code from the
+                  confirmation page.
+                </li>
+                <li>
+                  Use the camera scanner above or manually enter the Order ID.
+                </li>
+                <li>Verify the order details and payment status.</li>
+                <li>
+                  If payment is complete and order is ready, click "Release
+                  Order".
+                </li>
+                <li>
+                  Hand over the order to the student and mark it as completed.
+                </li>
+              </ol>
+            </div>
           </div>
         </section>
       </main>
@@ -301,6 +266,6 @@
 
     <script src="../../js/superadmin/data.js"></script>
     <script src="../../js/superadmin/global.js"></script>
-    <script src="../../js/superadmin/dashboard.js"></script>
+    <script src="../../js/superadmin/qr-scanner.js"></script>
   </body>
 </html>

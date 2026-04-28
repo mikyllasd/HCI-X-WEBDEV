@@ -1,0 +1,21 @@
+/* ==========================================================
+   STUDENT VERIFICATION — page-specific styles
+   Base styles live in superadmin.css / variables.css
+   ========================================================== */
+
+/* Ensure 4-column grid on student verification summary cards */
+#page-student-verification .stats-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 900px) {
+  #page-student-verification .stats-grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  #page-student-verification .stats-grid--4 {
+    grid-template-columns: 1fr;
+  }
+}

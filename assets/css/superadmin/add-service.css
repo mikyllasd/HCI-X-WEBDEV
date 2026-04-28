@@ -1,0 +1,59 @@
+/* ==========================================================
+   ADD SERVICE — page-specific styles
+   Base styles live in superadmin.css / variables.css
+   ========================================================== */
+
+/* Services table action buttons */
+.svc-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-svc-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  background: transparent;
+  color: var(--clr-blue);
+  border: 1.5px solid var(--clr-blue);
+  transition:
+    background var(--t),
+    color var(--t);
+  cursor: pointer;
+}
+.btn-svc-edit svg {
+  width: 13px;
+  height: 13px;
+}
+.btn-svc-edit:hover {
+  background: var(--clr-blue-lt);
+}
+
+.btn-svc-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  background: transparent;
+  color: #ef4444;
+  border: 1.5px solid #ef4444;
+  transition:
+    background var(--t),
+    color var(--t);
+  cursor: pointer;
+}
+.btn-svc-delete svg {
+  width: 13px;
+  height: 13px;
+}
+.btn-svc-delete:hover {
+  background: #fee2e2;
+}

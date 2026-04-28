@@ -58,9 +58,11 @@ function handleLogin() {
       showAlert(`✓ Welcome, ${record.role}! Redirecting to dashboard…`, 'success');
       setTimeout(() => {
         if (username.toLowerCase() === 'staff') {
-          window.location.href = 'staff.html';
+          window.location.href = '/assets/pages/staff/staff.html';
+        } if (username.toLowerCase() === 'superadmin') {
+          window.location.href = '/assets/pages/superadmin/superadmin.html';
         } else {
-          window.location.href = '/assets/pages/admin-dashboard.html';
+          window.location.href = '/assets/pages/admin/admin-dashboard.html';
         }
       }, 900);
     } else {

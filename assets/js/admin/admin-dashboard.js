@@ -1357,7 +1357,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const page = link.dataset.page;
       if (page === "logout") {
         if (confirm("Are you sure you want to log out?")) {
-          alert("Logged out. (Redirect to login page in production.)");
+          /* Clear any stored session / auth data */
+          sessionStorage.clear();
+          localStorage.removeItem("adminUser");
+          localStorage.removeItem("adminRole");
+
+          /* Redirect to login — path is taken directly from the
+             href already set on the logout anchor in the HTML. */
+          const loginHref = link.getAttribute("href");
+          window.location.href = loginHref;
         }
         return;
       }

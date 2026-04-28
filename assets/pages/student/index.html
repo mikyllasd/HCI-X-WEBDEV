@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Login</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+<section class="login-bg">
+    <div class="login-card">
+        <div class="login-icon">🎓</div>
+        <h2>UPRESSease</h2>
+        <p>Western Mindanao State University<br />Printing &amp; Merchandise Reservation System</p>
+        <br />
+        <form id="login-form">
+            <label class="login-label">Email</label>
+            <input type="email" id="login-email" placeholder="student@wmsu.edu.ph" required />
+            <label class="login-label">Password</label>
+            <input type="password" id="login-password" placeholder="Enter password" required />
+            <button type="submit" class="btn-red">Login</button>
+        </form>
+        <p class="signup-link">
+            Don't have an account?
+            <a href="signup.html">Sign up</a>
+        </p>
+    </div>
+</section>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // LOGIN PAGE LOGIC
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value.trim();
+        const pass  = document.getElementById('login-password').value;
+        if (!email || !pass) { showAlert('Missing Info', 'Please enter email and password.'); return; }
+        const existing = User.get();
+        if (existing && existing.email === email) {
+            window.location.href = 'dashboard.html';
+        } else {
+            User.save({ name: email.split('@')[0], email, phone: '', college: '', course: '', year: '' });
+            window.location.href = 'dashboard.html';
+        }
+    });
+</script>
+</body>
+</html>

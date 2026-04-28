@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Order Confirmed</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">Order Confirmed</span>
+        <span class="appbar-subtitle">UPRESSease - WMSU</span>
+    </div>
+</header>
+
+<main class="page">
+    <div class="confirm-wrapper">
+        <div class="confirm-card">
+            <div class="confirm-icon">✅</div>
+            <h2>Order Submitted!</h2>
+            <p>Your order has been received and is now pending processing. We'll notify you when it's ready for pickup.</p>
+            <!-- Order details populated by JS -->
+            <div class="confirm-details" id="confirm-details-list"></div>
+            <button class="btn-red" onclick="window.location.href='orders.html'" style="margin-bottom:0.75rem;">
+                View My Orders
+            </button>
+            <br />
+            <button class="btn-red" onclick="window.location.href='dashboard.html'" style="background:#555;margin-top:0.5rem;">
+                Back to Dashboard
+            </button>
+        </div>
+    </div>
+</main>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // CONFIRM PAGE LOGIC — shows most recent order
+    const all    = Orders.getAll();
+    const latest = all[0];
+
+    const detailsEl = document.getElementById('confirm-details-list');
+    if (latest && detailsEl) {
+        const c = latest.customer || {};
+        const rows = [
+            ['Order ID',     latest.orderId       || '—'],
+            ['Service',      latest.service       || '—'],
+            ['Description',  latest.desc          || '—'],
+            ['Total',        '₱' + (latest.total  || '0.00')],
+            ['Payment',      latest.paymentMethod || '—'],
+            ['Name',         c.name               || '—'],
+            ['Contact',      c.phone              || '—'],
+            ['Pickup Date',  c.date               || '—'],
+            ['Date Ordered', latest.dateOrdered   || '—'],
+            ['Status',       latest.status        || 'Pending']
+        ];
+        detailsEl.innerHTML = rows.map(([label, val]) => `
+            <div class="confirm-row">
+                <span>${escHtml(label)}</span>
+                <span>${escHtml(String(val))}</span>
+            </div>`).join('');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | My Cart</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">My Cart</span>
+        <span class="appbar-subtitle">UPRESSease - WMSU</span>
+    </div>
+</header>
+
+<main class="page">
+    <div class="cart-page-wrapper">
+        <!-- Cart items column -->
+        <div class="cart-items-col">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">🛒 Cart Items</div>
+                    <div class="card-subtitle" id="cart-item-count">0 item(s)</div>
+                </div>
+                <div id="cart-items-list"></div>
+                <!-- Empty state -->
+                <div id="cart-empty-state" style="display:none;text-align:center;padding:2rem;">
+                    <div style="font-size:3rem;margin-bottom:1rem;">🛒</div>
+                    <h3 style="color:#777;margin-bottom:0.5rem;">Your cart is empty</h3>
+                    <p style="color:#aaa;margin-bottom:1.5rem;">Add items from our services to get started</p>
+                    <button class="btn-red" onclick="window.location.href='dashboard.html'" style="width:auto;padding:0.75rem 2rem;">Browse Services</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order summary column -->
+        <div class="cart-summary-col">
+            <div class="card card-sticky">
+                <div class="card-head">
+                    <div class="card-title">Order Summary</div>
+                </div>
+                <div class="summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Items</span>
+                        <span class="summary-value" id="cart-sum-count">0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal</span>
+                        <span class="summary-value" id="cart-sum-subtotal">₱0.00</span>
+                    </div>
+                    <hr class="divider" />
+                    <div class="summary-row">
+                        <span class="summary-label summary-total-label">Total</span>
+                        <span class="summary-money" id="cart-sum-total">₱0.00</span>
+                    </div>
+                    <button class="btn-order" id="cart-checkout-btn" onclick="cartProceedCheckout()">🛍 Proceed to Checkout</button>
+                    <button class="btn-cart" onclick="cartClearAll()">🗑 Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // CART PAGE LOGIC
+    function renderCartPage() {
+        const cart = Cart.get();
+        const listEl      = document.getElementById('cart-items-list');
+        const emptyEl     = document.getElementById('cart-empty-state');
+        const countEl     = document.getElementById('cart-item-count');
+        const sumCountEl  = document.getElementById('cart-sum-count');
+        const sumSubEl    = document.getElementById('cart-sum-subtotal');
+        const sumTotalEl  = document.getElementById('cart-sum-total');
+        const checkoutBtn = document.getElementById('cart-checkout-btn');
+        if (!listEl) return;
+        if (cart.length === 0) {
+            listEl.innerHTML = '';
+            if (emptyEl)     emptyEl.style.display = 'block';
+            if (countEl)     countEl.textContent = '0 item(s)';
+            if (sumCountEl)  sumCountEl.textContent = '0';
+            if (sumSubEl)    sumSubEl.textContent = '₱0.00';
+            if (sumTotalEl)  sumTotalEl.textContent = '₱0.00';
+            if (checkoutBtn) checkoutBtn.disabled = true;
+            return;
+        }
+        if (emptyEl)     emptyEl.style.display = 'none';
+        if (checkoutBtn) checkoutBtn.disabled = false;
+        if (countEl)     countEl.textContent = cart.length + ' item(s)';
+        const total = Cart.total();
+        if (sumCountEl)  sumCountEl.textContent = cart.length;
+        if (sumSubEl)    sumSubEl.textContent   = '₱' + total.toFixed(2);
+        if (sumTotalEl)  sumTotalEl.textContent = '₱' + total.toFixed(2);
+        listEl.innerHTML = cart.map(item => `
+            <div class="cart-item-row" id="cart-row-${item.cartId}">
+                <div class="cart-item-info">
+                    <div class="cart-item-service">${escHtml(item.service)}</div>
+                    <div class="cart-item-desc-text">${escHtml(item.desc || '')}</div>
+                    ${item.addons && item.addons.length ? `<div style="font-size:0.75rem;color:#888;margin-top:0.2rem;">Add-ons: ${escHtml(item.addons.join(', '))}</div>` : ''}
+                    <div style="font-size:0.75rem;color:#bbb;margin-top:0.2rem;">Added ${new Date(item.addedAt).toLocaleString()}</div>
+                </div>
+                <div class="cart-item-actions">
+                    <div class="cart-item-price-tag">₱${parseFloat(item.total).toFixed(2)}</div>
+                    <button class="cart-remove-btn" onclick="removeCartItem('${escHtml(item.cartId)}')">🗑 Remove</button>
+                </div>
+            </div>`).join('');
+    }
+
+    function removeCartItem(cartId) {
+        Cart.remove(cartId, () => renderCartPage());
+    }
+
+    function cartProceedCheckout() {
+        if (Cart.count() === 0) { showAlert('Empty Cart', 'Your cart is empty. Add items before checking out.'); return; }
+        window.location.href = 'payment.html';
+    }
+
+    function cartClearAll() {
+        if (Cart.count() === 0) { showAlert('Cart Empty', 'Your cart is already empty.'); return; }
+        showConfirm('Clear Cart', 'Are you sure you want to remove all items from your cart?', () => {
+            Cart.clear();
+            renderCartPage();
+        });
+    }
+
+    // Init
+    renderCartPage();
+</script>
+</body>
+</html>

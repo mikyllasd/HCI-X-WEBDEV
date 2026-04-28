@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Payment Method</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='payment.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">Select Payment Method</span>
+        <span class="appbar-subtitle">Step 2 of 3</span>
+    </div>
+</header>
+
+<main class="page">
+    <div class="layout-half">
+        <!-- Left: order summary -->
+        <div class="col-left">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Order Summary</div>
+                    <div class="card-subtitle" id="pm-cart-count">1 service(s) in cart</div>
+                </div>
+                <!-- Cart items rendered by JS -->
+                <div id="pm-cart-items-list"></div>
+                <hr class="divider" style="margin:1rem 0;" />
+                <div class="summary-total-row">
+                    <span class="summary-total-label">Total Amount</span>
+                    <span class="summary-total-money" id="pm-sum-total">₱0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: payment method options -->
+        <div class="col-right">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Select Payment Method:</div>
+                </div>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="gcash" class="payment-radio" />
+                        <div class="payment-icon payment-icon--blue">💳</div>
+                        <div class="payment-text">
+                            <span class="payment-name">GCash</span>
+                            <span class="payment-desc">Pay now via GCash</span>
+                        </div>
+                        <div class="payment-check">✓</div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="cash" class="payment-radio" />
+                        <div class="payment-icon payment-icon--green">👛</div>
+                        <div class="payment-text">
+                            <span class="payment-name">Cash on Pick-up</span>
+                            <span class="payment-desc">Pay when you pick up your order</span>
+                        </div>
+                        <div class="payment-check">✓</div>
+                    </label>
+                </div>
+            </div>
+            <button class="btn-proceed" onclick="proceedPayment()">PROCEED</button>
+        </div>
+    </div>
+</main>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // PAY METHOD PAGE LOGIC
+    const cart  = Cart.get();
+    const total = Cart.total();
+
+    const listEl  = document.getElementById('pm-cart-items-list');
+    const countEl = document.getElementById('pm-cart-count');
+    const totalEl = document.getElementById('pm-sum-total');
+
+    if (listEl) {
+        listEl.innerHTML = cart.map(item => `
+            <div class="pay-cart-item-mini">
+                <div>
+                    <div class="pay-cart-item-mini-name">${escHtml(item.service)}</div>
+                    <div class="pay-cart-item-mini-desc">${escHtml(item.desc || '')}</div>
+                </div>
+                <div class="pay-cart-item-mini-price">₱${parseFloat(item.total).toFixed(2)}</div>
+            </div>`).join('');
+    }
+    if (countEl) countEl.textContent = `${cart.length} item(s) in cart`;
+    if (totalEl) totalEl.textContent = '₱' + total.toFixed(2);
+
+    // Highlight selected payment option on click
+    document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            document.querySelectorAll('.payment-option').forEach(o => { o.style.borderColor = '#e0e0e0'; o.style.background = ''; });
+            opt.style.borderColor = '#a32020';
+            opt.style.background  = '#fff9f9';
+        });
+    });
+
+    function finalizeOrder(extra = {}) {
+        const cartItems = Cart.get();
+        const co        = Checkout.get();
+        const customer  = co.customerInfo || {};
+        cartItems.forEach(item => {
+            Orders.add({ ...item, customer, ...extra });
+        });
+        Cart.clear();
+        Checkout.clear();
+        updateCartBadge();
+    }
+
+    function proceedPayment() {
+        const selected = document.querySelector('input[name="payment"]:checked');
+        if (!selected) { showAlert('No Selection', 'Please select a payment method to continue.'); return; }
+        Checkout.set({ paymentMethod: selected.value });
+        if (selected.value === 'gcash') {
+            window.location.href = 'gcash.html';
+        } else {
+            // Cash on pick-up: finalize immediately and go to confirm
+            finalizeOrder({ paymentMethod: 'Cash on Pick-up' });
+            window.location.href = 'confirm.html';
+        }
+    }
+</script>
+</body>
+</html>

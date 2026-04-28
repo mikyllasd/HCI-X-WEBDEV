@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Binding Details</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='binding.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">Your Details</span>
+        <span class="appbar-subtitle">UPRESSease - WMSU</span>
+    </div>
+    <button class="appbar-action" onclick="window.location.href='cart.html'">
+        🛒 Cart <span class="cart-badge"></span>
+    </button>
+</header>
+
+<main class="page">
+    <div class="layout-half">
+        <!-- Left: customer details form -->
+        <div class="col-left">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Your Details</div>
+                    <div class="card-subtitle">Required for processing your order</div>
+                </div>
+                <div class="field">
+                    <label class="label">Full Name *</label>
+                    <input class="input" type="text" id="binding-d-name" placeholder="Enter your full name" />
+                </div>
+                <div class="field">
+                    <label class="label">Phone Number *</label>
+                    <input class="input" type="tel" id="binding-d-phone" placeholder="09xxxxxxxxx" />
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label class="label">Course and Year</label>
+                        <input class="input" type="text" id="binding-d-course" placeholder="e.g. BSCS 3rd Year" />
+                    </div>
+                    <div class="field">
+                        <label class="label">College</label>
+                        <input class="input" type="text" id="binding-d-college" placeholder="Enter college" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Preferred Pick-up Date *</label>
+                    <input class="input" type="date" id="binding-d-date" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: order summary -->
+        <div class="col-right">
+            <div class="card card-sticky">
+                <div class="card-head">
+                    <div class="card-title">Order Summary</div>
+                </div>
+                <div class="summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Binding Type</span>
+                        <span class="summary-value" id="binding-sum-type">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Qty</span>
+                        <span class="summary-value" id="binding-sum-qty">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Price / copy</span>
+                        <span class="summary-value" id="binding-sum-unit">₱0.00</span>
+                    </div>
+                    <hr class="divider" />
+                    <div class="summary-row">
+                        <span class="summary-label summary-total-label">Total</span>
+                        <span class="summary-money" id="binding-sum-total">₱0.00</span>
+                    </div>
+                    <button class="btn-order" onclick="bindingOrderNow()">🛍 Order Now</button>
+                    <button class="btn-cart" onclick="bindingAddToCart()">+ Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // BINDING DETAILS PAGE LOGIC
+    const co = Checkout.get();
+    const u  = User.get();
+
+    // Populate summary from checkout state
+    setText('binding-sum-type',  co.bindingType  || '—');
+    setText('binding-sum-qty',   co.bindingQty   || 1);
+    setText('binding-sum-unit',  '₱' + parseFloat(co.bindingPrice || 0).toFixed(2));
+    setText('binding-sum-total', '₱' + ((parseFloat(co.bindingPrice) || 0) * (parseInt(co.bindingQty) || 1)).toFixed(2));
+
+    // Auto-fill from user profile
+    if (u) {
+        const nEl  = document.getElementById('binding-d-name');
+        const pEl  = document.getElementById('binding-d-phone');
+        const cEl  = document.getElementById('binding-d-college');
+        const crEl = document.getElementById('binding-d-course');
+        if (nEl  && !nEl.value)  nEl.value  = u.name    || '';
+        if (pEl  && !pEl.value)  pEl.value  = u.phone   || '';
+        if (cEl  && !cEl.value)  cEl.value  = u.college || '';
+        if (crEl && !crEl.value) crEl.value = u.course ? `${u.course} ${u.year || ''}`.trim() : '';
+    }
+
+    function getBindingOrderData() {
+        const bPrice = parseFloat(co.bindingPrice) || 0;
+        const bQty   = parseInt(co.bindingQty)     || 1;
+        return {
+            service: 'Binding',
+            desc:    `${bQty} × ${co.bindingType}`,
+            qty:     bQty,
+            total:   (bPrice * bQty).toFixed(2),
+            customer: {
+                name:    document.getElementById('binding-d-name')?.value.trim()    || '',
+                phone:   document.getElementById('binding-d-phone')?.value.trim()   || '',
+                course:  document.getElementById('binding-d-course')?.value.trim()  || '',
+                college: document.getElementById('binding-d-college')?.value.trim() || '',
+                date:    document.getElementById('binding-d-date')?.value           || ''
+            }
+        };
+    }
+
+    function validateBindingDetails() {
+        if (!co.bindingType)                                           { showAlert('No Selection', 'Please go back and select a binding type.'); return false; }
+        if (!document.getElementById('binding-d-name')?.value.trim()) { showAlert('Missing Info', 'Please enter your full name.'); return false; }
+        if (!document.getElementById('binding-d-phone')?.value.trim()){ showAlert('Missing Info', 'Please enter your phone number.'); return false; }
+        if (!document.getElementById('binding-d-date')?.value)        { showAlert('Missing Info', 'Please select a preferred pick-up date.'); return false; }
+        return true;
+    }
+
+    function bindingOrderNow() {
+        if (!validateBindingDetails()) return;
+        showConfirm('Proceed to Checkout', 'Place this binding order and proceed to payment?', () => {
+            const data = getBindingOrderData();
+            Cart.clear();
+            Cart.add(data);
+            Checkout.set({ customerInfo: data.customer });
+            window.location.href = 'pay-method.html';
+        });
+    }
+
+    function bindingAddToCart() {
+        if (!validateBindingDetails()) return;
+        Cart.add(getBindingOrderData());
+        showAlert('Added to Cart! 🛒', `${co.bindingType} × ${co.bindingQty} added to your cart.`);
+    }
+</script>
+</body>
+</html>

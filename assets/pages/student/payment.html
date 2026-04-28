@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Customer Information</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='cart.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">Customer Information</span>
+        <span class="appbar-subtitle">Step 1 of 3</span>
+    </div>
+</header>
+
+<main class="page">
+    <div class="layout-half">
+        <!-- Left: cart review + total -->
+        <div class="col-left">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">🛒 Your Cart</div>
+                    <div class="card-subtitle" id="pay-cart-count">Review your items before checkout</div>
+                </div>
+                <!-- Cart items rendered here by JS -->
+                <div id="pay-cart-items-list"></div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Order Summary</div>
+                </div>
+                <hr class="divider" />
+                <div class="summary-total-row">
+                    <span class="summary-total-label">Total Amount</span>
+                    <span class="summary-total-money" id="pay-sum-total">₱0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: customer info form -->
+        <div class="col-right">
+            <div class="card card-sticky">
+                <div class="card-head">
+                    <div class="card-title">Customer Information</div>
+                    <div class="card-subtitle">Required for order processing</div>
+                </div>
+                <div class="field">
+                    <label class="label">Full Name *</label>
+                    <input class="input" type="text" id="pay-full-name" placeholder="Your full name" />
+                </div>
+                <div class="field">
+                    <label class="label">Preferred Delivery Date *</label>
+                    <input class="input" type="date" id="pay-date" />
+                </div>
+                <div class="field">
+                    <label class="label">Contact Number *</label>
+                    <div class="input-icon-wrap">
+                        <span class="input-icon">📞</span>
+                        <input class="input input-with-icon" type="tel" id="pay-contact" placeholder="09xxxxxxxxx" />
+                    </div>
+                </div>
+                <!-- Toggle: use registered number? (shown only if user has a phone) -->
+                <div class="use-number-row" id="pay-number-toggle-row" style="display:none;">
+                    <span class="use-number-label">Use your registered number?</span>
+                    <div class="toggle-btns">
+                        <button class="toggle-btn toggle-btn--active" id="pay-yes-btn" onclick="togglePayNumber(true)">Yes</button>
+                        <button class="toggle-btn" id="pay-no-btn" onclick="togglePayNumber(false)">No</button>
+                    </div>
+                </div>
+                <button class="btn-proceed" onclick="proceedToPayMethod()">PROCEED TO PAYMENT</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // PAYMENT STEP 1 LOGIC
+    const cart = Cart.get();
+    const u    = User.get() || {};
+    const co   = Checkout.get();
+
+    // Redirect if cart is empty
+    if (cart.length === 0) {
+        showAlert('Empty Cart', 'Your cart is empty.', () => window.location.href = 'cart.html');
+    }
+
+    // Render cart items
+    const listEl  = document.getElementById('pay-cart-items-list');
+    const countEl = document.getElementById('pay-cart-count');
+    const totalEl = document.getElementById('pay-sum-total');
+    if (listEl) {
+        listEl.innerHTML = cart.map(item => `
+            <div class="pay-cart-item-mini">
+                <div>
+                    <div class="pay-cart-item-mini-name">${escHtml(item.service)}</div>
+                    <div class="pay-cart-item-mini-desc">${escHtml(item.desc || '')}</div>
+                </div>
+                <div class="pay-cart-item-mini-price">₱${parseFloat(item.total).toFixed(2)}</div>
+            </div>`).join('');
+    }
+    if (countEl) countEl.textContent = `${cart.length} item(s) — review before checkout`;
+    if (totalEl) totalEl.textContent = '₱' + Cart.total().toFixed(2);
+
+    // Auto-fill user info
+    const nameEl  = document.getElementById('pay-full-name');
+    const phoneEl = document.getElementById('pay-contact');
+    if (nameEl  && !nameEl.value)  nameEl.value  = co.customerInfo?.name  || u.name  || '';
+    if (phoneEl && !phoneEl.value) phoneEl.value = co.customerInfo?.phone || u.phone || '';
+    if (co.customerInfo?.date) {
+        const dateEl = document.getElementById('pay-date');
+        if (dateEl && !dateEl.value) dateEl.value = co.customerInfo.date;
+    }
+
+    window._registeredPhone    = u.phone || '';
+    window._checkoutOtpVerified = true;
+
+    // Show registered number toggle if user has phone
+    const toggleRow = document.getElementById('pay-number-toggle-row');
+    if (toggleRow) toggleRow.style.display = u.phone ? 'flex' : 'none';
+
+    function togglePayNumber(useIt) {
+        document.getElementById('pay-yes-btn')?.classList.toggle('toggle-btn--active', useIt);
+        document.getElementById('pay-no-btn')?.classList.toggle('toggle-btn--active', !useIt);
+        const phoneEl = document.getElementById('pay-contact');
+        if (!phoneEl) return;
+        if (useIt) {
+            phoneEl.value = window._registeredPhone || '';
+            window._checkoutOtpVerified = true;
+        } else {
+            phoneEl.value = '';
+            window._checkoutOtpVerified = false;
+        }
+    }
+
+    function proceedToPayMethod() {
+        const name  = document.getElementById('pay-full-name')?.value.trim();
+        const date  = document.getElementById('pay-date')?.value;
+        const phone = document.getElementById('pay-contact')?.value.trim();
+        if (!name)  { showAlert('Missing Info', 'Please enter your full name.'); return; }
+        if (!date)  { showAlert('Missing Info', 'Please select a preferred delivery date.'); return; }
+        if (!phone) { showAlert('Missing Info', 'Please enter your contact number.'); return; }
+
+        const regPhone     = window._registeredPhone;
+        const phoneChanged = regPhone && phone !== regPhone;
+
+        if (phoneChanged && !window._checkoutOtpVerified) {
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            showConfirm(
+                '📱 Phone Number Changed',
+                `You entered a different number (${phone}) from your registered one.\n\nAn OTP is required for verification.\nDemo OTP: ${code}\n\nProceed?`,
+                () => {
+                    showPrompt('Enter OTP', `Enter the 6-digit OTP sent to ${phone}`, 'Enter OTP here', entered => {
+                        if (entered === code) {
+                            window._checkoutOtpVerified = true;
+                            Checkout.set({ customerInfo: { name, date, phone } });
+                            showAlert('✅ Verified!', 'Phone verified.', () => window.location.href = 'pay-method.html');
+                        } else {
+                            showAlert('❌ Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
+                        }
+                    });
+                }
+            );
+            return;
+        }
+
+        Checkout.set({ customerInfo: { name, date, phone } });
+        window.location.href = 'pay-method.html';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Printing Order</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">Printing Order</span>
+        <span class="appbar-subtitle">UPRESSease - WMSU</span>
+    </div>
+    <button class="appbar-action" onclick="window.location.href='cart.html'">
+        🛒 Cart <span class="cart-badge"></span>
+    </button>
+</header>
+
+<main class="page">
+    <div class="layout-2col">
+        <!-- Left column: file upload + order details -->
+        <div class="col-main">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">⬆ Upload File</div>
+                    <div class="card-subtitle">Upload your document for printing</div>
+                </div>
+                <label class="dropzone">
+                    <input type="file" style="display:none;" id="print-file-input" accept=".pdf,.doc,.docx" />
+                    <div class="dropzone-icon">📄</div>
+                    <div class="dropzone-primary">Click to upload</div>
+                    <div class="dropzone-secondary">or drag and drop</div>
+                    <div class="dropzone-hint">PDF, DOC, DOCX (MAX. 50MB)</div>
+                </label>
+                <div id="print-file-name" style="display:none;margin-top:0.75rem;font-size:0.875rem;color:#555;"></div>
+                <div class="encrypt-notice">
+                    <span class="encrypt-icon">🛡</span>
+                    <div class="encrypt-text">
+                        <strong>Encrypted Upload</strong>
+                        <span>Files are securely encrypted and deleted 12 hours after completion.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Order Details</div>
+                    <div class="card-subtitle">Configure your printing options</div>
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label class="label">Paper Size</label>
+                        <select class="select" id="print-paper" onchange="calcPrintTotal()">
+                            <option value="">Select paper size</option>
+                            <option value="Short (8.5x11in)">Short (8.5 x 11 in)</option>
+                            <option value="A4 (8.27x11.69in)">A4 (8.27 x 11.69 in)</option>
+                            <option value="Long (8.5x13in)">Long (8.5 x 13 in)</option>
+                            <option value="Legal (8.5x14in)">Legal (8.5 x 14 in)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label class="label">Color Option</label>
+                        <select class="select" id="print-color" onchange="calcPrintTotal()">
+                            <option value="" data-price="0">Select color option</option>
+                            <option value="Black &amp; White" data-price="3">Black &amp; White — ₱3/page</option>
+                            <option value="Colored" data-price="6">Colored — ₱6/page</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label class="label">Number of Pages</label>
+                        <input class="input" type="number" id="print-pages" value="1" min="1" oninput="calcPrintTotal()" />
+                    </div>
+                    <div class="field">
+                        <label class="label">Number of Copies</label>
+                        <input class="input" type="number" id="print-qty" value="1" min="1" oninput="calcPrintTotal()" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Additional Services</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="print-binding" data-price="50" onchange="calcPrintTotal()" />
+                            Binding — ₱50
+                        </label>
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="print-lamination" data-price="10" onchange="calcPrintTotal()" />
+                            Lamination — ₱10/page
+                        </label>
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="print-rush" data-price="100" onchange="calcPrintTotal()" />
+                            Rush Fee (24hrs) — ₱100
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column: order summary -->
+        <aside class="col-side">
+            <div class="card card-sticky">
+                <div class="card-head">
+                    <div class="card-title">Order Summary</div>
+                </div>
+                <div class="summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Paper Size</span>
+                        <span class="summary-value" id="sum-print-paper">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Color</span>
+                        <span class="summary-value" id="sum-print-color">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Pages</span>
+                        <span class="summary-value" id="sum-print-pages">1</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Copies</span>
+                        <span class="summary-value" id="sum-print-qty">1</span>
+                    </div>
+                    <div class="summary-row" id="print-addons-row" style="display:none;">
+                        <span class="summary-label">Add-ons</span>
+                        <span class="summary-value" id="sum-print-addons" style="font-size:0.75rem;text-align:right;max-width:60%;"></span>
+                    </div>
+                    <hr class="divider" />
+                    <div class="summary-row">
+                        <span class="summary-label summary-total-label">Total</span>
+                        <span class="summary-money" id="sum-print-total">₱0.00</span>
+                    </div>
+                    <button class="btn-order" onclick="printOrderNow()">🛒 Order Now</button>
+                    <button class="btn-cart" onclick="printAddToCart()">+ Add to Cart</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // PRINTING PAGE LOGIC
+    const fi = document.getElementById('print-file-input');
+    if (fi) {
+        fi.addEventListener('change', function() {
+            const d = document.getElementById('print-file-name');
+            if (d) { d.textContent = this.files[0] ? '📎 ' + this.files[0].name : ''; d.style.display = this.files[0] ? 'block' : 'none'; }
+        });
+    }
+
+    function calcPrintTotal() {
+        const colorSel  = document.getElementById('print-color');
+        if (!colorSel) return 0;
+        const priceEach = parseFloat(colorSel.options[colorSel.selectedIndex]?.dataset.price || 0);
+        const pages = Math.max(1, parseInt(document.getElementById('print-pages')?.value) || 1);
+        const qty   = Math.max(1, parseInt(document.getElementById('print-qty')?.value)   || 1);
+        let total   = priceEach * pages * qty;
+        const addons = [];
+        if (document.getElementById('print-binding')?.checked)    { total += 50; addons.push('Binding'); }
+        if (document.getElementById('print-lamination')?.checked) { total += 10 * pages * qty; addons.push('Lamination'); }
+        if (document.getElementById('print-rush')?.checked)       { total += 100; addons.push('Rush Fee'); }
+        const paper = document.getElementById('print-paper')?.value || '—';
+        const color = colorSel.options[colorSel.selectedIndex]?.value || '—';
+        setText('sum-print-paper', paper);
+        setText('sum-print-color', color);
+        setText('sum-print-pages', pages);
+        setText('sum-print-qty',   qty);
+        setText('sum-print-total', '₱' + total.toFixed(2));
+        const addonsRow = document.getElementById('print-addons-row');
+        if (addonsRow) {
+            if (addons.length) { setText('sum-print-addons', addons.join(', ')); addonsRow.style.display = 'flex'; }
+            else addonsRow.style.display = 'none';
+        }
+        return total;
+    }
+
+    function getPrintOrderData() {
+        const colorSel = document.getElementById('print-color');
+        const paper = document.getElementById('print-paper')?.value;
+        const color = colorSel?.options[colorSel.selectedIndex]?.value;
+        const pages = Math.max(1, parseInt(document.getElementById('print-pages')?.value) || 1);
+        const qty   = Math.max(1, parseInt(document.getElementById('print-qty')?.value)   || 1);
+        const total = calcPrintTotal();
+        const addons = [];
+        if (document.getElementById('print-binding')?.checked)    addons.push('Binding');
+        if (document.getElementById('print-lamination')?.checked) addons.push('Lamination');
+        if (document.getElementById('print-rush')?.checked)       addons.push('Rush Fee');
+        return {
+            service: 'Printing', paperSize: paper, color, pages, qty, addons,
+            desc: `${qty} copy(ies) — ${paper || 'N/A'} (${color || 'N/A'}) × ${pages} pages${addons.length ? ' + ' + addons.join(', ') : ''}`,
+            total: total.toFixed(2)
+        };
+    }
+
+    function validatePrint() {
+        if (!document.getElementById('print-paper')?.value) { showAlert('Missing Info', 'Please select a paper size.'); return false; }
+        if (!document.getElementById('print-color')?.value) { showAlert('Missing Info', 'Please select a color option.'); return false; }
+        if ((parseInt(document.getElementById('print-pages')?.value) || 0) < 1) { showAlert('Invalid Input', 'Number of pages must be at least 1.'); return false; }
+        return true;
+    }
+
+    function printOrderNow() {
+        if (!validatePrint()) return;
+        showConfirm('Proceed to Checkout', 'Place this printing order and go to checkout?', () => {
+            const data = getPrintOrderData();
+            Cart.clear();
+            Cart.add(data);
+            window.location.href = 'payment.html';
+        });
+    }
+
+    function printAddToCart() {
+        if (!validatePrint()) return;
+        Cart.add(getPrintOrderData());
+        showAlert('Added to Cart! 🛒', 'Printing order added to your cart successfully.');
+    }
+
+    // Init summary
+    calcPrintTotal();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Binding Order</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+</head>
+<body>
+
+<!-- App bar -->
+<header class="appbar">
+    <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
+    <div class="appbar-titles">
+        <span class="appbar-title">Binding Order</span>
+        <span class="appbar-subtitle">UPRESSease - WMSU</span>
+    </div>
+    <button class="appbar-action" onclick="window.location.href='cart.html'">
+        🛒 Cart <span class="cart-badge"></span>
+    </button>
+</header>
+
+<main class="binding-page" id="binding-page">
+    <!-- Binding type selection -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title">Our Services</div>
+            <div class="card-subtitle">Choose your preferred binding type</div>
+        </div>
+        <div class="services-grid-bind">
+            <div class="service-option" onclick="selectBinding(this, 'Thesis Binding', 150)">
+                <div class="service-icon-box">📖</div>
+                <h3>Thesis Binding</h3>
+                <p>High-quality binding for research papers</p>
+                <div class="service-price">₱150</div>
+            </div>
+            <div class="service-option" onclick="selectBinding(this, 'Hardcover Binding', 200)">
+                <div class="service-icon-box">📖</div>
+                <h3>Hardcover Binding</h3>
+                <p>Durable hardcover for books and documents</p>
+                <div class="service-price">₱200</div>
+            </div>
+            <div class="service-option" onclick="selectBinding(this, 'Spiral Binding', 80)">
+                <div class="service-icon-box">📖</div>
+                <h3>Spiral Binding</h3>
+                <p>Perfect for reports, manuals, notebooks</p>
+                <div class="service-price">₱80</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quantity -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-title">Quantity</div>
+            <div class="card-subtitle">How many copies do you need?</div>
+        </div>
+        <div class="quantity-row">
+            <button class="qty-btn" onclick="changeBindingQty(-1)">−</button>
+            <span class="qty-display" id="binding-qty-display">1</span>
+            <button class="qty-btn" onclick="changeBindingQty(1)">+</button>
+            <span class="qty-label">copies</span>
+        </div>
+    </div>
+</main>
+
+<!-- Fixed bottom bar with total and proceed -->
+<div class="bottom-bar">
+    <div class="bottom-summary">
+        <span class="bottom-type" id="binding-bottom-type">No binding selected</span>
+        <span class="bottom-total" id="binding-bottom-total">₱0.00</span>
+    </div>
+    <button class="btn-next" onclick="bindingGoNext()">PROCEED</button>
+</div>
+
+<script src="../../js/student/student.js"></script>
+<script>
+    // BINDING PAGE LOGIC
+    let _bindingSelected = null, _bindingPrice = 0, _bindingQty = 1;
+
+    function selectBinding(el, name, price) {
+        document.querySelectorAll('#binding-page .service-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        _bindingSelected = name;
+        _bindingPrice    = price;
+        updateBindingBottom();
+    }
+
+    function changeBindingQty(delta) {
+        _bindingQty = Math.max(1, _bindingQty + delta);
+        setText('binding-qty-display', _bindingQty);
+        updateBindingBottom();
+    }
+
+    function updateBindingBottom() {
+        setText('binding-bottom-type',  _bindingSelected ? `${_bindingSelected} × ${_bindingQty}` : 'No binding selected');
+        setText('binding-bottom-total', '₱' + (_bindingPrice * _bindingQty).toFixed(2));
+    }
+
+    function bindingGoNext() {
+        if (!_bindingSelected) { showAlert('No Selection', 'Please select a binding type first.'); return; }
+        // Save selection to checkout state, then go to details page
+        Checkout.set({ bindingType: _bindingSelected, bindingPrice: _bindingPrice, bindingQty: _bindingQty });
+        window.location.href = 'binding-details.html';
+    }
+</script>
+</body>
+</html>

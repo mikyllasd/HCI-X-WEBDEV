@@ -1,3 +1,11 @@
+/**
+ * GLOBAL NAVIGATION
+ * This part works on every page (Dashboard, Verification, etc.)
+ */
+function navigateTo(url) {
+  window.location.href = url;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const dateElement = document.getElementById("currentDate");
   const now = new Date();

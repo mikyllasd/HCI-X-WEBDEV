@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Verification | UPRESSease</title>
+    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/superadmin/student-verification.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="logo-text">
+            <h1>UPRESSease</h1>
+            <p>Admin Portal</p>
+          </div>
+        </div>
+
+        <div class="user-badge">
+          <span class="badge-gold"
+            ><i class="fas fa-crown"></i> Superadmin</span
+          >
+          <p class="username">@superadmin</p>
+        </div>
+
+        <ul class="nav-links">
+          <li onclick="window.location.href = 'index.html'">
+            <i class="fas fa-th-large"></i> Dashboard
+          </li>
+          <li
+            class="active"
+            onclick="window.location.href = 'verification.html'"
+          >
+            <i class="fas fa-user-check"></i> Student Verification
+          </li>
+          <li onclick="window.location.href = 'orders.html'">
+            <i class="fas fa-box"></i> Orders
+          </li>
+          <li onclick="window.location.href = 'scanner.html'">
+            <i class="fas fa-qrcode"></i> QR Scanner
+          </li>
+
+          <p class="nav-label">PERFORMANCE ANALYTICS</p>
+          <li onclick="window.location.href = 'daily.html'">
+            <i class="far fa-clock"></i> Daily Analytics
+          </li>
+          <li onclick="window.location.href = 'monthly.html'">
+            <i class="far fa-calendar-alt"></i> Monthly Analytics
+          </li>
+          <li onclick="window.location.href = 'yearly.html'">
+            <i class="far fa-calendar-check"></i> Yearly Analytics
+          </li>
+          <li onclick="window.location.href = 'annual.html'">
+            <i class="fas fa-chart-line"></i> Annual Statistics
+          </li>
+
+          <p class="nav-label">REPORTS & MANAGEMENT</p>
+          <li onclick="window.location.href = 'history.html'">
+            <i class="fas fa-file-invoice"></i> Transaction History
+          </li>
+          <li onclick="window.location.href = 'accounts.html'">
+            <i class="fas fa-users-cog"></i> Active Accounts
+          </li>
+          <li onclick="window.location.href = 'service.html'">
+            <i class="fas fa-plus-circle"></i> Add Service
+          </li>
+        </ul>
+
+        <div class="logout" onclick="window.location.href = 'login.html'">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <p>Student Verification</p>
+          <div class="top-icons">
+            <i class="far fa-bell"></i>
+            <div class="profile-circle">SA</div>
+          </div>
+        </header>
+
+        <section class="page-header">
+          <h1>Student Verification</h1>
+          <p>Review and manage student registration requests</p>
+        </section>
+
+        <div class="verification-stats">
+          <div class="stat-card border-blue">
+            <div class="stat-info">
+              <span>Total Requests</span>
+              <h3>4</h3>
+            </div>
+            <i class="fas fa-filter icon-blue"></i>
+          </div>
+          <div class="stat-card border-yellow">
+            <div class="stat-info">
+              <span>Pending</span>
+              <h3>2</h3>
+            </div>
+            <i class="far fa-clock icon-yellow"></i>
+          </div>
+          <div class="stat-card border-green">
+            <div class="stat-info">
+              <span>Approved</span>
+              <h3>1</h3>
+            </div>
+            <i class="far fa-check-circle icon-green"></i>
+          </div>
+          <div class="stat-card border-red">
+            <div class="stat-info">
+              <span>Rejected</span>
+              <h3>1</h3>
+            </div>
+            <i class="far fa-times-circle icon-red"></i>
+          </div>
+        </div>
+
+        <div class="search-filter-container">
+          <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              placeholder="Search by name, student ID, or email..."
+            />
+          </div>
+          <div class="filter-btns">
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">Pending</button>
+            <button class="filter-btn">Approved</button>
+            <button class="filter-btn">Rejected</button>
+          </div>
+        </div>
+
+        <div class="requests-section">
+          <h3>Verification Requests</h3>
+          <span class="results-count">4 requests found</span>
+
+          <div class="v-card">
+            <div class="v-card-header">
+              <div class="v-name-row">
+                <h4>Maria Santos</h4>
+                <span class="badge badge-pending">Pending</span>
+              </div>
+              <i class="far fa-eye view-details"></i>
+            </div>
+            <div class="v-card-body">
+              <p><strong>Student ID:</strong> 2024-00123</p>
+              <p><strong>Program:</strong> Computer Science</p>
+              <p><strong>Year Level:</strong> 3rd Year</p>
+              <p><strong>Email:</strong> maria.santos@university.edu</p>
+              <p><strong>Submitted:</strong> 4/26/2026, 9:53:09 PM</p>
+            </div>
+          </div>
+
+          <div class="v-card">
+            <div class="v-card-header">
+              <div class="v-name-row">
+                <h4>Ana Reyes</h4>
+                <span class="badge badge-approved">Approved</span>
+              </div>
+              <i class="far fa-eye view-details"></i>
+            </div>
+            <div class="v-card-body">
+              <p><strong>Student ID:</strong> 2024-00125</p>
+              <p><strong>Program:</strong> Business Administration</p>
+              <p><strong>Year Level:</strong> 4th Year</p>
+              <p><strong>Email:</strong> ana.reyes@university.edu</p>
+              <p><strong>Submitted:</strong> 4/25/2026, 11:53:09 PM</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

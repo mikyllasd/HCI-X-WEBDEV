@@ -3,183 +3,304 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Verification | UPRESSease</title>
-    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+    <title>Student Verification | UPRESSease Admin Portal</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="../../css/superadmin/variables.css" />
+    <link rel="stylesheet" href="../../css/superadmin/superadmin.css" />
     <link
       rel="stylesheet"
       href="../../css/superadmin/student-verification.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
   </head>
   <body>
-    <div class="container">
-      <nav class="sidebar">
-        <div class="sidebar-header">
-          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
-          <div class="logo-text">
-            <h1>UPRESSease</h1>
-            <p>Admin Portal</p>
+    <div class="app-wrapper">
+      <!-- SIDEBAR -->
+      <aside
+        class="sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Admin sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span
+            ><span class="brand-sub">Admin Portal</span>
           </div>
         </div>
-
-        <div class="user-badge">
-          <span class="badge-gold"
-            ><i class="fas fa-crown"></i> Superadmin</span
-          >
-          <p class="username">@superadmin</p>
+        <div class="sidebar-user">
+          <button class="user-pill" aria-label="Logged in as Superadmin">
+            <i data-lucide="crown" aria-hidden="true"></i
+            ><span>Superadmin</span>
+          </button>
+          <p class="user-handle">@superadmin</p>
         </div>
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link"
+                ><i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a
+                href="student-verification.html"
+                class="nav-link active"
+                aria-current="page"
+                ><i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Student Verification</span></a
+              >
+            </li>
+            <li>
+              <a href="orders.html" class="nav-link"
+                ><i data-lucide="package" aria-hidden="true"></i
+                ><span>Orders</span></a
+              >
+            </li>
+            <li>
+              <a href="qr-scanner.html" class="nav-link"
+                ><i data-lucide="scan-qr-code" aria-hidden="true"></i
+                ><span>QR Scanner</span></a
+              >
+            </li>
+          </ul>
+          <p class="nav-section-label">Performance Analytics</p>
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="daily-analytics.html" class="nav-link"
+                ><i data-lucide="clock" aria-hidden="true"></i
+                ><span>Daily Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="monthly-analytics.html" class="nav-link"
+                ><i data-lucide="calendar-days" aria-hidden="true"></i
+                ><span>Monthly Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="yearly-analytics.html" class="nav-link"
+                ><i data-lucide="calendar-range" aria-hidden="true"></i
+                ><span>Yearly Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="annual-statistics.html" class="nav-link"
+                ><i data-lucide="trending-up" aria-hidden="true"></i
+                ><span>Annual Statistics</span></a
+              >
+            </li>
+          </ul>
+          <p class="nav-section-label">Reports &amp; Management</p>
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="transaction-history.html" class="nav-link"
+                ><i data-lucide="file-text" aria-hidden="true"></i
+                ><span>Transaction History</span></a
+              >
+            </li>
+            <li>
+              <a href="active-accounts.html" class="nav-link"
+                ><i data-lucide="users" aria-hidden="true"></i
+                ><span>Active Accounts</span></a
+              >
+            </li>
+            <li>
+              <a href="add-service.html" class="nav-link"
+                ><i data-lucide="circle-plus" aria-hidden="true"></i
+                ><span>Add Service</span></a
+              >
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a href="#" class="nav-link nav-link--logout" id="logout-btn"
+                ><i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
 
-        <ul class="nav-links">
-          <li onclick="window.location.href = 'index.html'">
-            <i class="fas fa-th-large"></i> Dashboard
-          </li>
-          <li
-            class="active"
-            onclick="window.location.href = 'verification.html'"
+      <!-- MAIN CONTENT -->
+      <main class="main-content" id="main-content" role="main">
+        <header class="topbar" role="banner">
+          <button
+            class="hamburger"
+            id="hamburger-btn"
+            aria-label="Toggle sidebar"
+            aria-expanded="false"
           >
-            <i class="fas fa-user-check"></i> Student Verification
-          </li>
-          <li onclick="window.location.href = 'orders.html'">
-            <i class="fas fa-box"></i> Orders
-          </li>
-          <li onclick="window.location.href = 'scanner.html'">
-            <i class="fas fa-qrcode"></i> QR Scanner
-          </li>
-
-          <p class="nav-label">PERFORMANCE ANALYTICS</p>
-          <li onclick="window.location.href = 'daily.html'">
-            <i class="far fa-clock"></i> Daily Analytics
-          </li>
-          <li onclick="window.location.href = 'monthly.html'">
-            <i class="far fa-calendar-alt"></i> Monthly Analytics
-          </li>
-          <li onclick="window.location.href = 'yearly.html'">
-            <i class="far fa-calendar-check"></i> Yearly Analytics
-          </li>
-          <li onclick="window.location.href = 'annual.html'">
-            <i class="fas fa-chart-line"></i> Annual Statistics
-          </li>
-
-          <p class="nav-label">REPORTS & MANAGEMENT</p>
-          <li onclick="window.location.href = 'history.html'">
-            <i class="fas fa-file-invoice"></i> Transaction History
-          </li>
-          <li onclick="window.location.href = 'accounts.html'">
-            <i class="fas fa-users-cog"></i> Active Accounts
-          </li>
-          <li onclick="window.location.href = 'service.html'">
-            <i class="fas fa-plus-circle"></i> Add Service
-          </li>
-        </ul>
-
-        <div class="logout" onclick="window.location.href = 'login.html'">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </div>
-      </nav>
-
-      <main class="main-content">
-        <header class="top-bar">
-          <p>Student Verification</p>
-          <div class="top-icons">
-            <i class="far fa-bell"></i>
-            <div class="profile-circle">SA</div>
+            <i data-lucide="menu" aria-hidden="true"></i>
+          </button>
+          <div class="topbar-title">Student Verification</div>
+          <div class="topbar-actions">
+            <button class="topbar-icon-btn" aria-label="Notifications">
+              <i data-lucide="bell" aria-hidden="true"></i>
+              <span class="notif-dot" aria-hidden="true"></span>
+            </button>
+            <div class="topbar-avatar" title="Superadmin">SA</div>
           </div>
         </header>
 
-        <section class="page-header">
-          <h1>Student Verification</h1>
-          <p>Review and manage student registration requests</p>
+        <section
+          class="page-section active"
+          id="page-student-verification"
+          aria-labelledby="sv-heading"
+        >
+          <div class="page-header">
+            <h1 id="sv-heading">Student Verification</h1>
+            <p class="page-subtitle">
+              Review and manage student registration requests
+            </p>
+          </div>
+
+          <div class="stats-grid stats-grid--4 sp">
+            <article
+              class="stat-card stat-card--blue"
+              aria-label="Total Requests"
+            >
+              <div class="stat-card__header">
+                <span>Total Requests</span
+                ><i data-lucide="filter" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-total">4</p>
+            </article>
+            <article class="stat-card stat-card--yellow" aria-label="Pending">
+              <div class="stat-card__header">
+                <span>Pending</span
+                ><i data-lucide="clock" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-pending">2</p>
+            </article>
+            <article class="stat-card stat-card--green" aria-label="Approved">
+              <div class="stat-card__header">
+                <span>Approved</span
+                ><i data-lucide="circle-check" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-approved">1</p>
+            </article>
+            <article
+              class="stat-card stat-card--red-solid"
+              aria-label="Rejected"
+            >
+              <div class="stat-card__header">
+                <span>Rejected</span
+                ><i data-lucide="x-circle" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="sv-rejected">1</p>
+            </article>
+          </div>
+
+          <div class="card sp">
+            <div class="search-filter-row">
+              <div class="search-box">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <input
+                  type="search"
+                  id="sv-search"
+                  placeholder="Search by name, student ID, or email..."
+                  aria-label="Search verification requests"
+                />
+              </div>
+              <div
+                class="filter-tabs"
+                role="tablist"
+                aria-label="Filter by status"
+              >
+                <button
+                  class="filter-tab active"
+                  data-filter="all"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  All
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="pending"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Pending
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="approved"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Approved
+                </button>
+                <button
+                  class="filter-tab"
+                  data-filter="rejected"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Rejected
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card sp">
+            <h2 class="card-title">Verification Requests</h2>
+            <p class="card-subtitle" id="sv-count">4 requests found</p>
+            <ul
+              class="request-list"
+              id="sv-list"
+              aria-label="Verification requests"
+            ></ul>
+          </div>
         </section>
-
-        <div class="verification-stats">
-          <div class="stat-card border-blue">
-            <div class="stat-info">
-              <span>Total Requests</span>
-              <h3>4</h3>
-            </div>
-            <i class="fas fa-filter icon-blue"></i>
-          </div>
-          <div class="stat-card border-yellow">
-            <div class="stat-info">
-              <span>Pending</span>
-              <h3>2</h3>
-            </div>
-            <i class="far fa-clock icon-yellow"></i>
-          </div>
-          <div class="stat-card border-green">
-            <div class="stat-info">
-              <span>Approved</span>
-              <h3>1</h3>
-            </div>
-            <i class="far fa-check-circle icon-green"></i>
-          </div>
-          <div class="stat-card border-red">
-            <div class="stat-info">
-              <span>Rejected</span>
-              <h3>1</h3>
-            </div>
-            <i class="far fa-times-circle icon-red"></i>
-          </div>
-        </div>
-
-        <div class="search-filter-container">
-          <div class="search-wrapper">
-            <i class="fas fa-search"></i>
-            <input
-              type="text"
-              placeholder="Search by name, student ID, or email..."
-            />
-          </div>
-          <div class="filter-btns">
-            <button class="filter-btn active">All</button>
-            <button class="filter-btn">Pending</button>
-            <button class="filter-btn">Approved</button>
-            <button class="filter-btn">Rejected</button>
-          </div>
-        </div>
-
-        <div class="requests-section">
-          <h3>Verification Requests</h3>
-          <span class="results-count">4 requests found</span>
-
-          <div class="v-card">
-            <div class="v-card-header">
-              <div class="v-name-row">
-                <h4>Maria Santos</h4>
-                <span class="badge badge-pending">Pending</span>
-              </div>
-              <i class="far fa-eye view-details"></i>
-            </div>
-            <div class="v-card-body">
-              <p><strong>Student ID:</strong> 2024-00123</p>
-              <p><strong>Program:</strong> Computer Science</p>
-              <p><strong>Year Level:</strong> 3rd Year</p>
-              <p><strong>Email:</strong> maria.santos@university.edu</p>
-              <p><strong>Submitted:</strong> 4/26/2026, 9:53:09 PM</p>
-            </div>
-          </div>
-
-          <div class="v-card">
-            <div class="v-card-header">
-              <div class="v-name-row">
-                <h4>Ana Reyes</h4>
-                <span class="badge badge-approved">Approved</span>
-              </div>
-              <i class="far fa-eye view-details"></i>
-            </div>
-            <div class="v-card-body">
-              <p><strong>Student ID:</strong> 2024-00125</p>
-              <p><strong>Program:</strong> Business Administration</p>
-              <p><strong>Year Level:</strong> 4th Year</p>
-              <p><strong>Email:</strong> ana.reyes@university.edu</p>
-              <p><strong>Submitted:</strong> 4/25/2026, 11:53:09 PM</p>
-            </div>
-          </div>
-        </div>
       </main>
     </div>
+
+    <!-- MODAL: STUDENT VERIFICATION DETAIL -->
+    <div
+      class="modal-overlay hidden"
+      id="sv-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sv-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="sv-modal-title">Student Details</h2>
+          <button
+            class="modal-close"
+            id="sv-modal-close"
+            aria-label="Close modal"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="sv-modal-body"></div>
+        <div class="modal-footer" id="sv-modal-footer"></div>
+      </div>
+    </div>
+
+    <div class="toast hidden" id="toast" role="status" aria-live="polite">
+      <i data-lucide="check-circle" aria-hidden="true"></i>
+      <span id="toast-message">Action completed.</span>
+    </div>
+    <div
+      class="sidebar-overlay hidden"
+      id="sidebar-overlay"
+      aria-hidden="true"
+    ></div>
+
+    <script src="../../js/superadmin/data.js"></script>
+    <script src="../../js/superadmin/global.js"></script>
+    <script src="../../js/superadmin/student-verification.js"></script>
   </body>
 </html>

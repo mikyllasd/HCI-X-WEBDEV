@@ -6,10 +6,18 @@
 // USER SYSTEM
 // ============================================================
 const User = {
-    save(data) { localStorage.setItem('upressUser', JSON.stringify(data)); },
-    get() { try { return JSON.parse(localStorage.getItem('upressUser') || 'null'); } catch { return null; } },
+    save(data) {
+        localStorage.setItem('currentUser', JSON.stringify(data));
+        // Keep the users[] record in sync when data changes
+        try {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const i = users.findIndex(u => u.email === data.email);
+            if (i !== -1) { users[i] = { ...users[i], ...data }; localStorage.setItem('users', JSON.stringify(users)); }
+        } catch(e) {}
+    },
+    get() { try { return JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch { return null; } },
     update(patch) { const u = this.get() || {}; this.save({ ...u, ...patch }); },
-    clear() { localStorage.removeItem('upressUser'); },
+    clear() { localStorage.removeItem('currentUser'); },
     isLoggedIn() { return !!this.get(); }
 };
 
@@ -44,16 +52,25 @@ const Cart = {
 // ORDERS SYSTEM
 // ============================================================
 const Orders = {
-    getAll() { try { return JSON.parse(localStorage.getItem('upressOrders') || '[]'); } catch { return []; } },
-    save(orders) { localStorage.setItem('upressOrders', JSON.stringify(orders)); },
+    getAll() { try { return JSON.parse(localStorage.getItem('orders') || '[]'); } catch { return []; } },
+    save(orders) { localStorage.setItem('orders', JSON.stringify(orders)); },
     add(orderData) {
-        const orders = this.getAll();
+        const orders  = this.getAll();
         const orderId = 'ORD-' + Date.now();
+        const user    = User.get();
+        const dateStr = new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+        const amount  = parseFloat(orderData.total || 0);
         const fullOrder = {
             ...orderData,
             orderId,
-            dateOrdered: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }),
-            status: 'Pending'
+            id:            orderId,
+            email:         user?.email || '',
+            amount,
+            total:         amount.toFixed(2),
+            payment:       orderData.paymentMethod || 'Not selected',
+            status:        'pending',
+            date:          dateStr,
+            dateOrdered:   dateStr,
         };
         orders.unshift(fullOrder);
         this.save(orders);
@@ -61,10 +78,17 @@ const Orders = {
     },
     updateStatus(orderId, status) {
         const orders = this.getAll();
-        const i = orders.findIndex(o => o.orderId === orderId);
-        if (i !== -1) { orders[i].status = status; this.save(orders); }
+        const i = orders.findIndex(o => o.orderId === orderId || o.id === orderId);
+        if (i !== -1) { orders[i].status = status.toLowerCase(); this.save(orders); }
     }
 };
+
+/* Returns only the current student's orders */
+function getMyOrders() {
+    const user = User.get();
+    const all  = Orders.getAll();
+    return user?.email ? all.filter(o => o.email === user.email) : all;
+}
 
 // ============================================================
 // CHECKOUT STATE
@@ -284,14 +308,21 @@ function initLogin() {
         const email = document.getElementById('login-email')?.value.trim();
         const pass  = document.getElementById('login-password')?.value;
         if (!email || !pass) { showAlert('Missing Info', 'Please enter email and password.'); return; }
-        // Check if user exists in storage
-        const existing = User.get();
-        if (existing && existing.email === email) {
-            showPage('dashboard');
-        } else {
-            // Demo login: create session
-            User.save({ name: email.split('@')[0], email, phone: '', college: '', course: '', year: '' });
-            showPage('dashboard');
+
+        try {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user  = users.find(u => u.email.toLowerCase() === email.toLowerCase() && (!u.role || u.role === 'student'));
+            if (user) {
+                if (user.password && user.password !== pass) {
+                    showAlert('Wrong Password', 'Incorrect password. Please try again.'); return;
+                }
+                localStorage.setItem('currentUser', JSON.stringify({ id: user.id, name: user.name, email: user.email, role: 'student' }));
+                showPage('dashboard');
+            } else {
+                showAlert('Not Registered', 'No account found with this email. Please sign up first.');
+            }
+        } catch(err) {
+            showAlert('Error', 'Something went wrong. Please try again.');
         }
     });
 }
@@ -354,7 +385,22 @@ function validateSignup(e) {
     if (!terms?.checked) {
         showAlert('Terms Required', 'Please agree to the terms and conditions.'); return false;
     }
-    User.save({ name, email, phone, college, course, year });
+    try {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+            showAlert('Already Registered', 'An account with this email already exists. Please log in.'); return false;
+        }
+        const newUser = {
+            id: 'USR-' + Date.now(), name, email, phone, college, course, year,
+            role: 'student', verificationStatus: 'pending',
+            registrationDate: new Date().toISOString().slice(0, 10),
+            lastCOR:          new Date().toISOString().slice(0, 10),
+            studentId:        'STU-' + Date.now(),
+        };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify({ id: newUser.id, name, email, role: 'student' }));
+    } catch(err) {}
     showAlert('Account Created! 🎉', `Welcome, ${name}! Your account has been created successfully.`, () => showPage('login'));
     return false;
 }
@@ -1139,25 +1185,25 @@ function initOrders() {
 }
 
 function updateOrderCounts() {
-    const all = Orders.getAll();
-    const el  = s => document.querySelector(`[data-status="${s}"]`);
-    if (el('all')) el('all').textContent = all.length;
+    const mine = getMyOrders();
+    const el   = s => document.querySelector(`[data-status="${s}"]`);
+    if (el('all')) el('all').textContent = mine.length;
     ['Pending','Processing','Ready','Completed'].forEach(s => {
-        if (el(s)) el(s).textContent = all.filter(o => o.status === s).length;
+        if (el(s)) el(s).textContent = mine.filter(o => o.status.toLowerCase() === s.toLowerCase()).length;
     });
 }
 
 function renderOrders() {
     const list = document.getElementById('orders-list');
     if (!list) return;
-    const all      = Orders.getAll();
-    const filtered = _ordersFilter === 'all' ? all : all.filter(o => o.status === _ordersFilter);
+    const mine     = getMyOrders();
+    const filtered = _ordersFilter === 'all' ? mine : mine.filter(o => o.status.toLowerCase() === _ordersFilter.toLowerCase());
 
     const statusStyle = {
-        'Pending':    { bg:'#fffde7', color:'#c8a800', border:'#f9e79f' },
-        'Processing': { bg:'#f3e5f5', color:'#8e44ad', border:'#d7bde2' },
-        'Ready':      { bg:'#e8f8f5', color:'#27ae60', border:'#a9dfbf' },
-        'Completed':  { bg:'#f0f0f0', color:'#555',    border:'#ccc'   }
+        'pending':    { bg:'#fffde7', color:'#c8a800', border:'#f9e79f' },
+        'processing': { bg:'#f3e5f5', color:'#8e44ad', border:'#d7bde2' },
+        'ready':      { bg:'#e8f8f5', color:'#27ae60', border:'#a9dfbf' },
+        'completed':  { bg:'#f0f0f0', color:'#555',    border:'#ccc'   }
     };
 
     if (filtered.length === 0) {
@@ -1171,7 +1217,7 @@ function renderOrders() {
     }
 
     list.innerHTML = filtered.map(order => {
-        const sc  = statusStyle[order.status] || statusStyle['Pending'];
+        const sc  = statusStyle[order.status.toLowerCase()] || statusStyle['pending'];
         const badge = `<span style="display:inline-block;padding:0.25rem 0.875rem;border-radius:1.25rem;font-size:0.8125rem;font-weight:600;background:${sc.bg};color:${sc.color};border:1px solid ${sc.border};">${escHtml(order.status)}</span>`;
         const c   = order.customer || {};
         const customerRow = c.name ? `<div style="font-size:0.8rem;color:#888;margin-top:0.25rem;">👤 ${escHtml(c.name)}${c.phone ? ' &nbsp;📞 ' + escHtml(c.phone) : ''}${c.date ? ' &nbsp;🗓 Pickup: ' + escHtml(c.date) : ''}</div>` : '';
@@ -1204,7 +1250,8 @@ function renderOrders() {
 
 function deleteOrder(orderId) {
     showConfirm('Remove Order', 'Are you sure you want to remove this order from your history?', () => {
-        Orders.save(Orders.getAll().filter(o => o.orderId !== orderId));
+        /* Filter from the FULL orders array to preserve other students' orders */
+        Orders.save(Orders.getAll().filter(o => o.orderId !== orderId && o.id !== orderId));
         updateOrderCounts();
         renderOrders();
     });

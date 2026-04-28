@@ -1,0 +1,105 @@
+/* ==========================================================
+   GLOBAL VARIABLES & BASE STYLES
+   ========================================================== */
+
+:root {
+  /* Brand palette */
+  --clr-primary: #8b0000; /* dark crimson */
+  --clr-primary-dk: #6b0000; /* hover / pressed */
+  --clr-primary-lt: #b22222;
+  --clr-primary-ghost: #fff5f5; /* tint for hover backgrounds */
+
+  /* Semantic accent colours */
+  --clr-green: #16a34a;
+  --clr-green-lt: #dcfce7;
+  --clr-yellow: #ca8a04;
+  --clr-yellow-lt: #fef9c3;
+  --clr-blue: #2563eb;
+  --clr-blue-lt: #dbeafe;
+  --clr-purple: #7c3aed;
+  --clr-purple-lt: #ede9fe;
+  --clr-teal: #0d9488;
+  --clr-teal-lt: #ccfbf1;
+  --clr-orange: #ea580c;
+  --clr-orange-lt: #ffedd5;
+  --clr-gray: #6b7280;
+  --clr-gray-lt: #f3f4f6;
+
+  /* Neutrals */
+  --clr-bg: #f1f3f5;
+  --clr-surface: #ffffff;
+  --clr-border: #e5e7eb;
+  --clr-text: #111827;
+  --clr-text-muted: #6b7280;
+
+  /* Sidebar & Layout */
+  --sidebar-w: 280px;
+  --sidebar-bg: #7b0000;
+  --sidebar-muted: rgba(255, 255, 255, 0.55);
+  --sidebar-active: #6b0000;
+  --sidebar-hover: rgba(255, 255, 255, 0.08);
+  --topbar-h: 60px;
+
+  /* Shape & Elevation */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.14);
+
+  /* Typography */
+  --font: "DM Sans", sans-serif;
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 14px;
+  --fs-md: 15px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 26px;
+  --fs-3xl: 34px;
+
+  /* Transitions */
+  --t: 0.18s ease;
+}
+
+/* RESET & BASE */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: var(--fs-base);
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font);
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+}
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+.sp {
+  margin-left: 28px;
+  margin-right: 28px;
+} /* Section padding helper */

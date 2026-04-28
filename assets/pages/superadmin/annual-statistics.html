@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | UPRESSease Admin Portal</title>
+    <title>Annual Statistics | UPRESSease Admin Portal</title>
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
       rel="stylesheet"
     />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="../../css/superadmin/variables.css" />
     <link rel="stylesheet" href="../../css/superadmin/superadmin.css" />
-    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+    <link rel="stylesheet" href="../../css/superadmin/annual-statistics.css" />
   </head>
   <body>
     <div class="app-wrapper">
@@ -41,10 +42,7 @@
         <nav class="sidebar-nav" aria-label="Main navigation">
           <ul class="nav-list" role="list">
             <li>
-              <a
-                href="dashboard.html"
-                class="nav-link active"
-                aria-current="page"
+              <a href="dashboard.html" class="nav-link"
                 ><i data-lucide="layout-dashboard" aria-hidden="true"></i
                 ><span>Dashboard</span></a
               >
@@ -89,7 +87,10 @@
               >
             </li>
             <li>
-              <a href="annual-statistics.html" class="nav-link"
+              <a
+                href="annual-statistics.html"
+                class="nav-link active"
+                aria-current="page"
                 ><i data-lucide="trending-up" aria-hidden="true"></i
                 ><span>Annual Statistics</span></a
               >
@@ -138,152 +139,120 @@
           >
             <i data-lucide="menu" aria-hidden="true"></i>
           </button>
-          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-title">Annual Statistics</div>
           <div class="topbar-actions">
             <button class="topbar-icon-btn" aria-label="Notifications">
               <i data-lucide="bell" aria-hidden="true"></i>
               <span class="notif-dot" aria-hidden="true"></span>
             </button>
-            <div
-              class="topbar-avatar"
-              title="Superadmin"
-              aria-label="Admin avatar"
-            >
-              SA
-            </div>
+            <div class="topbar-avatar" title="Superadmin">SA</div>
           </div>
         </header>
 
         <section
           class="page-section active"
-          id="page-dashboard"
-          aria-labelledby="dash-heading"
+          id="page-annual-statistics"
+          aria-labelledby="as-heading"
         >
-          <div class="page-header">
-            <h1 id="dash-heading">Dashboard</h1>
-            <p class="page-subtitle" id="dash-date">Today's Overview</p>
-          </div>
-
-          <div class="stats-grid stats-grid--3 sp">
-            <article
-              class="stat-card stat-card--red"
-              aria-label="Today's Orders"
-            >
-              <div class="stat-card__header">
-                <span>Today's Orders</span
-                ><i data-lucide="package" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-orders">0</p>
-              <p class="stat-card__label">Total orders today</p>
-            </article>
-            <article
-              class="stat-card stat-card--green"
-              aria-label="Today's Income"
-            >
-              <div class="stat-card__header">
-                <span>Today's Income</span
-                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-income">₱0.00</p>
-              <p class="stat-card__label">From completed orders</p>
-            </article>
-            <article
-              class="stat-card stat-card--yellow"
-              aria-label="Pending or Paid"
-            >
-              <div class="stat-card__header">
-                <span>Pending/Paid</span
-                ><i data-lucide="clock" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-pending">0</p>
-              <p class="stat-card__label">Awaiting processing</p>
-            </article>
-            <article
-              class="stat-card stat-card--purple"
-              aria-label="Processing"
-            >
-              <div class="stat-card__header">
-                <span>Processing</span
-                ><i data-lucide="package-open" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-processing">0</p>
-              <p class="stat-card__label">Currently being processed</p>
-            </article>
-            <article
-              class="stat-card stat-card--teal"
-              aria-label="Ready for Pickup"
-            >
-              <div class="stat-card__header">
-                <span>Ready for Pickup</span
-                ><i data-lucide="circle-check" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-ready">0</p>
-              <p class="stat-card__label">Ready to be claimed</p>
-            </article>
-            <article class="stat-card stat-card--gray" aria-label="Completed">
-              <div class="stat-card__header">
-                <span>Completed</span
-                ><i data-lucide="check" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-completed">0</p>
-              <p class="stat-card__label">Successfully completed</p>
-            </article>
-          </div>
-
-          <div class="card sp">
-            <div class="card-header">
-              <div class="card-title-group">
-                <i data-lucide="list" aria-hidden="true"></i>
-                <h2 class="card-title">Today's Transactions</h2>
-              </div>
-              <button
-                class="btn btn--primary"
-                onclick="window.location.href = 'orders.html'"
-              >
-                <i data-lucide="list" aria-hidden="true"></i> View All Orders
-              </button>
-            </div>
-            <p class="card-subtitle">All orders placed today</p>
-            <div class="empty-state" id="dash-empty">
-              <i data-lucide="package" aria-hidden="true"></i>
-              <p class="empty-state__title">No transactions today</p>
-              <p class="empty-state__sub">
-                Orders placed today will appear here
-              </p>
-            </div>
-            <div class="table-wrapper hidden" id="dash-table">
-              <table class="data-table" aria-label="Today's transactions">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Student Email</th>
-                    <th>Service</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Payment</th>
-                  </tr>
-                </thead>
-                <tbody id="dash-table-body"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="promo-banner sp">
-            <div class="promo-banner__icon" aria-hidden="true">
-              <i data-lucide="trending-up"></i>
-            </div>
-            <div class="promo-banner__text">
-              <h3>Performance Analytics</h3>
-              <p>
-                View detailed daily, monthly, and yearly performance reports
-              </p>
-            </div>
+          <div class="page-dark-header">
             <button
-              class="btn btn--light"
-              onclick="window.location.href = 'daily-analytics.html'"
+              class="back-btn"
+              onclick="window.location.href = 'dashboard.html'"
+              aria-label="Back"
             >
-              View Analytics
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
             </button>
+            <div>
+              <h1 id="as-heading">Annual Statistics</h1>
+              <p>Yearly performance metrics and trends</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <div class="stats-grid stats-grid--4">
+              <article class="stat-card stat-card--red">
+                <div class="stat-card__header">
+                  <span>Total Transactions</span
+                  ><i data-lucide="trending-up" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value">9</p>
+                <p class="stat-card__label">All years combined</p>
+              </article>
+              <article class="stat-card stat-card--green">
+                <div class="stat-card__header">
+                  <span>Total Revenue</span
+                  ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value">₱1,750.00</p>
+                <p class="stat-card__label">All time</p>
+              </article>
+              <article class="stat-card stat-card--blue">
+                <div class="stat-card__header">
+                  <span>Total Users</span
+                  ><i data-lucide="users" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value">48</p>
+                <p class="stat-card__label">Registered accounts</p>
+              </article>
+              <article class="stat-card stat-card--purple">
+                <div class="stat-card__header">
+                  <span>YoY Growth</span
+                  ><i data-lucide="calendar-days" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value positive">+0%</p>
+                <p class="stat-card__label">Transaction growth</p>
+              </article>
+            </div>
+            <div class="card mt-6">
+              <h2 class="card-title">Transactions by Year</h2>
+              <p class="card-subtitle">
+                Annual transaction volume and revenue trends
+              </p>
+              <div class="chart-container">
+                <canvas id="annual-line-chart"></canvas>
+              </div>
+            </div>
+            <div class="two-col-grid mt-4">
+              <div class="card">
+                <h2 class="card-title">Annual Transaction Volume</h2>
+                <p class="card-subtitle">Number of transactions per year</p>
+                <div class="chart-container chart-container--sm">
+                  <canvas id="annual-volume-chart"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <h2 class="card-title">User Registrations by Year</h2>
+                <p class="card-subtitle">New student account registrations</p>
+                <div class="chart-container chart-container--sm">
+                  <canvas id="annual-users-chart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card mt-4">
+              <h2 class="card-title">Year-by-Year Breakdown</h2>
+              <p class="card-subtitle">Detailed annual performance metrics</p>
+              <div class="table-wrapper mt-3">
+                <table class="data-table" aria-label="Year-by-year breakdown">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Transactions</th>
+                      <th>Revenue</th>
+                      <th>Avg Order Value</th>
+                      <th>New Users</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2026</td>
+                      <td>9</td>
+                      <td class="text-green font-semibold">₱1,750.00</td>
+                      <td>₱194.44</td>
+                      <td>8</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -299,8 +268,8 @@
       aria-hidden="true"
     ></div>
 
-    <script src="../../js/superadmin/data.js"></script>
     <script src="../../js/superadmin/global.js"></script>
-    <script src="../../js/superadmin/dashboard.js"></script>
+    <script src="../../js/superadmin/charts.js"></script>
+    <script src="../../js/superadmin/annual-statistics.js"></script>
   </body>
 </html>

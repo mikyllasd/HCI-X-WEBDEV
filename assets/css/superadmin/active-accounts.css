@@ -1,0 +1,9 @@
+/* ==========================================================
+   ACTIVE ACCOUNTS — page-specific styles
+   Base styles live in superadmin.css / variables.css
+   ========================================================== */
+
+/* Active accounts page fills available height */
+#page-active-accounts {
+  min-height: calc(100vh - var(--topbar-h));
+}

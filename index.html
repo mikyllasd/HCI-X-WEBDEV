@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | WMSU Printing & Merchandise</title>
-    <link rel="stylesheet" href="assets/css/student.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="assets/css/student/student.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
   </head>
   <body data-page="landing">
-
     <div class="spa-page" id="page-landing" style="display: block">
       <header class="landing-navbar">
         <nav class="landing-nav-wrapper">
@@ -20,10 +22,19 @@
             </div>
           </div>
           <div class="landing-nav-actions">
-            <button class="btn btn-outline" onclick="window.location.href='assets/pages/student.html'">
+            <button
+              class="btn btn-outline"
+              onclick="window.location.href = 'assets/pages/student.html'"
+            >
               Student Login
             </button>
-            <button class="btn btn-filled" onclick="window.location.href='assets/pages/admin-login-entry-point.html'">
+            <button
+              class="btn btn-filled"
+              onclick="
+                window.location.href =
+                  'assets/pages/admin-login-entry-point.html'
+              "
+            >
               Admin Login
             </button>
           </div>
@@ -39,7 +50,11 @@
           </p>
           <button
             class="btn btn-white"
-            onclick="document.getElementById('landing-how').scrollIntoView({ behavior: 'smooth' })"
+            onclick="
+              document
+                .getElementById('landing-how')
+                .scrollIntoView({ behavior: 'smooth' })
+            "
           >
             Get Started Now
           </button>
@@ -50,7 +65,8 @@
         <div class="landing-container">
           <h2 class="section-title reveal">Why Choose UPRESSease?</h2>
           <p class="section-subtitle reveal">
-            Experience seamless ordering, real-time tracking, and convenient pickup
+            Experience seamless ordering, real-time tracking, and convenient
+            pickup
           </p>
           <div class="landing-grid">
             <div class="feature-card reveal">
@@ -91,7 +107,8 @@
         <div class="landing-container">
           <h2 class="section-title reveal">Our Services</h2>
           <p class="section-subtitle reveal">
-            Comprehensive printing and merchandise solutions for all your academic needs
+            Comprehensive printing and merchandise solutions for all your
+            academic needs
           </p>
           <div class="landing-grid">
             <div class="service-card-landing reveal">
@@ -174,10 +191,16 @@
           <h2>Ready to Get Started?</h2>
           <p>Join hundreds of WMSU students already using UPRESSease</p>
           <div class="cta-actions">
-            <button class="btn btn-white" onclick="window.location.href='student.html?page=signup'">
+            <button
+              class="btn btn-white"
+              onclick="window.location.href = 'student.html?page=signup'"
+            >
               Create Account
             </button>
-            <button class="btn btn-outline-white" onclick="window.location.href='student.html'">
+            <button
+              class="btn btn-outline-white"
+              onclick="window.location.href = 'student.html'"
+            >
               Login
             </button>
           </div>
@@ -196,6 +219,6 @@
       </footer>
     </div>
 
-    <script src="assets/js/student.js"></script>
+    <script src="assets/js/student/student.js"></script>
   </body>
 </html>

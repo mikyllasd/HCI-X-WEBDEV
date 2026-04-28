@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease Admin Portal</title>
+    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="logo-text">
+            <h1>UPRESSease</h1>
+            <p>Admin Portal</p>
+          </div>
+        </div>
+
+        <div class="user-badge">
+          <span class="badge-gold"
+            ><i class="fas fa-crown"></i> Superadmin</span
+          >
+          <p class="username">@superadmin</p>
+        </div>
+
+        <ul class="nav-links">
+          <li class="active" onclick="navigateTo('index.html')">
+            <i class="fas fa-th-large"></i> Dashboard
+          </li>
+          <li onclick="navigateTo('verification.html')">
+            <i class="fas fa-user-check"></i> Student Verification
+          </li>
+          <li onclick="navigateTo('orders.html')">
+            <i class="fas fa-box"></i> Orders
+          </li>
+          <li onclick="navigateTo('scanner.html')">
+            <i class="fas fa-qrcode"></i> QR Scanner
+          </li>
+
+          <p class="nav-label">PERFORMANCE ANALYTICS</p>
+          <li onclick="navigateTo('daily.html')">
+            <i class="far fa-clock"></i> Daily Analytics
+          </li>
+          <li onclick="navigateTo('monthly.html')">
+            <i class="far fa-calendar-alt"></i> Monthly Analytics
+          </li>
+          <li onclick="navigateTo('yearly.html')">
+            <i class="far fa-calendar-check"></i> Yearly Analytics
+          </li>
+          <li onclick="navigateTo('annual.html')">
+            <i class="fas fa-chart-line"></i> Annual Statistics
+          </li>
+
+          <p class="nav-label">REPORTS & MANAGEMENT</p>
+          <li onclick="navigateTo('history.html')">
+            <i class="fas fa-file-invoice"></i> Transaction History
+          </li>
+          <li onclick="navigateTo('accounts.html')">
+            <i class="fas fa-users-cog"></i> Active Accounts
+          </li>
+          <li onclick="navigateTo('service.html')">
+            <i class="fas fa-plus-circle"></i> Add Service
+          </li>
+        </ul>
+
+        <div class="logout" onclick="navigateTo('login.html')">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <h2>Dashboard</h2>
+          <div class="top-icons">
+            <i class="far fa-bell"></i>
+            <div class="profile-circle">SA</div>
+          </div>
+        </header>
+
+        <section class="dashboard-header">
+          <h1>Dashboard</h1>
+          <p>Today's Overview — Tuesday, April 28, 2026</p>
+        </section>
+
+        <div class="stats-grid">
+          <div class="stat-card border-red">
+            <div class="stat-info">
+              <span>Today's Orders</span>
+              <h3>0</h3>
+              <p>Total orders today</p>
+            </div>
+            <i class="fas fa-box-open icon-red"></i>
+          </div>
+
+          <div class="stat-card border-green">
+            <div class="stat-info">
+              <span>Today's Income</span>
+              <h3>₱0.00</h3>
+              <p>From completed orders</p>
+            </div>
+            <i class="fas fa-peso-sign icon-green"></i>
+          </div>
+
+          <div class="stat-card border-yellow">
+            <div class="stat-info">
+              <span>Pending/Paid</span>
+              <h3>0</h3>
+              <p>Awaiting processing</p>
+            </div>
+            <i class="far fa-clock icon-yellow"></i>
+          </div>
+
+          <div class="stat-card border-purple">
+            <div class="stat-info">
+              <span>Processing</span>
+              <h3>0</h3>
+              <p>Currently being processed</p>
+            </div>
+            <i class="fas fa-boxes icon-purple"></i>
+          </div>
+
+          <div class="stat-card border-teal">
+            <div class="stat-info">
+              <span>Ready for Pickup</span>
+              <h3>0</h3>
+              <p>Ready to be claimed</p>
+            </div>
+            <i class="far fa-check-circle icon-teal"></i>
+          </div>
+
+          <div class="stat-card border-gray">
+            <div class="stat-info">
+              <span>Completed</span>
+              <h3>0</h3>
+              <p>Successfully completed</p>
+            </div>
+            <i class="fas fa-check icon-gray"></i>
+          </div>
+        </div>
+
+        <div class="transactions-container">
+          <div class="trans-header">
+            <h3><i class="fas fa-list-ul"></i> Today's Transactions</h3>
+            <button class="view-all-btn" onclick="navigateTo('orders.html')">
+              View All Orders
+            </button>
+          </div>
+          <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h4>No transactions today</h4>
+            <p>Orders placed today will appear here</p>
+          </div>
+        </div>
+
+        <div class="analytics-banner">
+          <div class="banner-left">
+            <div class="banner-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="banner-text">
+              <h4>Performance Analytics</h4>
+              <p>
+                View detailed daily, monthly, and yearly performance reports
+              </p>
+            </div>
+          </div>
+          <button class="view-analytics-btn" onclick="navigateTo('daily.html')">
+            View Analytics
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../js/superadmin/dashboard.js"></script>
+  </body>
+</html>

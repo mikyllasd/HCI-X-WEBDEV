@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
   if (!_cu || _cu.role !== "superadmin") {
-    window.location.href = "/assets/pages/admin-login-entry-point.html";
+    window.location.href = "../admin-login-entry-point.html";
     return;
   }
 
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     if (confirm("Are you sure you want to log out?")) {
       localStorage.removeItem("currentUser");
-      window.location.href = "/assets/pages/admin-login-entry-point.html";
+      window.location.href = "../admin-login-entry-point.html";
     }
   });
 });

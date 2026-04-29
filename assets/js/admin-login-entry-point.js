@@ -69,11 +69,11 @@ function handleLogin() {
       );
       setTimeout(() => {
         if (username.toLowerCase() === "staff") {
-          window.location.href = "/assets/pages/staff/staff.html";
+          window.location.href = "staff/staff.html";
         } else if (username.toLowerCase() === "superadmin") {
-          window.location.href = "/assets/pages/superadmin/dashboard.html";
+          window.location.href = "superadmin/dashboard.html";
         } else {
-          window.location.href = "/assets/pages/admin/admin-dashboard.html";
+          window.location.href = "admin/admin-dashboard.html";
         }
       }, 900);
     } else {
@@ -105,7 +105,7 @@ loginBtn.addEventListener("click", handleLogin);
 
 // ── Student Login Link ──
 studentLink.addEventListener("click", () => {
-  window.location.href = "/assets/pages/student/index.html";
+  window.location.href = "student/index.html";
 });
 
 // ── Enter Key Submits Form ──

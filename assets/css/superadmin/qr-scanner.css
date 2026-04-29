@@ -1,9 +1,0 @@
-/* ==========================================================
-   QR SCANNER — page-specific styles
-   Base styles live in superadmin.css / variables.css
-   ========================================================== */
-
-/* QR scanner page fills available height */
-#page-qr-scanner {
-  min-height: calc(100vh - var(--topbar-h));
-}

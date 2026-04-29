@@ -71,7 +71,7 @@ function handleLogin() {
         if (username.toLowerCase() === "staff") {
           window.location.href = "staff/staff.html";
         } else if (username.toLowerCase() === "superadmin") {
-          window.location.href = "superadmin/dashboard.html";
+          window.location.href = "super/dashboard.html";
         } else {
           window.location.href = "admin/admin-dashboard.html";
         }

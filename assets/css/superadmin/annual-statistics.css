@@ -1,9 +1,0 @@
-/* ==========================================================
-   ANNUAL STATISTICS — page-specific styles
-   Base styles live in superadmin.css / variables.css
-   ========================================================== */
-
-/* Annual stats page fills available height */
-#page-annual-statistics {
-  min-height: calc(100vh - var(--topbar-h));
-}

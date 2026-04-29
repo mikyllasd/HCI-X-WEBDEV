@@ -1,9 +1,0 @@
-/* ==========================================================
-   ORDERS — page-specific styles
-   Base styles live in superadmin.css / variables.css
-   ========================================================== */
-
-/* Orders page fills the full main column height */
-#page-orders {
-  min-height: calc(100vh - var(--topbar-h));
-}

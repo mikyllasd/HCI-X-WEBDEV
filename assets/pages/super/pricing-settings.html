@@ -3,22 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Admin Portal</title>
+    <title>UPRESSease – Pricing Settings</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../../css/super/global.css" />
+    <link rel="stylesheet" href="../../css/super/pricing-settings.css" />
   </head>
-  <body>
-    <!-- Mobile overlay -->
+  <body data-page="pricing">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="app-shell">
-      <!-- ===== SIDEBAR ===== -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
           <div class="brand-logo">
@@ -34,7 +32,7 @@
           </div>
           <div class="brand-text">
             <span class="brand-name">UPRESSease</span>
-            <span class="brand-sub">Admin Portal</span>
+            <span class="brand-sub">Super Admin Portal</span>
           </div>
           <button
             class="sidebar-close"
@@ -53,7 +51,6 @@
             </svg>
           </button>
         </div>
-
         <div class="sidebar-user">
           <div class="user-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -65,9 +62,8 @@
           </div>
           <span class="user-handle">@superadmin</span>
         </div>
-
         <nav class="sidebar-nav">
-          <a href="#" class="nav-item active" data-page="dashboard">
+          <a href="dashboard.html" class="nav-item" data-page="dashboard">
             <svg
               class="nav-icon"
               viewBox="0 0 24 24"
@@ -82,7 +78,7 @@
             </svg>
             Dashboard
           </a>
-          <a href="#" class="nav-item" data-page="users">
+          <a href="manage-users.html" class="nav-item" data-page="users">
             <svg
               class="nav-icon"
               viewBox="0 0 24 24"
@@ -97,7 +93,7 @@
             </svg>
             Manage Users
           </a>
-          <a href="#" class="nav-item" data-page="pricing">
+          <a href="pricing-settings.html" class="nav-item" data-page="pricing">
             <svg
               class="nav-icon"
               viewBox="0 0 24 24"
@@ -110,7 +106,7 @@
             </svg>
             Pricing Settings
           </a>
-          <a href="#" class="nav-item" data-page="policies">
+          <a href="policies.html" class="nav-item" data-page="policies">
             <svg
               class="nav-icon"
               viewBox="0 0 24 24"
@@ -128,7 +124,7 @@
             </svg>
             Policies
           </a>
-          <a href="#" class="nav-item" data-page="reports">
+          <a href="reports.html" class="nav-item" data-page="reports">
             <svg
               class="nav-icon"
               viewBox="0 0 24 24"
@@ -142,7 +138,7 @@
             </svg>
             Reports
           </a>
-          <a href="#" class="nav-item" data-page="settings">
+          <a href="system-settings.html" class="nav-item" data-page="settings">
             <svg
               class="nav-icon"
               viewBox="0 0 24 24"
@@ -158,7 +154,6 @@
             System Settings
           </a>
         </nav>
-
         <div class="sidebar-footer">
           <button class="logout-btn" id="logoutBtn">
             <svg
@@ -178,120 +173,20 @@
         </div>
       </aside>
 
-      <!-- ===== MAIN CONTENT ===== -->
       <main class="main-content">
         <header class="topbar">
           <button class="hamburger" id="hamburger" aria-label="Open menu">
             <span></span><span></span><span></span>
           </button>
-          <div class="topbar-title" id="topbarTitle">Dashboard</div>
+          <div class="topbar-title">Pricing Settings</div>
         </header>
 
         <div class="page-container" id="pageContainer">
-          <!-- Pages injected by JS -->
+          <!-- Rendered by pricing-settings.js -->
         </div>
       </main>
     </div>
 
-    <!-- ===== ADD USER MODAL ===== -->
-    <div class="modal-backdrop" id="modalBackdrop">
-      <div class="modal" id="addUserModal">
-        <div class="modal-header">
-          <div>
-            <h3 class="modal-title">Add New User</h3>
-            <p class="modal-sub">Create a new admin or staff account</p>
-          </div>
-          <button class="modal-close" id="modalClose">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label"
-              >Username <span class="required">*</span></label
-            >
-            <input
-              type="text"
-              class="form-input"
-              id="newUsername"
-              placeholder="Enter username"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label"
-              >Full Name <span class="required">*</span></label
-            >
-            <input
-              type="text"
-              class="form-input"
-              id="newFullName"
-              placeholder="Enter full name"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label"
-              >Email <span class="required">*</span></label
-            >
-            <input
-              type="email"
-              class="form-input"
-              id="newEmail"
-              placeholder="Enter email"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label"
-              >Password <span class="required">*</span></label
-            >
-            <div class="input-icon-wrap">
-              <input
-                type="password"
-                class="form-input"
-                id="newPassword"
-                placeholder="Enter password"
-              />
-              <button class="input-icon-btn" id="togglePassword" type="button">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label"
-              >Role <span class="required">*</span></label
-            >
-            <select class="form-input form-select" id="newRole">
-              <option value="Admin">Admin</option>
-              <option value="Staff">Staff</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-ghost" id="modalCancel">Cancel</button>
-          <button class="btn btn-primary" id="modalSubmit">Add User</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== TOAST ===== -->
     <div class="toast" id="toast">
       <svg
         width="18"
@@ -307,6 +202,7 @@
       <span id="toastMsg">Action completed successfully!</span>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../../js/super/shared.js"></script>
+    <script src="../../js/super/pricing-settings.js"></script>
   </body>
 </html>

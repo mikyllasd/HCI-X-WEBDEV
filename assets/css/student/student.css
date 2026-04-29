@@ -128,7 +128,7 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 /* ===================== CARD ===================== */
 .card { width: 100%; background: white; border-radius: 0.9375rem; padding: 1.5rem; box-shadow: 0 0.125rem 0.625rem rgba(0,0,0,0.06); }
 .card-sticky { position: sticky; top: 5rem; }
-.card-head { margin-bottom: 1rem; }
+.card-head { margin-bottom: 1rem;  }
 .card-title { font-size: 1.125rem; font-weight: 700; color: #333; }
 .card-subtitle { font-size: 0.8125rem; color: #777; margin-top: 0.25rem; }
 .card-blue { background: #eef4ff; border: 1px solid #d0e2ff; }

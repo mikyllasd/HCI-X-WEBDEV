@@ -7,59 +7,166 @@
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/signup.css" />
 </head>
-<body>
-<div style="background-color:#f4f4f4;min-height:100vh;">
-    <header style="position:sticky;top:0;z-index:1000;width:100%;background-color:#8B0000;color:white;display:flex;align-items:center;padding:0.9375rem 1.25rem;gap:0.9375rem;box-shadow:0 2px 5px rgba(0,0,0,0.18);">
-        <div style="font-size:1.5rem;">🎓</div>
-        <div>
-            <div style="font-size:1.25rem;font-weight:bold;">UPRESSease</div>
-            <div style="font-size:0.75rem;color:#f0f0f0;">Western Mindanao State University</div>
+<body class="signup-bg">
+
+    <!-- Header -->
+    <header class="signup-header">
+        <a href="index.html" class="signup-back">← Back to Login</a>
+        <div class="signup-header-brand">
+            <span class="signup-header-icon">🎓</span>
+            <div>
+                <div class="signup-header-title">UPRESSease</div>
+                <div class="signup-header-sub">Western Mindanao State University</div>
+            </div>
         </div>
     </header>
-    <div class="signup-container">
-        <h2>SIGN-UP PAGE</h2>
-        <form id="signup-form" onsubmit="return validateSignup(event);">
-            <div class="form-row"><label>Name:</label><input type="text" id="signup-name" required /></div>
-            <div class="form-row"><label>Email:</label><input type="email" id="signup-email" required /></div>
-            <div class="form-row"><label>Phone Number:</label><input type="tel" id="signup-phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required /></div>
-            <div class="form-row">
-                <label>College:</label>
-                <select id="signup-college" required onchange="populateCourses('signup-college','signup-course')">
-                    <option value="">-- Select College --</option>
-                    <option>College of Arts and Sciences</option>
-                    <option>College of Education</option>
-                    <option>College of Engineering</option>
-                    <option>College of Business Administration</option>
-                </select>
+
+    <!-- Main card -->
+    <main class="signup-main">
+        <div class="signup-card">
+
+            <!-- Card header -->
+            <div class="signup-card-head">
+                <div class="signup-avatar">🎓</div>
+                <h1 class="signup-title">Create Account</h1>
+                <p class="signup-subtitle">Sign up for UPRESSease</p>
             </div>
-            <div class="form-row"><label>Course:</label><select id="signup-course" required><option value="">-- Select Course --</option></select></div>
-            <div class="form-row">
-                <label>Year:</label>
-                <select id="signup-year" required>
-                    <option value="">-- Select Year --</option>
-                    <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>5th Year</option>
-                </select>
-            </div>
-            <hr style="border:0.5px solid #eee;margin:25px 0;" />
-            <div class="form-row"><label>Validated ID:</label><input type="file" id="signup-id" accept="image/*,.pdf" required /></div>
-            <div class="form-row"><label>1st Sem COR:</label><input type="file" id="signup-cor" accept="image/*,.pdf" required /></div>
-            <div class="form-row" style="gap:12px;flex-wrap:wrap;">
-                <button type="button" class="proceed-button" style="padding:10px 16px;" onclick="sendOtp()">Send OTP</button>
-                <input type="text" id="user-otp" placeholder="Enter OTP" style="max-width:180px;flex:1;" disabled />
-                <button type="button" class="proceed-button" style="padding:10px 16px;" onclick="verifyOtp()">Verify OTP</button>
-                <span id="otp-status" style="font-size:0.9rem;color:#d43434;"></span>
-            </div>
-            <div class="signup-terms-row">
-                <input type="checkbox" id="terms-check" required />
-                <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
-            </div>
-            <div style="display:flex;justify-content:center;width:100%;margin:30px 0;">
-                <button type="submit" class="proceed-button">PROCEED</button>
-            </div>
-        </form>
-    </div>
-</div>
-<script src="../../js/student/student.js"></script>
-<script src="../../js/student/signup.js"></script>
+
+            <form id="signup-form" onsubmit="return validateSignup(event);">
+                <div class="signup-panels">
+
+                    <!-- LEFT PANEL: Personal Information -->
+                    <div class="signup-panel">
+                        <div class="signup-section-label">Personal Information</div>
+                        <hr class="signup-divider" />
+
+                        <div class="signup-grid-2">
+                            <div class="sfield">
+                                <label class="slabel">Full Name *</label>
+                                <input class="sinput" type="text" id="signup-name" placeholder="Juan Dela Cruz" required />
+                            </div>
+                            <div class="sfield">
+                                <label class="slabel">WMSU Email *</label>
+                                <div class="sinput-verify-row">
+                                    <input class="sinput" type="email" id="signup-email" placeholder="student@wmsu.edu.ph" required />
+                                    <button type="button" class="verify-btn" onclick="sendOtp()">✉ Verify</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="signup-grid-2">
+                            <div class="sfield">
+                                <label class="slabel">Phone Number *</label>
+                                <div class="sinput-verify-row">
+                                    <input class="sinput" type="tel" id="signup-phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required />
+                                    <button type="button" class="verify-btn" onclick="sendOtp()">📞 Verify</button>
+                                </div>
+                            </div>
+                            <div class="sfield">
+                                <label class="slabel">Year Level *</label>
+                                <select class="sinput" id="signup-year" required>
+                                    <option value="">e.g., 3rd Year</option>
+                                    <option>1st Year</option>
+                                    <option>2nd Year</option>
+                                    <option>3rd Year</option>
+                                    <option>4th Year</option>
+                                    <option>5th Year</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="sfield">
+                            <label class="slabel">College *</label>
+                            <select class="sinput" id="signup-college" required onchange="populateCourses('signup-college','signup-course')">
+                                <option value="">Select a college</option>
+                                <option>College of Arts and Sciences</option>
+                                <option>College of Education</option>
+                                <option>College of Engineering</option>
+                                <option>College of Business Administration</option>
+                            </select>
+                        </div>
+
+                        <div class="sfield">
+                            <label class="slabel">Course *</label>
+                            <select class="sinput" id="signup-course" required>
+                                <option value="">Please select a college first</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT PANEL: Account Security -->
+                    <div class="signup-panel">
+                        <div class="signup-section-label">Account Security</div>
+                        <hr class="signup-divider" />
+
+                        <div class="signup-grid-2">
+                            <div class="sfield">
+                                <label class="slabel">Password *</label>
+                                <div class="sinput-eye-wrap">
+                                    <input class="sinput" type="password" id="signup-pass" placeholder="Enter password" required />
+                                    <button type="button" class="eye-btn" onclick="togglePass('signup-pass', this)">👁</button>
+                                </div>
+                            </div>
+                            <div class="sfield">
+                                <label class="slabel">Confirm Password *</label>
+                                <div class="sinput-eye-wrap">
+                                    <input class="sinput" type="password" id="signup-pass2" placeholder="Re-enter password" required />
+                                    <button type="button" class="eye-btn" onclick="togglePass('signup-pass2', this)">👁</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="signup-section-label" style="margin-top:1rem;">Required Documents</div>
+                        <hr class="signup-divider" />
+
+                        <div class="signup-grid-2">
+                            <div class="sfield">
+                                <label class="slabel">Validated ID *</label>
+                                <label class="sdropzone" id="id-drop">
+                                    <input type="file" id="signup-id" accept="image/*,.pdf" required style="display:none;" onchange="showFileName('signup-id','id-name')" />
+                                    <span class="sdrop-icon">⬆</span>
+                                    <span class="sdrop-primary">Upload Validated ID</span>
+                                    <span class="sdrop-hint">Click to upload</span>
+                                    <span class="sdrop-filename" id="id-name"></span>
+                                </label>
+                            </div>
+                            <div class="sfield">
+                                <label class="slabel">First Semester COR *</label>
+                                <label class="sdropzone" id="cor-drop">
+                                    <input type="file" id="signup-cor" accept="image/*,.pdf" required style="display:none;" onchange="showFileName('signup-cor','cor-name')" />
+                                    <span class="sdrop-icon">⬆</span>
+                                    <span class="sdrop-primary">Upload COR</span>
+                                    <span class="sdrop-hint">Click to upload</span>
+                                    <span class="sdrop-filename" id="cor-name"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <p class="sdoc-note">* Upload clear photos or scanned copies of your validated ID and Certificate of Registration</p>
+
+                        <!-- OTP row -->
+                        <div class="sotp-row">
+                            <input type="text" class="sinput" id="user-otp" placeholder="Enter OTP code" disabled />
+                            <button type="button" class="verify-btn" onclick="verifyOtp()">Verify OTP</button>
+                        </div>
+                        <div id="otp-status" class="sotp-status"></div>
+
+                        <!-- Terms -->
+                        <div class="signup-terms-row">
+                            <input type="checkbox" id="terms-check" required />
+                            <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
+                        </div>
+                    </div>
+
+                </div><!-- end panels -->
+
+                <button type="submit" class="signup-submit-btn">Create Account</button>
+
+            </form>
+        </div>
+    </main>
+
+    <script src="../../js/student/student.js"></script>
+    <script src="../../js/student/signup.js"></script>
 </body>
 </html>

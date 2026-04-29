@@ -6,6 +6,10 @@
     <title>UPRESSease | Printing Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/printing.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.9.1/mammoth.browser.min.js"></script>
 </head>
 <body>
 <header class="appbar">
@@ -102,6 +106,7 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="sum-print-total">₱0.00</span>
                     </div>
+                    <button class="btn-cart btn-print" type="button" id="printPreviewBtn">🖨 Print Preview</button>
                     <button class="btn-order" onclick="printOrderNow()">🛒 Order Now</button>
                     <button class="btn-cart" onclick="printAddToCart()">+ Add to Cart</button>
                 </div>
@@ -109,6 +114,55 @@
         </aside>
     </div>
 </main>
+
+<!-- Print Preview Modal -->
+<div class="pp-modal" id="ppModal" aria-hidden="true">
+    <div class="pp-backdrop" data-pp-close></div>
+    <div class="pp-dialog" role="dialog" aria-modal="true" aria-labelledby="ppTitle">
+        <div class="pp-head">
+            <div>
+                <div class="pp-title" id="ppTitle">Print Preview</div>
+                <div class="pp-sub" id="ppSub">Preview your document before printing</div>
+            </div>
+            <button class="pp-close" type="button" data-pp-close aria-label="Close">×</button>
+        </div>
+        <div class="pp-body">
+            <div class="pp-preview" id="ppPreview">
+                <div class="pp-previewHead">
+                    <div class="pp-previewTitle">Document preview</div>
+                    <a class="pp-previewLink" id="ppPreviewLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
+                        Open in new tab
+                    </a>
+                </div>
+                <div class="pp-previewBox">
+                    <object
+                        class="pp-previewFrame"
+                        id="ppPdfObject"
+                        type="application/pdf"
+                        aria-label="PDF preview"
+                    ></object>
+                    <div class="pp-docxPreview" id="ppDocxPreview" style="display:none;"></div>
+                    <div class="pp-previewFallback" id="ppPreviewFallback" style="display:none;"></div>
+                </div>
+            </div>
+            <div class="pp-meta" id="ppMeta"></div>
+            <div class="pp-controls">
+                <div class="pp-controls-head">
+                    <div>
+                        <div class="pp-controls-title">Copies per page</div>
+                        <div class="pp-hint" id="ppHint">Set how many copies to print for each page</div>
+                    </div>
+                </div>
+                <div class="pp-copies" id="ppCopies"></div>
+            </div>
+        </div>
+        <div class="pp-foot">
+            <button class="btn-cart" type="button" data-pp-close>Cancel</button>
+            <button class="btn-order" type="button" id="ppApplyBtn">Apply to Order</button>
+        </div>
+    </div>
+</div>
+
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/printing.js"></script>
 </body>

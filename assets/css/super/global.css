@@ -1,0 +1,151 @@
+:root {
+  --maroon: #800000;
+  --gold: #ffb400;
+  --bg: #f4f7f6;
+  --text: #333;
+  --light-text: #666;
+  --white: #ffffff;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+body {
+  display: flex;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: var(--maroon);
+  color: white;
+  position: fixed;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.logo-area {
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.badge {
+  background: var(--gold);
+  color: white;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0 25px 20px;
+  display: inline-block;
+  width: fit-content;
+}
+.nav-links {
+  flex: 1;
+}
+.nav-item {
+  padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: 0.3s;
+}
+.nav-item:hover,
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-left: 4px solid white;
+}
+.logout {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ff9999;
+}
+
+/* Main Content */
+.content {
+  margin-left: 260px;
+  padding: 40px;
+  width: calc(100% - 260px);
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.card.colored {
+  border-left: 5px solid;
+}
+
+/* Buttons & Inputs */
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.btn-maroon {
+  background: var(--maroon);
+  color: white;
+}
+.btn-maroon:hover {
+  background: #600000;
+}
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 450px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 80px;
+  }
+  .sidebar span,
+  .badge {
+    display: none;
+  }
+  .content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}

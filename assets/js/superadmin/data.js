@@ -150,6 +150,60 @@ const AppData = {
     this.saveServices(this.getServices().filter((s) => s.id !== id));
   },
 
+  /* ─── Analytics helpers ──────────────────────────── */
+  getColleges() {
+    return [
+      ...new Set(this.getUsers().map((u) => u.college).filter(Boolean)),
+    ].sort();
+  },
+
+  getOrderYears() {
+    const years = this.getOrders()
+      .map((o) => {
+        const d = new Date(o.date || o.dateOrdered);
+        return isNaN(d.getTime()) ? null : d.getFullYear();
+      })
+      .filter(Boolean);
+    return [...new Set(years)].sort((a, b) => b - a);
+  },
+
+  getFilteredOrders({ college = "all", service = "all", year = "all" } = {}) {
+    const userByEmail = {};
+    this.getUsers().forEach((u) => {
+      userByEmail[u.email] = u;
+    });
+    return this.getOrders().filter((o) => {
+      if (college !== "all") {
+        const u = userByEmail[o.email];
+        if (!u || u.college !== college) return false;
+      }
+      if (service !== "all" && o.service !== service) return false;
+      if (year !== "all") {
+        const d = new Date(o.date || o.dateOrdered);
+        if (isNaN(d.getTime()) || d.getFullYear() !== parseInt(year, 10))
+          return false;
+      }
+      return true;
+    });
+  },
+
+  getCollegeServiceMatrix(filters = {}) {
+    const orders = this.getFilteredOrders(filters);
+    const userByEmail = {};
+    this.getUsers().forEach((u) => {
+      userByEmail[u.email] = u;
+    });
+    const matrix = {};
+    orders.forEach((o) => {
+      const u = userByEmail[o.email];
+      const college = u && u.college ? u.college : "Unknown";
+      const svc = o.service || "Unknown";
+      if (!matrix[college]) matrix[college] = {};
+      matrix[college][svc] = (matrix[college][svc] || 0) + 1;
+    });
+    return matrix;
+  },
+
   /* ─── Seed ───────────────────────────────────────── */
   seedIfEmpty() {
     if (!this.getServices().length) {
@@ -354,6 +408,54 @@ const AppData = {
           status: "completed",
           date: "Feb 18, 2026",
           dateOrdered: "Feb 18, 2026",
+          customer: {},
+          addons: [],
+        },
+        {
+          orderId: "ORD-2026-006",
+          id: "ORD-2026-006",
+          email: "maria.santos@wmsu.edu.ph",
+          service: "Printing",
+          desc: "Short (Color) × 8 pages",
+          amount: 56,
+          total: "56.00",
+          payment: "Pay Onsite",
+          paymentMethod: "Pay Onsite",
+          status: "completed",
+          date: "Mar 15, 2026",
+          dateOrdered: "Mar 15, 2026",
+          customer: {},
+          addons: [],
+        },
+        {
+          orderId: "ORD-2026-007",
+          id: "ORD-2026-007",
+          email: "pedro.reyes@wmsu.edu.ph",
+          service: "Binding",
+          desc: "1 × Hard Cover",
+          amount: 150,
+          total: "150.00",
+          payment: "Online Payment",
+          paymentMethod: "Online Payment",
+          status: "completed",
+          date: "Mar 22, 2026",
+          dateOrdered: "Mar 22, 2026",
+          customer: {},
+          addons: [],
+        },
+        {
+          orderId: "ORD-2026-008",
+          id: "ORD-2026-008",
+          email: "maria.santos@wmsu.edu.ph",
+          service: "Lanyards",
+          desc: "1 × WMSU Official Lanyard",
+          amount: 150,
+          total: "150.00",
+          payment: "Pay Onsite",
+          paymentMethod: "Pay Onsite",
+          status: "completed",
+          date: "Feb 28, 2026",
+          dateOrdered: "Feb 28, 2026",
           customer: {},
           addons: [],
         },

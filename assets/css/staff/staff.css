@@ -1116,6 +1116,76 @@ button:hover {
   gap: 10px 14px;
 }
 
+.sd-modal__actions .sd-modal__action {
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Keep modal Print button compact too */
+.sd-modal__actions .sd-modal__print-action {
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Print preview modal styles (scoped) */
+.sd-print-preview__pages {
+  border: 1px solid #edf2f6;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 10px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.sd-print-preview__page {
+  background: #fff;
+  border: 1px solid #e5eaee;
+  border-radius: 12px;
+  padding: 14px 14px;
+  margin-bottom: 12px;
+}
+
+.sd-print-preview__pageNum {
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.sd-print-preview__mock {
+  font-weight: 650;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.sd-print-preview__controls {
+  margin-top: 12px;
+}
+
+.sd-print-preview__input {
+  width: 120px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid #e5eaee;
+  outline: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sd-print-preview__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 560px) {
   .sd-modal__dialog { margin: 18px auto; }
   .sd-modal__grid { grid-template-columns: 1fr; }

@@ -254,8 +254,31 @@ function openStaffModal(title, bodyHtml) {
   setModalOpen(true);
 }
 
+function clearStaffModalFootActions() {
+  const proceed = document.querySelector('#staffModal .sd-modal__footProceed');
+  if (proceed) proceed.remove();
+}
+
+function setProcessModalFootProceed({ orderId, nextStatusKey, label }) {
+  clearStaffModalFootActions();
+
+  const foot = document.querySelector('#staffModal .sd-modal__foot');
+  if (!foot) return;
+
+  if (orderId && nextStatusKey) {
+    const proceed = document.createElement('button');
+    proceed.type = 'button';
+    proceed.className = 'sd-modal__btn sd-modal__footProceed';
+    proceed.setAttribute('data-order-id', orderId);
+    proceed.setAttribute('data-next-status-key', nextStatusKey);
+    proceed.textContent = label || 'Proceed';
+    foot.appendChild(proceed);
+  }
+}
+
 function closeStaffModal() {
   setModalOpen(false);
+  clearStaffModalFootActions();
 }
 
 function activateStaffPage(pageKey) {
@@ -363,65 +386,56 @@ function renderOrderModal(order, mode) {
 
   const statusKey = normalizeStatus(order.status);
 
-  const statusLabelByKey = {
-    pending: 'Pending',
-    processing: 'Processing',
-    ready: 'Ready for Pickup',
-    completed: 'Completed',
+  const flowSteps = [
+    { key: 'pending', label: 'Pending' },
+    { key: 'processing', label: 'Processing' },
+    { key: 'ready', label: 'Ready to Pick up' },
+    { key: 'completed', label: 'Completing' },
+  ];
+  const currentIdx = Math.max(0, flowSteps.findIndex(s => s.key === statusKey));
+  const nextStep = flowSteps[currentIdx + 1] || null;
+
+  const proceedLabelByNextKey = {
+    processing: 'Proceed to Processing',
+    ready: 'Proceed to Ready to Pick up',
+    completed: 'Proceed to Completing',
   };
 
-  const nextActions = [];
+  const progressRatio = flowSteps.length > 1 ? (currentIdx / (flowSteps.length - 1)) : 0;
+  const progressR = Math.max(0, Math.min(1, progressRatio));
 
-  if (statusKey !== 'processing') {
-    nextActions.push({
-      key: 'processing',
-      label: 'Processing',
-    });
-  }
-  if (statusKey !== 'ready') {
-    nextActions.push({
-      key: 'ready',
-      label: 'Ready to Pick Up',
-    });
-  }
-  if (statusKey !== 'completed') {
-    nextActions.push({
-      key: 'completed',
-      label: 'Completed',
-    });
-  }
-
-  const actionsHtml =
-    mode === 'process' && nextActions.length
-      ? nextActions.map(a => `
-          <button
-            type="button"
-            class="sd-modal__btn sd-modal__action"
-            data-order-id="${escapeHtml(order.orderId)}"
-            data-status-key="${escapeHtml(a.key)}"
-          >
-            ${escapeHtml(a.label)}
-          </button>
-        `).join('')
-      : '';
+  const flowHtml = mode === 'process'
+    ? `
+      <div class="sd-modal__flow">
+        <div class="sd-modal__flowLabel">Order progress</div>
+        <div
+          class="sd-modal__pipeline"
+          style="--r:${progressR.toFixed(4)};"
+          role="list"
+          aria-label="Order status pipeline"
+        >
+          ${flowSteps.map((s, idx) => {
+            const isActive = idx === currentIdx;
+            const isDone = idx < currentIdx;
+            const cls = isActive ? 'is-active' : (isDone ? 'is-done' : 'is-upcoming');
+            return `
+              <div class="sd-modal__pipeStep ${cls}" role="listitem">
+                <div class="sd-modal__pipeDot" aria-hidden="true"></div>
+                <div class="sd-modal__pipeLabel">${escapeHtml(s.label)}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `
+    : '';
 
   const body = `
+    ${flowHtml}
     <div class="sd-modal__grid">
       <div class="sd-modal__field">
         <div class="sd-modal__label">Order ID</div>
         <div class="sd-modal__value">${escapeHtml(order.orderId)}</div>
-      </div>
-      <div class="sd-modal__field">
-        <div class="sd-modal__label">Status</div>
-        <div class="sd-modal__value">${escapeHtml(statusLabelByKey[statusKey] || order.status || '—')}</div>
-        ${actionsHtml ? `
-          <div
-            class="sd-modal__actions"
-            style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;"
-          >
-            ${actionsHtml}
-          </div>
-        ` : ''}
       </div>
       <div class="sd-modal__field">
         <div class="sd-modal__label">Student</div>
@@ -467,11 +481,171 @@ function renderOrderModal(order, mode) {
   `;
 
   openStaffModal(title, body);
+
+  if (mode === 'process') {
+    if (nextStep) {
+      setProcessModalFootProceed({
+        orderId: order.orderId,
+        nextStatusKey: nextStep.key,
+        label: proceedLabelByNextKey[nextStep.key] || 'Proceed',
+      });
+    } else {
+      setProcessModalFootProceed({ orderId: '', nextStatusKey: '', label: '' });
+    }
+  }
+}
+
+function getRowByOrderId(tableId, orderId) {
+  const table = document.getElementById(tableId);
+  const tbody = table ? table.querySelector('tbody') : null;
+  if (!tbody) return null;
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  return rows.find(tr => {
+    const td = tr.querySelector('td');
+    return td && td.textContent.trim() === orderId;
+  }) || null;
+}
+
+function getStatusKeyFromRow(tr) {
+  const badge = tr?.querySelector('.badge');
+  return normalizeStatus(badge?.textContent || '');
+}
+
+function setRowStatus(tr, statusKey) {
+  const badge = tr?.querySelector('.badge');
+  if (!badge) return;
+
+  const statusClassByKey = {
+    pending: 'badge-pending',
+    processing: 'badge-process',
+    ready: 'badge-ready',
+    completed: 'badge-complete',
+  };
+
+  const statusLabelByKey = {
+    pending: 'Pending',
+    processing: 'Processing',
+    ready: 'Ready for Pickup',
+    completed: 'Completed',
+  };
+
+  Object.keys(statusClassByKey).forEach(k => badge.classList.remove(statusClassByKey[k]));
+  const cls = statusClassByKey[statusKey] || statusClassByKey.pending;
+  const label = statusLabelByKey[statusKey] || statusLabelByKey.pending;
+  badge.classList.add(cls);
+  badge.textContent = label;
+}
+
+function getOrderFromSimpleRow(tr) {
+  const tds = tr ? Array.from(tr.querySelectorAll('td')) : [];
+  const status = tr?.querySelector('.badge')?.textContent?.trim() || '';
+  const orderId = tds[0]?.textContent?.trim() || '';
+
+  // Reuse the richer mock fields from getOrderFromRow if possible
+  const mockFromQueueRow = getRowByOrderId('orderQueueTable', orderId);
+  if (mockFromQueueRow) return getOrderFromRow(mockFromQueueRow);
+
+  const base = {
+    orderId,
+    student: tds[1]?.textContent?.trim() || '',
+    service: tds[2]?.textContent?.trim() || '',
+    date: tds[3]?.textContent?.trim() || '',
+    status,
+  };
+
+  // Add defaults so release page always has values
+  const extra = getOrderFromRow(tr) || {};
+  return { ...extra, ...base };
+}
+
+function saveSelectedReleaseOrder(order) {
+  try {
+    sessionStorage.setItem('staffSelectedReleaseOrder', JSON.stringify(order || {}));
+  } catch {}
+}
+
+function loadSelectedReleaseOrder() {
+  try {
+    const raw = sessionStorage.getItem('staffSelectedReleaseOrder');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearSelectedReleaseOrder() {
+  try {
+    sessionStorage.removeItem('staffSelectedReleaseOrder');
+  } catch {}
+}
+
+function setReleasePageOrder(order) {
+  const emptyEl = document.getElementById('releaseEmpty');
+  const contentEl = document.getElementById('releaseContent');
+  const gridEl = document.getElementById('releaseDetailsGrid');
+  const paymentEl = document.getElementById('releasePaymentReceived');
+  const completeBtn = document.getElementById('releaseCompleteBtn');
+  const statusEl = document.getElementById('releaseStatusText');
+
+  if (!emptyEl || !contentEl || !gridEl || !paymentEl || !completeBtn || !statusEl) return;
+
+  statusEl.textContent = '';
+  paymentEl.checked = false;
+  completeBtn.disabled = true;
+
+  if (!order || !order.orderId) {
+    emptyEl.style.display = '';
+    contentEl.style.display = 'none';
+    gridEl.innerHTML = '';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  contentEl.style.display = '';
+
+  const fields = [
+    ['Order ID', order.orderId],
+    ['Student', order.student || '—'],
+    ['Service', order.service || '—'],
+    ['Date', order.date || '—'],
+    ['Status', order.status || '—'],
+    ['Payment', order.payment || '—'],
+    ['Amount', order.amount || '—'],
+    ['Reference', order.reference || '—'],
+    ['File', order.file || '—'],
+    ['Specs', `${order.size || '—'} • ${order.pages || '—'}`],
+    ['Rush', order.rush || '—'],
+    ['Notes', order.notes || '—'],
+  ];
+
+  gridEl.innerHTML = fields.map(([label, value]) => `
+    <div class="sd-modal__field">
+      <div class="sd-modal__label">${escapeHtml(label)}</div>
+      <div class="sd-modal__value">${escapeHtml(value)}</div>
+    </div>
+  `).join('');
+
+  saveSelectedReleaseOrder(order);
 }
 
 document.addEventListener('click', (e) => {
   const closeEl = e.target.closest('[data-modal-close]');
   if (closeEl) {
+    closeStaffModal();
+    return;
+  }
+
+  const footProceed = e.target.closest('.sd-modal__footProceed');
+  if (footProceed) {
+    const orderId = footProceed.getAttribute('data-order-id') || '';
+    const nextStatusKey = footProceed.getAttribute('data-next-status-key') || '';
+    if (!orderId || !nextStatusKey) return;
+
+    const targetRow = getRowByOrderId('orderQueueTable', orderId);
+    if (!targetRow) return;
+    setRowStatus(targetRow, nextStatusKey);
+
+    renderDashboardMetricsAndTransactions();
     closeStaffModal();
     return;
   }
@@ -490,50 +664,56 @@ document.addEventListener('click', (e) => {
     return;
   }
 
-  const modalAction = e.target.closest('.sd-modal__action');
-  if (modalAction) {
-    const orderId = modalAction.getAttribute('data-order-id') || '';
-    const statusKey = modalAction.getAttribute('data-status-key') || '';
-    if (!orderId || !statusKey) return;
-
-    const table = document.getElementById('orderQueueTable');
-    const tbody = table ? table.querySelector('tbody') : null;
-    if (!tbody) return;
-
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const targetRow = rows.find(tr => {
-      const td = tr.querySelector('td');
-      return td && td.textContent.trim() === orderId;
-    });
-
-    if (!targetRow) return;
-
-    const badge = targetRow.querySelector('.badge');
-    if (!badge) return;
-
-    const statusClassByKey = {
-      pending: 'badge-pending',
-      processing: 'badge-process',
-      ready: 'badge-ready',
-      completed: 'badge-complete',
-    };
-
-    const statusLabelByKey = {
-      pending: 'Pending',
-      processing: 'Processing',
-      ready: 'Ready for Pickup',
-      completed: 'Completed',
-    };
-
-    Object.keys(statusClassByKey).forEach(k => badge.classList.remove(statusClassByKey[k]));
-    const cls = statusClassByKey[statusKey] || statusClassByKey.pending;
-    const label = statusLabelByKey[statusKey] || statusLabelByKey.pending;
-    badge.classList.add(cls);
-    badge.textContent = label;
-
-    renderDashboardMetricsAndTransactions();
-    closeStaffModal();
+  const releaseBtn = e.target.closest('.btn-action.release');
+  if (releaseBtn) {
+    const tr = releaseBtn.closest('tr');
+    const order = getOrderFromSimpleRow(tr);
+    setReleasePageOrder(order);
+    activateStaffPage('order-release');
+    return;
   }
+
+  const goToQrBtn = e.target.closest('#lookupGoToQrBtn');
+  if (goToQrBtn) {
+    activateStaffPage('qr-scanner');
+    return;
+  }
+
+  const lookupSearchBtn = e.target.closest('#lookupReferenceBtn');
+  if (lookupSearchBtn) {
+    runOrderLookup();
+    return;
+  }
+
+  const lookupReleaseBtn = e.target.closest('[data-lookup-release]');
+  if (lookupReleaseBtn) {
+    const orderId = lookupReleaseBtn.getAttribute('data-lookup-release') || '';
+    if (!orderId) return;
+
+    const qRow = getRowByOrderId('orderQueueTable', orderId);
+    const rRow = getRowByOrderId('readyReleaseTable', orderId);
+    const tr = qRow || rRow;
+    if (!tr) return;
+
+    const order = qRow ? getOrderFromRow(tr) : getOrderFromSimpleRow(tr);
+    setReleasePageOrder(order);
+    activateStaffPage('order-release');
+    return;
+  }
+
+  const releaseBackBtn = e.target.closest('#releaseBackBtn');
+  if (releaseBackBtn) {
+    activateStaffPage('ready-release');
+    return;
+  }
+
+  const releaseCompleteBtn = e.target.closest('#releaseCompleteBtn');
+  if (releaseCompleteBtn) {
+    completeReleaseFlow();
+    return;
+  }
+
+  // Note: status changes in modal are handled by the single "Proceed" button now.
 });
 
 document.addEventListener('keydown', (e) => {
@@ -559,15 +739,32 @@ function formatPeso(n) {
 }
 
 function getDashboardMockOrders() {
-  const rows = Array.from(document.querySelectorAll('#page-order-queue tbody tr'));
-  return rows.map(tr => {
-    const o = getOrderFromRow(tr);
-    return {
-      ...o,
-      statusKey: normalizeStatus(o.status),
-      amountNum: parsePesoAmount(o.amount),
-    };
-  });
+  const collect = (tableId, parser) => {
+    const table = document.getElementById(tableId);
+    const rows = table ? Array.from(table.querySelectorAll('tbody tr')) : [];
+    return rows.map(tr => {
+      const o = parser(tr);
+      return {
+        ...o,
+        statusKey: normalizeStatus(o.status),
+        amountNum: parsePesoAmount(o.amount),
+      };
+    });
+  };
+
+  const queue = collect('orderQueueTable', getOrderFromRow);
+  const ready = collect('readyReleaseTable', getOrderFromSimpleRow);
+  const completed = collect('completedOrdersTable', getOrderFromSimpleRow);
+
+  const seen = new Set();
+  const merged = [];
+  for (const o of [...queue, ...ready, ...completed]) {
+    const k = String(o.orderId || '').trim();
+    if (!k || seen.has(k)) continue;
+    seen.add(k);
+    merged.push(o);
+  }
+  return merged;
 }
 
 function renderDashboardMetricsAndTransactions() {
@@ -827,6 +1024,12 @@ function setupQrScanner() {
     }
     const ok = /^WMSU-(ORD|PKU)-\d{4,8}$/i.test(v) || /^#\d{4,6}$/.test(v);
     setResult(ok ? `Valid: ${v}` : `Invalid: ${v}`);
+    if (ok) {
+      try {
+        sessionStorage.setItem('staffLastScan', v);
+      } catch {}
+      document.dispatchEvent(new CustomEvent('staff:qr-scan', { detail: { value: v } }));
+    }
   };
 
   const scanLoop = async () => {
@@ -907,3 +1110,154 @@ function setupQrScanner() {
     return originalActivate(pageKey);
   };
 }
+
+function syncLookupLastScanned() {
+  const el = document.getElementById('lookupLastScannedText');
+  if (!el) return;
+  let v = '—';
+  try {
+    v = sessionStorage.getItem('staffLastScan') || '—';
+  } catch {}
+  el.textContent = v;
+}
+
+function findOrderByReference(reference) {
+  const ref = String(reference || '').trim().toLowerCase();
+  if (!ref) return null;
+
+  // Search order queue mock data (getOrderFromRow generates reference by orderId mapping)
+  const queueTable = document.getElementById('orderQueueTable');
+  const qRows = queueTable ? Array.from(queueTable.querySelectorAll('tbody tr')) : [];
+  for (const tr of qRows) {
+    const o = getOrderFromRow(tr);
+    if (String(o.reference || '').trim().toLowerCase() === ref) return o;
+  }
+
+  // Search ready-release list (fallback)
+  const readyTable = document.getElementById('readyReleaseTable');
+  const rRows = readyTable ? Array.from(readyTable.querySelectorAll('tbody tr')) : [];
+  for (const tr of rRows) {
+    const o = getOrderFromSimpleRow(tr);
+    if (String(o.reference || '').trim().toLowerCase() === ref) return o;
+  }
+
+  return null;
+}
+
+function runOrderLookup() {
+  const input = document.getElementById('lookupReferenceInput');
+  const result = document.getElementById('lookupResult');
+  if (!input || !result) return;
+
+  const ref = String(input.value || '').trim();
+  if (!ref) {
+    result.innerHTML = `<div class="sd-lookup__msg sd-lookup__msg--warn">Enter a reference number to search.</div>`;
+    return;
+  }
+
+  const order = findOrderByReference(ref);
+  if (!order) {
+    result.innerHTML = `<div class="sd-lookup__msg sd-lookup__msg--empty">No order found for reference <b>${escapeHtml(ref)}</b>.</div>`;
+    return;
+  }
+
+  result.innerHTML = `
+    <div class="sd-lookup__card">
+      <div class="sd-lookup__cardTop">
+        <div>
+          <div class="sd-lookup__id">${escapeHtml(order.orderId || '—')}</div>
+          <div class="sd-lookup__meta">
+            ${escapeHtml(order.student || '—')} — ${escapeHtml(order.service || '—')}
+            <span class="sd-modal__muted"> • ${escapeHtml(order.date || '—')}</span>
+          </div>
+        </div>
+        <div class="sd-lookup__status">${escapeHtml(order.status || '—')}</div>
+      </div>
+      <div class="sd-lookup__cardGrid">
+        <div class="sd-lookup__kv"><b>Payment</b><span>${escapeHtml(order.payment || '—')}</span></div>
+        <div class="sd-lookup__kv"><b>Amount</b><span>${escapeHtml(order.amount || '—')}</span></div>
+        <div class="sd-lookup__kv"><b>Reference</b><span>${escapeHtml(order.reference || '—')}</span></div>
+        <div class="sd-lookup__kv"><b>File</b><span>${escapeHtml(order.file || '—')}</span></div>
+      </div>
+      <div class="sd-lookup__cardActions">
+        <button class="sd-lookup__btn" type="button" data-lookup-release="${escapeHtml(order.orderId || '')}">
+          Open for Release
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function completeReleaseFlow() {
+  const order = loadSelectedReleaseOrder();
+  const statusEl = document.getElementById('releaseStatusText');
+  const paymentEl = document.getElementById('releasePaymentReceived');
+  if (!statusEl || !paymentEl) return;
+
+  if (!order || !order.orderId) {
+    statusEl.textContent = 'No order selected.';
+    return;
+  }
+
+  if (!paymentEl.checked) {
+    statusEl.textContent = 'Please confirm payment received.';
+    return;
+  }
+
+  // Update in queue table if present
+  const qRow = getRowByOrderId('orderQueueTable', order.orderId);
+  if (qRow) setRowStatus(qRow, 'completed');
+
+  // If present in ready-release, move it to completed history table
+  const rRow = getRowByOrderId('readyReleaseTable', order.orderId);
+  if (rRow) rRow.remove();
+
+  const completedTable = document.getElementById('completedOrdersTable');
+  const cBody = completedTable ? completedTable.querySelector('tbody') : null;
+  if (cBody) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(order.orderId)}</td>
+      <td>${escapeHtml(order.student || '—')}</td>
+      <td>${escapeHtml(order.service || '—')}</td>
+      <td>${escapeHtml(new Date().toLocaleDateString(undefined, { month: 'short', day: '2-digit', year: 'numeric' }))}</td>
+      <td>Staff</td>
+      <td><span class="badge badge-complete">Completed</span></td>
+    `;
+    cBody.prepend(tr);
+  }
+
+  statusEl.textContent = `Order ${order.orderId} released and marked as completed.`;
+  renderDashboardMetricsAndTransactions();
+  clearSelectedReleaseOrder();
+
+  // Keep details visible but disable the button until a new selection
+  const completeBtn = document.getElementById('releaseCompleteBtn');
+  if (completeBtn) completeBtn.disabled = true;
+}
+
+document.addEventListener('change', (e) => {
+  const paymentEl = e.target.closest('#releasePaymentReceived');
+  if (paymentEl) {
+    const btn = document.getElementById('releaseCompleteBtn');
+    if (btn) btn.disabled = !paymentEl.checked;
+  }
+});
+
+document.addEventListener('staff:qr-scan', () => {
+  syncLookupLastScanned();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  syncLookupLastScanned();
+
+  const selected = loadSelectedReleaseOrder();
+  if (selected && selected.orderId) setReleasePageOrder(selected);
+
+  const lookupInput = document.getElementById('lookupReferenceInput');
+  if (lookupInput) {
+    lookupInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runOrderLookup();
+    });
+  }
+});

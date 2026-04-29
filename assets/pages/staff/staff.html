@@ -10,115 +10,100 @@
       rel="stylesheet"
     />
 
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
     <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
   </head>
   <body class="staff-dashboard-body">
     <div class="app-wrapper staff-layout sd-layout">
       <aside
-        class="sidebar staff-sidebar sd-sidebar"
+        class="sidebar staff-sidebar"
+        id="sidebar"
         role="navigation"
         aria-label="Staff sidebar"
       >
-        <div class="sd-sidebarTop">
-          <div class="sd-brand">
-            <div class="sd-brand__logo" aria-hidden="true">
-              <span class="sd-brand__mark">U</span>
-            </div>
-            <div class="sd-brand__text">
-              <div class="sd-brand__name">UPRESSease</div>
-              <div class="sd-brand__sub">Staff Portal</div>
-            </div>
+        <!-- Brand block (copied from Admin sidebar structure) -->
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
           </div>
-
-          <div class="sd-user">
-            <div class="sd-user__label">Staff</div>
-            <div class="sd-user__handle">@staff</div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Staff Portal</span>
           </div>
         </div>
 
-        <nav class="staff-nav sd-nav" aria-label="Staff navigation">
-          <a
-            href="#"
-            class="nav-link active sd-nav__link"
-            data-page="dashboard"
-          >
-            <span class="sd-nav__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V11z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-            <span class="sd-nav__label">Dashboard</span>
-          </a>
-          <a href="#" class="nav-link sd-nav__link" data-page="order-queue">
-            <span class="sd-nav__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M7 7h14M7 12h14M7 17h14"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M3.5 7h.01M3.5 12h.01M3.5 17h.01"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </span>
-            <span class="sd-nav__label">Orders</span>
-          </a>
-          <a href="#" class="nav-link sd-nav__link" data-page="qr-scanner">
-            <span class="sd-nav__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M7 7h3v3H7V7zm7 0h3v3h-3V7zM7 14h3v3H7v-3zm7 7h3v-3h-3v3z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                />
-                <path
-                  d="M4 9V6a2 2 0 0 1 2-2h3M20 9V6a2 2 0 0 0-2-2h-3M4 15v3a2 2 0 0 0 2 2h3M20 15v3a2 2 0 0 1-2 2h-3"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </span>
-            <span class="sd-nav__label">QR Scanner</span>
-          </a>
+        <!-- Logged-in user -->
+        <div class="sidebar-user">
+          <button class="user-pill" aria-label="Logged in as Staff">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Staff</span>
+          </button>
+          <p class="user-handle">@staff</p>
+        </div>
 
-          <div class="logout-container">
-            <a
-              class="sd-logout"
-              href="../../pages/admin-login-entry-point.html"
-              aria-label="Logout"
-            >
-              <span class="sd-logout__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M10 7V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-1"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M13 12H3m0 0 3-3M3 12l3 3"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <span class="sd-logout__label">Logout</span>
-            </a>
-          </div>
+        <!-- Navigation links -->
+        <nav class="sidebar-nav" aria-label="Staff navigation">
+          <!-- Core pages -->
+          <ul class="nav-list" role="list">
+            <li>
+              <a
+                href="#"
+                class="nav-link active"
+                data-page="dashboard"
+                aria-current="page"
+              >
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="order-queue">
+                <i data-lucide="package" aria-hidden="true"></i
+                ><span>Orders Queue</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="ready-release">
+                <i data-lucide="check-circle" aria-hidden="true"></i
+                ><span>Release</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="order-lookup">
+                <i data-lucide="search" aria-hidden="true"></i
+                ><span>Order Lookup</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="qr-scanner">
+                <i data-lucide="scan-qr-code" aria-hidden="true"></i
+                ><span>QR Scanner</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="completed">
+                <i data-lucide="check-check" aria-hidden="true"></i
+                ><span>Completed</span></a
+              >
+            </li>
+          </ul>
+
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="../../pages/admin-login-entry-point.html"
+                class="nav-link nav-link--logout"
+                data-page="logout"
+                id="logout-btn"
+                aria-label="Logout"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
         </nav>
       </aside>
 
@@ -553,6 +538,106 @@
 
         <section
           class="staff-page"
+          id="page-order-lookup"
+          aria-labelledby="staff-order-lookup-heading"
+        >
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-order-lookup-heading">Order Lookup</h1>
+              <p>Find an order quickly by reference number or QR code</p>
+            </div>
+          </header>
+
+          <div class="staff-panel-full card sp">
+            <h3>Search</h3>
+            <div class="sd-lookup">
+              <div class="sd-lookup__row">
+                <div class="sd-lookup__field">
+                  <label class="sd-lookup__label" for="lookupReferenceInput">
+                    Reference number
+                  </label>
+                  <input
+                    id="lookupReferenceInput"
+                    class="sd-lookup__input"
+                    type="text"
+                    placeholder="Enter reference (e.g., GCSH-8472-1903-5521)"
+                  />
+                </div>
+                <button class="sd-lookup__btn" id="lookupReferenceBtn" type="button">
+                  Search
+                </button>
+              </div>
+
+              <div class="sd-lookup__qr">
+                <div class="sd-lookup__qrHead">
+                  <div>
+                    <div class="sd-lookup__qrTitle">Scan QR code</div>
+                    <div class="sd-lookup__qrSub">
+                      UI placeholder. Use QR Scanner page to scan.
+                    </div>
+                  </div>
+                  <button class="sd-lookup__btn sd-lookup__btn--ghost" id="lookupGoToQrBtn" type="button">
+                    Open QR Scanner
+                  </button>
+                </div>
+                <div class="sd-lookup__qrValue">
+                  <div class="sd-lookup__qrLabel">Last scanned</div>
+                  <div class="sd-lookup__qrText" id="lookupLastScannedText">—</div>
+                </div>
+              </div>
+
+              <div class="sd-lookup__result" id="lookupResult" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="staff-page"
+          id="page-order-release"
+          aria-labelledby="staff-order-release-heading"
+        >
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-order-release-heading">Order Release</h1>
+              <p>View order details, confirm payment, and complete the transaction</p>
+            </div>
+          </header>
+
+          <div class="staff-panel-full card sp">
+            <h3>Release Details</h3>
+            <div class="sd-release">
+              <div class="sd-release__empty" id="releaseEmpty">
+                Select an order from <b>Release</b> or <b>Order Lookup</b> to continue.
+              </div>
+              <div class="sd-release__content" id="releaseContent" style="display:none">
+                <div class="sd-release__grid" id="releaseDetailsGrid"></div>
+
+                <div class="sd-release__confirm">
+                  <label class="sd-release__check">
+                    <input id="releasePaymentReceived" type="checkbox" />
+                    <span>Payment received</span>
+                  </label>
+                  <div class="sd-release__hint">
+                    Required before you can release and mark as completed.
+                  </div>
+                </div>
+
+                <div class="sd-release__actions">
+                  <button class="sd-release__btn sd-release__btn--ghost" id="releaseBackBtn" type="button">
+                    Back to Release Queue
+                  </button>
+                  <button class="sd-release__btn" id="releaseCompleteBtn" type="button" disabled>
+                    Release Order & Mark Completed
+                  </button>
+                </div>
+                <div class="sd-release__status" id="releaseStatusText" aria-live="polite"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="staff-page"
           id="page-qr-scanner"
           aria-labelledby="staff-qr-heading"
         >
@@ -667,7 +752,7 @@
           <div class="staff-panel-full card sp">
             <h3>Ready for Pickup List</h3>
             <div class="staff-table-wrap">
-              <table class="data-table">
+              <table class="data-table" id="readyReleaseTable">
                 <thead>
                   <tr>
                     <th>Order ID</th>
@@ -763,7 +848,7 @@
           <div class="staff-panel-full card sp">
             <h3>Completed Order History</h3>
             <div class="staff-table-wrap">
-              <table class="data-table">
+              <table class="data-table" id="completedOrdersTable">
                 <thead>
                   <tr>
                     <th>Order ID</th>

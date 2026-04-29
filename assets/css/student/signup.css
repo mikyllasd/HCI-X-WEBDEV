@@ -7,19 +7,21 @@
     display: flex;
     flex-direction: column;
 }
-
-/* ── Header ── */
-.signup-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #8B0000;
-    padding: 0.75rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+.back-login-btn {
+  display: block;
+  margin-top: 3px;
+  text-align: center;
+  padding: 10px;
+  background-color: #8B0000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
 }
+.back-login-btn:hover {
+  background-color: #bbb;
+}
+
 .signup-back {
     color: #fff;
     text-decoration: none;
@@ -27,7 +29,7 @@
     font-weight: 600;
     opacity: 0.9;
 }
-.signup-back:hover { opacity: 1; text-decoration: underline; }
+.signup-back:hover { opacity: 1;}
 .signup-header-brand {
     display: flex;
     align-items: center;

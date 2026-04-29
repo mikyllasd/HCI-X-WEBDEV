@@ -1,37 +1,4 @@
-/* ============================================================
-   pay-method.css — Payment Method Page (Step 2 of 3)
-   ============================================================ */
-
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", system-ui, sans-serif; }
-body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; overflow-x: hidden; }
-
-.appbar { position: sticky; top: 0; z-index: 1000; width: 100%; background-color: #8B0000; color: white; padding: 0.9375rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 0.125rem 0.3125rem rgba(0,0,0,0.18); }
-.back-btn { color: white; font-size: 1.375rem; flex-shrink: 0; line-height: 1; background: none; border: none; cursor: pointer; }
-.back-btn:hover { opacity: 0.8; }
-.appbar-titles { display: flex; flex-direction: column; flex: 1; }
-.appbar-title { font-size: 1.25rem; font-weight: 700; color: white; }
-.appbar-subtitle { font-size: 0.75rem; color: #f0f0f0; opacity: 0.9; }
-
-.page { width: 100%; padding: 1.5rem; }
-.layout-half { max-width: 90rem; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-.col-left, .col-right { display: flex; flex-direction: column; gap: 1.25rem; }
-
-.card { width: 100%; background: white; border-radius: 0.9375rem; padding: 1.5rem; box-shadow: 0 0.125rem 0.625rem rgba(0,0,0,0.06); }
-.card-head { margin-bottom: 1rem; }
-.card-title { font-size: 1.125rem; font-weight: 700; color: #333; }
-.card-subtitle { font-size: 0.8125rem; color: #777; margin-top: 0.25rem; }
-
-.pay-cart-item-mini { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0; }
-.pay-cart-item-mini:last-child { border-bottom: none; }
-.pay-cart-item-mini-name { font-weight: 700; font-size: 0.9375rem; color: #333; margin-bottom: 0.2rem; }
-.pay-cart-item-mini-desc { font-size: 0.8rem; color: #777; }
-.pay-cart-item-mini-price { font-weight: 700; color: #a32020; font-size: 1rem; white-space: nowrap; }
-
-.summary-total-row { display: flex; justify-content: space-between; align-items: center; }
-.summary-total-label { font-size: 1.125rem; font-weight: 700; color: #333; }
-.summary-total-money { font-size: 1.5rem; font-weight: 700; color: #a32020; }
-.divider { border: none; border-top: 1px solid #e0e0e0; }
-
+/* pay-method.css */
 .payment-options { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
 .payment-option { display: flex; align-items: center; gap: 1rem; border: 2px solid #e0e0e0; border-radius: 0.75rem; padding: 1rem 1.25rem; cursor: pointer; transition: 0.2s; }
 .payment-option:hover { border-color: #a32020; background: #fff9f9; }
@@ -44,11 +11,3 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 .payment-name { font-weight: 700; font-size: 0.9375rem; }
 .payment-desc { font-size: 0.8125rem; color: #777; }
 .payment-check { font-size: 1rem; color: #a32020; font-weight: 700; visibility: hidden; }
-
-.btn-proceed { width: 100%; padding: 1rem; background-color: #a32020; color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 700; font-family: "Segoe UI", sans-serif; letter-spacing: 1px; cursor: pointer; transition: background-color 0.2s ease; margin-top: 0.25rem; }
-.btn-proceed:hover { background-color: #871a1a; }
-
-#upress-modal-input:focus { border-color: #a32020; box-shadow: 0 0 0.3125rem rgba(163,32,32,0.2); outline: none; }
-
-@media (max-width: 900px) { .layout-half { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .page { padding: 1rem; } .appbar { padding: 0.75rem 1rem; } }

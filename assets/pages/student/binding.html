@@ -5,23 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Binding Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
+    <link rel="stylesheet" href="../../css/student/binding.css" />
 </head>
 <body>
-
-<!-- App bar -->
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
         <span class="appbar-title">Binding Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button class="appbar-action" onclick="window.location.href='cart.html'">
-        🛒 Cart <span class="cart-badge"></span>
-    </button>
+    <button class="appbar-action" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-badge"></span></button>
 </header>
-
 <main class="binding-page" id="binding-page">
-    <!-- Binding type selection -->
     <div class="card">
         <div class="card-head">
             <div class="card-title">Our Services</div>
@@ -48,8 +43,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Quantity -->
     <div class="card">
         <div class="card-head">
             <div class="card-title">Quantity</div>
@@ -63,8 +56,6 @@
         </div>
     </div>
 </main>
-
-<!-- Fixed bottom bar with total and proceed -->
 <div class="bottom-bar">
     <div class="bottom-summary">
         <span class="bottom-type" id="binding-bottom-type">No binding selected</span>
@@ -72,37 +63,7 @@
     </div>
     <button class="btn-next" onclick="bindingGoNext()">PROCEED</button>
 </div>
-
 <script src="../../js/student/student.js"></script>
-<script>
-    // BINDING PAGE LOGIC
-    let _bindingSelected = null, _bindingPrice = 0, _bindingQty = 1;
-
-    function selectBinding(el, name, price) {
-        document.querySelectorAll('#binding-page .service-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        _bindingSelected = name;
-        _bindingPrice    = price;
-        updateBindingBottom();
-    }
-
-    function changeBindingQty(delta) {
-        _bindingQty = Math.max(1, _bindingQty + delta);
-        setText('binding-qty-display', _bindingQty);
-        updateBindingBottom();
-    }
-
-    function updateBindingBottom() {
-        setText('binding-bottom-type',  _bindingSelected ? `${_bindingSelected} × ${_bindingQty}` : 'No binding selected');
-        setText('binding-bottom-total', '₱' + (_bindingPrice * _bindingQty).toFixed(2));
-    }
-
-    function bindingGoNext() {
-        if (!_bindingSelected) { showAlert('No Selection', 'Please select a binding type first.'); return; }
-        // Save selection to checkout state, then go to details page
-        Checkout.set({ bindingType: _bindingSelected, bindingPrice: _bindingPrice, bindingQty: _bindingQty });
-        window.location.href = 'binding-details.html';
-    }
-</script>
+<script src="../../js/student/binding.js"></script>
 </body>
 </html>

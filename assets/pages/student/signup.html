@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Sign Up</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
+    <link rel="stylesheet" href="../../css/student/signup.css" />
 </head>
 <body>
 <div style="background-color:#f4f4f4;min-height:100vh;">
-    <!-- Top header bar -->
     <header style="position:sticky;top:0;z-index:1000;width:100%;background-color:#8B0000;color:white;display:flex;align-items:center;padding:0.9375rem 1.25rem;gap:0.9375rem;box-shadow:0 2px 5px rgba(0,0,0,0.18);">
         <div style="font-size:1.5rem;">🎓</div>
         <div>
@@ -16,22 +16,12 @@
             <div style="font-size:0.75rem;color:#f0f0f0;">Western Mindanao State University</div>
         </div>
     </header>
-
     <div class="signup-container">
         <h2>SIGN-UP PAGE</h2>
         <form id="signup-form" onsubmit="return validateSignup(event);">
-            <div class="form-row">
-                <label>Name:</label>
-                <input type="text" id="signup-name" required />
-            </div>
-            <div class="form-row">
-                <label>Email:</label>
-                <input type="email" id="signup-email" required />
-            </div>
-            <div class="form-row">
-                <label>Phone Number:</label>
-                <input type="tel" id="signup-phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required />
-            </div>
+            <div class="form-row"><label>Name:</label><input type="text" id="signup-name" required /></div>
+            <div class="form-row"><label>Email:</label><input type="email" id="signup-email" required /></div>
+            <div class="form-row"><label>Phone Number:</label><input type="tel" id="signup-phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required /></div>
             <div class="form-row">
                 <label>College:</label>
                 <select id="signup-college" required onchange="populateCourses('signup-college','signup-course')">
@@ -42,33 +32,17 @@
                     <option>College of Business Administration</option>
                 </select>
             </div>
-            <div class="form-row">
-                <label>Course:</label>
-                <select id="signup-course" required>
-                    <option value="">-- Select Course --</option>
-                </select>
-            </div>
+            <div class="form-row"><label>Course:</label><select id="signup-course" required><option value="">-- Select Course --</option></select></div>
             <div class="form-row">
                 <label>Year:</label>
                 <select id="signup-year" required>
                     <option value="">-- Select Year --</option>
-                    <option>1st Year</option>
-                    <option>2nd Year</option>
-                    <option>3rd Year</option>
-                    <option>4th Year</option>
-                    <option>5th Year</option>
+                    <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>5th Year</option>
                 </select>
             </div>
             <hr style="border:0.5px solid #eee;margin:25px 0;" />
-            <div class="form-row">
-                <label>Validated ID:</label>
-                <input type="file" id="signup-id" accept="image/*,.pdf" required />
-            </div>
-            <div class="form-row">
-                <label>1st Sem COR:</label>
-                <input type="file" id="signup-cor" accept="image/*,.pdf" required />
-            </div>
-            <!-- OTP row -->
+            <div class="form-row"><label>Validated ID:</label><input type="file" id="signup-id" accept="image/*,.pdf" required /></div>
+            <div class="form-row"><label>1st Sem COR:</label><input type="file" id="signup-cor" accept="image/*,.pdf" required /></div>
             <div class="form-row" style="gap:12px;flex-wrap:wrap;">
                 <button type="button" class="proceed-button" style="padding:10px 16px;" onclick="sendOtp()">Send OTP</button>
                 <input type="text" id="user-otp" placeholder="Enter OTP" style="max-width:180px;flex:1;" disabled />
@@ -77,9 +51,7 @@
             </div>
             <div class="signup-terms-row">
                 <input type="checkbox" id="terms-check" required />
-                <label for="terms-check">
-                    I agree to the <a href="terms.html">terms and conditions</a>.
-                </label>
+                <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
             </div>
             <div style="display:flex;justify-content:center;width:100%;margin:30px 0;">
                 <button type="submit" class="proceed-button">PROCEED</button>
@@ -87,61 +59,7 @@
         </form>
     </div>
 </div>
-
 <script src="../../js/student/student.js"></script>
-<script>
-    // SIGNUP PAGE LOGIC
-    let _otp = null;
-    let _otpVerified = false;
-
-    function sendOtp() {
-        const email = document.getElementById('signup-email')?.value.trim();
-        const phone = document.getElementById('signup-phone')?.value.trim();
-        if (!email || !phone) { showAlert('Missing Info', 'Please enter your email and phone number first.'); return; }
-        _otp = Math.floor(100000 + Math.random() * 900000).toString();
-        _otpVerified = false;
-        const otpInput = document.getElementById('user-otp');
-        if (otpInput) { otpInput.disabled = false; otpInput.value = ''; }
-        const statusEl = document.getElementById('otp-status');
-        if (statusEl) { statusEl.textContent = `📱 OTP sent to ${phone}. (Demo code: ${_otp})`; statusEl.style.color = '#888'; }
-    }
-
-    function verifyOtp() {
-        const entered  = document.getElementById('user-otp')?.value.trim();
-        const statusEl = document.getElementById('otp-status');
-        if (entered === _otp && _otp) {
-            _otpVerified = true;
-            if (statusEl) { statusEl.textContent = '✅ OTP verified!'; statusEl.style.color = 'green'; }
-        } else {
-            _otpVerified = false;
-            if (statusEl) { statusEl.textContent = '❌ Invalid OTP. Please try again.'; statusEl.style.color = '#d43434'; }
-        }
-    }
-
-    function validateSignup(e) {
-        e.preventDefault();
-        const name    = document.getElementById('signup-name')?.value.trim();
-        const email   = document.getElementById('signup-email')?.value.trim();
-        const phone   = document.getElementById('signup-phone')?.value.trim();
-        const college = document.getElementById('signup-college')?.value;
-        const course  = document.getElementById('signup-course')?.value;
-        const year    = document.getElementById('signup-year')?.value;
-        if (!name || !email || !phone || !college || !course || !year) {
-            showAlert('Missing Info', 'Please fill in all required fields.'); return false;
-        }
-        if (!_otpVerified) {
-            showAlert('OTP Required', 'Please verify your phone number with OTP before proceeding.'); return false;
-        }
-        const terms = document.getElementById('terms-check');
-        if (!terms?.checked) {
-            showAlert('Terms Required', 'Please agree to the terms and conditions.'); return false;
-        }
-        User.save({ name, email, phone, college, course, year });
-        showAlert('Account Created! 🎉', `Welcome, ${name}! Your account has been created successfully.`, () => {
-            window.location.href = 'index.html';
-        });
-        return false;
-    }
-</script>
+<script src="../../js/student/signup.js"></script>
 </body>
 </html>

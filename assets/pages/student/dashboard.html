@@ -8,6 +8,76 @@
     <link rel="stylesheet" href="../../css/student/dashboard.css" />
 </head>
 <body>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Right Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <span class="sidebar-logo">🎓</span>
+        <div class="sidebar-header-text">
+            <span class="sidebar-title">UPRESSease</span>
+            <span class="sidebar-sub">WMSU</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeSidebar()">✕</button>
+    </div>
+
+    <!-- Sidebar Tabs -->
+    <div class="sidebar-tabs">
+        <button class="sidebar-tab active" onclick="switchSidebarTab('orders', this)">📦 My Orders</button>
+        <button class="sidebar-tab" onclick="switchSidebarTab('cart', this)">🛒 Cart</button>
+        <button class="sidebar-tab" onclick="switchSidebarTab('history', this)">🕓 History</button>
+    </div>
+
+    <!-- My Orders Panel -->
+    <div class="sidebar-panel active" id="panel-orders">
+        <div class="sidebar-panel-inner">
+            <p class="sidebar-section-label">Active Orders</p>
+            <div id="sidebar-orders-list" class="sidebar-empty-state">
+                <div class="sidebar-empty-icon">📦</div>
+                <p>No active orders yet.</p>
+                <button class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Panel -->
+    <div class="sidebar-panel" id="panel-cart">
+        <div class="sidebar-panel-inner">
+            <!-- Select All Row -->
+            <div class="sidebar-cart-toolbar">
+                <label class="sidebar-check-label">
+                    <input type="checkbox" id="sidebar-select-all" onchange="sidebarSelectAll(this.checked)" />
+                    <span>Select All</span>
+                </label>
+                <span class="sidebar-selected-count" id="sidebar-selected-count">0 selected</span>
+            </div>
+            <div id="sidebar-cart-list"></div>
+            <div class="sidebar-cart-footer">
+                <div class="sidebar-cart-total-row">
+                    <span class="sidebar-cart-total-label">Selected Total</span>
+                    <span class="sidebar-cart-total-amount" id="sidebar-cart-total">₱0.00</span>
+                </div>
+                <button class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()">🛍 Checkout Selected</button>
+                <button class="sidebar-clear-btn" onclick="sidebarClearCart()">🗑 Clear Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="sidebar-panel" id="panel-history">
+        <div class="sidebar-panel-inner">
+            <p class="sidebar-section-label">Order History</p>
+            <div id="sidebar-history-list" class="sidebar-empty-state">
+                <div class="sidebar-empty-icon">🕓</div>
+                <p>No completed orders yet.</p>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Navbar -->
 <header class="dashboard-navbar">
     <div class="nav-left">
         <div class="nav-logo">🎓</div>
@@ -17,27 +87,51 @@
         </div>
     </div>
     <div class="nav-right">
-        <button onclick="window.location.href='cart.html'" class="nav-cart-btn">
-            🛒 Cart <span id="dash-cart-badge" class="dash-cart-badge" style="display:none;">0</span>
+        <!-- Notification Bell -->
+        <button class="nav-icon-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
+            🔔
+            <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
         </button>
-        <button onclick="window.location.href='orders.html'">My Orders</button>
-        <button onclick="doLogout()">Logout</button>
+
+        <!-- Sidebar Toggle -->
+        <button class="nav-icon-btn sidebar-toggle-btn" onclick="openSidebar()" title="Menu">
+            <span class="hamburger-icon">
+                <span></span><span></span><span></span>
+            </span>
+            <span class="sidebar-cart-nav-badge" id="sidebar-cart-nav-badge" style="display:none;">0</span>
+        </button>
     </div>
 </header>
+
+<!-- Notification Dropdown -->
+<div class="notif-panel" id="notif-panel" style="display:none;">
+    <div class="notif-panel-header">
+        <span class="notif-panel-title">🔔 Notifications</span>
+        <button class="notif-clear-btn" onclick="clearNotifications()">Clear all</button>
+    </div>
+    <div id="notif-list" class="notif-empty">
+        <div class="sidebar-empty-icon">🔔</div>
+        <p>No notifications yet.</p>
+    </div>
+</div>
+
+<!-- Main Content -->
 <div class="dashboard-container">
     <div class="welcome-card">
         <h2>Welcome back, <span id="welcome-name">Student</span>!</h2>
         <p id="welcome-email">student@wmsu.edu.ph</p>
         <p>Select a service below to get started with your order.</p>
     </div>
+
     <div id="dash-cart-preview" style="display:none;" class="dash-cart-preview-box">
         <div class="dash-cart-preview-header">
             <span>🛒 Cart Preview</span>
-            <button onclick="window.location.href='cart.html'" class="dash-view-cart-btn">View Full Cart →</button>
+            <button onclick="openSidebarCart()" class="dash-view-cart-btn">View Full Cart →</button>
         </div>
         <div id="dash-cart-preview-items"></div>
         <div class="dash-cart-preview-total">Total: <strong id="dash-cart-preview-total">₱0.00</strong></div>
     </div>
+
     <h2 class="services-title">Our Services</h2>
     <div class="services-grid-dash">
         <div class="service-card-dash">
@@ -66,6 +160,7 @@
         </div>
     </div>
 </div>
+
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/dashboard.js"></script>
 </body>

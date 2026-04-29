@@ -16,53 +16,65 @@
     </div>
     <button class="appbar-action" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-badge"></span></button>
 </header>
-<main class="binding-page" id="binding-page">
-    <div class="card">
-        <div class="card-head">
-            <div class="card-title">Our Services</div>
-            <div class="card-subtitle">Choose your preferred binding type</div>
-        </div>
-        <div class="services-grid-bind">
-            <div class="service-option" onclick="selectBinding(this, 'Thesis Binding', 150)">
-                <div class="service-icon-box">📖</div>
-                <h3>Thesis Binding</h3>
-                <p>High-quality binding for research papers</p>
-                <div class="service-price">₱150</div>
+<main class="page" id="binding-page">
+    <div class="layout-2col">
+        <div class="col-main">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Our Binding Services</div>
+                    <div class="card-subtitle">Choose your preferred binding type</div>
+                </div>
+                <div class="options">
+                    <div class="option" onclick="selectBindingType('thesis', 150, this)">
+                        <div class="option-icon">📖</div>
+                        <div class="option-name">Thesis Binding</div>
+                        <div class="option-desc">High-quality binding for research papers</div>
+                        <div class="option-price">₱150</div>
+                    </div>
+                    <div class="option" onclick="selectBindingType('hardcover', 200, this)">
+                        <div class="option-icon">📚</div>
+                        <div class="option-name">Hardcover Binding</div>
+                        <div class="option-desc">Durable hardcover for books and documents</div>
+                        <div class="option-price">₱200</div>
+                    </div>
+                    <div class="option" onclick="selectBindingType('spiral', 80, this)">
+                        <div class="option-icon">🗂️</div>
+                        <div class="option-name">Spiral Binding</div>
+                        <div class="option-desc">Perfect for reports, manuals, notebooks</div>
+                        <div class="option-price">₱80</div>
+                    </div>
+                </div>
             </div>
-            <div class="service-option" onclick="selectBinding(this, 'Hardcover Binding', 200)">
-                <div class="service-icon-box">📖</div>
-                <h3>Hardcover Binding</h3>
-                <p>Durable hardcover for books and documents</p>
-                <div class="service-price">₱200</div>
-            </div>
-            <div class="service-option" onclick="selectBinding(this, 'Spiral Binding', 80)">
-                <div class="service-icon-box">📖</div>
-                <h3>Spiral Binding</h3>
-                <p>Perfect for reports, manuals, notebooks</p>
-                <div class="service-price">₱80</div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Order Details</div>
+                    <div class="card-subtitle">How many copies do you need?</div>
+                </div>
+                <div class="field">
+                    <label class="label">Quantity *</label>
+                    <input class="input" type="number" value="1" min="1" id="binding-qty" oninput="updateBindingSummary()" />
+                </div>
             </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-head">
-            <div class="card-title">Quantity</div>
-            <div class="card-subtitle">How many copies do you need?</div>
-        </div>
-        <div class="quantity-row">
-            <button class="qty-btn" onclick="changeBindingQty(-1)">−</button>
-            <span class="qty-display" id="binding-qty-display">1</span>
-            <button class="qty-btn" onclick="changeBindingQty(1)">+</button>
-            <span class="qty-label">copies</span>
-        </div>
+        <aside class="col-side">
+            <div class="card card-sticky">
+                <div class="card-head"><div class="card-title">Order Summary</div></div>
+                <div class="summary">
+                    <div class="summary-row"><span class="summary-label">Type</span><span class="summary-value" id="binding-sum-type">—</span></div>
+                    <div class="summary-row"><span class="summary-label">Price/copy</span><span class="summary-value" id="binding-sum-unit">₱0.00</span></div>
+                    <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="binding-sum-qty">1</span></div>
+                    <hr class="divider" />
+                    <div class="summary-row">
+                        <span class="summary-label summary-total-label">Total</span>
+                        <span class="summary-money" id="binding-sum-total">₱0.00</span>
+                    </div>
+                    <button class="btn-order" onclick="bindingOrderNow()">🛒 Order Now</button>
+                    <button class="btn-cart" onclick="bindingAddToCart()">+ Add to Cart</button>
+                </div>
+            </div>
+        </aside>
     </div>
 </main>
-<div class="bottom-bar">
-    <div class="bottom-summary">
-        <span class="bottom-type" id="binding-bottom-type">No binding selected</span>
-        <span class="bottom-total" id="binding-bottom-total">₱0.00</span>
-    </div>
-    <button class="btn-next" onclick="bindingGoNext()">PROCEED</button>
-</div>
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/binding.js"></script>
 </body>

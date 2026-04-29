@@ -10,6 +10,7 @@ function openSidebar() {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('sidebarOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
+    renderSidebarOrders(); // always refresh orders on open
     renderSidebarCart();
 }
 
@@ -21,7 +22,6 @@ function closeSidebar() {
 
 function openSidebarCart() {
     openSidebar();
-    // Switch to cart tab
     const tabs = document.querySelectorAll('.sidebar-tab');
     tabs.forEach(t => t.classList.remove('active'));
     tabs[1].classList.add('active');
@@ -33,9 +33,105 @@ function switchSidebarTab(tab, el) {
     document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
     document.getElementById('panel-' + tab).classList.add('active');
-    if (tab === 'cart') renderSidebarCart();
-    if (tab === 'orders') renderSidebarOrders();
+    if (tab === 'cart')    renderSidebarCart();
+    if (tab === 'orders')  renderSidebarOrders();
     if (tab === 'history') renderSidebarHistory();
+}
+
+// Navigate to full orders page
+function goToFullOrders() {
+    closeSidebar();
+    window.location.href = 'orders.html';
+}
+
+/* ===================== SIDEBAR ORDERS ===================== */
+function renderSidebarOrders() {
+    const listEl = document.getElementById('sidebar-orders-list');
+    if (!listEl) return;
+
+    // Active = not Completed, not Cancelled
+    const allOrders = Orders.getAll();
+    const active = allOrders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled');
+
+    if (active.length === 0) {
+        listEl.innerHTML = `
+            <div class="sidebar-empty-state">
+                <div class="sidebar-empty-icon">📦</div>
+                <p>No active orders yet.</p>
+                <button class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
+            </div>`;
+        return;
+    }
+
+    // Show up to 5 in sidebar; link to full page for more
+    const shown = active.slice(0, 5);
+    listEl.innerHTML = shown.map(o => {
+        const items = Array.isArray(o.items) ? o.items : [o];
+        const total = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
+        const name  = items[0]?.service || 'Order';
+        return `
+        <div class="sidebar-order-item">
+            <div class="sidebar-order-name">${escHtml(name)}${items.length > 1 ? ` +${items.length - 1}` : ''}</div>
+            <div class="sidebar-order-meta">
+                ${escHtml(o.orderId || '')}
+                <span class="sidebar-order-status status-${escHtml(o.status || 'Pending')}">
+                    ${escHtml(o.status || 'Pending')}
+                </span>
+            </div>
+            <div class="sidebar-order-price">₱${total.toFixed(2)}</div>
+        </div>`;
+    }).join('');
+
+    if (active.length > 5) {
+        listEl.innerHTML += `
+        <div style="text-align:center;padding:0.5rem 0;">
+            <button onclick="goToFullOrders()" style="background:none;border:none;color:#8B0000;font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:'Segoe UI',sans-serif;">
+                View all ${active.length} orders →
+            </button>
+        </div>`;
+    }
+}
+
+/* ===================== SIDEBAR HISTORY ===================== */
+function renderSidebarHistory() {
+    const listEl = document.getElementById('sidebar-history-list');
+    if (!listEl) return;
+
+    const allOrders = Orders.getAll();
+    const history = allOrders.filter(o => o.status === 'Completed' || o.status === 'Cancelled');
+
+    if (history.length === 0) {
+        listEl.innerHTML = `
+            <div class="sidebar-empty-state">
+                <div class="sidebar-empty-icon">🕓</div>
+                <p>No completed orders yet.</p>
+            </div>`;
+        return;
+    }
+
+    const shown = history.slice(0, 5);
+    listEl.innerHTML = shown.map(o => {
+        const items = Array.isArray(o.items) ? o.items : [o];
+        const total = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
+        const name  = items[0]?.service || 'Order';
+        const icon  = o.status === 'Completed' ? '✓' : '✕';
+        const color = o.status === 'Completed' ? '#27ae60' : '#c0392b';
+        return `
+        <div class="sidebar-order-item">
+            <div class="sidebar-order-name">${escHtml(name)}</div>
+            <div class="sidebar-order-meta" style="color:${color};">${icon} ${escHtml(o.status)} · ${escHtml(o.dateOrdered || '')}</div>
+            <div class="sidebar-order-price">₱${total.toFixed(2)}</div>
+        </div>`;
+    }).join('');
+
+    if (history.length > 5) {
+        listEl.innerHTML += `
+        <div style="text-align:center;padding:0.5rem 0;">
+            <button onclick="goToFullOrders()" style="background:none;border:none;color:#8B0000;font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:'Segoe UI',sans-serif;">
+                View all history →
+            </button>
+        </div>`;
+    }
 }
 
 /* ===================== SIDEBAR CART ===================== */
@@ -46,7 +142,6 @@ function renderSidebarCart() {
     const listEl = document.getElementById('sidebar-cart-list');
     if (!listEl) return;
 
-    // Sync selection set — remove stale ids
     sidebarSelected = new Set([...sidebarSelected].filter(id => cart.find(i => i.cartId === id)));
 
     if (cart.length === 0) {
@@ -63,7 +158,9 @@ function renderSidebarCart() {
 
     listEl.innerHTML = cart.map(item => {
         const checked = sidebarSelected.has(item.cartId);
-        const unitPrice = item.unitPrice ? parseFloat(item.unitPrice) : (parseFloat(item.total) / (item.qty || 1));
+        const unitPrice = item.unitPrice
+            ? parseFloat(item.unitPrice)
+            : (parseFloat(item.total) / (item.qty || 1));
         return `
         <div class="sidebar-cart-item" id="sc-row-${item.cartId}">
             <label class="sc-check-wrap">
@@ -73,7 +170,7 @@ function renderSidebarCart() {
             </label>
             <div class="sc-info">
                 <div class="sc-service">${escHtml(item.service)}</div>
-                <div class="sc-desc">${escHtml((item.desc || '').substring(0, 55))}${(item.desc || '').length > 55 ? '...' : ''}</div>
+                <div class="sc-desc">${escHtml((item.desc || '').substring(0, 55))}${(item.desc || '').length > 55 ? '…' : ''}</div>
                 <div class="sc-qty-row">
                     <button class="sc-qty-btn" onclick="sidebarChangeQty('${item.cartId}', -1)">−</button>
                     <span class="sc-qty-val">${item.qty || 1}</span>
@@ -110,32 +207,28 @@ function sidebarSelectAll(checked) {
 function updateSidebarSelectAll() {
     const cart = Cart.get();
     const allCheckEl = document.getElementById('sidebar-select-all');
-    const countEl = document.getElementById('sidebar-selected-count');
+    const countEl    = document.getElementById('sidebar-selected-count');
     if (!allCheckEl) return;
     if (cart.length === 0) {
-        allCheckEl.checked = false;
-        allCheckEl.indeterminate = false;
+        allCheckEl.checked = false; allCheckEl.indeterminate = false;
     } else if (sidebarSelected.size === cart.length) {
-        allCheckEl.checked = true;
-        allCheckEl.indeterminate = false;
+        allCheckEl.checked = true;  allCheckEl.indeterminate = false;
     } else if (sidebarSelected.size === 0) {
-        allCheckEl.checked = false;
-        allCheckEl.indeterminate = false;
+        allCheckEl.checked = false; allCheckEl.indeterminate = false;
     } else {
-        allCheckEl.checked = false;
-        allCheckEl.indeterminate = true;
+        allCheckEl.checked = false; allCheckEl.indeterminate = true;
     }
     if (countEl) countEl.textContent = sidebarSelected.size + ' selected';
 }
 
 function updateSidebarCartFooter() {
-    const cart = Cart.get();
+    const cart     = Cart.get();
     const selected = cart.filter(i => sidebarSelected.has(i.cartId));
-    const total = selected.reduce((s, i) => s + parseFloat(i.total), 0);
-    const totalEl = document.getElementById('sidebar-cart-total');
-    const checkoutBtn = document.getElementById('sidebar-checkout-btn');
-    if (totalEl) totalEl.textContent = '₱' + total.toFixed(2);
-    if (checkoutBtn) checkoutBtn.disabled = sidebarSelected.size === 0;
+    const total    = selected.reduce((s, i) => s + parseFloat(i.total), 0);
+    const totalEl  = document.getElementById('sidebar-cart-total');
+    const checkBtn = document.getElementById('sidebar-checkout-btn');
+    if (totalEl)  totalEl.textContent = '₱' + total.toFixed(2);
+    if (checkBtn) checkBtn.disabled = sidebarSelected.size === 0;
 }
 
 function sidebarChangeQty(cartId, delta) {
@@ -157,10 +250,10 @@ function sidebarChangeQty(cartId, delta) {
 function sidebarRemoveItem(cartId) {
     showConfirm('Remove Item', 'Remove this item from your cart?', () => {
         sidebarSelected.delete(cartId);
-        Cart.remove(cartId, () => {
-            renderSidebarCart();
-            renderDashCartPreview();
-        });
+        Cart.save(Cart.get().filter(i => i.cartId !== cartId));
+        updateCartBadge();
+        renderSidebarCart();
+        renderDashCartPreview();
     });
 }
 
@@ -179,54 +272,9 @@ function sidebarCheckout() {
         showAlert('No Items Selected', 'Please select at least one item to checkout.');
         return;
     }
-    // Store selected IDs for checkout page to consume
     localStorage.setItem('upress_checkout_selected', JSON.stringify([...sidebarSelected]));
     closeSidebar();
     window.location.href = 'payment.html';
-}
-
-/* ===================== SIDEBAR ORDERS ===================== */
-function renderSidebarOrders() {
-    const listEl = document.getElementById('sidebar-orders-list');
-    if (!listEl) return;
-    // Pull from localStorage if you have an orders store; fallback to empty
-    const orders = JSON.parse(localStorage.getItem('upress_active_orders') || '[]');
-    if (orders.length === 0) {
-        listEl.innerHTML = `
-            <div class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">📦</div>
-                <p>No active orders yet.</p>
-                <button class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
-            </div>`;
-        return;
-    }
-    listEl.innerHTML = orders.map(o => `
-        <div class="sidebar-order-item">
-            <div class="sidebar-order-name">${escHtml(o.service)}</div>
-            <div class="sidebar-order-meta">${escHtml(o.status || 'Processing')}</div>
-            <div class="sidebar-order-price">₱${parseFloat(o.total).toFixed(2)}</div>
-        </div>`).join('');
-}
-
-/* ===================== SIDEBAR HISTORY ===================== */
-function renderSidebarHistory() {
-    const listEl = document.getElementById('sidebar-history-list');
-    if (!listEl) return;
-    const history = JSON.parse(localStorage.getItem('upress_order_history') || '[]');
-    if (history.length === 0) {
-        listEl.innerHTML = `
-            <div class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">🕓</div>
-                <p>No completed orders yet.</p>
-            </div>`;
-        return;
-    }
-    listEl.innerHTML = history.map(o => `
-        <div class="sidebar-order-item">
-            <div class="sidebar-order-name">${escHtml(o.service)}</div>
-            <div class="sidebar-order-meta" style="color:#27ae60;">✓ Completed · ${o.date || ''}</div>
-            <div class="sidebar-order-price">₱${parseFloat(o.total).toFixed(2)}</div>
-        </div>`).join('');
 }
 
 /* ===================== NOTIFICATIONS ===================== */
@@ -245,10 +293,9 @@ function clearNotifications() {
     if (badge) badge.style.display = 'none';
 }
 
-// Close notif panel when clicking outside
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     const panel = document.getElementById('notif-panel');
-    const btn = document.getElementById('notif-btn');
+    const btn   = document.getElementById('notif-btn');
     if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
         panel.style.display = 'none';
     }
@@ -277,7 +324,7 @@ function renderDashCartPreview() {
     if (container) {
         container.innerHTML = shown.map(item => `
             <div class="dash-cart-preview-item">
-                <span>🛒 ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '...' : '') : ''}</span>
+                <span>🛒 ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '…' : '') : ''}</span>
                 <span style="font-weight:700;color:#a32020;">₱${item.total}</span>
             </div>`).join('');
         if (cart.length > MAX) {

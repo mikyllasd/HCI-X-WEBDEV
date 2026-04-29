@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <!-- Separated stylesheet -->
-    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/admin/admin.css" />
   </head>
   <body>
     <!-- ============================================================
@@ -70,61 +70,33 @@
               >
             </li>
             <li>
-              <a href="#" class="nav-link" data-page="student-verification">
-                <i data-lucide="user-check" aria-hidden="true"></i
-                ><span>Student Verification</span></a
-              >
-            </li>
-            <li>
               <a href="#" class="nav-link" data-page="orders">
                 <i data-lucide="package" aria-hidden="true"></i
                 ><span>Orders</span></a
               >
             </li>
             <li>
+              <a href="#" class="nav-link" data-page="student-verification">
+                <i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Student Verification</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="payment-verification">
+                <i data-lucide="credit-card" aria-hidden="true"></i
+                ><span>Payment Verification</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="reports">
+                <i data-lucide="bar-chart-2" aria-hidden="true"></i
+                ><span>Reports</span></a
+              >
+            </li>
+            <li>
               <a href="#" class="nav-link" data-page="qr-scanner">
                 <i data-lucide="scan-qr-code" aria-hidden="true"></i
                 ><span>QR Scanner</span></a
-              >
-            </li>
-          </ul>
-
-          <!-- Performance Analytics section -->
-          <p class="nav-section-label">Performance Analytics</p>
-          <ul class="nav-list" role="list">
-            <li>
-              <a href="#" class="nav-link" data-page="daily-analytics">
-                <i data-lucide="clock" aria-hidden="true"></i
-                ><span>Daily Analytics</span></a
-              >
-            </li>
-            <li>
-              <a href="#" class="nav-link" data-page="monthly-analytics">
-                <i data-lucide="calendar-days" aria-hidden="true"></i
-                ><span>Monthly Analytics</span></a
-              >
-            </li>
-            <li>
-              <a href="#" class="nav-link" data-page="yearly-analytics">
-                <i data-lucide="calendar-range" aria-hidden="true"></i
-                ><span>Yearly Analytics</span></a
-              >
-            </li>
-            <li>
-              <a href="#" class="nav-link" data-page="annual-statistics">
-                <i data-lucide="trending-up" aria-hidden="true"></i
-                ><span>Annual Statistics</span></a
-              >
-            </li>
-          </ul>
-
-          <!-- Reports & Management section -->
-          <p class="nav-section-label">Reports &amp; Management</p>
-          <ul class="nav-list" role="list">
-            <li>
-              <a href="#" class="nav-link" data-page="transaction-history">
-                <i data-lucide="file-text" aria-hidden="true"></i
-                ><span>Transaction History</span></a
               >
             </li>
           </ul>
@@ -545,6 +517,554 @@
         <!-- /page-orders -->
 
         <!-- ==========================================================
+         PAGE: PAYMENT VERIFICATION
+         Review and verify student payment submissions
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-payment-verification"
+          aria-labelledby="pv-heading"
+        >
+          <div class="page-header">
+            <h1 id="pv-heading">Payment Verification</h1>
+            <p class="page-subtitle">Review and verify student payment proofs</p>
+          </div>
+
+          <div class="page-body">
+            <!-- Summary stats -->
+            <div class="stats-grid stats-grid--3 sp">
+              <article class="stat-card stat-card--yellow" aria-label="Pending Review">
+                <div class="stat-card__header">
+                  <span>Pending Review</span
+                     <i data-lucide="alert-circle" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="pv-pending">2</p>
+              </article>
+              <article class="stat-card stat-card--green" aria-label="Verified">
+                <div class="stat-card__header">
+                  <span>Verified</span>
+                  <i data-lucide="circle-check" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="pv-verified">0</p>
+              </article>
+              <article class="stat-card stat-card--red-solid" aria-label="Invalid">
+                <div class="stat-card__header">
+                  <span>Invalid</span>
+                  <i data-lucide="x-circle" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="pv-invalid">0</p>
+              </article>
+            </div>
+
+            <!-- Pending Review Cards -->
+            <div class="sp">
+              <h2 class="card-title" style="margin-bottom:1rem;">Pending Review</h2>
+              <div class="pv-cards-grid" id="pv-pending-grid">
+
+                <div class="pv-card" data-pv-id="ORD-2026-001" data-pv-name="Juan Dela Cruz"
+                     data-pv-service="Printing" data-pv-amount="₱150.00"
+                     data-pv-method="GCash" data-pv-ref="GCASH123456789"
+                     data-pv-submitted="4/30/2026, 1:56:48 AM">
+                  <div class="pv-card__header">
+                    <span class="pv-order-id">ORD-2026-001</span>
+                    <span class="pv-badge pv-badge--pending">Pending Review</span>
+                  </div>
+                  <p class="pv-customer">Juan Dela Cruz</p>
+                  <div class="pv-details">
+                    <div class="pv-detail"><span class="pv-detail__label">Service</span><span class="pv-detail__val">Printing</span></div>
+                    <div class="pv-detail"><span class="pv-detail__label">Amount</span><span class="pv-detail__val pv-amount">₱150.00</span></div>
+                    <div class="pv-detail"><span class="pv-detail__label">Method</span><span class="pv-detail__val">GCash</span></div>
+                    <div class="pv-detail"><span class="pv-detail__label">Reference</span><span class="pv-detail__val">GCASH123456789</span></div>
+                  </div>
+                  <p class="pv-submitted">Submitted: 4/30/2026, 1:56:48 AM</p>
+                  <button class="btn btn--primary pv-review-btn" onclick="openPvModal(this.closest('.pv-card'))">
+                    <i data-lucide="eye" aria-hidden="true"></i> Review
+                  </button>
+                </div>
+
+                <div class="pv-card" data-pv-id="ORD-2026-002" data-pv-name="Maria Santos"
+                     data-pv-service="Mug Printing" data-pv-amount="₱250.00"
+                     data-pv-method="PayMaya" data-pv-ref="MAYA987654321"
+                     data-pv-submitted="4/30/2026, 12:56:48 AM">
+                  <div class="pv-card__header">
+                    <span class="pv-order-id">ORD-2026-002</span>
+                    <span class="pv-badge pv-badge--pending">Pending Review</span>
+                  </div>
+                  <p class="pv-customer">Maria Santos</p>
+                  <div class="pv-details">
+                    <div class="pv-detail"><span class="pv-detail__label">Service</span><span class="pv-detail__val">Mug Printing</span></div>
+                    <div class="pv-detail"><span class="pv-detail__label">Amount</span><span class="pv-detail__val pv-amount">₱250.00</span></div>
+                    <div class="pv-detail"><span class="pv-detail__label">Method</span><span class="pv-detail__val">PayMaya</span></div>
+                    <div class="pv-detail"><span class="pv-detail__label">Reference</span><span class="pv-detail__val">MAYA987654321</span></div>
+                  </div>
+                  <p class="pv-submitted">Submitted: 4/30/2026, 12:56:48 AM</p>
+                  <button class="btn btn--primary pv-review-btn" onclick="openPvModal(this.closest('.pv-card'))">
+                    <i data-lucide="eye" aria-hidden="true"></i> Review
+                  </button>
+                </div>
+
+              </div>
+            </div>
+            <!-- Verified Section (hidden until items exist) -->
+            <div id="pv-verified-section" class="sp hidden">
+              <h2 class="card-title" style="margin-bottom:1rem;">Verified</h2>
+              <div class="pv-cards-grid" id="pv-verified-grid"></div>
+            </div>
+
+            <!-- Invalid Section (hidden until items exist) -->
+            <div id="pv-invalid-section" class="sp hidden">
+              <h2 class="card-title" style="margin-bottom:1rem;">Invalid</h2>
+              <div class="pv-cards-grid" id="pv-invalid-grid"></div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-payment-verification -->
+
+        <!-- ==========================================================
+         MODAL: PAYMENT VERIFICATION REVIEW
+         ========================================================== -->
+        <div
+          class="modal-overlay hidden"
+          id="pv-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="pv-modal-title"
+        >
+          <div class="modal pv-modal">
+            <div class="modal-header">
+              <div>
+                <h2 id="pv-modal-title">Payment Verification</h2>
+                <p class="card-subtitle" id="pv-modal-subtitle">Review payment proof and verify transaction</p>
+              </div>
+              <button class="modal-close" id="pv-modal-close" aria-label="Close modal" onclick="closePvModal()">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+            <div class="modal-body pv-modal-body">
+              <!-- 2-column info grid matching Figma -->
+              <div class="pv-info-grid">
+                <div class="pv-info-cell">
+                  <span class="pv-info-label">Order ID</span>
+                  <strong class="pv-info-val" id="pv-m-id">—</strong>
+                </div>
+                <div class="pv-info-cell">
+                  <span class="pv-info-label">Student</span>
+                  <strong class="pv-info-val" id="pv-m-name">—</strong>
+                </div>
+                <div class="pv-info-cell">
+                  <span class="pv-info-label">Amount</span>
+                  <strong class="pv-info-val pv-amount" id="pv-m-amount">—</strong>
+                </div>
+                <div class="pv-info-cell">
+                  <span class="pv-info-label">Method</span>
+                  <strong class="pv-info-val" id="pv-m-method">—</strong>
+                </div>
+                <div class="pv-info-cell pv-info-cell--full">
+                  <span class="pv-info-label">Reference Number</span>
+                  <strong class="pv-info-val" id="pv-m-ref">—</strong>
+                </div>
+              </div>
+
+              <!-- Payment Proof section -->
+              <div class="pv-proof-section">
+                <div class="pv-proof-header">
+                  <i data-lucide="file-text" aria-hidden="true"></i>
+                  <span>Payment Proof</span>
+                </div>
+                <div class="pv-proof-body" id="pv-m-proof">
+                  <img src="" alt="Payment Proof" class="pv-proof-img hidden" id="pv-proof-img" />
+                  <div class="pv-proof-placeholder" id="pv-proof-placeholder">
+                    <i data-lucide="image" aria-hidden="true"></i>
+                    <p>No payment proof uploaded</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer pv-modal-footer">
+              <button class="btn pv-btn-verify" id="pv-verify-btn" onclick="handlePvVerify()">
+                <i data-lucide="check" aria-hidden="true"></i> Verify Payment
+              </button>
+              <button class="btn pv-btn-invalid" id="pv-invalid-btn" onclick="handlePvInvalid()">
+                <i data-lucide="x" aria-hidden="true"></i> Mark as Invalid
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- ==========================================================
+         PAGE: REPORTS
+         View and analyze system performance
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-reports"
+          aria-labelledby="reports-heading"
+        >
+          <!-- Page header matching Figma: title left, Export Report button right -->
+          <div class="page-header rpt-page-header">
+            <div>
+              <h1 id="reports-heading">Reports &amp; Analytics</h1>
+              <p class="page-subtitle">View and analyze system performance</p>
+            </div>
+            <button class="btn btn--primary rpt-export-btn" id="rpt-export-btn" aria-label="Export Report">
+              <i data-lucide="download" aria-hidden="true"></i> Export Report
+            </button>
+          </div>
+
+          <!-- Report Filters card (Figma) -->
+          <div class="card sp rpt-filters-card" aria-label="Report Filters">
+            <div class="rpt-filters-header">
+              <i data-lucide="filter" aria-hidden="true" class="rpt-filter-icon"></i>
+              <div>
+                <h2 class="card-title rpt-filters-title">Report Filters</h2>
+                <p class="card-subtitle">Select time period and date range for reports</p>
+              </div>
+            </div>
+            <div class="rpt-filters-row">
+              <div class="rpt-filter-group">
+                <label class="form-label" for="rpt-type-select">Report Type</label>
+                <div class="rpt-select-wrapper">
+                  <select id="rpt-type-select" class="form-input rpt-select" aria-label="Report Type">
+                    <option value="daily">Daily (Last 7 Days)</option>
+                    <option value="monthly">Monthly (Last 12 Months)</option>
+                    <option value="yearly">Yearly (Last 5 Years)</option>
+                  </select>
+                  <i data-lucide="chevron-down" aria-hidden="true" class="rpt-select-chevron"></i>
+                </div>
+              </div>
+              <div class="rpt-filter-group">
+                <label class="form-label" for="rpt-start-date">Start Date (Optional)</label>
+                <input type="date" id="rpt-start-date" class="form-input" aria-label="Start Date" />
+              </div>
+              <div class="rpt-filter-group">
+                <label class="form-label" for="rpt-end-date">End Date (Optional)</label>
+                <input type="date" id="rpt-end-date" class="form-input" aria-label="End Date" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary stat cards: 3 columns matching Figma -->
+          <div class="stats-grid stats-grid--3 sp">
+            <article class="stat-card stat-card--red" aria-label="Total Orders">
+              <div class="stat-card__header">
+                <span>Total Orders</span>
+                <i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="rpt-orders">0</p>
+              <p class="stat-card__label">Orders in period</p>
+            </article>
+            <article class="stat-card stat-card--green" aria-label="Total Income">
+              <div class="stat-card__header">
+                <span>Total Income</span>
+                <i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="rpt-income">₱0.00</p>
+              <p class="stat-card__label">Revenue in period</p>
+            </article>
+            <article class="stat-card stat-card--blue" aria-label="Average Order Value">
+              <div class="stat-card__header">
+                <span>Avg Order Value</span>
+                <i data-lucide="trending-up" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="rpt-avg">₱0.00</p>
+              <p class="stat-card__label">Per completed order</p>
+            </article>
+          </div>
+          <!-- Performance Chart -->
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="bar-chart-2" aria-hidden="true"></i>
+              <div>
+                <h2 class="card-title">Performance Chart</h2>
+                <p class="card-subtitle" id="rpt-chart-label">Daily Report</p>
+              </div>
+            </div>
+            <div style="position:relative;height:300px;margin-top:1rem;">
+              <canvas id="reports-chart" aria-label="Reports performance chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Transaction History Table -->
+          <div class="card sp">
+            <h2 class="card-title">Transaction History</h2>
+            <p class="card-subtitle">All completed transactions in selected period</p>
+            <div class="empty-state" id="rpt-empty">
+              <i data-lucide="file-text" aria-hidden="true"></i>
+              <p class="empty-state__title">No transactions found</p>
+              <p class="empty-state__sub">Completed transactions will appear here</p>
+            </div>
+            <div class="table-wrapper hidden" id="rpt-table">
+              <table class="data-table" aria-label="Transaction history">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Student Email</th>
+                    <th>Service</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="rpt-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        <!-- /page-reports -->
+
+        <!-- ==========================================================
+         PAGE: QR CODE SCANNER
+         Camera or manual Order ID entry for quick pickup
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-qr-scanner"
+          aria-labelledby="qr-heading"
+        >
+          <div class="page-dark-header">
+            <button
+              class="back-btn"
+              onclick="navigateTo('dashboard')"
+              aria-label="Back"
+            >
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+            </button>
+            <div>
+              <h1 id="qr-heading">QR Code Scanner</h1>
+              <p>Scan orders for quick pickup</p>
+            </div>
+          </div>
+          <div class="page-body">
+            <div class="card qr-card">
+              <div class="qr-icon-wrap" aria-hidden="true">
+                <i data-lucide="qr-code"></i>
+              </div>
+              <h2 class="text-center">Scan QR Code or Enter Order ID</h2>
+              <p class="text-center text-muted mt-1">
+                Use your device's camera to scan the QR code or manually enter
+                the order ID
+              </p>
+
+              <!-- Camera area -->
+              <div
+                class="qr-camera-area"
+                id="qr-camera-area"
+                role="region"
+                aria-label="Camera scanner area"
+              >
+                <div class="qr-placeholder" aria-hidden="true">
+                  <i data-lucide="qr-code"></i>
+                </div>
+                <p class="qr-camera-label"><strong>Camera Scanner</strong></p>
+                <p class="text-muted small">
+                  Position the QR code in front of the camera
+                </p>
+                <button class="btn btn--outline mt-3" id="activate-camera-btn">
+                  Activate Camera
+                </button>
+                <video
+                  id="qr-video"
+                  autoplay
+                  playsinline
+                  class="hidden"
+                  aria-label="Camera feed"
+                ></video>
+              </div>
+
+              <div class="qr-divider"><span>Or enter manually</span></div>
+              <label class="form-label" for="qr-order-input">Order ID</label>
+              <div class="qr-input-row">
+                <div class="search-box">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="text"
+                    id="qr-order-input"
+                    placeholder="Enter Order ID (e.g., ORD-2026-001)"
+                    aria-label="Order ID input"
+                  />
+                </div>
+                <button class="btn btn--primary" id="qr-search-btn">
+                  Search
+                </button>
+              </div>
+              <div
+                id="qr-result"
+                class="qr-result hidden"
+                role="alert"
+                aria-live="polite"
+              ></div>
+            </div>
+<!-- How-to guide -->
+            <div class="card info-card mt-4">
+              <h3>
+                <i data-lucide="package" aria-hidden="true"></i> How to Use QR
+                Scanner
+              </h3>
+              <ol class="how-to-list">
+                <li>
+                  Ask the student to show their order QR code from the
+                  confirmation page.
+                </li>
+                <li>
+                  Use the camera scanner above or manually enter the Order ID.
+                </li>
+                <li>Verify the order details and payment status.</li>
+                <li>
+                  If payment is complete and order is ready, click "Release
+                  Order".
+                </li>
+                <li>
+                  Hand over the order to the student and mark it as completed.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+        <!-- /page-qr-scanner -->
+
+        <!-- ==========================================================
+         PAGE: DAILY ANALYTICS
+         Today's metrics + last 7 days line chart
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-daily-analytics"
+          aria-labelledby="da-heading"
+        >
+          <div class="page-header">
+            <h1 id="da-heading">Daily Analytics</h1>
+            <p class="page-subtitle">
+              Performance overview and trends for daily operations
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--2 sp">
+            <article class="stat-card stat-card--blue-soft">
+              <div class="stat-card__header">
+                <span>Today's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">0</p>
+              <p class="stat-card__label" id="da-date">
+                Sunday, April 26, 2026
+              </p>
+            </article>
+            <article class="stat-card stat-card--green-soft">
+              <div class="stat-card__header">
+                <span>Today's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱0.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="clock" aria-hidden="true"></i>
+              <h2 class="card-title">Last 7 Days Performance</h2>
+            </div>
+            <p class="card-subtitle">
+              Orders and income trends for the past week
+            </p>
+            <div class="chart-container">
+              <canvas id="daily-chart"></canvas>
+            </div>
+          </div>
+        </section>
+        <!-- /page-daily-analytics -->
+
+        <!-- ==========================================================
+         PAGE: MONTHLY ANALYTICS
+         Month totals + last 12 months bar chart
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-monthly-analytics"
+          aria-labelledby="ma-heading"
+        >
+          <div class="page-header">
+            <h1 id="ma-heading">Monthly Analytics</h1>
+            <p class="page-subtitle">
+              Performance overview and trends for monthly operations
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--2 sp">
+            <article class="stat-card stat-card--purple-soft">
+              <div class="stat-card__header">
+                <span>This Month's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">4</p>
+              <p class="stat-card__label">April 2026</p>
+            </article>
+            <article class="stat-card stat-card--green-soft">
+              <div class="stat-card__header">
+                <span>This Month's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱1,000.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="calendar-days" aria-hidden="true"></i>
+              <h2 class="card-title">Last 12 Months Performance</h2>
+            </div>
+            <p class="card-subtitle">Monthly orders and income trends</p>
+            <div class="chart-container">
+              <canvas id="monthly-chart"></canvas>
+            </div>
+          </div>
+        </section>
+        <!-- /page-monthly-analytics -->
+
+        <!-- ==========================================================
+         PAGE: YEARLY ANALYTICS
+         Year totals + last 5 years bar chart
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-yearly-analytics"
+          aria-labelledby="ya-heading"
+        >
+          <div class="page-header">
+            <h1 id="ya-heading">Yearly Analytics</h1>
+            <p class="page-subtitle">
+              Performance overview and trends for yearly operations
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--2 sp">
+            <article class="stat-card stat-card--orange-soft">
+              <div class="stat-card__header">
+                <span>This Year's Orders</span
+                ><i data-lucide="package" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">9</p>
+              <p class="stat-card__label">2026</p>
+            </article>
+            <article class="stat-card stat-card--green-soft">
+              <div class="stat-card__header">
+                <span>This Year's Income</span
+                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">₱1,750.00</p>
+              <p class="stat-card__label">From completed orders</p>
+            </article>
+          </div>
+          <div class="card sp">
+            <div class="card-title-group">
+              <i data-lucide="calendar-range" aria-hidden="true"></i>
+              <h2 class="card-title">Last 5 Years Performance</h2>
+            </div>
+            <p class="card-subtitle">Yearly orders and income comparison</p>
+            <div class="chart-container">
+              <canvas id="yearly-chart"></canvas>
+            </div>
+          </div>
+        </section>
+<!-- /page-yearly-analytics -->
+         <!-- /page-reports -->
+
+        <!-- ==========================================================
          PAGE: QR CODE SCANNER
          Camera or manual Order ID entry for quick pickup
          ========================================================== -->
@@ -907,8 +1427,6 @@
             </div>
           </div>
         </section>
-        <!-- /page-annual-statistics -->
-
         <!-- ==========================================================
          PAGE: TRANSACTION HISTORY
          Filterable list of all completed transactions
@@ -1030,8 +1548,6 @@
             </div>
           </div>
         </section>
-        <!-- /page-transaction-history -->
-
         <!-- ==========================================================
          PAGE: ACTIVE ACCOUNTS
          Student account expiration management
@@ -1155,7 +1671,6 @@
                 </div>
               </div>
             </div>
-
             <!-- Accounts table -->
             <div class="card mt-4">
               <h2 class="card-title">Student Accounts</h2>
@@ -1358,13 +1873,13 @@
             </div>
           </div>
         </section>
-        <!-- /page-add-service -->
-      </main>
+        </main>
       <!-- /main-content -->
     </div>
     <!-- /app-wrapper -->
 
-    <!-- ==========================================================
+
+    <!-- Separated JavaScript --><!-- ==========================================================
      MODAL: STUDENT VERIFICATION DETAIL
      Opened when admin clicks the eye icon on a request
      ========================================================== -->
@@ -1432,8 +1947,6 @@
       id="sidebar-overlay"
       aria-hidden="true"
     ></div>
-
-    <!-- Separated JavaScript -->
     <script src="../../js/admin/admin-dashboard.js"></script>
   </body>
 </html>

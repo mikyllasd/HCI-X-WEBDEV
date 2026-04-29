@@ -361,6 +361,50 @@ function renderOrderModal(order, mode) {
     ? `Process Order ${order.orderId}`
     : `Order Details ${order.orderId}`;
 
+  const statusKey = normalizeStatus(order.status);
+
+  const statusLabelByKey = {
+    pending: 'Pending',
+    processing: 'Processing',
+    ready: 'Ready for Pickup',
+    completed: 'Completed',
+  };
+
+  const nextActions = [];
+
+  if (statusKey !== 'processing') {
+    nextActions.push({
+      key: 'processing',
+      label: 'Processing',
+    });
+  }
+  if (statusKey !== 'ready') {
+    nextActions.push({
+      key: 'ready',
+      label: 'Ready to Pick Up',
+    });
+  }
+  if (statusKey !== 'completed') {
+    nextActions.push({
+      key: 'completed',
+      label: 'Completed',
+    });
+  }
+
+  const actionsHtml =
+    mode === 'process' && nextActions.length
+      ? nextActions.map(a => `
+          <button
+            type="button"
+            class="sd-modal__btn sd-modal__action"
+            data-order-id="${escapeHtml(order.orderId)}"
+            data-status-key="${escapeHtml(a.key)}"
+          >
+            ${escapeHtml(a.label)}
+          </button>
+        `).join('')
+      : '';
+
   const body = `
     <div class="sd-modal__grid">
       <div class="sd-modal__field">
@@ -369,7 +413,15 @@ function renderOrderModal(order, mode) {
       </div>
       <div class="sd-modal__field">
         <div class="sd-modal__label">Status</div>
-        <div class="sd-modal__value">${escapeHtml(order.status || '—')}</div>
+        <div class="sd-modal__value">${escapeHtml(statusLabelByKey[statusKey] || order.status || '—')}</div>
+        ${actionsHtml ? `
+          <div
+            class="sd-modal__actions"
+            style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;"
+          >
+            ${actionsHtml}
+          </div>
+        ` : ''}
       </div>
       <div class="sd-modal__field">
         <div class="sd-modal__label">Student</div>
@@ -412,14 +464,6 @@ function renderOrderModal(order, mode) {
         <div class="sd-modal__value">${escapeHtml(order.notes)}</div>
       </div>
     </div>
-    <div style="margin-top:12px;">
-      <div class="sd-modal__label">Next step</div>
-      <div class="sd-modal__value sd-modal__muted">
-        ${mode === 'process'
-          ? 'Mark as Processing, assign staff, and confirm payment (mock flow).'
-          : 'Review details and continue processing (mock flow).'}
-      </div>
-    </div>
   `;
 
   openStaffModal(title, body);
@@ -440,10 +484,55 @@ document.addEventListener('click', (e) => {
 
   const actionBtn = e.target.closest('.btn-action');
   if (actionBtn && !actionBtn.classList.contains('release')) {
-    const label = actionBtn.textContent.trim().toLowerCase();
     const tr = actionBtn.closest('tr');
     const order = getOrderFromRow(tr);
-    renderOrderModal(order, label === 'process' ? 'process' : 'view');
+    renderOrderModal(order, 'process');
+    return;
+  }
+
+  const modalAction = e.target.closest('.sd-modal__action');
+  if (modalAction) {
+    const orderId = modalAction.getAttribute('data-order-id') || '';
+    const statusKey = modalAction.getAttribute('data-status-key') || '';
+    if (!orderId || !statusKey) return;
+
+    const table = document.getElementById('orderQueueTable');
+    const tbody = table ? table.querySelector('tbody') : null;
+    if (!tbody) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const targetRow = rows.find(tr => {
+      const td = tr.querySelector('td');
+      return td && td.textContent.trim() === orderId;
+    });
+
+    if (!targetRow) return;
+
+    const badge = targetRow.querySelector('.badge');
+    if (!badge) return;
+
+    const statusClassByKey = {
+      pending: 'badge-pending',
+      processing: 'badge-process',
+      ready: 'badge-ready',
+      completed: 'badge-complete',
+    };
+
+    const statusLabelByKey = {
+      pending: 'Pending',
+      processing: 'Processing',
+      ready: 'Ready for Pickup',
+      completed: 'Completed',
+    };
+
+    Object.keys(statusClassByKey).forEach(k => badge.classList.remove(statusClassByKey[k]));
+    const cls = statusClassByKey[statusKey] || statusClassByKey.pending;
+    const label = statusLabelByKey[statusKey] || statusLabelByKey.pending;
+    badge.classList.add(cls);
+    badge.textContent = label;
+
+    renderDashboardMetricsAndTransactions();
+    closeStaffModal();
   }
 });
 
@@ -541,6 +630,9 @@ function renderDashboardMetricsAndTransactions() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
   renderDashboardMetricsAndTransactions();
   renderAnalyticsMockCharts();
   setupOrderQueueSorting();

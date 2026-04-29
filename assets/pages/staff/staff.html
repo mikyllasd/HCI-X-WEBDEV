@@ -3,12 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Staff Dashboard</title>
+    <title>UPRESSease – Staff Portal</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
   </head>
   <body class="staff-dashboard-body">
-    <div class="staff-layout sd-layout">
-      <aside class="staff-sidebar sd-sidebar">
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar sd-sidebar"
+        role="navigation"
+        aria-label="Staff sidebar"
+      >
         <div class="sd-sidebarTop">
           <div class="sd-brand">
             <div class="sd-brand__logo" aria-hidden="true">
@@ -16,7 +27,7 @@
             </div>
             <div class="sd-brand__text">
               <div class="sd-brand__name">UPRESSease</div>
-              <div class="sd-brand__sub">Admin Portal</div>
+              <div class="sd-brand__sub">Staff Portal</div>
             </div>
           </div>
 
@@ -83,7 +94,11 @@
           </a>
 
           <div class="logout-container">
-            <a class="sd-logout" href="staff.html" aria-label="Logout">
+            <a
+              class="sd-logout"
+              href="../../pages/admin-login-entry-point.html"
+              aria-label="Logout"
+            >
               <span class="sd-logout__icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path
@@ -107,10 +122,14 @@
         </nav>
       </aside>
 
-      <main class="staff-main sd-main">
-        <div class="staff-page active" id="page-dashboard">
+      <main class="main-content staff-main sd-main" role="main">
+        <section
+          class="staff-page active"
+          id="page-dashboard"
+          aria-labelledby="staff-dash-heading"
+        >
           <header class="sd-header">
-            <h1 class="sd-title">Dashboard</h1>
+            <h1 class="sd-title" id="staff-dash-heading">Dashboard</h1>
             <div class="sd-subtitle">
               Today's Overview - Monday, April 27, 2026
             </div>
@@ -325,11 +344,15 @@
               View Analytics
             </button>
           </section>
-        </div>
+        </section>
 
-        <div class="staff-page" id="page-analytics">
+        <section
+          class="staff-page"
+          id="page-analytics"
+          aria-labelledby="staff-analytics-heading"
+        >
           <header class="sd-header">
-            <h1 class="sd-title">Analytics</h1>
+            <h1 class="sd-title" id="staff-analytics-heading">Analytics</h1>
             <div class="sd-subtitle">
               Mock performance charts for today and this week
             </div>
@@ -389,12 +412,18 @@
               <div class="sd-chart__legend" id="orderTrendLegend"></div>
             </div>
           </section>
-        </div>
+        </section>
 
-        <div class="staff-page" id="page-order-queue">
-          <header class="staff-header">
-            <h1>Order Queue</h1>
-            <p>All incoming orders that need to be processed</p>
+        <section
+          class="staff-page"
+          id="page-order-queue"
+          aria-labelledby="staff-order-queue-heading"
+        >
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-order-queue-heading">Order Queue</h1>
+              <p>All incoming orders that need to be processed</p>
+            </div>
           </header>
 
           <div class="staff-card-grid" style="margin-bottom: 18px">
@@ -420,10 +449,10 @@
             </div>
           </div>
 
-          <div class="staff-panel-full">
+          <div class="staff-panel-full card sp">
             <h3>Queue List</h3>
             <div class="staff-table-wrap">
-              <table id="orderQueueTable">
+              <table id="orderQueueTable" class="data-table">
                 <thead>
                   <tr>
                     <th
@@ -482,7 +511,7 @@
                     <td>Document Printing</td>
                     <td>Apr 27, 2026</td>
                     <td><span class="badge badge-pending">Pending</span></td>
-                    <td><button class="btn-action">Process</button></td>
+                    <td><button class="btn-action">View</button></td>
                   </tr>
                   <tr>
                     <td>#1026</td>
@@ -490,7 +519,7 @@
                     <td>Tarpaulin Print</td>
                     <td>Apr 27, 2026</td>
                     <td><span class="badge badge-pending">Pending</span></td>
-                    <td><button class="btn-action">Process</button></td>
+                    <td><button class="btn-action">View</button></td>
                   </tr>
                   <tr>
                     <td>#1027</td>
@@ -514,20 +543,26 @@
                     <td>Mug Printing</td>
                     <td>Apr 26, 2026</td>
                     <td><span class="badge badge-pending">Pending</span></td>
-                    <td><button class="btn-action">Process</button></td>
+                    <td><button class="btn-action">View</button></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="staff-page" id="page-qr-scanner">
-          <header class="staff-header">
-            <h1>QR Scanner</h1>
-            <p>Scan student QR codes to confirm release</p>
+        <section
+          class="staff-page"
+          id="page-qr-scanner"
+          aria-labelledby="staff-qr-heading"
+        >
+          <header class="staff-header page-dark-header">
+            <div>
+              <h1 id="staff-qr-heading">QR Scanner</h1>
+              <p>Scan student QR codes to confirm release</p>
+            </div>
           </header>
-          <div class="staff-panel-full">
+          <div class="staff-panel-full card sp">
             <h3>Scanner</h3>
             <div class="sd-scan">
               <div class="sd-scan__toolbar">
@@ -592,12 +627,18 @@
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="staff-page" id="page-ready-release">
-          <header class="staff-header">
-            <h1>Ready to Release</h1>
-            <p>Orders finished and waiting for student pickup</p>
+        <section
+          class="staff-page"
+          id="page-ready-release"
+          aria-labelledby="staff-ready-heading"
+        >
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-ready-heading">Ready to Release</h1>
+              <p>Orders finished and waiting for student pickup</p>
+            </div>
           </header>
 
           <div class="staff-card-grid" style="margin-bottom: 18px">
@@ -623,10 +664,10 @@
             </div>
           </div>
 
-          <div class="staff-panel-full">
+          <div class="staff-panel-full card sp">
             <h3>Ready for Pickup List</h3>
             <div class="staff-table-wrap">
-              <table>
+              <table class="data-table">
                 <thead>
                   <tr>
                     <th>Order ID</th>
@@ -682,12 +723,18 @@
               </table>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="staff-page" id="page-completed">
-          <header class="staff-header">
-            <h1>Completed Orders</h1>
-            <p>All orders that have been successfully released</p>
+        <section
+          class="staff-page"
+          id="page-completed"
+          aria-labelledby="staff-completed-heading"
+        >
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-completed-heading">Completed Orders</h1>
+              <p>All orders that have been successfully released</p>
+            </div>
           </header>
 
           <div class="staff-card-grid" style="margin-bottom: 18px">
@@ -713,10 +760,10 @@
             </div>
           </div>
 
-          <div class="staff-panel-full">
+          <div class="staff-panel-full card sp">
             <h3>Completed Order History</h3>
             <div class="staff-table-wrap">
-              <table>
+              <table class="data-table">
                 <thead>
                   <tr>
                     <th>Order ID</th>
@@ -780,7 +827,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </section>
       </main>
     </div>
 

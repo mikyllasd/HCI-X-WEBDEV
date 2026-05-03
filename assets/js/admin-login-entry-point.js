@@ -56,7 +56,7 @@ function handleLogin() {
     const record = CREDENTIALS[username.toLowerCase()];
     if (record && record.password === password) {
       showAlert(
-        `✓ Welcome, ${record.role}! Redirecting to dashboard…`,
+        `Welcome, ${record.role}! Redirecting to dashboard…`,
         "success",
       );
       localStorage.setItem(

@@ -540,13 +540,13 @@ function policies() {
       <div class="summary-row">
         <span class="summary-key">QR Code Pickup:</span>
         <span class="summary-val ${state.policies.qrCode ? "enabled" : "disabled"}" id="sumQR">
-          ${state.policies.qrCode ? "✓ Enabled" : "✗ Inactive"}
+          ${state.policies.qrCode ? "Enabled" : "Inactive"}
         </span>
       </div>
       <div class="summary-row">
         <span class="summary-key">Discount System:</span>
         <span class="summary-val ${state.policies.discounts ? "enabled" : "disabled"}" id="sumDiscount">
-          ${state.policies.discounts ? "✓ Enabled" : "✗ Inactive"}
+          ${state.policies.discounts ? "Enabled" : "Inactive"}
         </span>
       </div>
     </div>
@@ -565,7 +565,7 @@ function policies() {
       ? "QR codes are required for order pickup"
       : "QR code feature is disabled";
     const el = document.getElementById("sumQR");
-    el.textContent = state.policies.qrCode ? "✓ Enabled" : "✗ Inactive";
+    el.textContent = state.policies.qrCode ? "Enabled" : "Inactive";
     el.className = `summary-val ${state.policies.qrCode ? "enabled" : "disabled"}`;
   });
 
@@ -576,7 +576,7 @@ function policies() {
       ? "Discount feature is active"
       : "Discount feature is disabled";
     const el = document.getElementById("sumDiscount");
-    el.textContent = state.policies.discounts ? "✓ Enabled" : "✗ Inactive";
+    el.textContent = state.policies.discounts ? "Enabled" : "Inactive";
     el.className = `summary-val ${state.policies.discounts ? "enabled" : "disabled"}`;
   });
 
@@ -858,7 +858,7 @@ function settings() {
 
       <div class="maintenance-alert ${s.maintenance ? "active" : "normal"}" id="maintenanceAlert">
         <div class="maintenance-alert-text">
-          <strong id="maintenanceStatus">${s.maintenance ? "⚠ Maintenance Mode Active" : "System Operating Normally"}</strong>
+          <strong id="maintenanceStatus">${s.maintenance ? "Maintenance mode active" : "System operating normally"}</strong>
           <span id="maintenanceSubStatus">${s.maintenance ? "Students cannot access the system" : "System is available to all users"}</span>
         </div>
         <button class="btn btn-sm ${s.maintenance ? "btn-danger" : "btn-ghost"}" id="maintenanceToggleBtn">
@@ -894,7 +894,7 @@ function settings() {
 
       if (s.maintenance) {
         alert.className = "maintenance-alert active";
-        statusEl.textContent = "⚠ Maintenance Mode Active";
+        statusEl.textContent = "Maintenance mode active";
         subStatusEl.textContent = "Students cannot access the system";
         btn.className = "btn btn-sm btn-danger";
         btn.textContent = "Disable";

@@ -53,12 +53,12 @@ function renderCartPage() {
                     <span class="cart-qty-val">${item.qty || 1}</span>
                     <button class="cart-qty-btn" onclick="cartChangeQty('${item.cartId}', 1)">+</button>
                     <span class="cart-unit-price">@ ₱${unitPrice.toFixed(2)}</span>
-                    <button class="cart-edit-btn" onclick="openEditModal('${item.cartId}')">✏️ Edit</button>
+                    <button type="button" class="cart-edit-btn" onclick="openEditModal('${item.cartId}')"><span class="upress-icon upress-icon--edit" aria-hidden="true"></span> Edit</button>
                 </div>
             </div>
             <div class="cart-item-actions">
                 <div class="cart-item-price-tag">₱${parseFloat(item.total).toFixed(2)}</div>
-                <button class="cart-remove-btn" onclick="removeCartItem('${item.cartId}')">🗑 Remove</button>
+                <button type="button" class="cart-remove-btn" onclick="removeCartItem('${item.cartId}')"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Remove</button>
             </div>
         </div>`;
     }).join('');

@@ -25,7 +25,7 @@ function buildLanyardCustomForms() {
     for (let i = 1; i <= qty; i++) {
         container.innerHTML += `
         <div style="border:1px solid #e0e0e0;border-radius:0.75rem;padding:1.25rem;margin-bottom:1rem;">
-            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">🎨 Design ${i} of ${qty}</div>
+            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">Design ${i} of ${qty}</div>
             <div class="grid-2">
                 <div class="field"><label class="label">Length (cm)</label><input class="input" type="number" id="lanyard-len-${i}" placeholder="e.g. 90" min="1"></div>
                 <div class="field"><label class="label">Width (cm)</label><input class="input" type="number" id="lanyard-wid-${i}" placeholder="e.g. 2" min="1"></div>
@@ -34,7 +34,7 @@ function buildLanyardCustomForms() {
                 <label class="label">Upload Design File</label>
                 <label class="dropzone" style="padding:1.25rem;cursor:pointer;">
                     <input type="file" style="display:none;" id="lanyard-file-${i}" accept="image/*,.pdf">
-                    <div style="font-size:1.25rem;">🎨</div>
+                    <div style="display:flex;justify-content:center;"><span class="upress-icon upress-icon--palette upress-icon--md" style="color:#8B0000" aria-hidden="true"></span></div>
                     <div style="color:#a32020;font-weight:700;font-size:0.875rem;">Click to upload design ${i}</div>
                     <div style="color:#999;font-size:0.75rem;">PNG, JPG, PDF (MAX. 20MB)</div>
                 </label>
@@ -47,7 +47,7 @@ function buildLanyardCustomForms() {
         const f = document.getElementById(`lanyard-file-${i}`);
         if (f) f.addEventListener('change', (function(idx) { return function() {
             const d = document.getElementById(`lanyard-fname-${idx}`);
-            if (d && this.files[0]) { d.textContent = '📎 ' + this.files[0].name; d.style.display = 'block'; }
+            if (d && this.files[0]) { d.innerHTML = '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(this.files[0].name); d.style.display = 'block'; }
         }; })(i));
     }
 }
@@ -95,7 +95,7 @@ function lanyardOrderNow() {
 function lanyardAddToCart() {
     if (!validateLanyard()) return;
     Cart.add(getLanyardOrderData());
-    showAlert('Added to Cart! 🛒', `${_lanyardTypeName} × ${document.getElementById('lanyard-qty')?.value || 1} added to your cart.`);
+    showAlert('Added to Cart', `${_lanyardTypeName} × ${document.getElementById('lanyard-qty')?.value || 1} added to your cart.`);
 }
 
 updateLanyardSummary();

@@ -61,13 +61,13 @@
       <div class="summary-row">
         <span class="summary-key">QR Code Pickup:</span>
         <span class="summary-val ${pol.qrCode ? "enabled" : "disabled"}" id="sumQR">
-          ${pol.qrCode ? "✓ Enabled" : "✗ Inactive"}
+          ${pol.qrCode ? "Enabled" : "Inactive"}
         </span>
       </div>
       <div class="summary-row">
         <span class="summary-key">Discount System:</span>
         <span class="summary-val ${pol.discounts ? "enabled" : "disabled"}" id="sumDiscount">
-          ${pol.discounts ? "✓ Enabled" : "✗ Inactive"}
+          ${pol.discounts ? "Enabled" : "Inactive"}
         </span>
       </div>
     </div>
@@ -86,7 +86,7 @@
       ? "QR codes are required for order pickup"
       : "QR code feature is disabled";
     const el = document.getElementById("sumQR");
-    el.textContent = pol.qrCode ? "✓ Enabled" : "✗ Inactive";
+    el.textContent = pol.qrCode ? "Enabled" : "Inactive";
     el.className = `summary-val ${pol.qrCode ? "enabled" : "disabled"}`;
   });
 
@@ -96,7 +96,7 @@
       ? "Discount feature is active"
       : "Discount feature is disabled";
     const el = document.getElementById("sumDiscount");
-    el.textContent = pol.discounts ? "✓ Enabled" : "✗ Inactive";
+    el.textContent = pol.discounts ? "Enabled" : "Inactive";
     el.className = `summary-val ${pol.discounts ? "enabled" : "disabled"}`;
   });
 

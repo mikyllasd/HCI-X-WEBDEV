@@ -60,7 +60,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
+}
+
+.portal-brand-icon .upress-icon {
+  color: #fff;
 }
 
 .portal-brand h1 {
@@ -149,6 +152,12 @@ label.portal-label {
   cursor: pointer;
   color: var(--muted);
   padding: 0.25rem;
+}
+
+.portal-toggle-pw .upress-icon {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .portal-row {

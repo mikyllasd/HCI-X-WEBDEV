@@ -14,7 +14,7 @@
         <span class="appbar-title">Lanyard Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button class="appbar-action" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-badge"></span></button>
+    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span></button>
 </header>
 <main class="page" id="lanyard-page">
     <div class="layout-2col">
@@ -26,19 +26,19 @@
                 </div>
                 <div class="options">
                     <div class="option active" onclick="selectLanyardType('wmsu', this)">
-                        <div class="option-icon">🎓</div>
+                        <div class="option-icon"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></div>
                         <div class="option-name">WMSU Official Lanyard</div>
                         <div class="option-desc">Standard WMSU lanyard</div>
                         <div class="option-price">₱120</div>
                     </div>
                     <div class="option" onclick="selectLanyardType('department', this)">
-                        <div class="option-icon">🏛</div>
+                        <div class="option-icon"><span class="upress-icon upress-icon--building" aria-hidden="true"></span></div>
                         <div class="option-name">Department Lanyard</div>
                         <div class="option-desc">Customized with department</div>
                         <div class="option-price">₱150</div>
                     </div>
                     <div class="option" onclick="selectLanyardType('custom', this)">
-                        <div class="option-icon">✏️</div>
+                        <div class="option-icon"><span class="upress-icon upress-icon--edit" aria-hidden="true"></span></div>
                         <div class="option-name">Customize</div>
                         <div class="option-desc">Create your own design</div>
                         <div class="option-price">₱200</div>
@@ -74,7 +74,7 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="lanyard-sum-total">₱120.00</span>
                     </div>
-                    <button class="btn-order" onclick="lanyardOrderNow()">🛒 Order Now</button>
+                    <button type="button" class="btn-order" onclick="lanyardOrderNow()"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now</button>
                     <button class="btn-cart" onclick="lanyardAddToCart()">+ Add to Cart</button>
                 </div>
             </div>

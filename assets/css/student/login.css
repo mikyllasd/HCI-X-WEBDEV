@@ -44,8 +44,8 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
-    font-size: 1.75rem;
 }
+.login-icon .upress-icon { color: #fff; }
 .login-bg input,
 .login-bg select {
     width: 100%;
@@ -119,10 +119,13 @@
     animation: modalIn 0.2s ease;
 }
 .fp-modal-icon {
-    font-size: 2rem;
     margin-bottom: 0.5rem;
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
+.fp-modal-icon .upress-icon { color: #8b0000; }
+.fp-modal-icon--success .upress-icon { color: #27ae60; }
 .fp-modal-title {
     margin: 0 0 0.375rem;
     font-size: 1.125rem;

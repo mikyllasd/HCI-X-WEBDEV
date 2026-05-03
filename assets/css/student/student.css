@@ -2,6 +2,8 @@
    UPRESSease — student.css
    ============================================================ */
 
+@import url("../upress-icons.css");
+
 /* ===================== RESET & BASE ===================== */
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", system-ui, sans-serif; }
 body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; overflow-x: hidden; }
@@ -36,6 +38,7 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 .appbar-subtitle { font-size: 0.75rem; color: #f0f0f0; opacity: 0.9; }
 .appbar-action { color: white; font-size: 0.9375rem; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; background: none; border: none; cursor: pointer; }
 .appbar-action:hover { opacity: 0.8; }
+.appbar-action .upress-icon { width: 1.125rem; height: 1.125rem; color: #fff; }
 .cart-badge { background: #fff; color: #8B0000; border-radius: 50%; width: 1.25rem; height: 1.25rem; display: none; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
 
 /* ===================== DASHBOARD NAVBAR ===================== */
@@ -91,8 +94,10 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 .btn-proceed:hover { background-color: #871a1a; }
 .btn-order { width: 100%; padding: 0.75rem; background-color: #a32020; color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; font-family: "Segoe UI", sans-serif; cursor: pointer; transition: background-color 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; }
 .btn-order:hover { background-color: #871a1a; }
+.btn-order .upress-icon { color: #fff; }
 .btn-cart { width: 100%; padding: 0.75rem; background-color: white; color: #a32020; border: 1.5px solid #a32020; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; font-family: "Segoe UI", sans-serif; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.5rem; }
 .btn-cart:hover { background-color: #fff0f0; }
+.btn-cart .upress-icon { color: #a32020; }
 
 /* ===================== DASHBOARD ===================== */
 .dashboard-container { max-width: 75rem; width: 100%; margin: 2.5rem auto; padding: 0 1.25rem; }
@@ -129,7 +134,8 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 .card { width: 100%; background: white; border-radius: 0.9375rem; padding: 1.5rem; box-shadow: 0 0.125rem 0.625rem rgba(0,0,0,0.06); }
 .card-sticky { position: sticky; top: 5rem; }
 .card-head { margin-bottom: 1rem;  }
-.card-title { font-size: 1.125rem; font-weight: 700; color: #333; }
+.card-title { font-size: 1.125rem; font-weight: 700; color: #333; display: flex; align-items: center; gap: 0.5rem; }
+.card-title > .upress-icon { width: 1.25rem; height: 1.25rem; color: #a32020; }
 .card-subtitle { font-size: 0.8125rem; color: #777; margin-top: 0.25rem; }
 .card-blue { background: #eef4ff; border: 1px solid #d0e2ff; }
 
@@ -172,6 +178,13 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 .option-name { font-size: 1rem; font-weight: 700; color: #333; }
 .option-desc { font-size: 0.8125rem; color: #777; line-height: 1.4; }
 .option-price { font-size: 1rem; font-weight: 700; color: #a32020; margin-top: 0.25rem; }
+
+.dropzone-icon .upress-icon { width: 2.125rem; height: 2.125rem; color: #8b0000; }
+.encrypt-icon .upress-icon { width: 1.125rem; height: 1.125rem; color: #3a6bc9; }
+.option-img-icon .upress-icon,
+.option-icon .upress-icon { width: 2rem; height: 2rem; color: #8b0000; }
+.input-icon .upress-icon { width: 1.125rem; height: 1.125rem; color: #777; }
+.service-icon-box .upress-icon { width: 1.75rem; height: 1.75rem; color: #fff; }
 
 /* ===================== ORDER SUMMARY ===================== */
 .summary { display: flex; flex-direction: column; gap: 0.9375rem; }
@@ -270,7 +283,8 @@ body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; over
 /* ===================== CONFIRM PAGE ===================== */
 .confirm-wrapper { max-width: 36rem; margin: 3rem auto; padding: 0 1.25rem; }
 .confirm-card { background: white; border-radius: 1rem; padding: 2.5rem; box-shadow: 0 0.25rem 1rem rgba(0,0,0,0.08); text-align: center; }
-.confirm-icon { font-size: 3rem; margin-bottom: 1rem; }
+.confirm-icon { display: flex; justify-content: center; margin-bottom: 1rem; }
+.confirm-icon .upress-icon { width: 3rem; height: 3rem; color: #27ae60; }
 .confirm-card h2 { font-size: 1.5rem; color: #27ae60; margin-bottom: 0.5rem; }
 .confirm-card p { color: #777; margin-bottom: 1.5rem; }
 .confirm-details { background: #f8f8f8; border-radius: 0.75rem; padding: 1.25rem; text-align: left; margin-bottom: 1.5rem; }

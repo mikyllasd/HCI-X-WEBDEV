@@ -25,10 +25,10 @@ function buildMugPhotoForms() {
     for (let i = 1; i <= qty; i++) {
         container.innerHTML += `
         <div style="border:1px solid #e0e0e0;border-radius:0.75rem;padding:1.25rem;margin-bottom:1rem;">
-            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">📸 Mug ${i} of ${qty} — Upload Photo</div>
+            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">Mug ${i} of ${qty} — Upload Photo</div>
             <label class="dropzone" style="padding:1.25rem;cursor:pointer;">
                 <input type="file" style="display:none;" id="mug-photo-${i}" accept="image/*">
-                <div style="font-size:1.5rem;">🖼️</div>
+                <div style="display:flex;justify-content:center;"><span class="upress-icon upress-icon--image upress-icon--lg" style="color:#8B0000" aria-hidden="true"></span></div>
                 <div style="color:#a32020;font-weight:700;font-size:0.875rem;">Click to upload photo for Mug ${i}</div>
                 <div style="color:#999;font-size:0.75rem;">PNG, JPG (MAX. 20MB)</div>
             </label>
@@ -43,7 +43,7 @@ function buildMugPhotoForms() {
         const f = document.getElementById(`mug-photo-${i}`);
         if (f) f.addEventListener('change', (function(idx) { return function() {
             const d = document.getElementById(`mug-file-${idx}`);
-            if (d && this.files[0]) { d.textContent = '📎 ' + this.files[0].name; d.style.display = 'block'; }
+            if (d && this.files[0]) { d.innerHTML = '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(this.files[0].name); d.style.display = 'block'; }
         }; })(i));
     }
 }
@@ -97,7 +97,7 @@ function mugOrderNow() {
 function mugAddToCart() {
     if (!validateMug()) return;
     Cart.add(getMugOrderData());
-    showAlert('Added to Cart! 🛒', `${_mugTypeName} × ${document.getElementById('mug-qty')?.value || 1} added to your cart.`);
+    showAlert('Added to Cart', `${_mugTypeName} × ${document.getElementById('mug-qty')?.value || 1} added to your cart.`);
 }
 
 updateMugSummary();

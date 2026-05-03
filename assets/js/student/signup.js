@@ -43,7 +43,12 @@
         const lead3 = document.getElementById("signup-step3-lead");
         const docCor = document.getElementById("signup-doc-cor-label");
 
-        if (avatar) avatar.textContent = type === "faculty" ? "🧑‍🏫" : "🎓";
+        if (avatar) {
+            avatar.innerHTML =
+                type === "faculty"
+                    ? '<span class="upress-icon upress-icon--users upress-icon--md" aria-hidden="true"></span>'
+                    : '<span class="upress-icon upress-icon--grad upress-icon--md" aria-hidden="true"></span>';
+        }
 
         if (type === "faculty") {
             if (studentBlock) studentBlock.classList.add("signup-hidden");

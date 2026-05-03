@@ -66,16 +66,16 @@ function proceedToPayMethod() {
     if (phoneChanged && !window._checkoutOtpVerified) {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         showConfirm(
-            '📱 Phone Number Changed',
+            'Phone Number Changed',
             `You entered a different number (${phone}) from your registered one.\n\nAn OTP is required for verification.\nDemo OTP: ${code}\n\nProceed?`,
             () => {
                 showPrompt('Enter OTP', `Enter the 6-digit OTP sent to ${phone}`, 'Enter OTP here', entered => {
                     if (entered === code) {
                         window._checkoutOtpVerified = true;
                         Checkout.set({ customerInfo: { name, date, phone } });
-                        showAlert('✅ Verified!', 'Phone verified.', () => window.location.href = 'pay-method.html');
+                        showAlert('Verified', 'Phone verified.', () => window.location.href = 'pay-method.html');
                     } else {
-                        showAlert('❌ Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
+                        showAlert('Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
                     }
                 });
             }

@@ -15,19 +15,19 @@
 <!-- Right Sidebar -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <span class="sidebar-logo">🎓</span>
+        <span class="sidebar-logo"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></span>
         <div class="sidebar-header-text">
             <span class="sidebar-title">UPRESSease</span>
             <span class="sidebar-sub">WMSU</span>
         </div>
-        <button class="sidebar-close-btn" onclick="closeSidebar()">✕</button>
+        <button type="button" class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close menu"><span class="upress-icon upress-icon--x" aria-hidden="true"></span></button>
     </div>
 
     <!-- Sidebar Tabs -->
     <div class="sidebar-tabs">
-        <button class="sidebar-tab active" onclick="switchSidebarTab('orders', this)">📦 My Orders</button>
-        <button class="sidebar-tab" onclick="switchSidebarTab('cart', this)">🛒 Cart</button>
-        <button class="sidebar-tab" onclick="switchSidebarTab('history', this)">🕓 History</button>
+        <button type="button" class="sidebar-tab active" onclick="switchSidebarTab('orders', this)"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span> My Orders</button>
+        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('cart', this)"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart</button>
+        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('history', this)"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span> History</button>
     </div>
 
     <!-- My Orders Panel -->
@@ -35,14 +35,14 @@
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
                 <p class="sidebar-section-label">Active Orders</p>
-                <button class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">
+                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">
                     ⤢ Full View
                 </button>
             </div>
             <div id="sidebar-orders-list" class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">📦</div>
+                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
                 <p>No active orders yet.</p>
-                <button class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
+                <button type="button" class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
             </div>
         </div>
     </div>
@@ -64,8 +64,8 @@
                     <span class="sidebar-cart-total-label">Selected Total</span>
                     <span class="sidebar-cart-total-amount" id="sidebar-cart-total">₱0.00</span>
                 </div>
-                <button class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()">🛍 Checkout Selected</button>
-                <button class="sidebar-clear-btn" onclick="sidebarClearCart()">🗑 Clear Cart</button>
+                <button type="button" class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()"><span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Checkout Selected</button>
+                <button type="button" class="sidebar-clear-btn" onclick="sidebarClearCart()"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart</button>
             </div>
         </div>
     </div>
@@ -75,12 +75,12 @@
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
                 <p class="sidebar-section-label">Order History</p>
-                <button class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">
+                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">
                     ⤢ Full View
                 </button>
             </div>
             <div id="sidebar-history-list" class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">🕓</div>
+                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span></div>
                 <p>No completed orders yet.</p>
             </div>
         </div>
@@ -90,18 +90,18 @@
 <!-- Navbar -->
 <header class="dashboard-navbar">
     <div class="nav-left">
-        <div class="nav-logo">🎓</div>
+        <div class="nav-logo"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></div>
         <div class="nav-title">
             <h1>UPRESSease</h1>
             <p>Western Mindanao State University</p>
         </div>
     </div>
     <div class="nav-right">
-        <button class="nav-icon-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
-            🔔
+        <button type="button" class="nav-icon-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications" aria-label="Notifications">
+            <span class="upress-icon upress-icon--bell" aria-hidden="true"></span>
             <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
         </button>
-        <button class="nav-icon-btn sidebar-toggle-btn" onclick="openSidebar()" title="Menu">
+        <button type="button" class="nav-icon-btn sidebar-toggle-btn" onclick="openSidebar()" title="Menu" aria-label="Open menu">
             <span class="hamburger-icon">
                 <span></span><span></span><span></span>
             </span>
@@ -113,11 +113,11 @@
 <!-- Notification Dropdown -->
 <div class="notif-panel" id="notif-panel" style="display:none;">
     <div class="notif-panel-header">
-        <span class="notif-panel-title">🔔 Notifications</span>
-        <button class="notif-clear-btn" onclick="clearNotifications()">Clear all</button>
+        <span class="notif-panel-title"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span> Notifications</span>
+        <button type="button" class="notif-clear-btn" onclick="clearNotifications()">Clear all</button>
     </div>
     <div id="notif-list" class="notif-empty">
-        <div class="sidebar-empty-icon">🔔</div>
+        <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span></div>
         <p>No notifications yet.</p>
     </div>
 </div>
@@ -144,8 +144,8 @@
 
     <div id="dash-cart-preview" style="display:none;" class="dash-cart-preview-box">
         <div class="dash-cart-preview-header">
-            <span>🛒 Cart Preview</span>
-            <button onclick="openSidebarCart()" class="dash-view-cart-btn">View Full Cart →</button>
+            <span><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart Preview</span>
+            <button type="button" onclick="openSidebarCart()" class="dash-view-cart-btn">View Full Cart →</button>
         </div>
         <div id="dash-cart-preview-items"></div>
         <div class="dash-cart-preview-total">Total: <strong id="dash-cart-preview-total">₱0.00</strong></div>
@@ -154,34 +154,34 @@
     <h2 class="services-title">Our Services</h2>
     <div class="services-grid-dash">
         <div class="service-card-dash">
-            <div class="service-icon-dash">🖨️</div>
+            <div class="service-icon-dash"><span class="upress-icon upress-icon--print" aria-hidden="true"></span></div>
             <h3>Printing</h3>
             <p>Document printing services</p>
-            <button class="btn-red" onclick="serviceHref('printing.html')">Order Now</button>
+            <button type="button" class="btn-red" onclick="serviceHref('printing.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
-            <div class="service-icon-dash">📖</div>
+            <div class="service-icon-dash"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
             <h3>Binding</h3>
             <p>Professional binding services</p>
-            <button class="btn-red" onclick="serviceHref('binding.html')">Order Now</button>
+            <button type="button" class="btn-red" onclick="serviceHref('binding.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
-            <div class="service-icon-dash">🎟️</div>
+            <div class="service-icon-dash"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
             <h3>Lanyards</h3>
             <p>Custom lanyards</p>
-            <button class="btn-red" onclick="serviceHref('lanyard.html')">Order Now</button>
+            <button type="button" class="btn-red" onclick="serviceHref('lanyard.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
-            <div class="service-icon-dash">☕</div>
+            <div class="service-icon-dash"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></div>
             <h3>Mug Printing</h3>
             <p>Customized mug printing services</p>
-            <button class="btn-red" onclick="serviceHref('mug.html')">Order Now</button>
+            <button type="button" class="btn-red" onclick="serviceHref('mug.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
-            <div class="service-icon-dash">🆔</div>
+            <div class="service-icon-dash"><span class="upress-icon upress-icon--id" aria-hidden="true"></span></div>
             <h3>ID printing</h3>
             <p>New, lost, damaged, or renewal</p>
-            <button class="btn-red" onclick="serviceHref('id-printing.html')">Start request</button>
+            <button type="button" class="btn-red" onclick="serviceHref('id-printing.html')">Start request</button>
         </div>
     </div>
 </div>

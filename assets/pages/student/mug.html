@@ -14,7 +14,7 @@
         <span class="appbar-title">Mug Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button class="appbar-action" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-badge"></span></button>
+    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span></button>
 </header>
 <main class="page" id="mug-page">
     <div class="layout-2col">
@@ -26,19 +26,19 @@
                 </div>
                 <div class="options">
                     <div class="option active" onclick="selectMugType('wmsu', this)">
-                        <div class="option-img-box"><span class="option-img-icon">☕</span></div>
+                        <div class="option-img-box"><span class="option-img-icon"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></span></div>
                         <div class="option-name">WMSU Logo Mug</div>
                         <div class="option-desc">Classic white mug with WMSU official logo</div>
                         <div class="option-price">₱200</div>
                     </div>
                     <div class="option" onclick="selectMugType('department', this)">
-                        <div class="option-img-box"><span class="option-img-icon">☕</span></div>
+                        <div class="option-img-box"><span class="option-img-icon"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></span></div>
                         <div class="option-name">Department Mug</div>
                         <div class="option-desc">Customized with department name and logo</div>
                         <div class="option-price">₱220</div>
                     </div>
                     <div class="option" onclick="selectMugType('photo', this)">
-                        <div class="option-img-box"><span class="option-img-icon">☕</span></div>
+                        <div class="option-img-box"><span class="option-img-icon"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></span></div>
                         <div class="option-name">Photo Print Mug</div>
                         <div class="option-desc">Full-color photo printing on ceramic mug</div>
                         <div class="option-price">₱250</div>
@@ -94,7 +94,7 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="mug-sum-total">₱200.00</span>
                     </div>
-                    <button class="btn-order" onclick="mugOrderNow()">🛒 Order Now</button>
+                    <button type="button" class="btn-order" onclick="mugOrderNow()"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now</button>
                     <button class="btn-cart" onclick="mugAddToCart()">+ Add to Cart</button>
                 </div>
             </div>

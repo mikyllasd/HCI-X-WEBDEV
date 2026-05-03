@@ -3,7 +3,15 @@ const fi = document.getElementById('print-file-input');
 if (fi) {
     fi.addEventListener('change', async function() {
         const d = document.getElementById('print-file-name');
-        if (d) { d.textContent = this.files[0] ? '📎 ' + this.files[0].name : ''; d.style.display = this.files[0] ? 'block' : 'none'; }
+        if (d) {
+            if (this.files[0]) {
+                d.innerHTML = '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(this.files[0].name);
+                d.style.display = 'block';
+            } else {
+                d.innerHTML = '';
+                d.style.display = 'none';
+            }
+        }
 
         const file = this.files && this.files[0] ? this.files[0] : null;
         if (!file) return;
@@ -14,8 +22,10 @@ if (fi) {
         const setStatus = (msg) => {
             const el = document.getElementById('print-file-name');
             if (!el) return;
-            const base = file ? `📎 ${file.name}` : '';
-            el.textContent = msg ? `${base} — ${msg}` : base;
+            const baseHtml = file
+                ? '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(file.name)
+                : '';
+            el.innerHTML = msg ? `${baseHtml} — ${escHtml(msg)}` : baseHtml;
         };
 
         setStatus('Detecting pages…');
@@ -378,7 +388,7 @@ function printOrderNow() {
 function printAddToCart() {
     if (!validatePrint()) return;
     Cart.add(getPrintOrderData());
-    showAlert('Added to Cart! 🛒', 'Printing order added to your cart successfully.');
+    showAlert('Added to Cart', 'Printing order added to your cart successfully.');
 }
 
 calcPrintTotal();

@@ -1374,7 +1374,7 @@ function searchOrderById() {
   if (order) {
     result.className = "qr-result found";
     result.innerHTML = `
-      <strong>✓ Order Found</strong><br>
+      <strong>Order found</strong><br>
       <strong>Order ID:</strong> ${escHtml(order.id)}<br>
       <strong>Student:</strong> ${escHtml(order.email)}<br>
       <strong>Service:</strong> ${escHtml(order.service)}<br>
@@ -1387,7 +1387,7 @@ function searchOrderById() {
   } else {
     result.className = "qr-result not-found";
     result.innerHTML = `
-      <strong>✗ Order Not Found</strong><br>
+      <strong>Order not found</strong><br>
       No order matching <code>${escHtml(query)}</code> was found in the system.`;
   }
 }

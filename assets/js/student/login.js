@@ -128,7 +128,7 @@ function fpSendOTP() {
     // In a real app you'd send this via backend.
     // Here we show it in an alert so the user can "receive" it.
     showAlert(
-        '📩 OTP Sent',
+        'OTP sent',
         'A reset code has been sent to ' + email + '.\n\n' +
         '(Demo mode — your code is: ' + fpOTP + ')',
         function () {
@@ -186,7 +186,7 @@ function fpResend(e) {
     e.preventDefault();
     fpOTP = String(Math.floor(100000 + Math.random() * 900000));
     showAlert(
-        '📩 New Code Sent',
+        'New code sent',
         'A new reset code has been sent to ' + fpTargetEmail + '.\n\n' +
         '(Demo mode — your new code is: ' + fpOTP + ')'
     );

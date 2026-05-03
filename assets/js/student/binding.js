@@ -48,7 +48,7 @@ function bindingAddToCart() {
     if (!validateBinding()) return;
     Cart.add(getBindingOrderData());
     const qty = document.getElementById('binding-qty')?.value || 1;
-    showAlert('Added to Cart! 🛒', `${_bindingTypeName} × ${qty} added to your cart.`);
+    showAlert('Added to Cart', `${_bindingTypeName} × ${qty} added to your cart.`);
 }
 
 updateBindingSummary();

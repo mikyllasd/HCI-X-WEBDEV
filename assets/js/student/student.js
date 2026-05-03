@@ -50,11 +50,16 @@ const Orders = {
     add(orderData) {
         const orders = this.getAll();
         const orderId = 'ORD-' + Date.now();
+        const pm = orderData.paymentMethod || '';
+        const paymentStatus =
+            pm.indexOf('GCash') !== -1 ? 'awaiting_proof' : 'due_at_pickup';
         const fullOrder = {
             ...orderData,
             orderId,
             dateOrdered: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }),
-            status: 'Pending'
+            status: 'Pending',
+            paymentVerified: false,
+            paymentStatus
         };
         orders.unshift(fullOrder);
         this.save(orders);
@@ -205,10 +210,20 @@ function updateCartBadge() {
 // COLLEGE → COURSE DROPDOWN
 // ============================================================
 const courseByCollege = {
-    'College of Arts and Sciences':       ['BA English', 'BA Psychology', 'BS Biology', 'BS Mathematics'],
-    'College of Education':               ['BEEd', 'BSEd Math', 'BSEd Science', 'BSEd English'],
-    'College of Engineering':             ['BS Civil Engineering', 'BS Mechanical Engineering', 'BS Electrical Engineering', 'BS Computer Engineering'],
-    'College of Business Administration': ['BSBA Marketing', 'BSBA Finance', 'BSBA Management', 'BS Accountancy']
+    'College of Arts and Sciences': ['BA English', 'BA Psychology', 'BS Biology', 'BS Mathematics'],
+    'College of Education': ['BEEd', 'BSEd Math', 'BSEd Science', 'BSEd English'],
+    'College of Engineering': ['BS Civil Engineering', 'BS Mechanical Engineering', 'BS Electrical Engineering', 'BS Computer Engineering'],
+    'College of Business Administration': ['BSBA Marketing', 'BSBA Finance', 'BSBA Management', 'BS Accountancy'],
+    'College of Computing Studies': ['BS Computer Science', 'BS Information Technology', 'BS Information Systems'],
+    'College of Home Science and Industry': ['BS Hospitality Management', 'BS Nutrition', 'BS Fashion Design'],
+    'College of Law': ['JD'],
+    'College of Medicine': ['MD'],
+    'College of Nursing': ['BS Nursing'],
+    'College of Sports, Physical Education and Athletics': ['BPEd', 'BSPE'],
+    'College of Forestry and Environmental Studies': ['BS Forestry', 'BS Environmental Science'],
+    'College of Agriculture': ['BS Agriculture', 'BS Agricultural Engineering'],
+    'College of Social Science and Humanities': ['BA Political Science', 'BA Sociology', 'BS Public Administration'],
+    Other: ['Program to be confirmed at office'],
 };
 
 function populateCourses(collegeId, courseId) {

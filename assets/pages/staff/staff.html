@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/staff/staff-pos.css" />
   </head>
   <body class="staff-dashboard-body">
     <div class="app-wrapper staff-layout sd-layout">
@@ -30,7 +31,7 @@
           </div>
           <div>
             <span class="brand-name">UPRESSease</span>
-            <span class="brand-sub">Staff Portal</span>
+            <span class="brand-sub">Staff &amp; walk-in POS</span>
           </div>
         </div>
 
@@ -56,6 +57,12 @@
               >
                 <i data-lucide="layout-dashboard" aria-hidden="true"></i
                 ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="walk-in-pos">
+                <i data-lucide="store" aria-hidden="true"></i
+                ><span>Walk-in POS</span></a
               >
             </li>
             <li>
@@ -93,7 +100,7 @@
           <ul class="nav-list nav-list--bottom" role="list">
             <li>
               <a
-                href="../../pages/admin-login-entry-point.html"
+                href="../auth/portal.html"
                 class="nav-link nav-link--logout"
                 data-page="logout"
                 id="logout-btn"
@@ -263,7 +270,7 @@
                   <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
                   <span>Today's Transactions</span>
                 </div>
-                <div class="sd-panel__sub">All orders placed today</div>
+                <div class="sd-panel__sub">Web orders and walk-in POS receipts dated today (each sale once)</div>
               </div>
               <button class="sd-panel__cta" id="viewAllOrdersBtn" type="button">
                 <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
@@ -291,7 +298,7 @@
               </div>
               <div class="sd-empty__title">No transactions today</div>
               <div class="sd-empty__sub">
-                Orders placed today will appear here
+                Nothing dated today yet — queue and completed tables still list all orders.
               </div>
             </div>
             <div
@@ -401,13 +408,120 @@
 
         <section
           class="staff-page"
+          id="page-walk-in-pos"
+          aria-labelledby="staff-pos-heading"
+        >
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-pos-heading">Walk-in POS</h1>
+              <p>
+                Counter sales for customers who walk into UPress (no student account). Add line
+                items, take cash or record GCash, then print or save the receipt.
+              </p>
+            </div>
+          </header>
+
+          <div class="pos-grid">
+            <div class="pos-panel pos-panel--ticket">
+              <h3 class="pos-panel__title">Customer</h3>
+              <label class="pos-label">Name (optional)</label>
+              <input type="text" id="posCustomerName" class="pos-input" placeholder="Walk-in customer" />
+
+              <label class="pos-label">Phone (optional)</label>
+              <input type="tel" id="posCustomerPhone" class="pos-input" placeholder="09xxxxxxxxx" />
+
+              <label class="pos-label">Patron type</label>
+              <select id="posPatronType" class="pos-input">
+                <option value="walk-in">Walk-in (public / visitor)</option>
+                <option value="student">Student (no login — quick sale)</option>
+                <option value="faculty">Faculty / staff</option>
+                <option value="organization">Organization / office</option>
+              </select>
+
+              <h3 class="pos-panel__title" style="margin-top: 1.25rem">Add service line</h3>
+              <label class="pos-label">Service</label>
+              <select id="posLineService" class="pos-input">
+                <option value="Printing">Printing</option>
+                <option value="Binding">Binding</option>
+                <option value="Lanyards">Lanyards</option>
+                <option value="Mug printing">Mug printing</option>
+                <option value="ID / laminating">ID / laminating</option>
+                <option value="Photocopy">Photocopy</option>
+                <option value="Other">Other (describe in notes)</option>
+              </select>
+
+              <div class="pos-row2">
+                <div>
+                  <label class="pos-label">Qty</label>
+                  <input type="number" id="posLineQty" class="pos-input" min="1" value="1" />
+                </div>
+                <div>
+                  <label class="pos-label">Unit price (₱)</label>
+                  <input type="number" id="posLineUnit" class="pos-input" min="0" step="0.25" value="5" />
+                </div>
+              </div>
+
+              <label class="pos-label">Notes (optional)</label>
+              <input type="text" id="posLineNotes" class="pos-input" placeholder="e.g. A4 color, rush" />
+
+              <div class="pos-actions">
+                <button type="button" class="pos-btn pos-btn--primary" id="posAddLineBtn">Add to ticket</button>
+                <button type="button" class="pos-btn pos-btn--ghost" id="posClearTicketBtn">Clear ticket</button>
+              </div>
+            </div>
+
+            <div class="pos-panel pos-panel--summary">
+              <h3 class="pos-panel__title">Current ticket</h3>
+              <div id="posTicketLines" class="pos-ticket-lines pos-empty">No lines yet. Add services above.</div>
+
+              <div class="pos-totals">
+                <div class="pos-total-row">
+                  <span>Subtotal</span><strong id="posSubtotal">₱0.00</strong>
+                </div>
+              </div>
+
+              <label class="pos-label">Payment</label>
+              <select id="posPaymentMethod" class="pos-input">
+                <option value="Cash">Cash (received now)</option>
+                <option value="GCash">GCash (walk-in — reference below)</option>
+                <option value="Pay later">Pay later / org billing (demo)</option>
+              </select>
+
+              <label class="pos-label">GCash reference (if GCash)</label>
+              <input type="text" id="posGcashRef" class="pos-input" placeholder="Reference number" />
+
+              <div class="pos-actions" style="margin-top: 1rem">
+                <button type="button" class="pos-btn pos-btn--accent" id="posCompleteSaleBtn">
+                  Complete sale &amp; record
+                </button>
+              </div>
+
+              <p class="pos-hint">
+                Each sale appears below and on <strong>Completed orders</strong>. Use <strong>Print</strong> next to
+                that sale only (not here).
+              </p>
+            </div>
+
+            <div class="pos-panel pos-panel--history">
+              <h3 class="pos-panel__title">Today's walk-in sales</h3>
+              <div class="pos-kpi">
+                <span>Walk-in total today</span>
+                <strong id="posWalkInTodayTotal">₱0.00</strong>
+              </div>
+              <div id="posWalkInHistory" class="pos-history-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="staff-page"
           id="page-order-queue"
           aria-labelledby="staff-order-queue-heading"
         >
           <header class="staff-header page-header">
             <div>
               <h1 id="staff-order-queue-heading">Order Queue</h1>
-              <p>All incoming orders that need to be processed</p>
+              <p>Web orders from students — verify online payment when needed, then process and release.</p>
             </div>
           </header>
 
@@ -857,6 +971,7 @@
                     <th>Completed</th>
                     <th>Released By</th>
                     <th>Status</th>
+                    <th>Receipt</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -867,6 +982,7 @@
                     <td>Apr 27, 2026</td>
                     <td>Staff A</td>
                     <td><span class="badge badge-complete">Completed</span></td>
+                    <td>—</td>
                   </tr>
                   <tr>
                     <td>#1023</td>
@@ -875,6 +991,7 @@
                     <td>Apr 27, 2026</td>
                     <td>Staff B</td>
                     <td><span class="badge badge-complete">Completed</span></td>
+                    <td>—</td>
                   </tr>
                   <tr>
                     <td>#1022</td>
@@ -883,6 +1000,7 @@
                     <td>Apr 26, 2026</td>
                     <td>Staff A</td>
                     <td><span class="badge badge-complete">Completed</span></td>
+                    <td>—</td>
                   </tr>
                   <tr>
                     <td>#1021</td>
@@ -891,6 +1009,7 @@
                     <td>Apr 26, 2026</td>
                     <td>Staff B</td>
                     <td><span class="badge badge-complete">Completed</span></td>
+                    <td>—</td>
                   </tr>
                   <tr>
                     <td>#1020</td>
@@ -899,6 +1018,7 @@
                     <td>Apr 25, 2026</td>
                     <td>Staff A</td>
                     <td><span class="badge badge-complete">Completed</span></td>
+                    <td>—</td>
                   </tr>
                   <tr>
                     <td>#1019</td>
@@ -907,6 +1027,7 @@
                     <td>Apr 25, 2026</td>
                     <td>Staff B</td>
                     <td><span class="badge badge-complete">Completed</span></td>
+                    <td>—</td>
                   </tr>
                 </tbody>
               </table>
@@ -944,6 +1065,8 @@
       </div>
     </div>
 
+    <script src="../../js/staff/staff-data.js"></script>
     <script src="../../js/staff/staff.js"></script>
+    <script src="../../js/staff/staff-pos.js"></script>
   </body>
 </html>

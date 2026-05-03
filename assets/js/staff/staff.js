@@ -213,13 +213,34 @@ if (loginForm) {
   });
 }
 
+(function staffAuthGuard() {
+  let u = null;
+  try {
+    u = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  } catch (_) {
+    u = null;
+  }
+  const role = u && String(u.role || u.username || '').toLowerCase();
+  if (!u || role !== 'staff') {
+    window.location.href = '../auth/portal.html';
+  }
+})();
+
 const navLinks = document.querySelectorAll('.nav-link[data-page]');
 const pages    = document.querySelectorAll('.staff-page');
 
 navLinks.forEach(link => {
   link.addEventListener('click', function (e) {
-    e.preventDefault();
     const target = this.dataset.page;
+    if (target === 'logout') {
+      e.preventDefault();
+      try {
+        localStorage.removeItem('currentUser');
+      } catch (_) {}
+      window.location.href = this.getAttribute('href') || '../auth/portal.html';
+      return;
+    }
+    e.preventDefault();
 
     navLinks.forEach(l => l.classList.remove('active'));
     this.classList.add('active');
@@ -299,6 +320,28 @@ function activateStaffPage(pageKey) {
 }
 
 function getOrderFromRow(tr) {
+  const enc = tr && tr.getAttribute && tr.getAttribute('data-order-full');
+  if (enc) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(enc));
+      return {
+        orderId: parsed.orderId || '',
+        student: parsed.student || '',
+        service: parsed.service || '',
+        date: parsed.date || '',
+        status: parsed.status || '',
+        payment: parsed.payment || '',
+        amount: parsed.amount || '',
+        reference: parsed.reference || '',
+        file: parsed.file || '',
+        pages: parsed.pages || '',
+        size: parsed.size || '',
+        rush: parsed.rush || '',
+        notes: parsed.notes || '',
+      };
+    } catch (_) {}
+  }
+
   const tds = tr ? Array.from(tr.querySelectorAll('td')) : [];
   const status = tr?.querySelector('.badge')?.textContent?.trim() || '';
   const orderId = tds[0]?.textContent?.trim() || '';
@@ -645,8 +688,23 @@ document.addEventListener('click', (e) => {
     if (!targetRow) return;
     setRowStatus(targetRow, nextStatusKey);
 
+    if (window.UpressStaffData && String(orderId).startsWith('ORD-')) {
+      UpressStaffData.persistWebOrderStatus(orderId, nextStatusKey);
+      UpressStaffData.hydrateTablesFromStorage();
+    }
+
     renderDashboardMetricsAndTransactions();
     closeStaffModal();
+    return;
+  }
+
+  const verifyPayBtn = e.target.closest('.btn-verify-pay');
+  if (verifyPayBtn) {
+    const oid = verifyPayBtn.getAttribute('data-verify-order') || '';
+    if (window.UpressStaffData && oid && UpressStaffData.verifyWebPayment(oid)) {
+      UpressStaffData.hydrateTablesFromStorage();
+      renderDashboardMetricsAndTransactions();
+    }
     return;
   }
 
@@ -738,18 +796,40 @@ function formatPeso(n) {
   return `₱${Number(n || 0).toFixed(2)}`;
 }
 
+/** Parse date labels from web orders, POS rows, or table text (en-PH locale strings OK). */
+function parseOrderDateFromLabel(dateStr) {
+  const raw = String(dateStr || '').trim();
+  if (!raw) return null;
+  const t = Date.parse(raw);
+  if (Number.isFinite(t)) return new Date(t);
+  const d = new Date(raw);
+  return Number.isFinite(d.getTime()) ? d : null;
+}
+
+function isOrderToday(o) {
+  const d = parseOrderDateFromLabel(o.date);
+  if (!d) return false;
+  return d.toDateString() === new Date().toDateString();
+}
+
 function getDashboardMockOrders() {
   const collect = (tableId, parser) => {
     const table = document.getElementById(tableId);
     const rows = table ? Array.from(table.querySelectorAll('tbody tr')) : [];
-    return rows.map(tr => {
-      const o = parser(tr);
-      return {
-        ...o,
-        statusKey: normalizeStatus(o.status),
-        amountNum: parsePesoAmount(o.amount),
-      };
-    });
+    return rows
+      .filter((tr) => !tr.querySelector('td[colspan]'))
+      .map((tr) => {
+        const o = parser(tr);
+        return {
+          ...o,
+          statusKey: normalizeStatus(o.status),
+          amountNum: parsePesoAmount(o.amount),
+        };
+      })
+      .filter((o) => {
+        const id = String(o.orderId || '').trim();
+        return id && !/no web|no orders|walk-in customers/i.test(id);
+      });
   };
 
   const queue = collect('orderQueueTable', getOrderFromRow);
@@ -769,13 +849,13 @@ function getDashboardMockOrders() {
 
 function renderDashboardMetricsAndTransactions() {
   const orders = getDashboardMockOrders();
-  if (!orders.length) return;
+  const ordersToday = orders.filter(isOrderToday);
 
   const counts = { pending: 0, processing: 0, ready: 0, completed: 0 };
   for (const o of orders) counts[o.statusKey] = (counts[o.statusKey] || 0) + 1;
 
-  const todayOrders = orders.length;
-  const todayIncome = orders
+  const todayOrders = ordersToday.length;
+  const todayIncome = ordersToday
     .filter(o => o.statusKey === 'completed')
     .reduce((sum, o) => sum + o.amountNum, 0);
 
@@ -802,7 +882,22 @@ function renderDashboardMetricsAndTransactions() {
     completed: 'sd-tx__status--completed',
   }[key] || 'sd-tx__status--pending');
 
-  const tx = orders.slice(0, 4).map(o => `
+  if (!ordersToday.length) {
+    list.style.display = 'none';
+    if (empty) empty.style.display = '';
+    return;
+  }
+
+  const sortedToday = ordersToday.slice().sort((a, b) => {
+    const ta = parseOrderDateFromLabel(a.date)?.getTime() || 0;
+    const tb = parseOrderDateFromLabel(b.date)?.getTime() || 0;
+    return tb - ta;
+  });
+
+  list.innerHTML = sortedToday.slice(0, 8).map(o => {
+    const isPos = /^POS-/i.test(String(o.orderId || ''));
+    const channel = isPos ? 'Walk-in POS' : 'Web order';
+    return `
     <div class="sd-tx__item">
       <div class="sd-tx__left">
         <div class="sd-tx__top">
@@ -811,7 +906,7 @@ function renderDashboardMetricsAndTransactions() {
         </div>
         <div class="sd-tx__meta">
           ${escapeHtml(o.student)} — ${escapeHtml(o.service)}
-          <span class="sd-modal__muted"> • ${escapeHtml(o.date)}</span>
+          <span class="sd-modal__muted"> • ${escapeHtml(o.date)} • ${escapeHtml(channel)}</span>
         </div>
       </div>
       <div class="sd-tx__right">
@@ -819,9 +914,9 @@ function renderDashboardMetricsAndTransactions() {
         <div class="sd-tx__pay">${escapeHtml(o.payment)}</div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
-  list.innerHTML = tx;
   list.style.display = '';
   if (empty) empty.style.display = 'none';
 }
@@ -830,10 +925,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
     window.lucide.createIcons();
   }
+  if (window.UpressStaffData) {
+    UpressStaffData.hydrateTablesFromStorage();
+  }
   renderDashboardMetricsAndTransactions();
   renderAnalyticsMockCharts();
   setupOrderQueueSorting();
   setupQrScanner();
+
+  document.addEventListener('staff:data-changed', () => {
+    if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
+    renderDashboardMetricsAndTransactions();
+    if (typeof window.renderWalkInPosHistory === 'function') window.renderWalkInPosHistory();
+  });
+
+  if (window.location.hash === '#walk-in-pos') {
+    activateStaffPage('walk-in-pos');
+  }
 });
 
 function setupOrderQueueSorting() {
@@ -1125,6 +1233,16 @@ function findOrderByReference(reference) {
   const ref = String(reference || '').trim().toLowerCase();
   if (!ref) return null;
 
+  if (window.UpressStaffData) {
+    const list = UpressStaffData.getWebOrders();
+    for (const o of list) {
+      const r = String(o.refNumber || '').trim().toLowerCase();
+      const id = String(o.orderId || '').trim().toLowerCase();
+      if (r && r === ref) return UpressStaffData.orderToStaffPayload(o);
+      if (id && id === ref) return UpressStaffData.orderToStaffPayload(o);
+    }
+  }
+
   // Search order queue mock data (getOrderFromRow generates reference by orderId mapping)
   const queueTable = document.getElementById('orderQueueTable');
   const qRows = queueTable ? Array.from(queueTable.querySelectorAll('tbody tr')) : [];
@@ -1212,22 +1330,37 @@ function completeReleaseFlow() {
   const rRow = getRowByOrderId('readyReleaseTable', order.orderId);
   if (rRow) rRow.remove();
 
-  const completedTable = document.getElementById('completedOrdersTable');
-  const cBody = completedTable ? completedTable.querySelector('tbody') : null;
-  if (cBody) {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
+  statusEl.textContent = `Order ${order.orderId} released and marked as completed.`;
+
+  if (window.UpressStaffData && String(order.orderId || '').startsWith('ORD-')) {
+    const list = UpressStaffData.getWebOrders();
+    const i = list.findIndex((x) => x.orderId === order.orderId);
+    if (i !== -1) {
+      list[i].status = 'Completed';
+      UpressStaffData.saveWebOrders(list);
+    }
+  }
+
+  if (window.UpressStaffData) {
+    UpressStaffData.hydrateTablesFromStorage();
+  } else {
+    const completedTable = document.getElementById('completedOrdersTable');
+    const cBody = completedTable ? completedTable.querySelector('tbody') : null;
+    if (cBody) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
       <td>${escapeHtml(order.orderId)}</td>
       <td>${escapeHtml(order.student || '—')}</td>
       <td>${escapeHtml(order.service || '—')}</td>
       <td>${escapeHtml(new Date().toLocaleDateString(undefined, { month: 'short', day: '2-digit', year: 'numeric' }))}</td>
       <td>Staff</td>
       <td><span class="badge badge-complete">Completed</span></td>
+      <td>—</td>
     `;
-    cBody.prepend(tr);
+      cBody.prepend(tr);
+    }
   }
 
-  statusEl.textContent = `Order ${order.orderId} released and marked as completed.`;
   renderDashboardMetricsAndTransactions();
   clearSelectedReleaseOrder();
 

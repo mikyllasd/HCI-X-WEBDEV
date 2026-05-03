@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPress Sign-In | UPRESSease</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../css/auth/portal.css" />
+  </head>
+  <body>
+    <div class="portal-wrap">
+      <div class="portal-card">
+        <div class="portal-brand">
+          <div class="portal-brand-icon" aria-hidden="true">🎓</div>
+          <div>
+            <h1>UPress Sign-In</h1>
+            <p>Western Mindanao State University</p>
+          </div>
+        </div>
+        <p class="portal-lead">
+          One entry for students and campus roles. Use your WMSU email for student accounts, or your
+          assigned username for staff, admin, and superadmin.
+        </p>
+
+        <div class="portal-alert" id="portal-alert" role="status"></div>
+
+        <form id="portal-form" autocomplete="on">
+          <label class="portal-label" for="portal-id">Email or username</label>
+          <div class="portal-input-wrap">
+            <input
+              type="text"
+              id="portal-id"
+              name="username"
+              autocomplete="username"
+              placeholder="you@wmsu.edu.ph or staff username"
+              required
+            />
+          </div>
+
+          <label class="portal-label" for="portal-pw">Password</label>
+          <div class="portal-input-wrap">
+            <input
+              type="password"
+              id="portal-pw"
+              name="password"
+              autocomplete="current-password"
+              placeholder="Enter password"
+              required
+            />
+            <button type="button" class="portal-toggle-pw" id="portal-toggle-pw" aria-label="Show password">
+              👁
+            </button>
+          </div>
+
+          <div class="portal-row">
+            <label><input type="checkbox" id="portal-remember" /> Remember me</label>
+            <a href="../student/index.html#recover" id="portal-forgot">Forgot password?</a>
+          </div>
+
+          <div class="remember-device-prompt" id="remember-device-prompt">
+            <strong>Is this your personal device?</strong>
+            <p style="margin: 0.35rem 0 0; color: var(--muted); font-size: 0.8125rem">
+              If you choose Yes, your session can stay signed in longer. If No, the session ends when
+              you close the browser.
+            </p>
+            <div class="btn-row">
+              <button type="button" id="remember-yes" class="primary">Yes</button>
+              <button type="button" id="remember-no">No</button>
+            </div>
+          </div>
+
+          <button type="submit" class="portal-btn" id="portal-submit">Sign in</button>
+        </form>
+
+        <div class="portal-links">
+          New student? <a href="../student/signup.html">Create an account</a>
+          ·
+          <a href="../../../index.html">Back to home</a>
+        </div>
+
+        <div class="portal-divider">Demo credentials (click to fill)</div>
+        <p class="portal-demo-label">Operational roles</p>
+        <div class="portal-demo-grid">
+          <div class="portal-demo-card" data-user="superadmin" data-pass="super123">
+            <span class="role">Super Admin</span>
+            <span class="cred">superadmin / super123</span>
+          </div>
+          <div class="portal-demo-card" data-user="admin" data-pass="admin123">
+            <span class="role">Admin (monitoring &amp; reports)</span>
+            <span class="cred">admin / admin123</span>
+          </div>
+          <div class="portal-demo-card" data-user="staff" data-pass="staff123">
+            <span class="role">Staff &amp; POS (web orders + walk-in counter)</span>
+            <span class="cred">staff / staff123</span>
+          </div>
+        </div>
+
+        <p class="portal-footnote">
+          Web: student submits order → staff verifies files &amp; produces → verify GCash / pickup
+          payment on the queue → release. Walk-in: use Walk-in POS for on-site customers (cash /
+          GCash). Superadmin sets policy, academic year, and pricing.
+        </p>
+      </div>
+    </div>
+
+    <script src="../../js/auth/portal.js"></script>
+  </body>
+</html>

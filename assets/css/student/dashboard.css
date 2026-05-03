@@ -376,3 +376,44 @@
 @media (max-width: 480px) {
     .services-grid-dash { grid-template-columns: 1fr; }
 }
+
+/* Account status & lifecycle (workflow revamp) */
+.account-status-banner {
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+.account-status-banner--pending {
+    background: #fffbeb;
+    border: 1px solid #f5e0a8;
+    color: #6b5900;
+}
+
+.workflow-strip {
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem 0.85rem;
+    margin-bottom: 1.25rem;
+}
+.workflow-strip__title {
+    display: block;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+.workflow-strip__steps {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.8125rem;
+    color: #444;
+    line-height: 1.5;
+}
+.workflow-strip__steps li {
+    margin-bottom: 0.15rem;
+}

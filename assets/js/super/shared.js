@@ -84,7 +84,10 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   showToast("Logged out successfully.");
   setTimeout(() => {
     sessionStorage.removeItem(STORAGE_KEY);
-    window.location.href = "dashboard.html";
+    try {
+      localStorage.removeItem("currentUser");
+    } catch (_) {}
+    window.location.replace("../../pages/admin-login-entry-point.html");
   }, 1200);
 });
 

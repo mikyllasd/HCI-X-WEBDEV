@@ -14,8 +14,16 @@ form.addEventListener('submit', function (e) {
 
     // Check if account exists and password matches (if a password was saved)
     if (existing && existing.email === email) {
+        if (existing.accountStatus === 'suspended') {
+            showAlert('Account suspended', 'Your account has been suspended. Please contact the UPress office for assistance.');
+            return;
+        }
+        if (existing.accountStatus === 'deactivated') {
+            showAlert('Account deactivated', 'Your account has been deactivated. Please contact the UPress office to reactivate your account.');
+            return;
+        }
         if (existing.password && existing.password !== pass) {
-            showAlert('Login Failed', 'Incorrect password. Please try again.');
+            showAlert('Sign-in failed', 'Incorrect email or password.');
             return;
         }
         window.location.href = 'dashboard.html';
@@ -28,11 +36,24 @@ form.addEventListener('submit', function (e) {
             phone: '',
             college: '',
             course: '',
-            year: ''
+            year: '',
+            accountStatus: /@wmsu\.edu\.ph$/i.test(email) ? 'verified' : 'pending',
+            signupPath: /@wmsu\.edu\.ph$/i.test(email) ? 'A' : 'B'
         });
         window.location.href = 'dashboard.html';
     }
 });
+
+if (window.location.hash === '#recover') {
+    function tryOpenRecover() {
+        if (typeof openFP === 'function') openFP();
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', tryOpenRecover);
+    } else {
+        tryOpenRecover();
+    }
+}
 
 // ── FORGOT PASSWORD ────────────────────────────────────
 let fpOTP         = '';

@@ -1,0 +1,313 @@
+/* UPress — unified sign-in (students, staff, admin) */
+:root {
+  --ink: #1a1a1a;
+  --muted: #5c5c5c;
+  --line: #e8e4df;
+  --maroon: #8b1538;
+  --maroon-deep: #6b0f2b;
+  --cream: #faf7f2;
+  --card: #ffffff;
+  --ok: #1e7e4a;
+  --warn: #b8860b;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(139, 21, 56, 0.08), transparent),
+    var(--cream);
+  color: var(--ink);
+}
+
+.portal-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.portal-card {
+  width: 100%;
+  max-width: 28rem;
+  background: var(--card);
+  border-radius: 1.25rem;
+  box-shadow: 0 0.25rem 2rem rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--line);
+  padding: 2rem 2rem 1.75rem;
+}
+
+.portal-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.portal-brand-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--maroon), var(--maroon-deep));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.portal-brand h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.portal-brand p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.portal-lead {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 1rem 0 1.25rem;
+}
+
+.portal-alert {
+  display: none;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  margin-bottom: 1rem;
+}
+
+.portal-alert.show {
+  display: flex;
+}
+
+.portal-alert.error {
+  background: #fdecea;
+  color: #7a1e16;
+  border: 1px solid #f5c4bf;
+}
+
+.portal-alert.success {
+  background: #e8f6ee;
+  color: #14532d;
+  border: 1px solid #b8e0c8;
+}
+
+label.portal-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.portal-input-wrap {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.portal-input-wrap input {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.portal-input-wrap input:focus {
+  border-color: var(--maroon);
+}
+
+.portal-toggle-pw {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 0.25rem;
+}
+
+.portal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.portal-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.portal-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--maroon), var(--maroon-deep));
+  color: #fff;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.portal-btn:hover {
+  opacity: 0.95;
+}
+
+.portal-btn:active {
+  transform: scale(0.99);
+}
+
+.portal-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.portal-links {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+}
+
+.portal-links a {
+  color: var(--maroon);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.portal-links a:hover {
+  text-decoration: underline;
+}
+
+.portal-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.portal-divider::before,
+.portal-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.portal-demo-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.portal-demo-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.portal-demo-card {
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  background: var(--cream);
+  transition: border-color 0.15s;
+}
+
+.portal-demo-card:hover {
+  border-color: var(--maroon);
+}
+
+.portal-demo-card .role {
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.portal-demo-card .cred {
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+}
+
+.portal-footnote {
+  margin-top: 1.25rem;
+  font-size: 0.6875rem;
+  color: #999;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.remember-device-prompt {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #f4f1ec;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.remember-device-prompt.show {
+  display: block;
+}
+
+.remember-device-prompt .btn-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.remember-device-prompt button {
+  flex: 1;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.remember-device-prompt button.primary {
+  background: var(--maroon);
+  color: #fff;
+  border-color: var(--maroon);
+}

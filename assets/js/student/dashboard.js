@@ -1,9 +1,34 @@
 // dashboard.js
 const u = User.get();
-if (!u) { window.location.href = 'index.html'; }
+if (!u) { window.location.href = '../auth/portal.html'; }
+
+const accountStatus = u?.accountStatus || 'verified';
+const canPlaceOrders = accountStatus === 'verified' && !u?.accountSuspended;
 
 setText('welcome-name',  u?.name  || 'Student');
 setText('welcome-email', u?.email || 'student@wmsu.edu.ph');
+
+(function initAccountBanner() {
+    const bar = document.getElementById('account-status-banner');
+    if (!bar) return;
+    if (accountStatus === 'pending') {
+        bar.style.display = 'block';
+        bar.className = 'account-status-banner account-status-banner--pending';
+        bar.innerHTML =
+            '<strong>Pending verification</strong> — Your enrollment is being reviewed. You can browse services, ' +
+            'but placing orders is disabled until an administrator approves your account.';
+    } else if (accountStatus === 'verified') {
+        bar.style.display = 'none';
+    }
+})();
+
+function serviceHref(page) {
+    if (!canPlaceOrders) {
+        showAlert('Verification required', 'You must have a verified account before placing orders.');
+        return;
+    }
+    window.location.href = page;
+}
 
 /* ===================== SIDEBAR ===================== */
 function openSidebar() {
@@ -268,6 +293,10 @@ function sidebarClearCart() {
 }
 
 function sidebarCheckout() {
+    if (!canPlaceOrders) {
+        showAlert('Verification required', 'You must have a verified account before checking out.');
+        return;
+    }
     if (sidebarSelected.size === 0) {
         showAlert('No Items Selected', 'Please select at least one item to checkout.');
         return;
@@ -342,6 +371,6 @@ function doLogout() {
     showConfirm('Logout', 'Are you sure you want to log out?', () => {
         User.clear();
         Checkout.clear();
-        window.location.href = 'index.html';
+        window.location.href = '../auth/portal.html';
     });
 }

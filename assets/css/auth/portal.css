@@ -1,14 +1,13 @@
-/* UPress — unified sign-in (students, staff, admin) */
+@import url("../upress-tokens.css");
+
 :root {
-  --ink: #1a1a1a;
-  --muted: #5c5c5c;
-  --line: #e8e4df;
-  --maroon: #8b1538;
-  --maroon-deep: #6b0f2b;
-  --cream: #faf7f2;
-  --card: #ffffff;
-  --ok: #1e7e4a;
-  --warn: #b8860b;
+  --ink: var(--color-text);
+  --muted: var(--color-text-muted);
+  --line: var(--color-border);
+  --maroon: var(--color-header);
+  --maroon-deep: var(--color-header-hover);
+  --cream: var(--color-surface-soft);
+  --card: var(--color-white);
 }
 
 *,
@@ -17,30 +16,15 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "DM Sans", system-ui, sans-serif;
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(139, 21, 56, 0.08), transparent),
-    var(--cream);
-  color: var(--ink);
-}
-
 .portal-wrap {
-  min-height: 100vh;
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  align-items: center;
 }
 
-.portal-card {
-  width: 100%;
+.portal-card.pattern-card {
   max-width: 28rem;
-  background: var(--card);
-  border-radius: 1.25rem;
-  box-shadow: 0 0.25rem 2rem rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--line);
   padding: 2rem 2rem 1.75rem;
 }
 
@@ -48,18 +32,19 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .portal-brand-icon {
   width: 2.75rem;
   height: 2.75rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--maroon), var(--maroon-deep));
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .portal-brand-icon .upress-icon {
@@ -69,8 +54,9 @@ body {
 .portal-brand h1 {
   margin: 0;
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
 .portal-brand p {
@@ -80,10 +66,11 @@ body {
 }
 
 .portal-lead {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--muted);
-  line-height: 1.5;
-  margin: 1rem 0 1.25rem;
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+  text-align: left;
 }
 
 .portal-alert {
@@ -91,7 +78,7 @@ body {
   align-items: flex-start;
   gap: 0.5rem;
   padding: 0.65rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   font-size: 0.8125rem;
   margin-bottom: 1rem;
 }
@@ -112,13 +99,7 @@ body {
   border: 1px solid #b8e0c8;
 }
 
-label.portal-label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+label.portal-label.pattern-field-label {
   margin-bottom: 0.35rem;
 }
 
@@ -127,19 +108,12 @@ label.portal-label {
   margin-bottom: 1rem;
 }
 
-.portal-input-wrap input {
-  width: 100%;
-  padding: 0.75rem 0.875rem;
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
-  font-size: 0.9375rem;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.15s;
+.portal-input-wrap .portal-field-input {
+  margin-bottom: 0;
 }
 
-.portal-input-wrap input:focus {
-  border-color: var(--maroon);
+.portal-input-wrap--pw .portal-field-input {
+  padding-right: 2.75rem;
 }
 
 .portal-toggle-pw {
@@ -178,47 +152,19 @@ label.portal-label {
   cursor: pointer;
 }
 
-.portal-btn {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--maroon), var(--maroon-deep));
-  color: #fff;
-  transition: opacity 0.15s, transform 0.1s;
-}
-
-.portal-btn:hover {
-  opacity: 0.95;
-}
-
-.portal-btn:active {
-  transform: scale(0.99);
-}
-
-.portal-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.portal-links {
-  text-align: center;
-  margin-top: 1rem;
-  font-size: 0.8125rem;
-}
-
-.portal-links a {
+.portal-row a {
   color: var(--maroon);
   font-weight: 600;
+  font-size: 0.8125rem;
   text-decoration: none;
 }
 
-.portal-links a:hover {
+.portal-row a:hover {
   text-decoration: underline;
+}
+
+.portal-links.pattern-muted {
+  margin-top: 1rem;
 }
 
 .portal-divider {
@@ -253,16 +199,17 @@ label.portal-label {
 
 .portal-demo-card {
   border: 1px solid var(--line);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   padding: 0.5rem 0.65rem;
   cursor: pointer;
   font-size: 0.75rem;
   background: var(--cream);
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .portal-demo-card:hover {
   border-color: var(--maroon);
+  box-shadow: var(--shadow-sm);
 }
 
 .portal-demo-card .role {
@@ -280,7 +227,7 @@ label.portal-label {
 .portal-footnote {
   margin-top: 1.25rem;
   font-size: 0.6875rem;
-  color: #999;
+  color: var(--color-text-light);
   line-height: 1.45;
   text-align: center;
 }
@@ -289,8 +236,15 @@ label.portal-label {
   display: none;
   margin-top: 0.75rem;
   padding: 0.75rem;
-  background: #f4f1ec;
-  border-radius: 0.5rem;
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  border: 1px solid var(--line);
+}
+
+.remember-device-hint {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
   font-size: 0.8125rem;
 }
 
@@ -306,13 +260,14 @@ label.portal-label {
 
 .remember-device-prompt button {
   flex: 1;
-  padding: 0.4rem 0.5rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--line);
-  background: #fff;
-  font-family: inherit;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--line);
+  background: var(--card);
+  font-family: var(--font-sans);
   cursor: pointer;
   font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .remember-device-prompt button.primary {

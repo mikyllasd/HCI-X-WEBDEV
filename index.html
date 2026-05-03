@@ -1,221 +1,631 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease | WMSU Printing & Merchandise</title>
-    <link rel="stylesheet" href="assets/css/index.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-  </head>
-  <body data-page="landing">
-    <div class="spa-page" id="page-landing" style="display: block">
-      <header class="landing-navbar">
-        <nav class="landing-nav-wrapper">
-          <div class="landing-logo">
-            <i class="fas fa-user-graduate"></i>
-            <div class="landing-logo-text">
-              <h1>UPRESSease</h1>
-              <span>WMSU Printing &amp; Merchandise System</span>
-            </div>
-          </div>
-          <div class="landing-nav-actions">
-            <button
-              class="btn btn-outline"
-              onclick="window.location.href = 'assets/pages/student/signup.html'"
-            >
-              Create account
-            </button>
-            <button
-              class="btn btn-filled"
-              onclick="window.location.href = 'assets/pages/auth/portal.html'"
-            >
-              Sign in
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      <section class="landing-hero">
-        <div class="landing-hero-content reveal">
-          <h1>Welcome to UPRESSease</h1>
-          <p>
-            Your one-stop solution for printing, binding, and merchandise
-            services at Western Mindanao State University
-          </p>
-          <button
-            class="btn btn-white"
-            onclick="
-              document
-                .getElementById('landing-how')
-                .scrollIntoView({ behavior: 'smooth' })
-            "
-          >
-            Get Started Now
-          </button>
-        </div>
-      </section>
-
-      <section class="landing-section">
-        <div class="landing-container">
-          <h2 class="section-title reveal">Why Choose UPRESSease?</h2>
-          <p class="section-subtitle reveal">
-            Experience seamless ordering, real-time tracking, and convenient
-            pickup
-          </p>
-          <div class="landing-grid">
-            <div class="feature-card reveal">
-              <i class="fas fa-mobile-alt"></i>
-              <h3>Easy Online Ordering</h3>
-              <p>Place your orders from anywhere, anytime</p>
-            </div>
-            <div class="feature-card reveal">
-              <i class="fas fa-clock"></i>
-              <h3>Real-Time Tracking</h3>
-              <p>Monitor your order status with live updates</p>
-            </div>
-            <div class="feature-card reveal">
-              <i class="fas fa-qrcode"></i>
-              <h3>QR Code Pickup</h3>
-              <p>Quick and secure order pickup using QR code</p>
-            </div>
-            <div class="feature-card reveal">
-              <i class="fas fa-shield-alt"></i>
-              <h3>Secure Payments</h3>
-              <p>Multiple payment options with secure verification</p>
-            </div>
-            <div class="feature-card reveal">
-              <i class="fas fa-sync"></i>
-              <h3>Order Flexibility</h3>
-              <p>15-minute cancellation window</p>
-            </div>
-            <div class="feature-card reveal">
-              <i class="fas fa-print"></i>
-              <h3>Quality Services</h3>
-              <p>Professional printing and binding services</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="landing-section landing-services-bg">
-        <div class="landing-container">
-          <h2 class="section-title reveal">Our Services</h2>
-          <p class="section-subtitle reveal">
-            Comprehensive printing and merchandise solutions for all your
-            academic needs
-          </p>
-          <div class="landing-grid">
-            <div class="service-card-landing reveal">
-              <div class="icon-sq"><i class="fas fa-print"></i></div>
-              <h3>Printing Services</h3>
-              <ul>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Black &amp; White / Color</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Multiple paper sizes</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Single/Double-sided</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Rush orders available</li>
-              </ul>
-            </div>
-            <div class="service-card-landing reveal">
-              <div class="icon-sq"><i class="fas fa-book"></i></div>
-              <h3>Binding Services</h3>
-              <ul>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Spiral binding</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Hard bound</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Soft bound</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Professional finish</li>
-              </ul>
-            </div>
-            <div class="service-card-landing reveal">
-              <div class="icon-sq"><i class="fas fa-award"></i></div>
-              <h3>Custom Lanyards</h3>
-              <ul>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Personalized designs</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Bulk orders</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> High-quality materials</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Organization events</li>
-              </ul>
-            </div>
-            <div class="service-card-landing reveal">
-              <div class="icon-sq"><i class="fas fa-coffee"></i></div>
-              <h3>Mug Printing</h3>
-              <ul>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Photo printing</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Custom designs</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Gift ready packaging</li>
-                <li><span class="upress-icon upress-icon--check" aria-hidden="true"></span> Durable prints</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="landing-how" class="landing-section">
-        <div class="landing-container">
-          <h2 class="section-title reveal">How It Works</h2>
-          <p class="section-subtitle reveal">
-            Simple steps to get your orders processed quickly
-          </p>
-          <div class="steps-grid">
-            <div class="step-item reveal">
-              <div class="step-num">1</div>
-              <h3>Sign Up</h3>
-              <p>Create your account with WMSU email verification</p>
-            </div>
-            <div class="step-item reveal">
-              <div class="step-num">2</div>
-              <h3>Place Order</h3>
-              <p>Select services, upload files, and customize</p>
-            </div>
-            <div class="step-item reveal">
-              <div class="step-num">3</div>
-              <h3>Track Order</h3>
-              <p>Monitor progress from processing to pickup</p>
-            </div>
-            <div class="step-item reveal">
-              <div class="step-num">4</div>
-              <h3>Pick Up</h3>
-              <p>Show your QR code and collect at UPRESS</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="landing-cta">
-        <div class="landing-container reveal">
-          <h2>Ready to Get Started?</h2>
-          <p>Join hundreds of WMSU students already using UPRESSease</p>
-          <div class="cta-actions">
-            <button
-              class="btn btn-white"
-              onclick="window.location.href = 'assets/pages/student/signup.html'"
-            >
-              Create Account
-            </button>
-            <button
-              class="btn btn-outline-white"
-              onclick="window.location.href = 'assets/pages/auth/portal.html'"
-            >
-              Sign in
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <footer class="landing-footer">
-        <div class="landing-container">
-          <div class="footer-logo">
-            <i class="fas fa-user-graduate"></i>
-            <h2>UPRESSease</h2>
-          </div>
-          <p>Western Mindanao State University - University Press</p>
-          <p>&copy; 2026 UPRESSease. All rights reserved.</p>
-        </div>
-      </footer>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPRESSease - University Printing Services</title>
+  <meta name="description" content="WMSU's one-stop printing solution for students and faculty. Fast, reliable, and affordable printing services.">
+  <link rel="stylesheet" href="assets/css/landing.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header-content">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9V2h12v7" />
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+          <rect x="6" y="14" width="12" height="8" />
+        </svg>
+        <span class="logo-text">UPRESS<span class="logo-accent">ease</span></span>
+      </a>
+      
+      <nav class="nav" id="nav">
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      
+      <div class="header-actions">
+        <a href="assets/pages/auth/portal.html" class="btn btn-ghost">Login</a>
+        <a href="assets/pages/student/signup.html" class="btn btn-primary">Get Started</a>
+      </div>
+      
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <nav class="mobile-nav">
+        <a href="#services" class="mobile-nav-link">Services</a>
+        <a href="#how-it-works" class="mobile-nav-link">How It Works</a>
+        <a href="#pricing" class="mobile-nav-link">Pricing</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+        <div class="mobile-nav-actions">
+          <a href="assets/pages/auth/portal.html" class="btn btn-ghost btn-block">Login</a>
+          <a href="assets/pages/student/signup.html" class="btn btn-primary btn-block">Get Started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-    <script src="assets/js/index.js"></script>
-  </body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Welcome to <span class="text-accent">UPRESSease</span></h1>
+        <p class="hero-description">
+          Your one-stop solution for printing, binding, and merchandise
+          services at Western Mindanao State University
+        </p>
+        <div class="hero-actions">
+          <a href="assets/pages/student/signup.html" class="btn btn-primary btn-lg">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <line x1="19" y1="8" x2="19" y2="14" />
+              <line x1="22" y1="11" x2="16" y2="11" />
+            </svg>
+            Create Account
+          </a>
+          <a href="#services" class="btn btn-outline btn-lg">
+            View Services
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card hero-card-1">
+          <div class="hero-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+          </div>
+          <span>Document Printing</span>
+        </div>
+        <div class="hero-card hero-card-2">
+          <div class="hero-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <span>ID Processing</span>
+        </div>
+        <div class="hero-card hero-card-3">
+          <div class="hero-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+          </div>
+          <span>Binding Services</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bg"></div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Our Services</span>
+        <h2 class="section-title">Everything You Need, <br>All in One Place</h2>
+        <p class="section-description">
+          From simple document printing to custom merchandise, we offer a comprehensive 
+          range of services tailored for the WMSU community.
+        </p>
+      </div>
+      
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9V2h12v7" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+          </div>
+          <h3 class="service-title">Printing</h3>
+          <p class="service-description">
+            High-quality B&W and color printing. Short, A4, Long, and Legal paper sizes available.
+          </p>
+          <ul class="service-features">
+            <li>Black & White - Starting at P2.00</li>
+            <li>Colored - Starting at P10.00</li>
+            <li>Multiple paper sizes</li>
+          </ul>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+          </div>
+          <h3 class="service-title">Binding</h3>
+          <p class="service-description">
+            Professional binding services for your documents, theses, and reports.
+          </p>
+          <ul class="service-features">
+            <li>Soft Bind - P50.00</li>
+            <li>Hard Bind - P350.00</li>
+            <li>Ring & Spiral Bind</li>
+          </ul>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <circle cx="9" cy="10" r="2" />
+              <path d="M15 8h.01" />
+              <path d="M17 12h.01" />
+              <path d="M7 16h10" />
+            </svg>
+          </div>
+          <h3 class="service-title">ID Processing</h3>
+          <p class="service-description">
+            Official WMSU ID cards for students and faculty. New, lost, damaged, or renewal.
+          </p>
+          <ul class="service-features">
+            <li>New ID - P150.00</li>
+            <li>Lost ID - P300.00</li>
+            <li>Quick processing</li>
+          </ul>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <h3 class="service-title">Lanyards</h3>
+          <p class="service-description">
+            Custom lanyards with your department or organization branding.
+          </p>
+          <ul class="service-features">
+            <li>WMSU Standard - P75.00</li>
+            <li>Department Lanyards</li>
+            <li>Custom designs available</li>
+          </ul>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+              <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+              <line x1="6" y1="2" x2="6" y2="4" />
+              <line x1="10" y1="2" x2="10" y2="4" />
+              <line x1="14" y1="2" x2="14" y2="4" />
+            </svg>
+          </div>
+          <h3 class="service-title">Mug Printing</h3>
+          <p class="service-description">
+            Custom printed mugs for gifts, organizations, or personal use.
+          </p>
+          <ul class="service-features">
+            <li>11oz Standard Mug - P150.00</li>
+            <li>Custom designs</li>
+            <li>Bulk orders available</li>
+          </ul>
+        </div>
+        
+        <div class="service-card service-card-cta">
+          <div class="service-cta-content">
+            <h3 class="service-title">Ready to Order?</h3>
+            <p class="service-description">
+              Create your account and start ordering in minutes.
+            </p>
+            <a href="assets/pages/student/signup.html" class="btn btn-primary">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">How It Works</span>
+        <h2 class="section-title">Simple Steps to <br>Get Your Print</h2>
+        <p class="section-description">
+          Our streamlined process makes ordering quick and hassle-free.
+        </p>
+      </div>
+      
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3 class="step-title">Create Account</h3>
+            <p class="step-description">
+              Register with your WMSU email and upload your Certificate of Registration (COR) for verification.
+            </p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3 class="step-title">Upload & Customize</h3>
+            <p class="step-description">
+              Upload your files and select your preferences - paper size, color, binding type, and more.
+            </p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3 class="step-title">Pay & Confirm</h3>
+            <p class="step-description">
+              Choose your payment method - GCash, Cash, or Cash on Pickup. Receive order confirmation.
+            </p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3 class="step-title">Pick Up</h3>
+            <p class="step-description">
+              Get notified when your order is ready. Show your QR code at the counter for quick pickup.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Pricing</span>
+        <h2 class="section-title">Transparent & <br>Affordable Rates</h2>
+        <p class="section-description">
+          No hidden fees. What you see is what you pay.
+        </p>
+      </div>
+      
+      <div class="pricing-tables">
+        <div class="pricing-table">
+          <h3 class="pricing-table-title">Printing Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Paper Size</th>
+                <th>B&W</th>
+                <th>Color</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Short</td>
+                <td id="landing-print-short-bw">P2.00</td>
+                <td id="landing-print-short-color">P10.00</td>
+              </tr>
+              <tr>
+                <td>A4</td>
+                <td id="landing-print-a4-bw">P3.00</td>
+                <td id="landing-print-a4-color">P15.00</td>
+              </tr>
+              <tr>
+                <td>Long</td>
+                <td id="landing-print-long-bw">P3.50</td>
+                <td id="landing-print-long-color">P18.00</td>
+              </tr>
+              <tr>
+                <td>Legal</td>
+                <td id="landing-print-legal-bw">P4.00</td>
+                <td id="landing-print-legal-color">P20.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="pricing-table">
+          <h3 class="pricing-table-title">Binding Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Soft Bind</td>
+                <td id="landing-bind-soft">P50.00</td>
+              </tr>
+              <tr>
+                <td>Hard Bind</td>
+                <td id="landing-bind-hard">P350.00</td>
+              </tr>
+              <tr>
+                <td>Ring Bind</td>
+                <td id="landing-bind-ring">P45.00</td>
+              </tr>
+              <tr>
+                <td>Spiral Bind</td>
+                <td id="landing-bind-spiral">P55.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="pricing-table">
+          <h3 class="pricing-table-title">ID printing</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Request</th>
+                <th>Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>New ID</td>
+                <td id="landing-id-new">P150.00</td>
+              </tr>
+              <tr>
+                <td>Lost ID</td>
+                <td id="landing-id-lost">P300.00</td>
+              </tr>
+              <tr>
+                <td>Damaged ID</td>
+                <td id="landing-id-damaged">P200.00</td>
+              </tr>
+              <tr>
+                <td>Renewal</td>
+                <td id="landing-id-renewal">P180.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pricing-table">
+          <h3 class="pricing-table-title">Lanyards</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WMSU official</td>
+                <td id="landing-lanyard-official">P120.00</td>
+              </tr>
+              <tr>
+                <td>Department</td>
+                <td id="landing-lanyard-dept">P150.00</td>
+              </tr>
+              <tr>
+                <td>Custom design</td>
+                <td id="landing-lanyard-custom">P200.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pricing-table">
+          <h3 class="pricing-table-title">Mug printing</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WMSU logo mug</td>
+                <td id="landing-mug-wmsu">P200.00</td>
+              </tr>
+              <tr>
+                <td>Department mug</td>
+                <td id="landing-mug-dept">P220.00</td>
+              </tr>
+              <tr>
+                <td>Photo print mug</td>
+                <td id="landing-mug-photo">P250.00</td>
+              </tr>
+              <tr>
+                <td>Large (15oz) add-on</td>
+                <td id="landing-mug-large">P30.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Start Printing?</h2>
+        <p class="cta-description">
+          Join thousands of WMSU students who trust UPRESSease for their printing needs.
+        </p>
+        <div class="cta-actions">
+          <a href="assets/pages/student/signup.html" class="btn btn-light btn-lg">Create Free Account</a>
+          <a href="#contact" class="btn btn-outline-light btn-lg">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Contact</span>
+        <h2 class="section-title">Get In Touch</h2>
+        <p class="section-description">
+          Have questions? We're here to help.
+        </p>
+      </div>
+      
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <div>
+              <h4>Location</h4>
+              <p>WMSU Campus, Normal Road<br>Zamboanga City 7000</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </div>
+            <div>
+              <h4>Phone</h4>
+              <p>+63 917 123 4567</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </div>
+            <div>
+              <h4>Email</h4>
+              <p>upressease@wmsu.edu.ph</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <h4>Operating Hours</h4>
+              <p>Monday - Friday<br>8:00 AM - 5:00 PM</p>
+            </div>
+          </div>
+        </div>
+        
+        <form class="contact-form" id="contact-form">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required placeholder="How can we help?">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" required placeholder="Your message..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9V2h12v7" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            <span class="logo-text">UPRESS<span class="logo-accent">ease</span></span>
+          </a>
+          <p class="footer-description">
+            WMSU's official printing services platform. Fast, reliable, and student-friendly.
+          </p>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="#services">Printing</a></li>
+              <li><a href="#services">Binding</a></li>
+              <li><a href="#services">ID Processing</a></li>
+              <li><a href="#services">Lanyards</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="#how-it-works">How It Works</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#contact">Contact Us</a></li>
+              <li><a href="#">FAQs</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="assets/pages/student/terms.html">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Refund Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 UPRESSease. All rights reserved.</p>
+        <p>Western Mindanao State University</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/site-pricing.js"></script>
+  <script src="assets/js/landing.js"></script>
+</body>
 </html>

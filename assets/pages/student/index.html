@@ -3,102 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease | Login</title>
-    <link rel="stylesheet" href="../../css/student/student.css" />
-    <link rel="stylesheet" href="../../css/student/login.css" />
+    <title>Sign in | UPRESSease</title>
+    <meta http-equiv="refresh" content="0;url=../auth/portal.html" />
+    <script>
+      window.location.replace("../auth/portal.html" + window.location.hash);
+    </script>
 </head>
 <body>
-<section class="login-bg">
-    <p class="unified-login-tip">
-        <a href="../auth/portal.html">UPress unified sign-in</a> (students &amp; campus roles) — use this page for password recovery only, or sign in below.
-    </p>
-    <div class="login-card">
-        <div class="login-icon"><span class="upress-icon upress-icon--grad upress-icon--lg" aria-hidden="true"></span></div>
-        <h2>UPRESSease</h2>
-        <p>Western Mindanao State University<br />Printing &amp; Merchandise Reservation System</p>
-        <br />
-        <form id="login-form">
-            <label class="login-label">Email</label>
-            <input type="email" id="login-email" placeholder="student@wmsu.edu.ph" required />
-            <label class="login-label">Password</label>
-            <input type="password" id="login-password" placeholder="Enter password" required />
-            <div style="text-align:right; margin-top:-0.5rem; margin-bottom:0.875rem;">
-                <a href="#" id="forgot-link" class="forgot-link">Forgot Password?</a>
-            </div>
-            <button type="submit" class="btn-red">Login</button>
-        </form>
-        <p class="signup-link">
-            Don't have an account? <a href="signup.html">Sign up</a>
-        </p>
-    </div>
-</section>
-
-<!-- ══════════════ FORGOT PASSWORD MODAL ══════════════ -->
-<div id="fp-overlay" class="fp-overlay">
-    <div class="fp-modal">
-
-        <!-- Step 1: Email -->
-        <div id="fp-step1">
-            <div class="fp-modal-icon"><span class="upress-icon upress-icon--key upress-icon--lg" aria-hidden="true"></span></div>
-            <h3 class="fp-modal-title">Forgot Password</h3>
-            <p class="fp-modal-desc">Enter your registered email and we'll send you a reset code.</p>
-            <label class="login-label">Email</label>
-            <input type="email" id="fp-email" class="fp-input" placeholder="student@wmsu.edu.ph" />
-            <p id="fp-email-err" class="fp-error"></p>
-            <div class="fp-btn-row">
-                <button class="fp-btn-cancel" onclick="closeFP()">Cancel</button>
-                <button class="fp-btn-confirm" onclick="fpSendOTP()">Send Code</button>
-            </div>
-        </div>
-
-        <!-- Step 2: OTP -->
-        <div id="fp-step2" style="display:none;">
-            <div class="fp-modal-icon"><span class="upress-icon upress-icon--mail upress-icon--lg" aria-hidden="true"></span></div>
-            <h3 class="fp-modal-title">Check Your Email</h3>
-            <p id="fp-otp-hint" class="fp-modal-desc"></p>
-            <label class="login-label">6-Digit Code</label>
-            <input type="text" id="fp-otp-input" class="fp-input fp-otp-input" maxlength="6" placeholder="· · · · · ·" />
-            <p id="fp-otp-err" class="fp-error"></p>
-            <div class="fp-btn-row">
-                <button class="fp-btn-cancel" onclick="fpBackToStep1()">Back</button>
-                <button class="fp-btn-confirm" onclick="fpVerifyOTP()">Verify</button>
-            </div>
-            <p class="fp-resend-row">
-                <a href="#" id="fp-resend-link" class="fp-resend-link" onclick="fpResend(event)">Resend Code</a>
-                <span id="fp-resend-timer" class="fp-resend-timer" style="display:none;">
-                    &nbsp;(wait <span id="fp-countdown">60</span>s)
-                </span>
-            </p>
-        </div>
-
-        <!-- Step 3: New Password -->
-        <div id="fp-step3" style="display:none;">
-            <div class="fp-modal-icon"><span class="upress-icon upress-icon--lock upress-icon--lg" aria-hidden="true"></span></div>
-            <h3 class="fp-modal-title">Set New Password</h3>
-            <p class="fp-modal-desc">Choose a strong password for your account.</p>
-            <label class="login-label">New Password</label>
-            <input type="password" id="fp-new-pass" class="fp-input" placeholder="At least 8 characters" />
-            <label class="login-label" style="margin-top:0.25rem;">Confirm Password</label>
-            <input type="password" id="fp-confirm-pass" class="fp-input" placeholder="Repeat new password" />
-            <p id="fp-pass-err" class="fp-error"></p>
-            <div class="fp-btn-row">
-                <button class="fp-btn-cancel" onclick="closeFP()">Cancel</button>
-                <button class="fp-btn-confirm" onclick="fpResetPassword()">Reset Password</button>
-            </div>
-        </div>
-
-        <!-- Step 4: Success -->
-        <div id="fp-step4" style="display:none; text-align:center;">
-            <div class="fp-modal-icon fp-modal-icon--success"><span class="upress-icon upress-icon--check upress-icon--lg" aria-hidden="true"></span></div>
-            <h3 class="fp-modal-title" style="color:#27ae60;">Password Reset!</h3>
-            <p class="fp-modal-desc">Your password has been updated successfully. You can now log in with your new password.</p>
-            <button class="fp-btn-confirm" style="width:100%; margin-top:0.5rem;" onclick="closeFP()">Back to Login</button>
-        </div>
-
-    </div>
-</div>
-
-<script src="../../js/student/student.js"></script>
-<script src="../../js/student/login.js"></script>
+    <p><a href="../auth/portal.html">Continue to sign in</a></p>
 </body>
 </html>

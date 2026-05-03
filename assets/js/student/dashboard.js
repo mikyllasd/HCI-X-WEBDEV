@@ -110,7 +110,7 @@ function renderSidebarOrders() {
     if (active.length > 5) {
         listEl.innerHTML += `
         <div style="text-align:center;padding:0.5rem 0;">
-            <button onclick="goToFullOrders()" style="background:none;border:none;color:#8B0000;font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:'Segoe UI',sans-serif;">
+            <button onclick="goToFullOrders()" style="background:none;border:none;color:var(--color-header);font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:var(--font-sans);">
                 View all ${active.length} orders →
             </button>
         </div>`;
@@ -154,7 +154,7 @@ function renderSidebarHistory() {
     if (history.length > 5) {
         listEl.innerHTML += `
         <div style="text-align:center;padding:0.5rem 0;">
-            <button onclick="goToFullOrders()" style="background:none;border:none;color:#8B0000;font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:'Segoe UI',sans-serif;">
+            <button onclick="goToFullOrders()" style="background:none;border:none;color:var(--color-header);font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:var(--font-sans);">
                 View all history →
             </button>
         </div>`;

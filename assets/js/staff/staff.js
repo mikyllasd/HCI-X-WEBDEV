@@ -227,9 +227,34 @@ if (loginForm) {
 })();
 
 const navLinks = document.querySelectorAll('.nav-link[data-page]');
-const pages    = document.querySelectorAll('.staff-page');
+const pages = document.querySelectorAll('.staff-page');
+const staffSidebar = document.getElementById('sidebar');
+const staffSidebarOverlay = document.getElementById('sidebarOverlay');
+const staffHamburger = document.getElementById('hamburger');
+const staffSidebarClose = document.getElementById('sidebarClose');
 
-navLinks.forEach(link => {
+function closeStaffSidebar() {
+  if (staffSidebar) staffSidebar.classList.remove('open');
+  if (staffSidebarOverlay) staffSidebarOverlay.classList.remove('open');
+}
+
+function toggleStaffSidebar() {
+  if (!staffSidebar) return;
+  const open = staffSidebar.classList.toggle('open');
+  if (staffSidebarOverlay) staffSidebarOverlay.classList.toggle('open', open);
+}
+
+if (staffHamburger && staffSidebar) {
+  staffHamburger.addEventListener('click', toggleStaffSidebar);
+}
+if (staffSidebarClose) {
+  staffSidebarClose.addEventListener('click', closeStaffSidebar);
+}
+if (staffSidebarOverlay) {
+  staffSidebarOverlay.addEventListener('click', closeStaffSidebar);
+}
+
+navLinks.forEach((link) => {
   link.addEventListener('click', function (e) {
     const target = this.dataset.page;
     if (target === 'logout') {
@@ -242,12 +267,13 @@ navLinks.forEach(link => {
     }
     e.preventDefault();
 
-    navLinks.forEach(l => l.classList.remove('active'));
+    navLinks.forEach((l) => l.classList.remove('active'));
     this.classList.add('active');
 
-    pages.forEach(page => {
+    pages.forEach((page) => {
       page.classList.toggle('active', page.id === 'page-' + target);
     });
+    closeStaffSidebar();
   });
 });
 

@@ -114,12 +114,12 @@
         : `<div class="users-grid">${state.users.map((u, i) => userCard(u, i)).join("")}</div>`;
 
     pageContainer.innerHTML = `
-      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-        <div>
+      <div class="page-header page-header--row">
+        <div class="page-header__intro">
           <h1 class="page-title">Manage Users</h1>
           <p class="page-sub">Add, edit, suspend, or delete admin and staff accounts</p>
         </div>
-        <button class="btn btn-primary" id="addUserBtn">
+        <button class="btn btn-primary page-header__action" type="button" id="addUserBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
           Add User
         </button>

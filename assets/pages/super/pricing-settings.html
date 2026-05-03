@@ -4,190 +4,119 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease – Pricing Settings</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../../css/super/global.css" />
-    <link rel="stylesheet" href="../../css/super/pricing-settings.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-super-content.css" />
+    <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
   </head>
-  <body data-page="pricing">
+  <body class="staff-dashboard-body" data-page="pricing">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="app-shell">
-      <aside class="sidebar" id="sidebar">
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Superadmin sidebar"
+      >
         <div class="sidebar-brand">
-          <div class="brand-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
           </div>
-          <div class="brand-text">
+          <div>
             <span class="brand-name">UPRESSease</span>
-            <span class="brand-sub">Super Admin Portal</span>
+            <span class="brand-sub">Admin portal</span>
           </div>
           <button
             class="sidebar-close"
             id="sidebarClose"
+            type="button"
             aria-label="Close sidebar"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+            <i data-lucide="x" aria-hidden="true"></i>
           </button>
         </div>
         <div class="sidebar-user">
-          <div class="user-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-              />
-            </svg>
-            Superadmin
-          </div>
-          <span class="user-handle">@superadmin</span>
+          <button class="user-pill" type="button" aria-label="Logged in as superadmin">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Superadmin</span>
+          </button>
+          <p class="user-handle">@superadmin</p>
         </div>
-        <nav class="sidebar-nav">
-          <a href="dashboard.html" class="nav-item" data-page="dashboard">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-            </svg>
-            Dashboard
-          </a>
-          <a href="manage-users.html" class="nav-item" data-page="users">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            Manage Users
-          </a>
-          <a href="pricing-settings.html" class="nav-item" data-page="pricing">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <line x1="12" y1="1" x2="12" y2="23" />
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-            Pricing Settings
-          </a>
-          <a href="policies.html" class="nav-item" data-page="policies">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-              />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
-              <polyline points="10 9 9 9 8 9" />
-            </svg>
-            Policies
-          </a>
-          <a href="reports.html" class="nav-item" data-page="reports">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <line x1="18" y1="20" x2="18" y2="10" />
-              <line x1="12" y1="20" x2="12" y2="4" />
-              <line x1="6" y1="20" x2="6" y2="14" />
-            </svg>
-            Reports
-          </a>
-          <a href="system-settings.html" class="nav-item" data-page="settings">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle cx="12" cy="12" r="3" />
-              <path
-                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-              />
-            </svg>
-            System Settings
-          </a>
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="manage-users.html" class="nav-link" data-page="users">
+                <i data-lucide="users" aria-hidden="true"></i
+                ><span>Manage Users</span></a
+              >
+            </li>
+            <li>
+              <a href="pricing-settings.html" class="nav-link active" data-page="pricing">
+                <i data-lucide="circle-dollar-sign" aria-hidden="true"></i
+                ><span>Pricing Settings</span></a
+              >
+            </li>
+            <li>
+              <a href="policies.html" class="nav-link" data-page="policies">
+                <i data-lucide="file-text" aria-hidden="true"></i
+                ><span>Policies</span></a
+              >
+            </li>
+            <li>
+              <a href="reports.html" class="nav-link" data-page="reports">
+                <i data-lucide="bar-chart-2" aria-hidden="true"></i
+                ><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="system-settings.html" class="nav-link" data-page="settings">
+                <i data-lucide="settings" aria-hidden="true"></i
+                ><span>System Settings</span></a
+              >
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="#"
+                class="nav-link nav-link--logout"
+                id="logoutBtn"
+                data-page="logout"
+                aria-label="Logout"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
         </nav>
-        <div class="sidebar-footer">
-          <button class="logout-btn" id="logoutBtn">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Logout
-          </button>
-        </div>
       </aside>
-
-      <main class="main-content">
-        <header class="topbar">
-          <button class="hamburger" id="hamburger" aria-label="Open menu">
-            <span></span><span></span><span></span>
-          </button>
-          <div class="topbar-title">Pricing Settings</div>
-        </header>
-
-        <div class="page-container" id="pageContainer">
-          <!-- Rendered by pricing-settings.js -->
-        </div>
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div class="page-container" id="pageContainer"></div>
       </main>
     </div>
 
-    <div class="toast" id="toast">
+<div class="toast" id="toast">
       <svg
         width="18"
         height="18"
@@ -202,6 +131,7 @@
       <span id="toastMsg">Action completed successfully!</span>
     </div>
 
+    <script src="../../js/site-pricing.js"></script>
     <script src="../../js/super/shared.js"></script>
     <script src="../../js/super/pricing-settings.js"></script>
   </body>

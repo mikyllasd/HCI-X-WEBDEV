@@ -22,9 +22,26 @@
         renewal: 'No surrender required. Payment applies before scheduling.'
     };
 
+    function idFeePeso(key) {
+        if (typeof window.UPressPricing === 'undefined' || !UPressPricing.readPricingFromSession) return null;
+        const p = UPressPricing.readPricingFromSession();
+        const map = { lost: 'lostId', damaged: 'damagedId', renewal: 'renewalId' };
+        const idKey = map[key];
+        if (!idKey || !p.idAccessories) return null;
+        const n = p.idAccessories[idKey];
+        return typeof n === 'number' ? n : null;
+    }
+
+    function hintWithFee(key) {
+        const base = hints[key] || '';
+        const fee = idFeePeso(key);
+        if (fee == null) return base;
+        return base + ' Estimated fee: ₱' + fee.toFixed(2) + '.';
+    }
+
     sel.addEventListener('change', function () {
         const v = sel.value;
-        hint.textContent = v ? hints[v] || '' : '';
+        hint.textContent = v && hints[v] ? hintWithFee(v) : '';
         affWrap.style.display = v === 'lost' ? 'block' : 'none';
     });
 

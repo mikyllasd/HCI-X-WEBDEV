@@ -6,6 +6,7 @@
     <title>UPRESSease | Lanyard Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/lanyard.css" />
+    <script src="../../js/site-pricing.js"></script>
 </head>
 <body>
 <header class="appbar">
@@ -29,19 +30,19 @@
                         <div class="option-icon"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></div>
                         <div class="option-name">WMSU Official Lanyard</div>
                         <div class="option-desc">Standard WMSU lanyard</div>
-                        <div class="option-price">₱120</div>
+                        <div class="option-price" id="lanyard-opt-price-wmsu">₱120</div>
                     </div>
                     <div class="option" onclick="selectLanyardType('department', this)">
                         <div class="option-icon"><span class="upress-icon upress-icon--building" aria-hidden="true"></span></div>
                         <div class="option-name">Department Lanyard</div>
                         <div class="option-desc">Customized with department</div>
-                        <div class="option-price">₱150</div>
+                        <div class="option-price" id="lanyard-opt-price-dept">₱150</div>
                     </div>
                     <div class="option" onclick="selectLanyardType('custom', this)">
                         <div class="option-icon"><span class="upress-icon upress-icon--edit" aria-hidden="true"></span></div>
                         <div class="option-name">Customize</div>
                         <div class="option-desc">Create your own design</div>
-                        <div class="option-price">₱200</div>
+                        <div class="option-price" id="lanyard-opt-price-custom">₱200</div>
                     </div>
                 </div>
             </div>

@@ -89,15 +89,15 @@ function initModals() {
     const el = document.createElement('div');
     el.innerHTML = `
     <div id="upress-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center;">
-        <div id="upress-modal-box" style="background:white;border-radius:0.9375rem;padding:2rem;max-width:26rem;width:90%;box-shadow:0 0.5rem 2rem rgba(0,0,0,0.2);font-family:'Segoe UI',sans-serif;animation:modalIn 0.2s ease;">
+        <div id="upress-modal-box" style="background:white;border-radius:0.9375rem;padding:2rem;max-width:26rem;width:90%;box-shadow:0 0.5rem 2rem rgba(0,0,0,0.2);font-family:var(--font-sans);animation:modalIn 0.2s ease;">
             <h3 id="upress-modal-title" style="margin:0 0 0.75rem;font-size:1.125rem;color:#333;"></h3>
             <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;line-height:1.5;white-space:pre-line;"></p>
             <div id="upress-modal-input-wrap" style="display:none;margin-bottom:1rem;">
-                <input id="upress-modal-input" type="text" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:'Segoe UI',sans-serif;outline:none;">
+                <input id="upress-modal-input" type="text" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);outline:none;">
             </div>
             <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-                <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'Segoe UI',sans-serif;">Cancel</button>
-                <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:#a32020;color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'Segoe UI',sans-serif;">Confirm</button>
+                <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
+                <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:var(--color-cta);color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Confirm</button>
             </div>
         </div>
     </div>
@@ -169,7 +169,7 @@ function getBase() {
 function goTo(page) {
     // Map page names to filenames
     const map = {
-        'login':           'index.html',
+        'login':           '../auth/portal.html',
         'signup':          'signup.html',
         'terms':           'terms.html',
         'dashboard':       'dashboard.html',

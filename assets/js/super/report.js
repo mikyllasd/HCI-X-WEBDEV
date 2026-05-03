@@ -5,19 +5,14 @@
 (function () {
   const pageContainer = document.getElementById("pageContainer");
 
-  // ── Mock report data ──
   const reportData = {
     daily: {
-      labels: ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed"],
-      orders: [4, 3, 0, 0, 2, 0, 0],
-      income: [780, 620, 0, 0, 350, 0, 0],
+      labels: ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"],
+      orders: [0, 0, 0, 0, 0, 0, 0],
+      income: [0, 0, 0, 0, 0, 0, 0],
     },
     monthly: {
       labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
         "May",
         "Jun",
         "Jul",
@@ -26,16 +21,18 @@
         "Oct",
         "Nov",
         "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
       ],
-      orders: [12, 8, 22, 9, 15, 18, 6, 9, 11, 14, 7, 0],
-      income: [
-        2400, 1600, 4400, 1800, 3000, 3600, 1200, 1800, 2200, 2800, 1400, 0,
-      ],
+      orders: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+      income: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000],
     },
     yearly: {
       labels: ["2022", "2023", "2024", "2025", "2026"],
-      orders: [85, 132, 168, 201, 9],
-      income: [17000, 26400, 33600, 40200, 1750],
+      orders: [0, 0, 0, 0, 9],
+      income: [0, 0, 0, 0, 1750],
     },
   };
 
@@ -43,9 +40,20 @@
   let chartInstance = null;
 
   pageContainer.innerHTML = `
-    <div class="page-header">
-      <h1 class="page-title">Reports</h1>
-      <p class="page-sub">View and analyze system performance over time</p>
+    <div class="page-header page-header--row">
+      <div class="page-header__intro">
+        <h1 class="page-title">Reports</h1>
+        <p class="page-sub">View and analyze system performance over time</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary page-header__action"
+        id="reportsExportBtn"
+        aria-label="Export Report"
+      >
+        <i data-lucide="download" aria-hidden="true"></i>
+        Export Report
+      </button>
     </div>
 
     <div class="reports-header-section">
@@ -59,8 +67,8 @@
           <div class="filter-label">Report Type</div>
           <select class="form-input form-select" id="reportType">
             <option value="daily" selected>Daily (Last 7 Days)</option>
-            <option value="monthly">Monthly (This Year)</option>
-            <option value="yearly">Yearly (All Time)</option>
+            <option value="monthly">Monthly (Last 12 Months)</option>
+            <option value="yearly">Yearly (Last 5 Years)</option>
           </select>
         </div>
         <div>
@@ -74,32 +82,36 @@
       </div>
     </div>
 
-    <div class="stats-grid" style="margin-bottom:20px">
+    <section class="sd-metrics" aria-label="Report summary">
       ${statCard("Total Orders", "9", "Across selected period", "red", "accent-red", iconBox())}
       ${statCard("Total Income", "₱1,750.00", "From completed orders", "green", "accent-green", iconDollar())}
       ${statCard("Avg Order Value", "₱194.44", "Per completed order", "blue", "accent-blue", iconTrend())}
-    </div>
+    </section>
 
-    <div class="card">
-      <div class="card-header">
+    <div class="card sp">
+      <div class="card-title-group">
+        <i data-lucide="bar-chart-2" aria-hidden="true"></i>
         <div>
-          <div class="card-title">Performance Chart</div>
-          <div class="card-sub" id="chartSubtitle">Daily Report</div>
+          <h2 class="card-title">Performance Chart</h2>
+          <p class="card-subtitle" id="rpt-chart-label">Daily Report</p>
         </div>
       </div>
-      <div class="card-body">
-        <div class="chart-container">
-          <canvas id="perfChart"></canvas>
-        </div>
+      <div style="position:relative;height:300px;margin-top:1rem;">
+        <canvas id="reports-chart" aria-label="Reports performance chart"></canvas>
       </div>
     </div>
   `;
 
   function buildChart(type) {
-    const data = reportData[type];
-    const ctx = document.getElementById("perfChart").getContext("2d");
+    const canvas = document.getElementById("reports-chart");
+    if (!canvas) return;
+    const existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
+    chartInstance = null;
 
-    chartInstance = new Chart(ctx, {
+    const data = reportData[type] || reportData.daily;
+
+    chartInstance = new Chart(canvas, {
       type: "line",
       data: {
         labels: data.labels,
@@ -107,28 +119,30 @@
           {
             label: "Orders",
             data: data.orders,
-            borderColor: "#ef4444",
-            backgroundColor: "rgba(239,68,68,0.08)",
+            borderColor: "#1a1a1a",
+            backgroundColor: "transparent",
+            pointBackgroundColor: "#ffffff",
+            pointBorderColor: "#1a1a1a",
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
             borderWidth: 2,
-            pointBackgroundColor: "#ef4444",
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            tension: 0.35,
-            fill: true,
-            yAxisID: "y",
+            tension: 0,
+            yAxisID: "yLeft",
           },
           {
             label: "Income (₱)",
             data: data.income,
-            borderColor: "#22c55e",
-            backgroundColor: "rgba(34,197,94,0.06)",
+            borderColor: "#10B981",
+            backgroundColor: "transparent",
+            pointBackgroundColor: "#ffffff",
+            pointBorderColor: "#10B981",
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
             borderWidth: 2,
-            pointBackgroundColor: "#22c55e",
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            tension: 0.35,
-            fill: true,
-            yAxisID: "y1",
+            tension: 0,
+            yAxisID: "yRight",
           },
         ],
       },
@@ -138,65 +152,81 @@
         interaction: { mode: "index", intersect: false },
         plugins: {
           legend: {
+            display: true,
             position: "bottom",
+            align: "center",
             labels: {
-              font: {
-                family: "'Plus Jakarta Sans', sans-serif",
-                size: 12,
-                weight: "600",
-              },
               usePointStyle: true,
-              pointStyleWidth: 8,
+              pointStyle: "circle",
               padding: 20,
-              color: "#5a6170",
+              font: { family: "'Inter', sans-serif", size: 13 },
+              color: "#374151",
             },
           },
           tooltip: {
-            backgroundColor: "white",
-            titleColor: "#1a1d23",
-            bodyColor: "#5a6170",
-            borderColor: "#e4e8ef",
+            backgroundColor: "#fff",
+            borderColor: "#e5e7eb",
             borderWidth: 1,
-            padding: 12,
-            titleFont: {
-              family: "'Plus Jakarta Sans', sans-serif",
-              weight: "700",
-              size: 13,
-            },
-            bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
+            titleColor: "#111827",
+            bodyColor: "#6B7280",
+            padding: 10,
             callbacks: {
-              label: (ctx) => {
-                if (ctx.dataset.label === "Income (₱)")
-                  return `Income (₱) : ${ctx.parsed.y.toLocaleString()}`;
-                return `Orders : ${ctx.parsed.y}`;
+              label(ctx) {
+                if (ctx.dataset.label === "Income (₱)") {
+                  return " Income: ₱" + ctx.parsed.y.toFixed(2);
+                }
+                return " Orders: " + ctx.parsed.y;
               },
             },
           },
         },
         scales: {
           x: {
-            grid: { color: "rgba(0,0,0,0.04)" },
+            grid: {
+              color: "#e5e7eb",
+              lineWidth: 1,
+              drawTicks: false,
+            },
+            border: { dash: [4, 4] },
             ticks: {
-              font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
-              color: "#9aa1b0",
+              font: { family: "'Inter', sans-serif", size: 12 },
+              color: "#6B7280",
+              padding: 8,
             },
           },
-          y: {
+          yLeft: {
+            type: "linear",
             position: "left",
-            grid: { color: "rgba(0,0,0,0.04)" },
-            ticks: {
-              font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
-              color: "#ef4444",
-              stepSize: 1,
+            beginAtZero: true,
+            grid: {
+              color: "#e5e7eb",
+              lineWidth: 1,
+              drawTicks: false,
             },
+            border: { dash: [4, 4] },
+            ticks: {
+              font: { family: "'Inter', sans-serif", size: 12 },
+              color: "#6B7280",
+              padding: 8,
+              stepSize: 1,
+              precision: 0,
+            },
+            title: { display: false },
           },
-          y1: {
+          yRight: {
+            type: "linear",
             position: "right",
+            beginAtZero: true,
             grid: { drawOnChartArea: false },
             ticks: {
-              font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
-              color: "#22c55e",
+              font: { family: "'Inter', sans-serif", size: 12 },
+              color: "#10B981",
+              padding: 8,
+              callback(val) {
+                return val;
+              },
             },
+            title: { display: false },
           },
         },
       },
@@ -205,6 +235,10 @@
 
   buildChart(reportType);
 
+  document.getElementById("reportsExportBtn").addEventListener("click", () => {
+    showToast("Export prepared (demo).");
+  });
+
   document.getElementById("reportType").addEventListener("change", (e) => {
     reportType = e.target.value;
     const subtitles = {
@@ -212,12 +246,16 @@
       monthly: "Monthly Report",
       yearly: "Yearly Report",
     };
-    document.getElementById("chartSubtitle").textContent =
-      subtitles[reportType];
+    const lbl = document.getElementById("rpt-chart-label");
+    if (lbl) lbl.textContent = subtitles[reportType];
     if (chartInstance) {
       chartInstance.destroy();
       chartInstance = null;
     }
     buildChart(reportType);
   });
+
+  if (typeof lucide !== "undefined" && lucide.createIcons) {
+    lucide.createIcons();
+  }
 })();

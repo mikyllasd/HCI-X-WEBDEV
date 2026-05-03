@@ -1,8 +1,5 @@
-/* ============================================================
-   UPRESSease Admin Portal – Global Stylesheet
-   ============================================================ */
+@import url("../upress-tokens.css");
 
-/* ── Reset & Variables ── */
 *,
 *::before,
 *::after {
@@ -12,13 +9,13 @@
 }
 
 :root {
-  --maroon: #800000;
-  --maroon-dark: #5a0000;
+  --maroon: var(--color-header);
+  --maroon-dark: var(--color-header-hover);
   --maroon-light: #9a1515;
   --maroon-muted: rgba(128, 0, 0, 0.08);
   --gold: #f5a623;
   --gold-light: #ffd580;
-  --bg: #f0f2f5;
+  --bg: #ebe8e4;
   --surface: #ffffff;
   --surface2: #f8f9fb;
   --border: #e4e8ef;
@@ -44,7 +41,7 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
   --transition: 0.2s ease;
-  --font: "Plus Jakarta Sans", sans-serif;
+  --font: var(--font-sans);
   --font-mono: "DM Mono", monospace;
 }
 
@@ -54,12 +51,16 @@ html {
 
 body {
   font-family: var(--font);
-  background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--color-surface-soft);
+  background-image:
+    radial-gradient(ellipse 100% 70% at 0% 0%, color-mix(in srgb, var(--maroon) 10%, transparent), transparent 55%),
+    radial-gradient(ellipse 80% 50% at 100% 15%, color-mix(in srgb, var(--maroon) 7%, transparent), transparent 50%),
+    linear-gradient(180deg, var(--color-surface-soft) 0%, var(--bg) 45%);
 }
 
 /* ── App Shell ── */
@@ -297,6 +298,22 @@ body {
   background: var(--text);
   border-radius: 2px;
   transition: all var(--transition);
+}
+
+.main-content > .main-hamburger {
+  display: none;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  align-items: center;
+  justify-content: center;
 }
 
 .topbar-title {
@@ -1343,9 +1360,10 @@ body {
 
   .main-content {
     margin-left: 0;
+    padding-top: 60px;
   }
 
-  .hamburger {
+  .main-content > .main-hamburger {
     display: flex;
   }
 
@@ -1386,9 +1404,6 @@ body {
   }
   .stat-value {
     font-size: 28px;
-  }
-  .topbar {
-    padding: 0 16px;
   }
   .page-container {
     padding: 12px;

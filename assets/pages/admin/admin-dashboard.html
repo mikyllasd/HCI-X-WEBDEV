@@ -5,31 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease – Admin Portal</title>
 
-    <!-- Google Fonts: DM Sans -->
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Lucide Icons via CDN -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
     <!-- Chart.js for analytics graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <!-- Separated stylesheet -->
-    <link rel="stylesheet" href="../../css/admin/admin.css" />
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
   </head>
-  <body>
+  <body class="staff-dashboard-body">
     <!-- ============================================================
      APP WRAPPER — flex container holding sidebar + main column
      ============================================================ -->
-    <div class="app-wrapper">
+    <div class="app-wrapper staff-layout sd-layout">
       <!-- ==========================================================
        SIDEBAR — sticky, stays fixed while main content scrolls
        ========================================================== -->
       <aside
-        class="sidebar"
+        class="sidebar staff-sidebar"
         id="sidebar"
         role="navigation"
         aria-label="Admin sidebar"
@@ -120,34 +119,18 @@
       <!-- /sidebar -->
 
       <!-- ==========================================================
-       MAIN CONTENT — sticky topbar + all page sections
+       MAIN CONTENT — all page sections
        ========================================================== -->
-      <main class="main-content" id="main-content" role="main">
-        <!-- Sticky top navigation bar -->
-        <header class="topbar" role="banner">
-          <button
-            class="hamburger"
-            id="hamburger-btn"
-            aria-label="Toggle sidebar"
-            aria-expanded="false"
-          >
-            <i data-lucide="menu" aria-hidden="true"></i>
-          </button>
-          <div class="topbar-title" id="topbar-title">Dashboard</div>
-          <div class="topbar-actions">
-            <button class="topbar-icon-btn" aria-label="Notifications">
-              <i data-lucide="bell" aria-hidden="true"></i>
-              <span class="notif-dot" aria-hidden="true"></span>
-            </button>
-            <div
-              class="topbar-avatar"
-              title="Admin"
-              aria-label="Admin avatar"
-            >
-              A
-            </div>
-          </div>
-        </header>
+      <main class="main-content staff-main sd-main" id="main-content" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger-btn"
+          type="button"
+          aria-label="Toggle sidebar"
+          aria-expanded="false"
+        >
+          <i data-lucide="menu" aria-hidden="true"></i>
+        </button>
 
         <!-- ==========================================================
          PAGE: DASHBOARD
@@ -158,99 +141,193 @@
           id="page-dashboard"
           aria-labelledby="dash-heading"
         >
-          <div class="page-header">
-            <h1 id="dash-heading">Dashboard</h1>
-            <p class="page-subtitle" id="dash-date">Today's Overview</p>
-          </div>
+          <header class="sd-header">
+            <h1 class="sd-title" id="dash-heading">Dashboard</h1>
+            <div class="sd-subtitle" id="dash-date"></div>
+          </header>
 
-          <!-- Order status cards (6 cards, 3 columns) -->
-          <div class="stats-grid stats-grid--3 sp">
-            <article
-              class="stat-card stat-card--red"
-              aria-label="Today's Orders"
-            >
-              <div class="stat-card__header">
-                <span>Today's Orders</span
-                ><i data-lucide="package" aria-hidden="true"></i>
+          <section class="sd-metrics" aria-label="Dashboard metrics">
+            <article class="sd-card sd-card--red" aria-label="Today's Orders">
+              <div class="sd-card__top">
+                <div class="sd-card__label">Today's Orders</div>
+                <div
+                  class="sd-card__icon sd-card__icon--ring"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 21a9 9 0 1 0-9-9"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M12 7v6l4 2"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
               </div>
-              <p class="stat-card__value" id="dash-orders">0</p>
-              <p class="stat-card__label">Total orders today</p>
+              <div class="sd-card__value" id="dash-orders">0</div>
+              <div class="sd-card__hint">Total orders today</div>
             </article>
-            <article
-              class="stat-card stat-card--green"
-              aria-label="Today's Income"
-            >
-              <div class="stat-card__header">
-                <span>Today's Income</span
-                ><i data-lucide="dollar-sign" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-income">₱0.00</p>
-              <p class="stat-card__label">From completed orders</p>
-            </article>
-            <article
-              class="stat-card stat-card--yellow"
-              aria-label="Pending or Paid"
-            >
-              <div class="stat-card__header">
-                <span>Pending/Paid</span
-                ><i data-lucide="clock" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-pending">0</p>
-              <p class="stat-card__label">Awaiting processing</p>
-            </article>
-            <article
-              class="stat-card stat-card--purple"
-              aria-label="Processing"
-            >
-              <div class="stat-card__header">
-                <span>Processing</span
-                ><i data-lucide="package-open" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-processing">0</p>
-              <p class="stat-card__label">Currently being processed</p>
-            </article>
-            <article
-              class="stat-card stat-card--teal"
-              aria-label="Ready for Pickup"
-            >
-              <div class="stat-card__header">
-                <span>Ready for Pickup</span
-                ><i data-lucide="circle-check" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-ready">0</p>
-              <p class="stat-card__label">Ready to be claimed</p>
-            </article>
-            <article class="stat-card stat-card--gray" aria-label="Completed">
-              <div class="stat-card__header">
-                <span>Completed</span
-                ><i data-lucide="check" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="dash-completed">0</p>
-              <p class="stat-card__label">Successfully completed</p>
-            </article>
-          </div>
 
-          <!-- Today's transactions card -->
-          <div class="card sp">
-            <div class="card-header">
-              <div class="card-title-group">
-                <i data-lucide="list" aria-hidden="true"></i>
-                <h2 class="card-title">Today's Transactions</h2>
+            <article class="sd-card sd-card--green" aria-label="Today's Income">
+              <div class="sd-card__top">
+                <div class="sd-card__label">Today's Income</div>
+                <div
+                  class="sd-card__icon sd-card__icon--money"
+                  aria-hidden="true"
+                >
+                  $
+                </div>
               </div>
-              <button class="btn btn--primary" onclick="navigateTo('orders')">
-                <i data-lucide="list" aria-hidden="true"></i> View All Orders
+              <div class="sd-card__value" id="dash-income">₱0.00</div>
+              <div class="sd-card__hint">From completed orders</div>
+            </article>
+
+            <article class="sd-card sd-card--amber" aria-label="Pending or Paid">
+              <div class="sd-card__top">
+                <div class="sd-card__label">Pending/Paid</div>
+                <div
+                  class="sd-card__icon sd-card__icon--ring"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 21a9 9 0 1 0-9-9"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M12 7v6"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="sd-card__value" id="dash-pending">0</div>
+              <div class="sd-card__hint">Awaiting processing</div>
+            </article>
+
+            <article class="sd-card sd-card--purple" aria-label="Processing">
+              <div class="sd-card__top">
+                <div class="sd-card__label">Processing</div>
+                <div
+                  class="sd-card__icon sd-card__icon--spark"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5L12 2z"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="sd-card__value" id="dash-processing">0</div>
+              <div class="sd-card__hint">Currently being processed</div>
+            </article>
+
+            <article class="sd-card sd-card--teal" aria-label="Ready for Pickup">
+              <div class="sd-card__top">
+                <div class="sd-card__label">Ready for Pickup</div>
+                <div
+                  class="sd-card__icon sd-card__icon--check"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6 9 17l-5-5"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="sd-card__value" id="dash-ready">0</div>
+              <div class="sd-card__hint">Ready to be claimed</div>
+            </article>
+
+            <article class="sd-card sd-card--gray" aria-label="Completed">
+              <div class="sd-card__top">
+                <div class="sd-card__label">Completed</div>
+                <div
+                  class="sd-card__icon sd-card__icon--check muted"
+                  aria-hidden="true"
+                >
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M20 6 9 17l-5-5"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="sd-card__value" id="dash-completed">0</div>
+              <div class="sd-card__hint">Successfully completed</div>
+            </article>
+          </section>
+
+          <section class="sd-panel" aria-label="Today's transactions">
+            <div class="sd-panel__head">
+              <div>
+                <div class="sd-panel__title">
+                  <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+                  <span>Today's Transactions</span>
+                </div>
+                <div class="sd-panel__sub">
+                  Web orders and walk-in POS receipts dated today (each sale once)
+                </div>
+              </div>
+              <button
+                type="button"
+                class="sd-panel__cta"
+                onclick="navigateTo('orders')"
+              >
+                <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
+                <span>View All</span>
               </button>
             </div>
-            <p class="card-subtitle">All orders placed today</p>
-            <!-- Empty state -->
-            <div class="empty-state" id="dash-empty">
-              <i data-lucide="package" aria-hidden="true"></i>
-              <p class="empty-state__title">No transactions today</p>
-              <p class="empty-state__sub">
-                Orders placed today will appear here
-              </p>
+
+            <div class="sd-empty" id="dash-empty">
+              <div class="sd-empty__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M3.27 6.96 12 12l8.73-5.04M12 22V12"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div class="sd-empty__title">No transactions today</div>
+              <div class="sd-empty__sub">
+                Nothing dated today yet — queue and completed tables still list
+                all orders.
+              </div>
             </div>
-            <!-- Table hidden when empty -->
+
             <div class="table-wrapper hidden" id="dash-table">
               <table class="data-table" aria-label="Today's transactions">
                 <thead>
@@ -266,26 +343,40 @@
                 <tbody id="dash-table-body"></tbody>
               </table>
             </div>
-          </div>
+          </section>
 
-          <!-- Analytics promo banner -->
-          <div class="promo-banner sp">
-            <div class="promo-banner__icon" aria-hidden="true">
-              <i data-lucide="trending-up"></i>
+          <section class="sd-hero" aria-label="Performance analytics">
+            <div class="sd-hero__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M4 16l5-6 4 3 7-9"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M4 20h16"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
             </div>
-            <div class="promo-banner__text">
-              <h3>Performance Analytics</h3>
-              <p>
+            <div class="sd-hero__text">
+              <div class="sd-hero__title">Performance Analytics</div>
+              <div class="sd-hero__sub">
                 View detailed daily, monthly, and yearly performance reports
-              </p>
+              </div>
             </div>
             <button
-              class="btn btn--light"
+              type="button"
+              class="sd-hero__cta"
               onclick="navigateTo('daily-analytics')"
             >
               View Analytics
             </button>
-          </div>
+          </section>
         </section>
         <!-- /page-dashboard -->
 
@@ -418,18 +509,9 @@
           id="page-orders"
           aria-labelledby="orders-heading"
         >
-          <div class="page-dark-header">
-            <button
-              class="back-btn"
-              onclick="navigateTo('dashboard')"
-              aria-label="Back"
-            >
-              <i data-lucide="arrow-left" aria-hidden="true"></i>
-            </button>
-            <div>
-              <h1 id="orders-heading">Orders Management</h1>
-              <p>View and manage all orders</p>
-            </div>
+          <div class="page-header">
+            <h1 id="orders-heading">Orders Management</h1>
+            <p class="page-subtitle">View and manage all orders</p>
           </div>
           <div class="page-body">
             <div class="card">
@@ -536,7 +618,7 @@
               <article class="stat-card stat-card--yellow" aria-label="Pending Review">
                 <div class="stat-card__header">
                   <span>Pending Review</span
-                     <i data-lucide="alert-circle" aria-hidden="true"></i>
+                  ><i data-lucide="alert-circle" aria-hidden="true"></i>
                 </div>
                 <p class="stat-card__value" id="pv-pending">2</p>
               </article>
@@ -699,17 +781,22 @@
           id="page-reports"
           aria-labelledby="reports-heading"
         >
-          <!-- Page header matching Figma: title left, Export Report button right -->
-          <div class="page-header rpt-page-header">
-            <div>
+          <div class="page-header rpt-page-header page-header--row">
+            <div class="page-header__intro">
               <h1 id="reports-heading">Reports &amp; Analytics</h1>
               <p class="page-subtitle">View and analyze system performance</p>
             </div>
-            <button class="btn btn--primary rpt-export-btn" id="rpt-export-btn" aria-label="Export Report">
+            <button
+              type="button"
+              class="btn btn--primary rpt-export-btn page-header__action"
+              id="rpt-export-btn"
+              aria-label="Export Report"
+            >
               <i data-lucide="download" aria-hidden="true"></i> Export Report
             </button>
           </div>
 
+          <div class="page-body">
           <!-- Report Filters card (Figma) -->
           <div class="card sp rpt-filters-card" aria-label="Report Filters">
             <div class="rpt-filters-header">
@@ -784,7 +871,7 @@
           </div>
 
           <!-- Transaction History Table -->
-          <div class="card sp">
+          <div class="card sp mt-6">
             <h2 class="card-title">Transaction History</h2>
             <p class="card-subtitle">All completed transactions in selected period</p>
             <div class="empty-state" id="rpt-empty">
@@ -807,6 +894,7 @@
                 <tbody id="rpt-table-body"></tbody>
               </table>
             </div>
+          </div>
           </div>
         </section>
         <!-- /page-reports -->

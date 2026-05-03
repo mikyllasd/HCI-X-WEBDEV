@@ -1,10 +1,3 @@
-/* ============================================================
-   UPRESSease Admin Portal – Shared Script
-   ============================================================ */
-
-// ── Shared State ──
-// Stored in sessionStorage so it persists across page navigations
-// within the same browser tab.
 const STORAGE_KEY = "upressease_state";
 
 function loadState() {
@@ -23,7 +16,9 @@ function saveState(s) {
 
 const defaultState = {
   users: [],
-  pricing: { bw: 3.0, color: 2.0, surcharge: 5.0 },
+  pricing: window.UPressPricing
+    ? window.UPressPricing.getDefaultPricing()
+    : { bw: 3, color: 2, surcharge: 5 },
   policies: { qrCode: true, discounts: false },
   settings: {
     institution: "Western Mindanao State University",
@@ -36,9 +31,12 @@ const defaultState = {
   },
 };
 
-const state = Object.assign({}, defaultState, loadState());
+const state = Object.assign({}, defaultState, loadState() || {});
+if (window.UPressPricing) {
+  state.pricing = window.UPressPricing.normalizePricing(state.pricing);
+  window.UPressPricing.mirrorPublicPricing(state.pricing);
+}
 
-// Persist state on every change via a Proxy-based auto-save helper
 function persistState() {
   saveState({
     users: state.users,
@@ -46,9 +44,11 @@ function persistState() {
     policies: state.policies,
     settings: state.settings,
   });
+  if (window.UPressPricing && state.pricing) {
+    window.UPressPricing.mirrorPublicPricing(state.pricing);
+  }
 }
 
-// ── Toast ──
 const toast = document.getElementById("toast");
 const toastMsg = document.getElementById("toastMsg");
 let toastTimer;
@@ -60,61 +60,52 @@ function showToast(msg, duration = 3000) {
   toastTimer = setTimeout(() => toast.classList.remove("show"), duration);
 }
 
-// ── Sidebar Mobile ──
 const sidebar = document.getElementById("sidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
 const hamburger = document.getElementById("hamburger");
 const sidebarClose = document.getElementById("sidebarClose");
 
-hamburger.addEventListener("click", () => {
-  sidebar.classList.add("open");
-  sidebarOverlay.classList.add("open");
-});
-
-function closeSidebar() {
-  sidebar.classList.remove("open");
-  sidebarOverlay.classList.remove("open");
+if (hamburger && sidebar) {
+  hamburger.addEventListener("click", () => {
+    sidebar.classList.add("open");
+    if (sidebarOverlay) sidebarOverlay.classList.add("open");
+  });
 }
 
-sidebarClose.addEventListener("click", closeSidebar);
-sidebarOverlay.addEventListener("click", closeSidebar);
+function closeSidebar() {
+  if (!sidebar) return;
+  sidebar.classList.remove("open");
+  if (sidebarOverlay) sidebarOverlay.classList.remove("open");
+}
 
-// ── Logout ──
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  showToast("Logged out successfully.");
-  setTimeout(() => {
-    sessionStorage.removeItem(STORAGE_KEY);
-    try {
-      localStorage.removeItem("currentUser");
-    } catch (_) {}
-    window.location.replace("../../pages/admin-login-entry-point.html");
-  }, 1200);
-});
+if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener("click", closeSidebar);
 
-// ── Active Nav Item ──
-// Each page sets its own data-page on <body> and this marks the nav item active.
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    showToast("Logged out successfully.");
+    setTimeout(() => {
+      sessionStorage.removeItem(STORAGE_KEY);
+      try {
+        localStorage.removeItem("currentUser");
+      } catch (_) {}
+      window.location.replace("../../pages/admin-login-entry-point.html");
+    }, 1200);
+  });
+}
+
 (function markActiveNav() {
   const currentPage = document.body.dataset.page || "";
-  document.querySelectorAll(".nav-item").forEach((item) => {
+  document.querySelectorAll(".nav-link[data-page]").forEach((item) => {
     item.classList.toggle("active", item.dataset.page === currentPage);
-    item.addEventListener("click", (e) => {
-      e.preventDefault();
-      closeSidebar();
-      const page = item.dataset.page;
-      const map = {
-        dashboard: "dashboard.html",
-        users: "manage-users.html",
-        pricing: "pricing-settings.html",
-        policies: "policies.html",
-        reports: "reports.html",
-        settings: "system-settings.html",
-      };
-      if (map[page]) window.location.href = map[page];
-    });
   });
+  if (typeof lucide !== "undefined" && lucide.createIcons) {
+    lucide.createIcons();
+  }
 })();
 
-// ── SVG Icon Helpers (shared across pages) ──
 function iconBox() {
   return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>`;
 }
@@ -137,17 +128,29 @@ function iconTrend() {
   return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`;
 }
 
-// ── Shared Helpers ──
-function statCard(label, value, desc, iconColor, accent, icon) {
+function statCardSdTone(accent) {
+  const m = {
+    "accent-red": "sd-card--red",
+    "accent-green": "sd-card--green",
+    "accent-yellow": "sd-card--amber",
+    "accent-purple": "sd-card--purple",
+    "accent-blue": "sd-card--blue",
+    "accent-gray": "sd-card--gray",
+  };
+  return m[accent] || "sd-card--gray";
+}
+
+function statCard(label, value, desc, _iconColor, accent, icon) {
+  const tone = statCardSdTone(accent);
   return `
-    <div class="stat-card ${accent}">
-      <div class="stat-top">
-        <div class="stat-label">${label}</div>
-        <div class="stat-icon ${iconColor}">${icon}</div>
+    <article class="sd-card ${tone}" aria-label="${label}">
+      <div class="sd-card__top">
+        <div class="sd-card__label">${label}</div>
+        <div class="sd-card__icon" aria-hidden="true">${icon}</div>
       </div>
-      <div class="stat-value">${value}</div>
-      <div class="stat-desc">${desc}</div>
-    </div>
+      <div class="sd-card__value">${value}</div>
+      <div class="sd-card__hint">${desc}</div>
+    </article>
   `;
 }
 

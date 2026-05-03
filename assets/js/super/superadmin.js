@@ -7,7 +7,9 @@ const STORAGE_KEY = "upressease_state";
 // ── State ──
 const state = {
   users: [],
-  pricing: { bw: 3.0, color: 2.0, surcharge: 5.0 },
+  pricing: window.UPressPricing
+    ? window.UPressPricing.getDefaultPricing()
+    : { bw: 3, color: 2, surcharge: 5 },
   policies: { qrCode: true, discounts: false },
   settings: {
     institution: "Western Mindanao State University",
@@ -23,19 +25,55 @@ const state = {
   chartInstance: null,
 };
 
-// ── Mock report data ──
+function persistPortalState() {
+  try {
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        users: state.users,
+        pricing: state.pricing,
+        policies: state.policies,
+        settings: state.settings,
+      }),
+    );
+  } catch (_) {}
+  if (window.UPressPricing && state.pricing) {
+    UPressPricing.mirrorPublicPricing(state.pricing);
+  }
+}
+
+(function hydratePortalFromSession() {
+  if (!window.UPressPricing) return;
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      state.pricing = UPressPricing.normalizePricing(state.pricing);
+      return;
+    }
+    const s = JSON.parse(raw);
+    if (Array.isArray(s.users)) state.users = s.users;
+    if (s.pricing) state.pricing = UPressPricing.normalizePricing(s.pricing);
+    else state.pricing = UPressPricing.normalizePricing(state.pricing);
+    if (s.policies && typeof s.policies === "object") {
+      state.policies = Object.assign({}, state.policies, s.policies);
+    }
+    if (s.settings && typeof s.settings === "object") {
+      state.settings = Object.assign({}, state.settings, s.settings);
+    }
+  } catch (_) {
+    state.pricing = UPressPricing.normalizePricing(state.pricing);
+  }
+  if (state.pricing) UPressPricing.mirrorPublicPricing(state.pricing);
+})();
+
 const reportData = {
   daily: {
-    labels: ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed"],
-    orders: [4, 3, 0, 0, 2, 0, 0],
-    income: [780, 620, 0, 0, 350, 0, 0],
+    labels: ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"],
+    orders: [0, 0, 0, 0, 0, 0, 0],
+    income: [0, 0, 0, 0, 0, 0, 0],
   },
   monthly: {
     labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
       "May",
       "Jun",
       "Jul",
@@ -44,22 +82,23 @@ const reportData = {
       "Oct",
       "Nov",
       "Dec",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
     ],
-    orders: [12, 8, 22, 9, 15, 18, 6, 9, 11, 14, 7, 0],
-    income: [
-      2400, 1600, 4400, 1800, 3000, 3600, 1200, 1800, 2200, 2800, 1400, 0,
-    ],
+    orders: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+    income: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000],
   },
   yearly: {
     labels: ["2022", "2023", "2024", "2025", "2026"],
-    orders: [85, 132, 168, 201, 9],
-    income: [17000, 26400, 33600, 40200, 1750],
+    orders: [0, 0, 0, 0, 9],
+    income: [0, 0, 0, 0, 1750],
   },
 };
 
 // ── DOM Refs ──
 const pageContainer = document.getElementById("pageContainer");
-const topbarTitle = document.getElementById("topbarTitle");
 const sidebar = document.getElementById("sidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
 const hamburger = document.getElementById("hamburger");
@@ -68,11 +107,11 @@ const modalBackdrop = document.getElementById("modalBackdrop");
 const toast = document.getElementById("toast");
 const toastMsg = document.getElementById("toastMsg");
 
-// ── Navigation ──
-document.querySelectorAll(".nav-item").forEach((item) => {
+document.querySelectorAll(".nav-link[data-page]").forEach((item) => {
   item.addEventListener("click", (e) => {
     e.preventDefault();
     const page = item.dataset.page;
+    if (!page || page === "logout") return;
     navigateTo(page);
     closeSidebar();
   });
@@ -80,42 +119,39 @@ document.querySelectorAll(".nav-item").forEach((item) => {
 
 function navigateTo(page) {
   state.currentPage = page;
-  document
-    .querySelectorAll(".nav-item")
-    .forEach((n) => n.classList.toggle("active", n.dataset.page === page));
-  const titles = {
-    dashboard: "Dashboard",
-    users: "Manage Users",
-    pricing: "Pricing Settings",
-    policies: "Policies",
-    reports: "Reports",
-    settings: "System Settings",
-  };
-  topbarTitle.textContent = titles[page] || "Dashboard";
+  document.querySelectorAll(".nav-link[data-page]").forEach((n) => {
+    if (n.dataset.page === "logout") return;
+    n.classList.toggle("active", n.dataset.page === page);
+  });
   renderPage(page);
 }
 
-// ── Sidebar Mobile ──
-hamburger.addEventListener("click", () => {
-  sidebar.classList.add("open");
-  sidebarOverlay.classList.add("open");
-});
-function closeSidebar() {
-  sidebar.classList.remove("open");
-  sidebarOverlay.classList.remove("open");
+if (hamburger && sidebar) {
+  hamburger.addEventListener("click", () => {
+    sidebar.classList.add("open");
+    if (sidebarOverlay) sidebarOverlay.classList.add("open");
+  });
 }
-sidebarClose.addEventListener("click", closeSidebar);
-sidebarOverlay.addEventListener("click", closeSidebar);
+function closeSidebar() {
+  if (!sidebar) return;
+  sidebar.classList.remove("open");
+  if (sidebarOverlay) sidebarOverlay.classList.remove("open");
+}
+if (sidebarClose) sidebarClose.addEventListener("click", closeSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener("click", closeSidebar);
 
-// ── Logout ──
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  showToast("Logged out successfully.");
-  try {
-    localStorage.removeItem("currentUser");
-  } catch (_) {}
-  sessionStorage.removeItem(STORAGE_KEY);
-  window.location.replace("../../../index.html");
-});
+const logoutBtnEl = document.getElementById("logoutBtn");
+if (logoutBtnEl) {
+  logoutBtnEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    showToast("Logged out successfully.");
+    try {
+      localStorage.removeItem("currentUser");
+    } catch (_) {}
+    sessionStorage.removeItem(STORAGE_KEY);
+    window.location.replace("../../../index.html");
+  });
+}
 
 // ── Toast ──
 let toastTimer;
@@ -182,6 +218,7 @@ document.getElementById("modalSubmit").addEventListener("click", () => {
   usernameInput.style.borderColor = "";
 
   state.users.push({ username, fullName, email, role });
+  persistPortalState();
   closeModal();
   showToast("User added successfully!");
   if (state.currentPage === "users") renderPage("users");
@@ -207,71 +244,112 @@ function renderPage(page) {
   };
   pageContainer.innerHTML = "";
   (renderers[page] || dashboard)();
+  if (typeof lucide !== "undefined" && lucide.createIcons) {
+    lucide.createIcons();
+  }
 }
 
 // ── DASHBOARD ──
 function dashboard() {
   pageContainer.innerHTML = `
-    <div class="page-header">
-      <h1 class="page-title">Dashboard</h1>
-      <p class="page-sub">Today's Overview – ${formatDate(new Date())}</p>
-    </div>
+    <header class="sd-header">
+      <h1 class="sd-title">Dashboard</h1>
+      <div class="sd-subtitle">Today's Overview – ${formatDate(new Date())}</div>
+    </header>
 
-    <div class="stats-grid">
+    <section class="sd-metrics" aria-label="Dashboard metrics">
       ${statCard("Today's Orders", "0", "Total orders today", "red", "accent-red", iconBox())}
       ${statCard("Today's Income", "₱0.00", "From completed orders", "green", "accent-green", iconDollar())}
       ${statCard("Pending/Paid", "0", "Awaiting processing", "yellow", "accent-yellow", iconClock())}
       ${statCard("Processing", "0", "Currently being processed", "purple", "accent-purple", iconBox2())}
       ${statCard("Ready for Pickup", "0", "Ready to be claimed", "green", "accent-green", iconCheck())}
       ${statCard("Completed", "0", "Successfully completed", "gray", "accent-gray", iconCheck2())}
-    </div>
+    </section>
 
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-header">
+    <section class="sd-panel" aria-label="Today's transactions">
+      <div class="sd-panel__head">
         <div>
-          <div class="card-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            Today's Transactions
+          <div class="sd-panel__title">
+            <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+            <span>Today's Transactions</span>
           </div>
-          <div class="card-sub">All orders placed today</div>
+          <div class="sd-panel__sub">All orders placed today</div>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="navigateTo('reports')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>
-          View All Orders
+        <button type="button" class="sd-panel__cta" onclick="navigateTo('reports')">
+          <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
+          <span>View All</span>
         </button>
       </div>
-      <div class="empty-state">
-        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        <div class="empty-title">No transactions today</div>
-        <div class="empty-desc">Orders placed today will appear here</div>
+      <div class="sd-empty">
+        <div class="sd-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M3.27 6.96 12 12l8.73-5.04M12 22V12"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div class="sd-empty__title">No transactions today</div>
+        <div class="sd-empty__sub">Orders placed today will appear here</div>
       </div>
-    </div>
+    </section>
 
-    <div class="promo-banner">
-      <div class="promo-left">
-        <div class="promo-icon-wrap">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <div>
-          <div class="promo-title">Performance Analytics</div>
-          <div class="promo-desc">View detailed daily, monthly, and yearly performance reports</div>
+    <section class="sd-hero" aria-label="Performance analytics">
+      <div class="sd-hero__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M4 16l5-6 4 3 7-9"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="sd-hero__text">
+        <div class="sd-hero__title">Performance Analytics</div>
+        <div class="sd-hero__sub">
+          View detailed daily, monthly, and yearly performance reports
         </div>
       </div>
-      <button class="btn btn-promo" onclick="navigateTo('reports')">View Analytics</button>
-    </div>
+      <button type="button" class="sd-hero__cta" onclick="navigateTo('reports')">View Analytics</button>
+    </section>
   `;
 }
 
-function statCard(label, value, desc, iconColor, accent, icon) {
+function statCardSdTone(accent) {
+  const m = {
+    "accent-red": "sd-card--red",
+    "accent-green": "sd-card--green",
+    "accent-yellow": "sd-card--amber",
+    "accent-purple": "sd-card--purple",
+    "accent-blue": "sd-card--blue",
+    "accent-gray": "sd-card--gray",
+  };
+  return m[accent] || "sd-card--gray";
+}
+
+function statCard(label, value, desc, _iconColor, accent, icon) {
+  const tone = statCardSdTone(accent);
   return `
-    <div class="stat-card ${accent}">
-      <div class="stat-top">
-        <div class="stat-label">${label}</div>
-        <div class="stat-icon ${iconColor}">${icon}</div>
+    <article class="sd-card ${tone}" aria-label="${label}">
+      <div class="sd-card__top">
+        <div class="sd-card__label">${label}</div>
+        <div class="sd-card__icon" aria-hidden="true">${icon}</div>
       </div>
-      <div class="stat-value">${value}</div>
-      <div class="stat-desc">${desc}</div>
-    </div>
+      <div class="sd-card__value">${value}</div>
+      <div class="sd-card__hint">${desc}</div>
+    </article>
   `;
 }
 
@@ -307,6 +385,7 @@ function users() {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.idx);
       state.users.splice(idx, 1);
+      persistPortalState();
       showToast("User removed.");
       renderPage("users");
     });
@@ -316,6 +395,7 @@ function users() {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.idx);
       state.users[idx].suspended = !state.users[idx].suspended;
+      persistPortalState();
       showToast(
         state.users[idx].suspended ? "User suspended." : "User restored.",
       );
@@ -362,125 +442,20 @@ function userCard(u, i) {
 
 // ── PRICING ──
 function pricing() {
-  pageContainer.innerHTML = `
-    <div class="page-header">
-      <h1 class="page-title">Pricing Settings</h1>
-      <p class="page-sub">Configure base prices and additional charges for printing services</p>
-    </div>
-
-    <div class="settings-section">
-      <div class="settings-section-header">
-        <div class="settings-section-icon blue">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
-        <div>
-          <div class="settings-section-title">Base Price Per Page</div>
-          <div class="settings-section-sub">Standard charge for black and white printing per page</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Price (₱)</label>
-        <div class="price-input-wrap">
-          <span class="price-currency">₱</span>
-          <input type="number" class="form-input" id="priceBW" value="${state.pricing.bw.toFixed(2)}" step="0.50" min="0" />
-        </div>
-        <div class="form-help" id="helpBW">Current: ₱${state.pricing.bw.toFixed(2)} per page</div>
-      </div>
-    </div>
-
-    <div class="settings-section">
-      <div class="settings-section-header">
-        <div class="settings-section-icon purple">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        </div>
-        <div>
-          <div class="settings-section-title">Color Printing Charge</div>
-          <div class="settings-section-sub">Additional charge for color printing (added to base price)</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Additional Price (₱)</label>
-        <div class="price-input-wrap">
-          <span class="price-currency">₱</span>
-          <input type="number" class="form-input" id="priceColor" value="${state.pricing.color.toFixed(2)}" step="0.50" min="0" />
-        </div>
-        <div class="form-help" id="helpColor">Total color price: ₱${(state.pricing.bw + state.pricing.color).toFixed(2)} per page</div>
-      </div>
-    </div>
-
-    <div class="settings-section">
-      <div class="settings-section-header">
-        <div class="settings-section-icon green">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        </div>
-        <div>
-          <div class="settings-section-title">Large Image Surcharge</div>
-          <div class="settings-section-sub">Extra charge for documents containing large images or graphics</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Surcharge (₱)</label>
-        <div class="price-input-wrap">
-          <span class="price-currency">₱</span>
-          <input type="number" class="form-input" id="priceSurcharge" value="${state.pricing.surcharge.toFixed(2)}" step="0.50" min="0" />
-        </div>
-        <div class="form-help">Applied when images exceed 30% of page content</div>
-      </div>
-    </div>
-
-    <div class="summary-block" id="pricingSummary">
-      <div class="summary-title">Pricing Summary</div>
-      <div class="summary-row">
-        <span class="summary-key">B&W Printing:</span>
-        <span class="summary-val" id="sumBW">₱${state.pricing.bw.toFixed(2)} /page</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-key">Color Printing:</span>
-        <span class="summary-val" id="sumColor">₱${(state.pricing.bw + state.pricing.color).toFixed(2)} /page</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-key">Large Image Surcharge:</span>
-        <span class="summary-val" id="sumSurcharge">+₱${state.pricing.surcharge.toFixed(2)}</span>
-      </div>
-    </div>
-
-    <div class="sticky-save">
-      <button class="btn btn-primary" id="savePricing">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Save Changes
-      </button>
-    </div>
-  `;
-
-  // Live update helpers
-  function updateSummary() {
-    const bw = parseFloat(document.getElementById("priceBW").value) || 0;
-    const col = parseFloat(document.getElementById("priceColor").value) || 0;
-    const sur =
-      parseFloat(document.getElementById("priceSurcharge").value) || 0;
-    document.getElementById("helpBW").textContent =
-      `Current: ₱${bw.toFixed(2)} per page`;
-    document.getElementById("helpColor").textContent =
-      `Total color price: ₱${(bw + col).toFixed(2)} per page`;
-    document.getElementById("sumBW").textContent = `₱${bw.toFixed(2)} /page`;
-    document.getElementById("sumColor").textContent =
-      `₱${(bw + col).toFixed(2)} /page`;
-    document.getElementById("sumSurcharge").textContent = `+₱${sur.toFixed(2)}`;
+  if (window.UPressPricing) {
+    state.pricing = UPressPricing.normalizePricing(state.pricing);
+    pageContainer.innerHTML = UPressPricing.buildPricingSettingsHTML(state.pricing);
+    UPressPricing.bindPricingSettingsForm(pageContainer, {
+      setPricing: (p) => {
+        state.pricing = p;
+      },
+      persist: persistPortalState,
+      showToast: showToast,
+    });
+    return;
   }
-
-  ["priceBW", "priceColor", "priceSurcharge"].forEach((id) => {
-    document.getElementById(id).addEventListener("input", updateSummary);
-  });
-
-  document.getElementById("savePricing").addEventListener("click", () => {
-    state.pricing.bw =
-      parseFloat(document.getElementById("priceBW").value) || 0;
-    state.pricing.color =
-      parseFloat(document.getElementById("priceColor").value) || 0;
-    state.pricing.surcharge =
-      parseFloat(document.getElementById("priceSurcharge").value) || 0;
-    showToast("Pricing settings saved!");
-  });
+  pageContainer.innerHTML =
+    '<div class="page-header"><h1 class="page-title">Pricing Settings</h1><p class="page-sub">Load site-pricing.js to configure rates.</p></div>';
 }
 
 // ── POLICIES ──
@@ -581,6 +556,7 @@ function policies() {
   });
 
   document.getElementById("savePolicies").addEventListener("click", () => {
+    persistPortalState();
     showToast("Policy settings saved!");
   });
 }
@@ -588,9 +564,20 @@ function policies() {
 // ── REPORTS ──
 function reports() {
   pageContainer.innerHTML = `
-    <div class="page-header">
-      <h1 class="page-title">Reports</h1>
-      <p class="page-sub">View and analyze system performance over time</p>
+    <div class="page-header page-header--row">
+      <div class="page-header__intro">
+        <h1 class="page-title">Reports</h1>
+        <p class="page-sub">View and analyze system performance over time</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary page-header__action"
+        id="superReportsExportBtn"
+        aria-label="Export Report"
+      >
+        <i data-lucide="download" aria-hidden="true"></i>
+        Export Report
+      </button>
     </div>
 
     <div class="reports-header-section">
@@ -604,8 +591,8 @@ function reports() {
           <div class="filter-label">Report Type</div>
           <select class="form-input form-select" id="reportType">
             <option value="daily" ${state.reportType === "daily" ? "selected" : ""}>Daily (Last 7 Days)</option>
-            <option value="monthly" ${state.reportType === "monthly" ? "selected" : ""}>Monthly (This Year)</option>
-            <option value="yearly" ${state.reportType === "yearly" ? "selected" : ""}>Yearly (All Time)</option>
+            <option value="monthly" ${state.reportType === "monthly" ? "selected" : ""}>Monthly (Last 12 Months)</option>
+            <option value="yearly" ${state.reportType === "yearly" ? "selected" : ""}>Yearly (Last 5 Years)</option>
           </select>
         </div>
         <div>
@@ -619,29 +606,32 @@ function reports() {
       </div>
     </div>
 
-    <div class="stats-grid" style="margin-bottom:20px">
+    <section class="sd-metrics" aria-label="Report summary">
       ${statCard("Total Orders", "9", "Across selected period", "red", "accent-red", iconBox())}
       ${statCard("Total Income", "₱1,750.00", "From completed orders", "green", "accent-green", iconDollar())}
       ${statCard("Avg Order Value", "₱194.44", "Per completed order", "blue", "accent-blue", iconTrend())}
-    </div>
+    </section>
 
-    <div class="card">
-      <div class="card-header">
+    <div class="card sp">
+      <div class="card-title-group">
+        <i data-lucide="bar-chart-2" aria-hidden="true"></i>
         <div>
-          <div class="card-title">Performance Chart</div>
-          <div class="card-sub" id="chartSubtitle">Daily Report</div>
+          <h2 class="card-title">Performance Chart</h2>
+          <p class="card-subtitle" id="rpt-chart-label">Daily Report</p>
         </div>
       </div>
-      <div class="card-body">
-        <div class="chart-container">
-          <canvas id="perfChart"></canvas>
-        </div>
+      <div style="position:relative;height:300px;margin-top:1rem;">
+        <canvas id="reports-chart" aria-label="Reports performance chart"></canvas>
       </div>
     </div>
   `;
 
   // Build chart
   buildChart(state.reportType);
+
+  document.getElementById("superReportsExportBtn").addEventListener("click", () => {
+    showToast("Export prepared (demo).");
+  });
 
   document.getElementById("reportType").addEventListener("change", (e) => {
     state.reportType = e.target.value;
@@ -650,8 +640,8 @@ function reports() {
       monthly: "Monthly Report",
       yearly: "Yearly Report",
     };
-    document.getElementById("chartSubtitle").textContent =
-      subtitles[e.target.value];
+    const lbl = document.getElementById("rpt-chart-label");
+    if (lbl) lbl.textContent = subtitles[e.target.value];
     if (state.chartInstance) {
       state.chartInstance.destroy();
       state.chartInstance = null;
@@ -661,10 +651,15 @@ function reports() {
 }
 
 function buildChart(type) {
-  const data = reportData[type];
-  const ctx = document.getElementById("perfChart").getContext("2d");
+  const canvas = document.getElementById("reports-chart");
+  if (!canvas) return;
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  state.chartInstance = null;
 
-  state.chartInstance = new Chart(ctx, {
+  const data = reportData[type] || reportData.daily;
+
+  state.chartInstance = new Chart(canvas, {
     type: "line",
     data: {
       labels: data.labels,
@@ -672,28 +667,30 @@ function buildChart(type) {
         {
           label: "Orders",
           data: data.orders,
-          borderColor: "#ef4444",
-          backgroundColor: "rgba(239,68,68,0.08)",
+          borderColor: "#1a1a1a",
+          backgroundColor: "transparent",
+          pointBackgroundColor: "#ffffff",
+          pointBorderColor: "#1a1a1a",
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           borderWidth: 2,
-          pointBackgroundColor: "#ef4444",
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          tension: 0.35,
-          fill: true,
-          yAxisID: "y",
+          tension: 0,
+          yAxisID: "yLeft",
         },
         {
           label: "Income (₱)",
           data: data.income,
-          borderColor: "#22c55e",
-          backgroundColor: "rgba(34,197,94,0.06)",
+          borderColor: "#10B981",
+          backgroundColor: "transparent",
+          pointBackgroundColor: "#ffffff",
+          pointBorderColor: "#10B981",
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
           borderWidth: 2,
-          pointBackgroundColor: "#22c55e",
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          tension: 0.35,
-          fill: true,
-          yAxisID: "y1",
+          tension: 0,
+          yAxisID: "yRight",
         },
       ],
     },
@@ -703,67 +700,81 @@ function buildChart(type) {
       interaction: { mode: "index", intersect: false },
       plugins: {
         legend: {
+          display: true,
           position: "bottom",
+          align: "center",
           labels: {
-            font: {
-              family: "'Plus Jakarta Sans', sans-serif",
-              size: 12,
-              weight: "600",
-            },
             usePointStyle: true,
-            pointStyleWidth: 8,
+            pointStyle: "circle",
             padding: 20,
-            color: "#5a6170",
+            font: { family: "'Inter', sans-serif", size: 13 },
+            color: "#374151",
           },
         },
         tooltip: {
-          backgroundColor: "white",
-          titleColor: "#1a1d23",
-          bodyColor: "#5a6170",
-          borderColor: "#e4e8ef",
+          backgroundColor: "#fff",
+          borderColor: "#e5e7eb",
           borderWidth: 1,
-          padding: 12,
-          boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
-          titleFont: {
-            family: "'Plus Jakarta Sans', sans-serif",
-            weight: "700",
-            size: 13,
-          },
-          bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
+          titleColor: "#111827",
+          bodyColor: "#6B7280",
+          padding: 10,
           callbacks: {
-            label: (ctx) => {
-              if (ctx.dataset.label === "Income (₱)")
-                return `Income (₱) : ${ctx.parsed.y.toLocaleString()}`;
-              return `Orders : ${ctx.parsed.y}`;
+            label(ctx) {
+              if (ctx.dataset.label === "Income (₱)") {
+                return " Income: ₱" + ctx.parsed.y.toFixed(2);
+              }
+              return " Orders: " + ctx.parsed.y;
             },
           },
         },
       },
       scales: {
         x: {
-          grid: { color: "rgba(0,0,0,0.04)" },
+          grid: {
+            color: "#e5e7eb",
+            lineWidth: 1,
+            drawTicks: false,
+          },
+          border: { dash: [4, 4] },
           ticks: {
-            font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
-            color: "#9aa1b0",
+            font: { family: "'Inter', sans-serif", size: 12 },
+            color: "#6B7280",
+            padding: 8,
           },
         },
-        y: {
+        yLeft: {
+          type: "linear",
           position: "left",
-          grid: { color: "rgba(0,0,0,0.04)" },
+          beginAtZero: true,
+          grid: {
+            color: "#e5e7eb",
+            lineWidth: 1,
+            drawTicks: false,
+          },
+          border: { dash: [4, 4] },
           ticks: {
-            font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
-            color: "#ef4444",
+            font: { family: "'Inter', sans-serif", size: 12 },
+            color: "#6B7280",
+            padding: 8,
             stepSize: 1,
+            precision: 0,
           },
           title: { display: false },
         },
-        y1: {
+        yRight: {
+          type: "linear",
           position: "right",
+          beginAtZero: true,
           grid: { drawOnChartArea: false },
           ticks: {
-            font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
-            color: "#22c55e",
+            font: { family: "'Inter', sans-serif", size: 12 },
+            color: "#10B981",
+            padding: 8,
+            callback(val) {
+              return val;
+            },
           },
+          title: { display: false },
         },
       },
     },
@@ -918,6 +929,7 @@ function settings() {
     s.hours = document.getElementById("sHours").value;
     if (document.getElementById("sMaintenanceMsg"))
       s.maintenanceMsg = document.getElementById("sMaintenanceMsg").value;
+    persistPortalState();
     showToast("System settings saved!");
   });
 }
@@ -959,3 +971,6 @@ function formatDate(d) {
 
 // ── Init ──
 renderPage("dashboard");
+if (typeof lucide !== "undefined" && lucide.createIcons) {
+  lucide.createIcons();
+}

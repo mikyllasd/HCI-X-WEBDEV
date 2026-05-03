@@ -124,6 +124,18 @@
 
 <!-- Main Content -->
 <div class="dashboard-container">
+    <div id="account-status-banner" class="account-status-banner" style="display:none;" role="status"></div>
+
+    <div class="workflow-strip" aria-label="Order lifecycle">
+        <span class="workflow-strip__title">How your order moves</span>
+        <ol class="workflow-strip__steps">
+            <li>You submit &amp; pay</li>
+            <li>Staff checks files &amp; produces</li>
+            <li>Cashier verifies payment</li>
+            <li>Pickup when ready</li>
+        </ol>
+    </div>
+
     <div class="welcome-card">
         <h2>Welcome back, <span id="welcome-name">Student</span>!</h2>
         <p id="welcome-email">student@wmsu.edu.ph</p>
@@ -145,25 +157,31 @@
             <div class="service-icon-dash">🖨️</div>
             <h3>Printing</h3>
             <p>Document printing services</p>
-            <button class="btn-red" onclick="window.location.href='printing.html'">Order Now</button>
+            <button class="btn-red" onclick="serviceHref('printing.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
             <div class="service-icon-dash">📖</div>
             <h3>Binding</h3>
             <p>Professional binding services</p>
-            <button class="btn-red" onclick="window.location.href='binding.html'">Order Now</button>
+            <button class="btn-red" onclick="serviceHref('binding.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
             <div class="service-icon-dash">🎟️</div>
             <h3>Lanyards</h3>
             <p>Custom lanyards</p>
-            <button class="btn-red" onclick="window.location.href='lanyard.html'">Order Now</button>
+            <button class="btn-red" onclick="serviceHref('lanyard.html')">Order Now</button>
         </div>
         <div class="service-card-dash">
             <div class="service-icon-dash">☕</div>
             <h3>Mug Printing</h3>
             <p>Customized mug printing services</p>
-            <button class="btn-red" onclick="window.location.href='mug.html'">Order Now</button>
+            <button class="btn-red" onclick="serviceHref('mug.html')">Order Now</button>
+        </div>
+        <div class="service-card-dash">
+            <div class="service-icon-dash">🆔</div>
+            <h3>ID printing</h3>
+            <p>New, lost, damaged, or renewal</p>
+            <button class="btn-red" onclick="serviceHref('id-printing.html')">Start request</button>
         </div>
     </div>
 </div>

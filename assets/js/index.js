@@ -49,11 +49,16 @@ const Orders = {
     add(orderData) {
         const orders = this.getAll();
         const orderId = 'ORD-' + Date.now();
+        const pm = orderData.paymentMethod || '';
+        const paymentStatus =
+            pm.indexOf('GCash') !== -1 ? 'awaiting_proof' : 'due_at_pickup';
         const fullOrder = {
             ...orderData,
             orderId,
             dateOrdered: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }),
-            status: 'Pending'
+            status: 'Pending',
+            paymentVerified: false,
+            paymentStatus
         };
         orders.unshift(fullOrder);
         this.save(orders);

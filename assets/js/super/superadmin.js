@@ -2,6 +2,8 @@
    UPRESSease Admin Portal – Main Script
    ============================================================ */
 
+const STORAGE_KEY = "upressease_state";
+
 // ── State ──
 const state = {
   users: [],
@@ -108,7 +110,11 @@ sidebarOverlay.addEventListener("click", closeSidebar);
 // ── Logout ──
 document.getElementById("logoutBtn").addEventListener("click", () => {
   showToast("Logged out successfully.");
-  setTimeout(() => location.reload(), 1200);
+  try {
+    localStorage.removeItem("currentUser");
+  } catch (_) {}
+  sessionStorage.removeItem(STORAGE_KEY);
+  window.location.replace("../../../index.html");
 });
 
 // ── Toast ──

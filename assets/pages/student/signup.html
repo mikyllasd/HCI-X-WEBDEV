@@ -8,150 +8,275 @@
     <link rel="stylesheet" href="../../css/student/signup.css" />
 </head>
 <body class="signup-bg">
-
-    <!-- Main card -->
     <main class="signup-main">
         <div class="signup-card">
-
-            <!-- Card header -->
             <div class="signup-card-head">
-                <div class="signup-avatar">🎓</div>
+                <div class="signup-avatar" id="signup-role-avatar" aria-hidden="true">🎓</div>
                 <h1 class="signup-title">Create Account</h1>
-                <p class="signup-subtitle">Sign up for UPRESSease</p>
+                <p class="signup-subtitle">Join WMSU UPress — step by step</p>
             </div>
 
-            <form id="signup-form" onsubmit="return validateSignup(event);">
-                <div class="signup-panels">
+            <div class="signup-steps" id="signup-steps" aria-label="Sign-up progress">
+                <div class="signup-step active" data-step="1">
+                    <span class="signup-step-number">1</span>
+                    <span class="signup-step-label">Account type</span>
+                </div>
+                <div class="signup-step-connector" aria-hidden="true"></div>
+                <div class="signup-step" data-step="2">
+                    <span class="signup-step-number">2</span>
+                    <span class="signup-step-label">Your details</span>
+                </div>
+                <div class="signup-step-connector" aria-hidden="true"></div>
+                <div class="signup-step" data-step="3">
+                    <span class="signup-step-number">3</span>
+                    <span class="signup-step-label">Verify</span>
+                </div>
+            </div>
 
-                    <!-- LEFT PANEL: Personal Information -->
-                    <div class="signup-panel">
-                        <div class="signup-section-label">Personal Information</div>
-                        <hr class="signup-divider" />
+            <div id="signup-inline-alert" class="signup-inline-alert signup-hidden" role="alert"></div>
 
-                        <div class="signup-grid-2">
-                            <div class="sfield">
-                                <label class="slabel">Full Name *</label>
-                                <input class="sinput" type="text" id="signup-name" placeholder="Juan Dela Cruz" required />
+            <form id="signup-form" class="signup-form" novalidate>
+                <!-- Step 1: account type (v0dev-style role cards) -->
+                <div class="signup-form-step" id="signup-step-1">
+                    <h2 class="signup-step-heading">I am a…</h2>
+                    <p class="signup-step-lead">Choose how you use UPress so we ask for the right information.</p>
+                    <div class="role-selection" role="radiogroup" aria-label="Account type">
+                        <label class="role-card selected" data-role="student">
+                            <input type="radio" name="signup-account-type" value="student" checked />
+                            <div class="role-card-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                                </svg>
                             </div>
-                            <div class="sfield">
-                                <label class="slabel">WMSU Email *</label>
-                                <div class="sinput-verify-row">
-                                    <input class="sinput" type="email" id="signup-email" placeholder="student@wmsu.edu.ph" required />
-                                    <button type="button" class="verify-btn" onclick="sendOtp()">✉ Verify</button>
-                                </div>
+                            <div class="role-card-title">Student</div>
+                            <div class="role-card-description">Enrolled at WMSU</div>
+                        </label>
+                        <label class="role-card" data-role="faculty">
+                            <input type="radio" name="signup-account-type" value="faculty" />
+                            <div class="role-card-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
                             </div>
-                        </div>
+                            <div class="role-card-title">Faculty</div>
+                            <div class="role-card-description">WMSU employee</div>
+                        </label>
+                    </div>
+                    <button type="button" class="signup-submit-btn" id="signup-btn-step1">Continue</button>
+                </div>
 
-                        <div class="signup-grid-2">
-                            <div class="sfield">
-                                <label class="slabel">Phone Number *</label>
-                                <div class="sinput-verify-row">
-                                    <input class="sinput" type="tel" id="signup-phone" placeholder="09xxxxxxxxx" pattern="09[0-9]{9}" required />
-                                    <button type="button" class="verify-btn" onclick="sendOtp()">📞 Verify</button>
-                                </div>
-                            </div>
-                            <div class="sfield">
-                                <label class="slabel">Year Level *</label>
-                                <select class="sinput" id="signup-year" required>
-                                    <option value="">e.g., 3rd Year</option>
-                                    <option>1st Year</option>
-                                    <option>2nd Year</option>
-                                    <option>3rd Year</option>
-                                    <option>4th Year</option>
-                                    <option>5th Year</option>
-                                </select>
-                            </div>
-                        </div>
+                <!-- Step 2: personal & security -->
+                <div class="signup-form-step signup-hidden" id="signup-step-2">
+                    <h2 class="signup-step-heading">Your details</h2>
+                    <p class="signup-step-lead" id="signup-step2-lead">Tell us who you are and how to reach you.</p>
 
+                    <div class="signup-grid-2">
                         <div class="sfield">
-                            <label class="slabel">College *</label>
-                            <select class="sinput" id="signup-college" required onchange="populateCourses('signup-college','signup-course')">
-                                <option value="">Select a college</option>
-                                <option>College of Arts and Sciences</option>
-                                <option>College of Education</option>
-                                <option>College of Engineering</option>
-                                <option>College of Business Administration</option>
+                            <label class="slabel" for="signup-first">First name *</label>
+                            <input class="sinput" type="text" id="signup-first" autocomplete="given-name" placeholder="Juan" required />
+                        </div>
+                        <div class="sfield">
+                            <label class="slabel" for="signup-last">Last name *</label>
+                            <input class="sinput" type="text" id="signup-last" autocomplete="family-name" placeholder="Dela Cruz" required />
+                        </div>
+                    </div>
+
+                    <div class="sfield">
+                        <label class="slabel" for="signup-campus-id" id="signup-campus-id-label">Student ID *</label>
+                        <input class="sinput" type="text" id="signup-campus-id" placeholder="e.g. 2024-12345" required />
+                    </div>
+
+                    <div class="sfield">
+                        <label class="slabel" for="signup-college" id="signup-college-label">College *</label>
+                        <select class="sinput" id="signup-college" required>
+                            <option value="">Select your college</option>
+                            <option>College of Computing Studies</option>
+                            <option>College of Business Administration</option>
+                            <option>College of Engineering</option>
+                            <option>College of Education</option>
+                            <option>College of Arts and Sciences</option>
+                            <option>College of Home Science and Industry</option>
+                            <option>College of Law</option>
+                            <option>College of Medicine</option>
+                            <option>College of Nursing</option>
+                            <option>College of Sports, Physical Education and Athletics</option>
+                            <option>College of Forestry and Environmental Studies</option>
+                            <option>College of Agriculture</option>
+                            <option>College of Social Science and Humanities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="signup-grid-2" id="signup-student-only">
+                        <div class="sfield">
+                            <label class="slabel" for="signup-year">Year level *</label>
+                            <select class="sinput" id="signup-year" required>
+                                <option value="">e.g. 3rd Year</option>
+                                <option>1st Year</option>
+                                <option>2nd Year</option>
+                                <option>3rd Year</option>
+                                <option>4th Year</option>
+                                <option>5th Year</option>
                             </select>
                         </div>
-
                         <div class="sfield">
-                            <label class="slabel">Course *</label>
+                            <label class="slabel" for="signup-course">Course *</label>
                             <select class="sinput" id="signup-course" required>
-                                <option value="">Please select a college first</option>
+                                <option value="">Select a college first</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- RIGHT PANEL: Account Security -->
-                    <div class="signup-panel">
-                        <div class="signup-section-label">Account Security</div>
-                        <hr class="signup-divider" />
-
-                        <div class="signup-grid-2">
-                            <div class="sfield">
-                                <label class="slabel">Password *</label>
-                                <div class="sinput-eye-wrap">
-                                    <input class="sinput" type="password" id="signup-pass" placeholder="Enter password" required />
-                                    <button type="button" class="eye-btn" onclick="togglePass('signup-pass', this)">👁</button>
-                                </div>
-                            </div>
-                            <div class="sfield">
-                                <label class="slabel">Confirm Password *</label>
-                                <div class="sinput-eye-wrap">
-                                    <input class="sinput" type="password" id="signup-pass2" placeholder="Re-enter password" required />
-                                    <button type="button" class="eye-btn" onclick="togglePass('signup-pass2', this)">👁</button>
-                                </div>
-                            </div>
+                    <div class="sfield sfield--email-otp">
+                        <label class="slabel" for="signup-email">WMSU email *</label>
+                        <div class="signup-email-verify-row">
+                            <input
+                                class="sinput signup-email-verify-row__input"
+                                type="email"
+                                id="signup-email"
+                                autocomplete="email"
+                                placeholder="you@wmsu.edu.ph"
+                                required
+                            />
+                            <button type="button" class="verify-btn signup-email-verify-row__btn" id="signup-email-verify-btn">Verify</button>
                         </div>
-
-                        <div class="signup-section-label" style="margin-top:1rem;">Required Documents</div>
-                        <hr class="signup-divider" />
-
-                        <div class="signup-grid-2">
-                            <div class="sfield">
-                                <label class="slabel">Validated ID *</label>
-                                <label class="sdropzone" id="id-drop">
-                                    <input type="file" id="signup-id" accept="image/*,.pdf" required style="display:none;" onchange="showFileName('signup-id','id-name')" />
-                                    <span class="sdrop-icon">⬆</span>
-                                    <span class="sdrop-primary">Upload Validated ID</span>
-                                    <span class="sdrop-hint">Click to upload</span>
-                                    <span class="sdrop-filename" id="id-name"></span>
-                                </label>
-                            </div>
-                            <div class="sfield">
-                                <label class="slabel">First Semester COR *</label>
-                                <label class="sdropzone" id="cor-drop">
-                                    <input type="file" id="signup-cor" accept="image/*,.pdf" required style="display:none;" onchange="showFileName('signup-cor','cor-name')" />
-                                    <span class="sdrop-icon">⬆</span>
-                                    <span class="sdrop-primary">Upload COR</span>
-                                    <span class="sdrop-hint">Click to upload</span>
-                                    <span class="sdrop-filename" id="cor-name"></span>
-                                </label>
-                            </div>
+                        <div id="signup-otp-sample" class="signup-otp-sample signup-hidden" role="status" aria-live="polite">
+                            <span class="signup-otp-sample__label">Demo — your code:</span>
+                            <code class="signup-otp-sample__code" id="signup-otp-code-display"></code>
                         </div>
+                        <p class="signup-otp-hint">
+                            Tap <strong>Verify</strong> to send a code to this email (demo shows the code in the box). Enter it below and tap
+                            <strong>Verify code</strong> next to the code field. <strong>Continue</strong> stays off until your email is verified.
+                        </p>
+                    </div>
 
-                        <p class="sdoc-note">* Upload clear photos or scanned copies of your validated ID and Certificate of Registration</p>
-
-                        <!-- OTP row -->
-                        <div class="sotp-row">
-                            <input type="text" class="sinput" id="user-otp" placeholder="Enter OTP code" disabled />
-                            <button type="button" class="verify-btn" onclick="verifyOtp()">Verify OTP</button>
+                    <div class="sfield">
+                        <label class="slabel" for="user-otp">Email verification code *</label>
+                        <div class="signup-otp-verify-row">
+                            <input
+                                type="text"
+                                class="sinput signup-otp-verify-row__input"
+                                id="user-otp"
+                                inputmode="numeric"
+                                maxlength="8"
+                                placeholder="Enter the 6-digit code"
+                                disabled
+                                autocomplete="one-time-code"
+                            />
+                            <button type="button" class="verify-btn signup-otp-verify-row__btn" id="signup-otp-verify-btn" disabled>Verify code</button>
                         </div>
                         <div id="otp-status" class="sotp-status"></div>
+                    </div>
 
-                        <!-- Terms -->
-                        <div class="signup-terms-row">
-                            <input type="checkbox" id="terms-check" required />
-                            <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
+                    <div class="sfield">
+                        <label class="slabel" for="signup-phone">Mobile number *</label>
+                        <input
+                            class="sinput"
+                            type="tel"
+                            id="signup-phone"
+                            autocomplete="tel"
+                            placeholder="09XXXXXXXXX"
+                            pattern="09[0-9]{9}"
+                            required
+                        />
+                    </div>
+
+                    <div class="signup-grid-2">
+                        <div class="sfield">
+                            <label class="slabel" for="signup-pass">Password *</label>
+                            <div class="sinput-eye-wrap">
+                                <input class="sinput" type="password" id="signup-pass" autocomplete="new-password" placeholder="At least 6 characters" required />
+                                <button type="button" class="eye-btn" data-toggle-pass="signup-pass" aria-label="Show password">
+                                    <svg class="eye-btn__icon eye-btn__icon--show" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+                                        <path fill="currentColor" d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                        <path fill="currentColor" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                    </svg>
+                                    <svg class="eye-btn__icon eye-btn__icon--hide" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+                                        <path
+                                            fill="currentColor"
+                                            d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088 7.31 3.18A7.029 7.029 0 0 1 8 3.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.094 3.088A7.029 7.029 0 0 0 0 8c0 .573.089 1.12.256 1.639z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sfield">
+                            <label class="slabel" for="signup-pass2">Confirm password *</label>
+                            <div class="sinput-eye-wrap">
+                                <input class="sinput" type="password" id="signup-pass2" autocomplete="new-password" placeholder="Re-enter password" required />
+                                <button type="button" class="eye-btn" data-toggle-pass="signup-pass2" aria-label="Show password">
+                                    <svg class="eye-btn__icon eye-btn__icon--show" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+                                        <path fill="currentColor" d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                        <path fill="currentColor" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                    </svg>
+                                    <svg class="eye-btn__icon eye-btn__icon--hide" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
+                                        <path
+                                            fill="currentColor"
+                                            d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088 7.31 3.18A7.029 7.029 0 0 1 8 3.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.094 3.088A7.029 7.029 0 0 0 0 8c0 .573.089 1.12.256 1.639z"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                </div><!-- end panels -->
+                    <div class="signup-step-actions">
+                        <button type="button" class="signup-btn-outline" id="signup-btn-step2-back">Back</button>
+                        <button type="button" class="signup-submit-btn signup-btn-inline" id="signup-btn-step2-next" disabled>Continue</button>
+                    </div>
+                </div>
 
-                <button type="submit" class="signup-submit-btn">Create Account</button>
-                <a href="index.html" class="back-login-btn">← Back to Login</a>
+                <!-- Step 3: documents & OTP & terms -->
+                <div class="signup-form-step signup-hidden" id="signup-step-3">
+                    <h2 class="signup-step-heading" id="signup-step3-title">Upload verification</h2>
+                    <p class="signup-step-lead" id="signup-step3-lead">
+                        Upload clear photos or scans. PDF, JPG, or PNG up to 5MB each (demo — files stay in your browser only).
+                    </p>
 
+                    <div class="signup-docs-grid">
+                        <div class="sfield">
+                            <label class="slabel" for="signup-id" id="signup-doc-id-label">Validated ID *</label>
+                            <label class="signup-file-upload" id="signup-id-upload">
+                                <input type="file" id="signup-id" accept="image/*,.pdf" />
+                                <span class="signup-file-upload-icon" aria-hidden="true">⬆</span>
+                                <span class="signup-file-upload-text">Click or drag to upload</span>
+                                <span class="signup-file-upload-hint">PDF, JPG, PNG</span>
+                            </label>
+                            <div id="signup-id-preview" class="signup-file-preview-wrap signup-hidden"></div>
+                        </div>
+                        <div class="sfield">
+                            <label class="slabel" for="signup-cor" id="signup-doc-cor-label">First semester COR *</label>
+                            <label class="signup-file-upload" id="signup-cor-upload">
+                                <input type="file" id="signup-cor" accept="image/*,.pdf" />
+                                <span class="signup-file-upload-icon" aria-hidden="true">⬆</span>
+                                <span class="signup-file-upload-text">Click or drag to upload</span>
+                                <span class="signup-file-upload-hint">PDF, JPG, PNG</span>
+                            </label>
+                            <div id="signup-cor-preview" class="signup-file-preview-wrap signup-hidden"></div>
+                        </div>
+                    </div>
+
+                    <div class="signup-terms-row">
+                        <input type="checkbox" id="terms-check" required />
+                        <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
+                    </div>
+                    <div class="signup-terms-row">
+                        <input type="checkbox" id="privacy-check" required />
+                        <label for="privacy-check">I consent to the processing of my personal data in line with the Data Privacy Act of 2012 (RA 10173).</label>
+                    </div>
+
+                    <div class="signup-step-actions">
+                        <button type="button" class="signup-btn-outline" id="signup-btn-step3-back">Back</button>
+                        <button type="submit" class="signup-submit-btn signup-btn-inline" id="signup-submit">Create account</button>
+                    </div>
+                </div>
             </form>
+
+            <a href="../auth/portal.html" class="back-login-btn">← Back to sign-in</a>
         </div>
     </main>
 

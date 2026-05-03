@@ -1,0 +1,236 @@
+/* Walk-in POS (staff hub) */
+
+/*
+ * staff.css sets every `button { width: 100%; }` for the hub. That breaks POS
+ * (inline Print, ticket row remove, action pairs). Reset inside POS + receipt Print in tables.
+ */
+.pos-grid button,
+.staff-table-wrap .data-table .btn-pos-print-receipt {
+  width: auto;
+  max-width: 100%;
+}
+
+.pos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 320px;
+  gap: 1rem;
+  align-items: start;
+  padding: 0 0.25rem 2rem;
+}
+
+@media (max-width: 1200px) {
+  .pos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pos-panel {
+  background: #fff;
+  border: 1px solid #e8e4df;
+  border-radius: 12px;
+  padding: 1.1rem 1.15rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.pos-panel__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.pos-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #666;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.pos-input {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.pos-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.pos-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+/* Primary checkout action: keep full width under the ticket */
+.pos-panel--summary .pos-actions .pos-btn--accent {
+  width: 100%;
+}
+
+.pos-btn {
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.pos-btn--primary {
+  background: #8b1538;
+  border-color: #6b0f2b;
+  color: #fff;
+}
+
+.pos-btn--accent {
+  background: #0d6e4d;
+  border-color: #0a5a40;
+  color: #fff;
+}
+
+.pos-btn--ghost {
+  background: #fff;
+}
+
+.pos-ticket-lines {
+  min-height: 120px;
+  max-height: 280px;
+  overflow: auto;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.pos-ticket-lines.pos-empty {
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pos-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.35rem;
+  border-bottom: 1px solid #eee;
+}
+
+.pos-line:last-child {
+  border-bottom: none;
+}
+
+.pos-line-remove {
+  border: none;
+  background: none;
+  color: #a32020;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.pos-totals {
+  border-top: 1px solid #eee;
+  padding-top: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+.pos-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.pos-hint {
+  font-size: 0.78rem;
+  color: #666;
+  line-height: 1.45;
+  margin: 1rem 0 0;
+}
+
+.pos-kpi {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0.75rem;
+  background: #f8f6f3;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.pos-kpi strong {
+  color: #0d6e4d;
+  font-size: 1.05rem;
+}
+
+.pos-history-list {
+  max-height: 360px;
+  overflow: auto;
+  font-size: 0.8rem;
+}
+
+.pos-sale-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.pos-sale-card time {
+  display: block;
+  font-size: 0.72rem;
+  color: #888;
+  margin-bottom: 0.2rem;
+}
+
+.pos-sale-card__row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.pos-sale-card__main {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.btn-pos-print-receipt,
+.pos-sale-print {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  flex-shrink: 0;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #6b0f2b;
+  background: #fff;
+  color: #6b0f2b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn-pos-print-receipt:hover,
+.pos-sale-print:hover {
+  background: #8b1538;
+  border-color: #6b0f2b;
+  color: #fff;
+}

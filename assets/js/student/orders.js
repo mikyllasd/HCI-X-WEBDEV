@@ -62,6 +62,15 @@
             );
             const totalAmt = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
 
+            // Get customer info from user
+            const user = User.get() || {};
+            const fullName = user.name || '—';
+            const studentId = user.campusId || '—';
+            const course = user.course || '—';
+            const department = user.college || '—';
+            const mobile = user.phone || '—';
+            const email = user.email || '—';
+
             return `
             <div class="order-card">
                 <div class="order-card-top">
@@ -78,6 +87,32 @@
                     </span>
                 </div>
                 <div class="order-desc">${descParts.join('<br>')}</div>
+                <div class="order-customer-info">
+                    <div class="customer-info-row">
+                        <span class="info-label">Full Name:</span>
+                        <span class="info-value">${escHtml(fullName)}</span>
+                    </div>
+                    <div class="customer-info-row">
+                        <span class="info-label">Student ID:</span>
+                        <span class="info-value">${escHtml(studentId)}</span>
+                    </div>
+                    <div class="customer-info-row">
+                        <span class="info-label">Course:</span>
+                        <span class="info-value">${escHtml(course)}</span>
+                    </div>
+                    <div class="customer-info-row">
+                        <span class="info-label">Department:</span>
+                        <span class="info-value">${escHtml(department)}</span>
+                    </div>
+                    <div class="customer-info-row">
+                        <span class="info-label">Mobile:</span>
+                        <span class="info-value">${escHtml(mobile)}</span>
+                    </div>
+                    <div class="customer-info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">${escHtml(email)}</span>
+                    </div>
+                </div>
                 <div class="order-card-bottom">
                     <span class="order-date"><span class="upress-icon upress-icon--cal" aria-hidden="true"></span> ${escHtml(o.dateOrdered || '')}</span>
                     <span class="order-total">₱${totalAmt.toFixed(2)}</span>

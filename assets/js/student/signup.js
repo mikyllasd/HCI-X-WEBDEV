@@ -2,6 +2,301 @@
     let currentStep = 1;
     let otpCode = null;
     let otpVerified = false;
+    let capturedIdDataUrl = null;  // Store captured ID as data URL
+    let faceMatchComplete = false;
+
+    // ============================================================
+    // CAMERA CAPTURE + OCR + FACE MATCH MODULE
+    // ============================================================
+    const CameraCapture = {
+        idVideoStream: null,
+        faceVideoStream: null,
+
+        async initIdCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                const video = document.getElementById('id-camera-video');
+                if (video) {
+                    video.srcObject = stream;
+                    this.idVideoStream = stream;
+                }
+                return true;
+            } catch (err) {
+                console.error('Camera error:', err);
+                showAlert('Camera access denied', 'Please allow camera access to capture your ID.');
+                return false;
+            }
+        },
+
+        async initFaceCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+                });
+                const video = document.getElementById('face-camera-video');
+                if (video) {
+                    video.srcObject = stream;
+                    this.faceVideoStream = stream;
+                }
+                return true;
+            } catch (err) {
+                console.error('Face camera error:', err);
+                showAlert('Camera access denied', 'Please allow camera access for face verification.');
+                return false;
+            }
+        },
+
+        captureIdSnapshot() {
+            const video = document.getElementById('id-camera-video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            capturedIdDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            return capturedIdDataUrl;
+        },
+
+        stopIdCamera() {
+            if (this.idVideoStream) {
+                this.idVideoStream.getTracks().forEach(track => track.stop());
+                this.idVideoStream = null;
+            }
+        },
+
+        stopFaceCamera() {
+            if (this.faceVideoStream) {
+                this.faceVideoStream.getTracks().forEach(track => track.stop());
+                this.faceVideoStream = null;
+            }
+        }
+    };
+
+    // OCR using Tesseract.js from CDN
+    async function performOCR(imageDataUrl) {
+        const spinnerEl = document.getElementById('ocr-spinner');
+        if (spinnerEl) spinnerEl.classList.remove('signup-hidden');
+
+        try {
+            // Load Tesseract from CDN
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+            script.onload = async () => {
+                try {
+                    const { createWorker } = window.Tesseract;
+                    const worker = await createWorker();
+                    const { data: { text } } = await worker.recognize(imageDataUrl);
+                    await worker.terminate();
+
+                    const extracted = extractIdInfo(text);
+                    preFillFormFields(extracted);
+                    showOCRResults(extracted);
+
+                    if (spinnerEl) spinnerEl.classList.add('signup-hidden');
+                } catch (err) {
+                    console.error('OCR error:', err);
+                    if (spinnerEl) spinnerEl.classList.add('signup-hidden');
+                    showInlineAlert('Could not read ID. Please check image clarity and try again.');
+                }
+            };
+            document.head.appendChild(script);
+        } catch (err) {
+            console.error('OCR init error:', err);
+            if (spinnerEl) spinnerEl.classList.add('signup-hidden');
+        }
+    }
+
+    function extractIdInfo(text) {
+        // Simple extraction - looks for patterns in OCR text
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+        const result = {
+            fullName: '',
+            studentId: '',
+            course: '',
+            department: ''
+        };
+
+        // Try to extract student ID (usually format like 2024-12345)
+        const idMatch = text.match(/\b(\d{4}-\d{4,6})\b/);
+        if (idMatch) result.studentId = idMatch[1];
+
+        // Try to find full name (usually first 2-3 lines)
+        if (lines.length > 0) result.fullName = lines[0];
+        if (lines.length > 1 && !lines[1].includes('Student')) result.fullName = lines[0] + ' ' + lines[1];
+
+        // Try to extract course/program
+        const courseMatch = text.match(/(Bachelor|BS|AB|Certificate|Associate)[\s\w]*/i);
+        if (courseMatch) result.course = courseMatch[0];
+
+        return result;
+    }
+
+    function preFillFormFields(extracted) {
+        // Pre-fill name fields
+        if (extracted.fullName) {
+            const parts = extracted.fullName.split(/\s+/);
+            if (parts.length >= 1) {
+                const firstEl = document.getElementById('signup-first');
+                if (firstEl) firstEl.value = parts[0];
+            }
+            if (parts.length >= 2) {
+                const lastEl = document.getElementById('signup-last');
+                if (lastEl) lastEl.value = parts.slice(1).join(' ');
+            }
+        }
+
+        // Pre-fill student ID
+        if (extracted.studentId) {
+            const idEl = document.getElementById('signup-campus-id');
+            if (idEl) idEl.value = extracted.studentId;
+        }
+
+        // Pre-fill course if detected
+        if (extracted.course) {
+            const courseEl = document.getElementById('signup-course');
+            if (courseEl) {
+                for (let opt of courseEl.options) {
+                    if (opt.textContent.toUpperCase().includes(extracted.course.toUpperCase())) {
+                        courseEl.value = opt.value;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    function showOCRResults(extracted) {
+        const resultsEl = document.getElementById('ocr-results');
+        if (!resultsEl) return;
+
+        let html = '<div><strong>Name:</strong> ' + (extracted.fullName || '—') + '</div>';
+        html += '<div><strong>ID:</strong> ' + (extracted.studentId || '—') + '</div>';
+        html += '<div><strong>Course:</strong> ' + (extracted.course || '—') + '</div>';
+
+        resultsEl.innerHTML = html;
+        resultsEl.classList.remove('signup-hidden');
+    }
+
+    // Face matching using face-api.js
+    async function startFaceMatching() {
+        const statusEl = document.getElementById('face-status');
+        if (!statusEl) return;
+
+        try {
+            // Load face-api.js
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js';
+            script.onload = async () => {
+                try {
+                    // Load face-api models
+                    const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
+                    await faceapi.nets.tinyFaceDetector.load(MODEL_URL);
+                    await faceapi.nets.faceLandmark68Net.load(MODEL_URL);
+                    await faceapi.nets.faceRecognitionNet.load(MODEL_URL);
+                    await faceapi.nets.faceExpressionNet.load(MODEL_URL);
+
+                    // Get face from captured ID
+                    const idImg = document.createElement('img');
+                    idImg.src = capturedIdDataUrl;
+                    idImg.onload = async () => {
+                        const idDetections = await faceapi
+                            .detectAllFaces(idImg, new faceapi.TinyFaceDetectorOptions())
+                            .withFaceLandmarks()
+                            .withFaceDescriptors();
+
+                        if (idDetections.length === 0) {
+                            statusEl.textContent = 'No face detected on ID. Please try again.';
+                            statusEl.classList.remove('scanning', 'matched');
+                            statusEl.classList.add('no-match');
+                            return;
+                        }
+
+                        const idFaceDescriptor = idDetections[0].descriptor;
+
+                        // Now check live video feed
+                        statusEl.textContent = 'Scanning...';
+                        statusEl.classList.add('scanning');
+
+                        const liveVideo = document.getElementById('face-camera-video');
+                        let noFaceCounter = 0;
+                        const checkInterval = setInterval(async () => {
+                            try {
+                                const liveDetections = await faceapi
+                                    .detectAllFaces(liveVideo, new faceapi.TinyFaceDetectorOptions())
+                                    .withFaceLandmarks()
+                                    .withFaceDescriptors();
+
+                                if (liveDetections.length === 0) {
+                                    noFaceCounter++;
+                                    if (noFaceCounter > 10) {
+                                        const warningEl = document.getElementById('face-warning');
+                                        if (warningEl) warningEl.classList.remove('signup-hidden');
+                                    }
+                                    return;
+                                }
+
+                                noFaceCounter = 0;
+                                const warningEl = document.getElementById('face-warning');
+                                if (warningEl) warningEl.classList.add('signup-hidden');
+
+                                const liveFaceDescriptor = liveDetections[0].descriptor;
+
+                                // Compare faces
+                                const distance = faceapi.euclideanDistance(idFaceDescriptor, liveFaceDescriptor);
+
+                                if (distance < 0.6) {
+                                    statusEl.textContent = 'Face matched';
+                                    statusEl.classList.remove('scanning');
+                                    statusEl.classList.add('matched');
+                                    clearInterval(checkInterval);
+                                    CameraCapture.stopFaceCamera();
+                                    faceMatchComplete = true;
+
+                                    // Auto-move to form display after a short delay
+                                    setTimeout(() => {
+                                        goToFormDisplay();
+                                    }, 1500);
+                                }
+                            } catch (err) {
+                                console.error('Face check error:', err);
+                            }
+                        }, 500);
+
+                        // Timeout after 30 seconds
+                        setTimeout(() => {
+                            clearInterval(checkInterval);
+                        }, 30000);
+                    };
+                } catch (err) {
+                    console.error('Face API error:', err);
+                    statusEl.textContent = 'Face verification unavailable. Proceeding...';
+                    faceMatchComplete = true;
+                    goToFormDisplay();
+                }
+            };
+            document.head.appendChild(script);
+        } catch (err) {
+            console.error('Face API init error:', err);
+            faceMatchComplete = true;
+            goToFormDisplay();
+        }
+    }
+
+    function goToFormDisplay() {
+        const step1 = document.getElementById('camera-step-1');
+        const step2 = document.getElementById('camera-step-2');
+        const step3 = document.getElementById('camera-step-3');
+        if (step1) step1.classList.add('signup-hidden');
+        if (step2) step2.classList.add('signup-hidden');
+        if (step3) step3.classList.add('signup-hidden');
+        goToStep(2);
+    }
+
+    // ============================================================
+    // END CAMERA MODULE
+    // ============================================================
 
     function escapeHtml(str) {
         return String(str ?? "")
@@ -362,6 +657,16 @@
         document.getElementById("signup-btn-step2-next")?.addEventListener("click", handleStep2Continue);
 
         document.getElementById("signup-btn-step3-back")?.addEventListener("click", function () {
+            CameraCapture.stopIdCamera();
+            CameraCapture.stopFaceCamera();
+            faceMatchComplete = false;
+            capturedIdDataUrl = null;
+            const step1 = document.getElementById('camera-step-1');
+            const step2 = document.getElementById('camera-step-2');
+            const step3 = document.getElementById('camera-step-3');
+            if (step1) step1.classList.remove('signup-hidden');
+            if (step2) step2.classList.add('signup-hidden');
+            if (step3) step3.classList.add('signup-hidden');
             goToStep(2);
         });
 
@@ -390,8 +695,59 @@
             });
         });
 
-        initFileUploadZone("signup-id-upload", "signup-id", "signup-id-preview");
+        // Initialize camera capture for ID
+        document.getElementById('capture-id-btn')?.addEventListener('click', async function () {
+            const snapshot = CameraCapture.captureIdSnapshot();
+            if (snapshot) {
+                const preview = document.getElementById('id-preview-img');
+                if (preview) preview.src = snapshot;
+
+                const step1 = document.getElementById('camera-step-1');
+                const step2 = document.getElementById('camera-step-2');
+                if (step1) step1.classList.add('signup-hidden');
+                if (step2) step2.classList.remove('signup-hidden');
+
+                CameraCapture.stopIdCamera();
+                await performOCR(snapshot);
+            }
+        });
+
+        document.getElementById('retake-id-btn')?.addEventListener('click', async function () {
+            const step1 = document.getElementById('camera-step-1');
+            const step2 = document.getElementById('camera-step-2');
+            if (step1) step1.classList.remove('signup-hidden');
+            if (step2) step2.classList.add('signup-hidden');
+            
+            const resultsEl = document.getElementById('ocr-results');
+            if (resultsEl) resultsEl.classList.add('signup-hidden');
+            
+            await CameraCapture.initIdCamera();
+        });
+
+        document.getElementById('continue-after-id-btn')?.addEventListener('click', async function () {
+            const step2 = document.getElementById('camera-step-2');
+            const step3 = document.getElementById('camera-step-3');
+            if (step2) step2.classList.add('signup-hidden');
+            if (step3) step3.classList.remove('signup-hidden');
+
+            await CameraCapture.initFaceCamera();
+            startFaceMatching();
+        });
+
+        // Init file upload zones for COR (keep existing COR upload, remove ID)
         initFileUploadZone("signup-cor-upload", "signup-cor", "signup-cor-preview");
+
+        // Initialize camera for ID capture when showing step 3
+        const origGoToStep = goToStep;
+        goToStep = function (step) {
+            origGoToStep(step);
+            if (step === 3) {
+                // Show camera capture UI
+                const section = document.getElementById('camera-capture-section');
+                if (section) section.style.display = 'flex';
+                CameraCapture.initIdCamera();
+            }
+        };
 
         document.getElementById("signup-form")?.addEventListener("submit", function (e) {
             e.preventDefault();
@@ -402,15 +758,21 @@
                 return;
             }
 
-            const idFile = document.getElementById("signup-id")?.files?.[0];
+            // Check for captured ID
+            if (!capturedIdDataUrl) {
+                showInlineAlert("Please capture your ID using the camera.");
+                return;
+            }
+
+            // Check for COR file
             const corFile = document.getElementById("signup-cor")?.files?.[0];
-            if (!idFile || !corFile) {
-                showInlineAlert("Please upload both required documents.");
+            if (!corFile) {
+                showInlineAlert("Please upload your First semester COR.");
                 return;
             }
             const maxMb = 5;
-            if (idFile.size > maxMb * 1024 * 1024 || corFile.size > maxMb * 1024 * 1024) {
-                showInlineAlert("Each file must be 5MB or smaller.");
+            if (corFile.size > maxMb * 1024 * 1024) {
+                showInlineAlert("COR file must be 5MB or smaller.");
                 return;
             }
 

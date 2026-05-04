@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease | Customer Information</title>
+    <title>UPRESSease | Checkout</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/payment.css" />
 </head>
 <body>
 <header class="appbar">
-    <button class="back-btn" onclick="window.location.href='cart.html'">←</button>
+    <button class="back-btn" onclick="goBackToCart()">←</button>
     <div class="appbar-titles">
-        <span class="appbar-title">Customer Information</span>
-        <span class="appbar-subtitle">Step 1 of 3</span>
+        <span class="appbar-title">Checkout</span>
+        <span class="appbar-subtitle">Part 6 of 6</span>
     </div>
 </header>
 <main class="page">
@@ -20,43 +20,31 @@
         <div class="col-left">
             <div class="card">
                 <div class="card-head">
-                    <div class="card-title"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Your Cart</div>
-                    <div class="card-subtitle" id="pay-cart-count">Review your items before checkout</div>
+                    <div class="card-title"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Summary</div>
+                    <div class="card-subtitle" id="checkout-item-count">Review your complete order</div>
                 </div>
-                <div id="pay-cart-items-list"></div>
-            </div>
-            <div class="card">
-                <div class="card-head"><div class="card-title">Order Summary</div></div>
-                <hr class="divider" />
-                <div class="summary-total-row">
-                    <span class="summary-total-label">Total Amount</span>
-                    <span class="summary-total-money" id="pay-sum-total">₱0.00</span>
-                </div>
+                <div id="checkout-items-list" class="checkout-items-list"></div>
             </div>
         </div>
         <div class="col-right">
             <div class="card card-sticky">
                 <div class="card-head">
-                    <div class="card-title">Customer Information</div>
-                    <div class="card-subtitle">Required for order processing</div>
+                    <div class="card-title">Order Total</div>
+                    <div class="card-subtitle">Ready to confirm</div>
                 </div>
-                <div class="field"><label class="label">Full Name *</label><input class="input" type="text" id="pay-full-name" placeholder="Your full name" /></div>
-                <div class="field"><label class="label">Preferred Delivery Date *</label><input class="input" type="date" id="pay-date" /></div>
-                <div class="field">
-                    <label class="label">Contact Number *</label>
-                    <div class="input-icon-wrap">
-                        <span class="input-icon"><span class="upress-icon upress-icon--phone" aria-hidden="true"></span></span>
-                        <input class="input input-with-icon" type="tel" id="pay-contact" placeholder="09xxxxxxxxx" />
-                    </div>
+                <div class="checkout-summary-row">
+                    <span class="checkout-summary-label">Subtotal</span>
+                    <span class="checkout-summary-value" id="checkout-subtotal">₱0.00</span>
                 </div>
-                <div class="use-number-row" id="pay-number-toggle-row" style="display:none;">
-                    <span class="use-number-label">Use your registered number?</span>
-                    <div class="toggle-btns">
-                        <button class="toggle-btn toggle-btn--active" id="pay-yes-btn" onclick="togglePayNumber(true)">Yes</button>
-                        <button class="toggle-btn" id="pay-no-btn" onclick="togglePayNumber(false)">No</button>
-                    </div>
+                <hr class="divider" />
+                <div class="checkout-summary-row checkout-summary-row--total">
+                    <span class="checkout-summary-label">Total Amount Due</span>
+                    <span class="checkout-summary-value checkout-summary-value--total" id="checkout-total">₱0.00</span>
                 </div>
-                <button class="btn-proceed" onclick="proceedToPayMethod()">PROCEED TO PAYMENT</button>
+                <div class="checkout-actions">
+                    <button class="btn-secondary" onclick="goBackToCart()">← Back</button>
+                    <button class="btn-proceed" onclick="proceedToConfirmation()">Confirm Order</button>
+                </div>
             </div>
         </div>
     </div>

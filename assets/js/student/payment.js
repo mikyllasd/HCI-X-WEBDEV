@@ -1,4 +1,4 @@
-// payment.js
+// payment.js - PART 6: CHECKOUT
 const cart = Cart.get();
 const u    = User.get() || {};
 const co   = Checkout.get();
@@ -7,82 +7,140 @@ if (cart.length === 0) {
     showAlert('Empty Cart', 'Your cart is empty.', () => window.location.href = 'cart.html');
 }
 
-const listEl  = document.getElementById('pay-cart-items-list');
-const countEl = document.getElementById('pay-cart-count');
-const totalEl = document.getElementById('pay-sum-total');
-if (listEl) {
-    listEl.innerHTML = cart.map(item => `
-        <div class="pay-cart-item-mini">
-            <div>
-                <div class="pay-cart-item-mini-name">${escHtml(item.service)}</div>
-                <div class="pay-cart-item-mini-desc">${escHtml(item.desc || '')}</div>
+// Services that require appointment scheduling (to be scheduled after payment)
+const appointmentRequiredServices = ['Binding Option 2', 'ID Printing — Lost', 'ID Printing — Damaged', 'ID Printing — Renewal'];
+
+// Estimated completion days by service type
+const estimatedCompletionDays = {
+    'Printing': 2,
+    'Binding': 5,
+    'Lanyards': 7,
+    'Mug Printing': 10,
+    'ID Printing': 3
+};
+
+function getEstimatedCompletionDate(serviceType) {
+    // Get base days from service type
+    let days = 2; // default
+    for (const [key, value] of Object.entries(estimatedCompletionDays)) {
+        if (serviceType.includes(key)) {
+            days = value;
+            break;
+        }
+    }
+    
+    // Add 1 day per 5 orders in queue (simplified queue calculation)
+    const allOrders = Orders.getAll();
+    const pendingOrders = allOrders.filter(o => o.status === 'Pending' || o.status === 'Processing');
+    const queueDays = Math.floor(pendingOrders.length / 5);
+    
+    const date = new Date();
+    date.setDate(date.getDate() + days + queueDays);
+    return date.toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function renderCheckoutItems() {
+    const listEl = document.getElementById('checkout-items-list');
+    const countEl = document.getElementById('checkout-item-count');
+    
+    if (!listEl) return;
+    
+    listEl.innerHTML = cart.map((item, idx) => {
+        const isAppointmentRequired = appointmentRequiredServices.some(s => item.service.includes(s));
+        const completionDate = isAppointmentRequired 
+            ? 'To be scheduled after payment confirmation'
+            : getEstimatedCompletionDate(item.service);
+        
+        let html = `
+            <div class="checkout-item-card">
+                <div class="checkout-item-header">
+                    <h3 class="checkout-item-title">${escHtml(item.service)}</h3>
+                </div>
+                
+                <div class="checkout-item-specs">
+        `;
+        
+        // Specifications
+        if (item.desc) {
+            html += `<div class="spec-row"><span class="spec-label">Specifications:</span><span class="spec-value">${escHtml(item.desc)}</span></div>`;
+        }
+        
+        // Quantity
+        html += `<div class="spec-row"><span class="spec-label">Quantity:</span><span class="spec-value">${item.quantity || 1}</span></div>`;
+        
+        // Uploaded file thumbnail (if applicable)
+        if (item.fileData || item.fileName) {
+            html += `
+                <div class="spec-row">
+                    <span class="spec-label">Uploaded File:</span>
+                    <span class="spec-value">
+                        <span class="file-thumbnail">📄 ${escHtml(item.fileName || 'file.pdf')}</span>
+                    </span>
+                </div>
+            `;
+        }
+        
+        // Special instructions
+        if (item.specialInstructions) {
+            html += `<div class="spec-row"><span class="spec-label">Instructions:</span><span class="spec-value">${escHtml(item.specialInstructions)}</span></div>`;
+        }
+        
+        // Pricing
+        html += `
+                </div>
+                
+                <div class="checkout-item-pricing">
+                    <div class="pricing-row">
+                        <span class="pricing-label">Unit Price:</span>
+                        <span class="pricing-value">₱${parseFloat(item.price || 0).toFixed(2)}</span>
+                    </div>
+                    <div class="pricing-row">
+                        <span class="pricing-label">Total:</span>
+                        <span class="pricing-value pricing-value--bold">₱${parseFloat(item.total || 0).toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="checkout-item-timeline">
+                    <span class="timeline-label">
+                        ${isAppointmentRequired ? '📅 Appointment:' : '⏱️ Estimated:'}
+                    </span>
+                    <span class="timeline-value">${completionDate}</span>
+                </div>
             </div>
-            <div class="pay-cart-item-mini-price">₱${parseFloat(item.total).toFixed(2)}</div>
-        </div>`).join('');
-}
-if (countEl) countEl.textContent = `${cart.length} item(s) — review before checkout`;
-if (totalEl) totalEl.textContent = '₱' + Cart.total().toFixed(2);
-
-const nameEl  = document.getElementById('pay-full-name');
-const phoneEl = document.getElementById('pay-contact');
-if (nameEl  && !nameEl.value)  nameEl.value  = co.customerInfo?.name  || u.name  || '';
-if (phoneEl && !phoneEl.value) phoneEl.value = co.customerInfo?.phone || u.phone || '';
-if (co.customerInfo?.date) {
-    const dateEl = document.getElementById('pay-date');
-    if (dateEl && !dateEl.value) dateEl.value = co.customerInfo.date;
+        `;
+        
+        return html;
+    }).join('');
+    
+    if (countEl) countEl.textContent = `${cart.length} item(s) in order`;
 }
 
-window._registeredPhone     = u.phone || '';
-window._checkoutOtpVerified = true;
-
-const toggleRow = document.getElementById('pay-number-toggle-row');
-if (toggleRow) toggleRow.style.display = u.phone ? 'flex' : 'none';
-
-function togglePayNumber(useIt) {
-    document.getElementById('pay-yes-btn')?.classList.toggle('toggle-btn--active', useIt);
-    document.getElementById('pay-no-btn')?.classList.toggle('toggle-btn--active', !useIt);
-    const phoneEl = document.getElementById('pay-contact');
-    if (!phoneEl) return;
-    if (useIt) {
-        phoneEl.value = window._registeredPhone || '';
-        window._checkoutOtpVerified = true;
-    } else {
-        phoneEl.value = '';
-        window._checkoutOtpVerified = false;
-    }
+function updateTotals() {
+    const subtotal = Cart.total();
+    const total = subtotal; // No taxes/fees in this implementation
+    
+    const subtotalEl = document.getElementById('checkout-subtotal');
+    const totalEl = document.getElementById('checkout-total');
+    
+    if (subtotalEl) subtotalEl.textContent = '₱' + subtotal.toFixed(2);
+    if (totalEl) totalEl.textContent = '₱' + total.toFixed(2);
 }
 
-function proceedToPayMethod() {
-    const name  = document.getElementById('pay-full-name')?.value.trim();
-    const date  = document.getElementById('pay-date')?.value;
-    const phone = document.getElementById('pay-contact')?.value.trim();
-    if (!name)  { showAlert('Missing Info', 'Please enter your full name.'); return; }
-    if (!date)  { showAlert('Missing Info', 'Please select a preferred delivery date.'); return; }
-    if (!phone) { showAlert('Missing Info', 'Please enter your contact number.'); return; }
+function goBackToCart() {
+    window.location.href = 'cart.html';
+}
 
-    const regPhone     = window._registeredPhone;
-    const phoneChanged = regPhone && phone !== regPhone;
-
-    if (phoneChanged && !window._checkoutOtpVerified) {
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-        showConfirm(
-            'Phone Number Changed',
-            `You entered a different number (${phone}) from your registered one.\n\nAn OTP is required for verification.\nDemo OTP: ${code}\n\nProceed?`,
-            () => {
-                showPrompt('Enter OTP', `Enter the 6-digit OTP sent to ${phone}`, 'Enter OTP here', entered => {
-                    if (entered === code) {
-                        window._checkoutOtpVerified = true;
-                        Checkout.set({ customerInfo: { name, date, phone } });
-                        showAlert('Verified', 'Phone verified.', () => window.location.href = 'pay-method.html');
-                    } else {
-                        showAlert('Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
-                    }
-                });
-            }
-        );
-        return;
-    }
-
-    Checkout.set({ customerInfo: { name, date, phone } });
+function proceedToConfirmation() {
+    Checkout.set({ 
+        customerInfo: {
+            name: u.name,
+            phone: u.phone,
+            email: u.email
+        }
+    });
     window.location.href = 'pay-method.html';
 }
+
+// Initialize checkout display
+renderCheckoutItems();
+updateTotals();

@@ -106,3 +106,30 @@
 @media (max-width: 360px) {
     .manage-tab { width: 100%; }
 }
+
+/* Customer Info Display */
+.order-customer-info {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem;
+    padding: 0.75rem; background: #f9f9f9; border-radius: 0.5rem;
+    font-size: 0.8125rem; border: 1px solid #e8e8e8;
+}
+
+.customer-info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 0.5rem;
+}
+
+.info-label {
+    font-weight: 700; color: #666; flex-shrink: 0;
+}
+
+.info-value {
+    color: #333; text-align: right; word-break: break-word;
+}
+
+@media (max-width: 600px) {
+    .order-customer-info {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}

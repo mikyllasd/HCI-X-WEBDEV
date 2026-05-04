@@ -369,6 +369,154 @@ function renderDashCartPreview() {
 
 renderDashCartPreview();
 
+// ===================== CREATE ORDER FLOW =====================
+function showCreateOrderModal() {
+    if (!canPlaceOrders) {
+        showAlert('Verification required', 'You must have a verified account before placing orders.');
+        return;
+    }
+    
+    initModals();
+    const overlay = document.getElementById('upress-modal-overlay');
+    document.getElementById('upress-modal-title').textContent = 'Who is this order for?';
+    document.getElementById('upress-modal-msg').textContent = 'Select the type of order you want to create.';
+    document.getElementById('upress-modal-cancel').style.display = 'none';
+    document.getElementById('upress-modal-confirm').textContent = 'Confirm';
+    document.getElementById('upress-modal-input-wrap').style.display = 'none';
+    
+    // Create custom order type selection UI
+    const modalBox = document.getElementById('upress-modal-box');
+    const originalContent = `
+        <h3 id="upress-modal-title" style="margin:0 0 0.75rem;font-size:1.125rem;color:#333;"></h3>
+        <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;line-height:1.5;white-space:pre-line;"></p>
+        <div id="upress-modal-input-wrap" style="display:none;margin-bottom:1rem;">
+            <input id="upress-modal-input" type="text" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);outline:none;">
+        </div>`;
+    
+    const customOptions = `
+        <h3 id="upress-modal-title" style="margin:0 0 1rem;font-size:1.125rem;color:#333;">Who is this order for?</h3>
+        <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;">Select the type of order you want to create.</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
+            <button type="button" id="order-individual" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
+                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">👤 Individual Order</div>
+                <div style="font-size:0.8125rem;color:#888;">For personal use</div>
+            </button>
+            <button type="button" id="order-organization" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
+                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">🏫 Organization Order</div>
+                <div style="font-size:0.8125rem;color:#888;">For your student organization</div>
+            </button>
+        </div>
+        <div id="org-selector" style="display:none;margin-bottom:1.5rem;">
+            <label class="label" style="font-size:0.875rem;margin-bottom:0.5rem;">Select Organization *</label>
+            <select id="org-dropdown" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);">
+                <option value="">-- Choose Organization --</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
+            <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:var(--color-cta);color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Confirm</button>
+        </div>`;
+    
+    modalBox.innerHTML = customOptions;
+    overlay.style.display = 'flex';
+    
+    // Hide cancel button initially
+    document.getElementById('upress-modal-cancel').style.display = 'none';
+    
+    // Add event listeners
+    const individualBtn = document.getElementById('order-individual');
+    const organizationBtn = document.getElementById('order-organization');
+    const orgSelector = document.getElementById('org-selector');
+    const orgDropdown = document.getElementById('org-dropdown');
+    
+    let selectedOrderType = null;
+    let selectedOrg = null;
+    
+    function updateStyle(btn, selected) {
+        if (selected) {
+            btn.style.borderColor = '#a32020';
+            btn.style.background = '#fff9f9';
+        } else {
+            btn.style.borderColor = '#e0e0e0';
+            btn.style.background = 'white';
+        }
+    }
+    
+    individualBtn.addEventListener('click', () => {
+        selectedOrderType = 'individual';
+        selectedOrg = null;
+        updateStyle(individualBtn, true);
+        updateStyle(organizationBtn, false);
+        orgSelector.style.display = 'none';
+    });
+    
+    organizationBtn.addEventListener('click', () => {
+        selectedOrderType = 'organization';
+        updateStyle(individualBtn, false);
+        updateStyle(organizationBtn, true);
+        orgSelector.style.display = 'block';
+        loadOrganizations();
+    });
+    
+    function loadOrganizations() {
+        // Placeholder organizations - in a real app, this would come from a backend
+        const orgs = [
+            'Computer Science Club',
+            'Engineering Society',
+            'Business Club',
+            'Arts and Culture Guild',
+            'Sports Association',
+            'Science Club'
+        ];
+        orgDropdown.innerHTML = '<option value="">-- Choose Organization --</option>' + 
+            orgs.map(org => `<option value="${org}">${org}</option>`).join('');
+    }
+    
+    orgDropdown.addEventListener('change', (e) => {
+        selectedOrg = e.target.value;
+    });
+    
+    // Confirm button
+    document.getElementById('upress-modal-confirm').onclick = () => {
+        if (!selectedOrderType) {
+            showAlert('Selection Required', 'Please select order type.');
+            return;
+        }
+        if (selectedOrderType === 'organization' && !selectedOrg) {
+            showAlert('Selection Required', 'Please select an organization.');
+            return;
+        }
+        
+        overlay.style.display = 'none';
+        
+        // Store order type and proceed to show services
+        localStorage.setItem('upress_order_type', selectedOrderType);
+        if (selectedOrg) localStorage.setItem('upress_order_org', selectedOrg);
+        
+        // Show services section instead of service selection modal
+        showServicesSection();
+    };
+    
+    overlay.onclick = null; // Disable backdrop click
+}
+
+
+
+function showServicesSection() {
+    const servicesSection = document.getElementById('services-section');
+    if (servicesSection) {
+        servicesSection.style.display = 'block';
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function hideServicesSection() {
+    const servicesSection = document.getElementById('services-section');
+    if (servicesSection) {
+        servicesSection.style.display = 'none';
+    }
+}
+
 function doLogout() {
     showConfirm('Logout', 'Are you sure you want to log out?', () => {
         User.clear();

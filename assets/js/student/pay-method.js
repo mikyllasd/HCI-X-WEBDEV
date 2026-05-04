@@ -19,6 +19,19 @@ if (listEl) {
 if (countEl) countEl.textContent = `${cart.length} item(s) in cart`;
 if (totalEl) totalEl.textContent = '₱' + total.toFixed(2);
 
+// ===================== DOWNPAYMENT RULE =====================
+const DOWNPAYMENT_THRESHOLD = 600;
+const downpaymentSection = document.getElementById('downpayment-section');
+if (total >= DOWNPAYMENT_THRESHOLD) {
+    const downpayment = total * 0.5;
+    const balance = total - downpayment;
+    downpaymentSection.style.display = 'block';
+    document.getElementById('pm-downpayment').textContent = '₱' + downpayment.toFixed(2);
+    document.getElementById('pm-balance').textContent = '₱' + balance.toFixed(2);
+} else {
+    downpaymentSection.style.display = 'none';
+}
+
 document.querySelectorAll('.payment-option').forEach(opt => {
     opt.addEventListener('click', () => {
         document.querySelectorAll('.payment-option').forEach(o => { o.style.borderColor = '#e0e0e0'; o.style.background = ''; });
@@ -31,8 +44,20 @@ function finalizeOrder(extra = {}) {
     const cartItems = Cart.get();
     const co        = Checkout.get();
     const customer  = co.customerInfo || {};
+    const totalAmount = Cart.total();
+    
+    // Calculate downpayment info
+    let downpaymentInfo = {};
+    if (totalAmount >= DOWNPAYMENT_THRESHOLD) {
+        downpaymentInfo = {
+            requiresDownpayment: true,
+            downpaymentAmount: (totalAmount * 0.5).toFixed(2),
+            balanceDueAtPickup: (totalAmount * 0.5).toFixed(2)
+        };
+    }
+    
     cartItems.forEach(item => {
-        Orders.add({ ...item, customer, ...extra });
+        Orders.add({ ...item, customer, ...downpaymentInfo, ...extra });
     });
     Cart.clear();
     Checkout.clear();

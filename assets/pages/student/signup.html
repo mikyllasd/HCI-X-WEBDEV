@@ -241,12 +241,54 @@
                     <div class="signup-docs-grid">
                         <div class="sfield">
                             <label class="slabel" for="signup-id" id="signup-doc-id-label">Validated ID *</label>
-                            <label class="signup-file-upload" id="signup-id-upload">
-                                <input type="file" id="signup-id" accept="image/*,.pdf" />
-                                <span class="signup-file-upload-icon" aria-hidden="true"><span class="upress-icon upress-icon--upload upress-icon--md"></span></span>
-                                <span class="signup-file-upload-text">Click or drag to upload</span>
-                                <span class="signup-file-upload-hint">PDF, JPG, PNG</span>
-                            </label>
+                            
+                            <!-- Camera capture section for ID -->
+                            <div id="camera-capture-section" class="camera-capture-section">
+                                <div id="camera-step-1" class="camera-step">
+                                    <div class="camera-guide-container">
+                                        <video id="id-camera-video" class="camera-video" playsinline></video>
+                                        <div class="id-card-guide" aria-hidden="true">
+                                            <div class="id-card-outline">
+                                                <span>Align ID card within box</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="camera-controls">
+                                        <button type="button" class="camera-btn camera-btn-primary" id="capture-id-btn">Capture ID</button>
+                                    </div>
+                                </div>
+
+                                <div id="camera-step-2" class="camera-step signup-hidden">
+                                    <div class="preview-container">
+                                        <img id="id-preview-img" class="preview-img" />
+                                        <div id="ocr-spinner" class="ocr-spinner signup-hidden">
+                                            <div class="spinner"></div>
+                                            <p>Reading ID...</p>
+                                        </div>
+                                        <div id="ocr-results" class="ocr-results signup-hidden"></div>
+                                    </div>
+                                    <div class="camera-controls">
+                                        <button type="button" class="camera-btn camera-btn-outline" id="retake-id-btn">Retake</button>
+                                        <button type="button" class="camera-btn camera-btn-primary" id="continue-after-id-btn">Continue to Face Match</button>
+                                    </div>
+                                </div>
+
+                                <div id="camera-step-3" class="camera-step signup-hidden">
+                                    <h3 class="camera-step-title">Face Verification</h3>
+                                    <p class="camera-step-subtitle">Look at the camera for verification</p>
+                                    <div class="camera-guide-container">
+                                        <video id="face-camera-video" class="camera-video" playsinline></video>
+                                        <div class="face-guide" aria-hidden="true">
+                                            <div class="face-outline"></div>
+                                        </div>
+                                    </div>
+                                    <div class="face-status" id="face-status">Scanning...</div>
+                                    <div id="face-warning" class="face-warning signup-hidden">No face detected for 10 seconds. Please position your face in the circle.</div>
+                                </div>
+                            </div>
+
+                            <!-- Hidden file input for COR and fallback ID file storage -->
+                            <input type="hidden" id="signup-id" />
                             <div id="signup-id-preview" class="signup-file-preview-wrap signup-hidden"></div>
                         </div>
                         <div class="sfield">

@@ -4,13 +4,22 @@
     max-width: 75rem; margin: auto;
     display: grid; grid-template-columns: 2fr 1fr;
     gap: 1.5rem; align-items: start;
+    min-height: 80vh;
 }
 .cart-items-col, .cart-summary-col {
+    
     display: flex; flex-direction: column; gap: 1.25rem;
+    
 }
+
+.card {
+    min-height: 70vh;
+}
+
 
 /* Select All label in card header */
 .cart-select-all-label {
+    
     display: flex; align-items: center; gap: 0.5rem;
     font-size: 0.875rem; font-weight: 600; color: #555;
     cursor: pointer;
@@ -21,6 +30,7 @@
 
 /* Cart row */
 .cart-item-row {
+    
     display: flex; align-items: flex-start;
     justify-content: space-between;
     padding: 1rem 0; border-bottom: 1px solid #f0f0f0; gap: 0.75rem;

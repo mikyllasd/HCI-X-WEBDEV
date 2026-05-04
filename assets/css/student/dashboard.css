@@ -199,6 +199,38 @@
 }
 .sidebar-browse-btn:hover { background: var(--color-header-hover); }
 
+/* Sidebar Footer */
+.sidebar-footer {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-white);
+    padding: 1rem 1.25rem;
+    flex-shrink: 0;
+}
+.sidebar-logout-btn {
+    width: 100%;
+    background: #842029;
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+.sidebar-logout-btn .upress-icon {
+    width: 1rem;
+    height: 1rem;
+}
+.sidebar-logout-btn:hover {
+    background: #842029;
+}
+
 /* ===================== SIDEBAR CART ===================== */
 .sidebar-cart-toolbar {
     display: flex; justify-content: space-between; align-items: center;

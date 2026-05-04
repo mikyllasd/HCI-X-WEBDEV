@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="svp-root">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Binding Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/binding.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+    <link rel="stylesheet" href="../../css/student/printing.css" />
+    <link rel="stylesheet" href="../../css/student/student-service-viewport.css" />
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
-<body>
+<body class="svp-fill">
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
@@ -20,9 +22,10 @@
         <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span>
     </button>
 </header>
-<main class="page" id="binding-page">
-    <div class="layout-2col">
-        <div class="col-main">
+<main class="page page--svp" id="binding-page">
+    <div class="svp-app">
+        <div class="svp-work">
+            <div class="svp-work-scroll">
 
             <!-- Step 1: Choose process -->
             <div class="card">
@@ -108,10 +111,6 @@
                         <input class="input" type="number" id="binding-qty" value="1" min="1" oninput="updateBindingSummary()" />
                     </div>
                 </div>
-                <div class="field">
-                    <label class="label">Special Instructions (optional)</label>
-                    <textarea class="input textarea" id="binding-special" placeholder="Any special instructions..."></textarea>
-                </div>
             </div>
 
             <!-- Option 2: Appointment notice -->
@@ -126,25 +125,29 @@
                 </p>
             </div>
 
+            </div>
         </div>
-        <aside class="col-side">
-            <div class="card card-sticky">
-                <div class="card-head"><div class="card-title">Order Summary</div></div>
-                <div class="summary">
-                    <div class="summary-row"><span class="summary-label">Process</span><span class="summary-value" id="binding-sum-process">Print &amp; Bind</span></div>
-                    <div class="summary-row"><span class="summary-label">Binding Type</span><span class="summary-value" id="binding-sum-type">—</span></div>
-                    <div class="summary-row"><span class="summary-label">Pages</span><span class="summary-value" id="binding-sum-pages">—</span></div>
-                    <div class="summary-row"><span class="summary-label">Price/copy</span><span class="summary-value" id="binding-sum-unit">₱0.00</span></div>
-                    <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="binding-sum-qty">1</span></div>
-                    <hr class="divider" />
-                    <div class="summary-row">
-                        <span class="summary-label summary-total-label">Total</span>
-                        <span class="summary-money" id="binding-sum-total">₱0.00</span>
-                    </div>
-                    <button type="button" class="btn-order" onclick="bindingOrderNow()">
+        <aside class="svp-rail">
+            <div class="card printing-summary-card">
+                <div class="printing-summary-head">Summary</div>
+                <div class="printing-summary-rows">
+                    <div class="printing-sum-row"><span>Process</span><span id="binding-sum-process">Print &amp; Bind</span></div>
+                    <div class="printing-sum-row"><span>Binding type</span><span id="binding-sum-type">—</span></div>
+                    <div class="printing-sum-row"><span>Pages</span><span id="binding-sum-pages">—</span></div>
+                    <div class="printing-sum-row"><span>Price/copy</span><span id="binding-sum-unit">₱0.00</span></div>
+                    <div class="printing-sum-row"><span>Quantity</span><span id="binding-sum-qty">1</span></div>
+                </div>
+                <div class="printing-sum-total">
+                    <span>Total</span>
+                    <span class="printing-sum-money" id="binding-sum-total">₱0.00</span>
+                </div>
+                <label class="printing-notes-label" for="binding-special">Order notes (optional)</label>
+                <textarea class="input textarea printing-notes-textarea" id="binding-special" rows="2" placeholder="Binding edge, rush, or other instructions…"></textarea>
+                <div class="printing-actions">
+                    <button type="button" class="btn-order printing-btn-primary" onclick="bindingOrderNow()">
                         <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now
                     </button>
-                    <button class="btn-cart" onclick="bindingAddToCart()">+ Add to Cart</button>
+                    <button type="button" class="btn-cart printing-btn-secondary" onclick="bindingAddToCart()">+ Cart</button>
                 </div>
             </div>
         </aside>

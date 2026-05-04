@@ -3,15 +3,6 @@
     const u = User.get();
     if (!u) { window.location.href = '../auth/portal.html'; return; }
 
-    if ((u.accountStatus || 'verified') === 'pending') {
-        showAlert(
-            'Order history unavailable',
-            'While your account is pending verification, order history is hidden. You will have full access after admin approval.',
-            () => { window.location.href = 'dashboard.html'; }
-        );
-        return;
-    }
-
     let currentFilter = 'all';
 
     // Pull orders from the shared Orders store

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="printing-root">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Printing Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/printing.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mammoth@1.9.1/mammoth.browser.min.js"></script>
 </head>
-<body>
+<body class="printing-fill">
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
@@ -21,67 +21,118 @@
         <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span>
     </button>
 </header>
-<main class="page">
-    <div class="layout-2col">
-        <div class="col-main">
-
-            <!-- Quantity first -->
-            <div class="card">
-                <div class="card-head">
-                    <div class="card-title">How many copies do you need?</div>
-                    <div class="card-subtitle">Each copy can have a different file and settings</div>
-                </div>
-                <div class="field">
-                    <label class="label">Number of Copies *</label>
-                    <input class="input" type="number" id="print-qty" value="1" min="1" max="100" oninput="onPrintQtyChange()" style="max-width:180px;" />
-                </div>
-                <!-- Same file for all copies checkbox -->
-                <label class="checkbox-row" id="same-file-row" style="display:none;margin-top:0.5rem;">
-                    <input type="checkbox" id="same-file-all" onchange="onSameFileToggle()" />
-                    Same file and settings for all copies
-                </label>
-            </div>
-
-            <!-- Per-copy slots -->
-            <div id="print-copy-slots"></div>
-
-            <!-- Special Instructions -->
-            <div class="card">
-                <div class="card-head">
-                    <div class="card-title">Special Instructions</div>
-                    <div class="card-subtitle">Optional notes for the entire order</div>
-                </div>
-                <div class="field">
-                    <textarea class="input textarea" id="print-special" placeholder="Any special instructions for the whole order (optional)..."></textarea>
+<main class="page page--printing">
+    <div class="printing-app">
+        <header class="printing-toolbar">
+            <div class="printing-toolbar-top">
+                <h1 class="printing-title">Printing</h1>
+                <div class="printing-toolbar-fields">
+                    <label class="printing-field printing-field--sets">
+                        <span class="printing-field-label">Print sets</span>
+                        <input class="input printing-input-tight" type="number" id="print-qty" value="1" min="1" max="100" oninput="onPrintQtyChange()" />
+                    </label>
+                    <label class="printing-samefile" id="same-file-row" style="display:none;">
+                        <input type="checkbox" id="same-file-all" onchange="onSameFileToggle()" />
+                        <span>Same file &amp; settings for all sets</span>
+                    </label>
                 </div>
             </div>
+            <p class="printing-hint">Total = (paper × color rate) × <strong>printed pages</strong> (per-page copies in Preview) + image surcharges.</p>
+        </header>
 
+        <div class="printing-work">
+            <div id="print-set-tabs" class="printing-tabs" style="display:none;" role="tablist" aria-label="Print sets"></div>
+            <div id="print-copy-slots" class="printing-slots"></div>
         </div>
-        <aside class="col-side">
-            <div class="card card-sticky">
-                <div class="card-head"><div class="card-title">Order Summary</div></div>
-                <div class="summary">
-                    <div class="summary-row"><span class="summary-label">Copies</span><span class="summary-value" id="sum-print-qty">1</span></div>
-                    <div class="summary-row"><span class="summary-label">Paper Size</span><span class="summary-value" id="sum-print-paper">—</span></div>
-                    <div class="summary-row"><span class="summary-label">Color</span><span class="summary-value" id="sum-print-color">—</span></div>
-                    <div class="summary-row" id="print-addons-row" style="display:none;">
-                        <span class="summary-label">Add-ons</span>
-                        <span class="summary-value" id="sum-print-addons" style="font-size:0.75rem;text-align:right;max-width:60%;"></span>
+
+        <aside class="printing-rail">
+            <div class="card printing-summary-card">
+                <div class="printing-summary-head">Summary</div>
+                <div class="printing-summary-rows">
+                    <div class="printing-sum-row"><span>Sets</span><span id="sum-print-qty">1</span></div>
+                    <div class="printing-sum-row"><span>File pages</span><span id="sum-print-docpages">—</span></div>
+                    <div class="printing-sum-row"><span>Printed pages</span><span id="sum-print-impressions">—</span></div>
+                    <div class="printing-sum-row"><span>Paper</span><span id="sum-print-paper">—</span></div>
+                    <div class="printing-sum-row"><span>Color</span><span id="sum-print-color">—</span></div>
+                    <div class="printing-sum-row" id="print-addons-row" style="display:none;">
+                        <span>Add-ons</span><span id="sum-print-addons" class="printing-sum-addons"></span>
                     </div>
-                    <hr class="divider" />
-                    <div class="summary-row">
-                        <span class="summary-label summary-total-label">Total</span>
-                        <span class="summary-money" id="sum-print-total">₱0.00</span>
-                    </div>
-                    <button type="button" class="btn-order" onclick="printOrderNow()">
+                </div>
+                <div class="printing-sum-total">
+                    <span>Total</span>
+                    <span class="printing-sum-money" id="sum-print-total">₱0.00</span>
+                </div>
+                <label class="printing-notes-label" for="print-special">Order notes (optional)</label>
+                <textarea class="input textarea printing-notes-textarea" id="print-special" rows="2" placeholder="Notes for the whole order…"></textarea>
+                <div class="printing-actions">
+                    <button type="button" class="btn-order printing-btn-primary" onclick="printOrderNow()">
                         <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now
                     </button>
-                    <button class="btn-cart" onclick="printAddToCart()">+ Add to Cart</button>
+                    <button type="button" class="btn-cart printing-btn-secondary" onclick="printAddToCart()">+ Cart</button>
                 </div>
             </div>
         </aside>
     </div>
 </main>
+
+<div id="print-preview-modal" class="pp-modal" aria-hidden="true">
+    <div class="pp-backdrop" onclick="closePrintPreviewModal()"></div>
+    <div class="pp-dialog pp-dialog--wide" role="dialog" aria-modal="true" aria-labelledby="pp-modal-title">
+        <div class="pp-head">
+            <div>
+                <div class="pp-title" id="pp-modal-title">Preview &amp; copies per page</div>
+                <div class="pp-sub" id="pp-modal-sub"></div>
+            </div>
+            <button type="button" class="pp-close" onclick="closePrintPreviewModal()" aria-label="Close">×</button>
+        </div>
+        <div class="pp-body pp-body-split">
+            <div class="pp-previewCol">
+                <div class="pp-previewNav" id="pp-pdf-nav" style="display:none;">
+                    <button type="button" class="btn-cart pp-nav-btn" id="pp-pdf-prev" onclick="ppPdfPrevPage()">← Prev</button>
+                    <span class="pp-page-indicator" id="pp-pdf-page-label">Page 1 / 1</span>
+                    <button type="button" class="btn-cart pp-nav-btn" id="pp-pdf-next" onclick="ppPdfNextPage()">Next →</button>
+                </div>
+                <div class="pp-previewBox pp-previewBox--tall" id="pp-preview-box">
+                    <iframe id="pp-pdf-iframe" class="pp-pdf-iframe" title="PDF preview" style="display:none;"></iframe>
+                    <canvas id="pp-pdf-canvas" class="pp-pdf-canvas" style="display:none;"></canvas>
+                    <img id="pp-img-preview" class="pp-img-preview" alt="Preview" style="display:none;" />
+                    <div id="pp-docx-preview" class="pp-docxPreview" style="display:none;"></div>
+                    <div id="pp-preview-fallback" class="pp-previewFallback" style="display:none;"></div>
+                </div>
+            </div>
+            <div class="pp-sideCol">
+                <div class="pp-side-head">
+                    <span class="pp-side-title">Copies per page</span>
+                    <span class="pp-badge" id="pp-page-count-badge">0 pages</span>
+                </div>
+                <p class="pp-hint" id="pp-docx-hint" style="display:none;">DOCX page count is estimated from breaks in the file. Adjust copies if your layout differs.</p>
+                <div class="pp-bulk-row" id="pp-apply-all-row">
+                    <label class="pp-inline-label" for="pp-apply-all">Set all pages to</label>
+                    <input type="number" class="input pp-num-input" id="pp-apply-all" min="1" max="999" value="1" />
+                    <button type="button" class="btn-cart" onclick="ppApplyAllCopies()">Apply</button>
+                </div>
+                <div class="pp-tail-row" id="pp-tail-row" style="display:none;">
+                    <label class="pp-inline-label" for="pp-tail-copies">Pages <span id="pp-tail-from"></span>–<span id="pp-tail-to"></span> (same count)</label>
+                    <input type="number" class="input pp-num-input" id="pp-tail-copies" min="1" max="999" value="1" />
+                </div>
+                <div class="pp-pages-scroll" id="pp-pages-table"></div>
+            </div>
+        </div>
+        <div class="pp-notes-section">
+            <label class="pp-notes-label" for="pp-print-notes-sync">Print instructions (optional)</label>
+            <textarea
+                id="pp-print-notes-sync"
+                class="input textarea pp-notes-textarea"
+                rows="5"
+                placeholder="Binding edge, duplex, stapling, rush, or other instructions…"
+            ></textarea>
+        </div>
+        <div class="pp-foot">
+            <button type="button" class="btn-cart pp-foot-btn" onclick="closePrintPreviewModal()">Cancel</button>
+            <button type="button" class="btn-order pp-foot-btn" onclick="savePrintPreviewModal()">Save</button>
+        </div>
+    </div>
+</div>
 
 <script src="../../js/student/student.js"></script>
 <script src="../../js/site-pricing.js"></script>

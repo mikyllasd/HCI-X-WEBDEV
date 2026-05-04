@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="svp-root">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ID Printing | UPRESSease</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/printing.css" />
+    <link rel="stylesheet" href="../../css/student/student-service-viewport.css" />
     <script src="../../js/site-pricing.js"></script>
 </head>
-<body>
+<body class="svp-fill">
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
@@ -17,29 +18,49 @@
     </div>
     <span></span>
 </header>
-<main class="page">
-    <div class="card" style="max-width: 36rem; margin: 0 auto;">
-        <div class="card-head">
-            <div class="card-title">Request type</div>
-            <div class="card-subtitle">Reason drives documents, payment, and scheduling (per UPress policy).</div>
+<main class="page page--svp">
+    <div class="svp-app">
+        <div class="svp-work">
+            <div class="svp-work-scroll">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">Request type</div>
+                        <div class="card-subtitle">Reason drives documents, payment, and scheduling (per UPress policy).</div>
+                    </div>
+                    <div class="field">
+                        <label class="label">What type of ID request is this?</label>
+                        <select class="input" id="id-reason">
+                            <option value="">— Select —</option>
+                            <option value="new">New ID (free — in-person visit)</option>
+                            <option value="lost">Lost (affidavit + payment)</option>
+                            <option value="damaged">Damaged (surrender old ID + payment)</option>
+                            <option value="renewal">Renewal (payment)</option>
+                        </select>
+                    </div>
+                    <p id="id-reason-hint" class="card-subtitle id-reason-hint"></p>
+                    <div id="id-affidavit-wrap" style="display:none;" class="field">
+                        <label class="label">Affidavit of loss (PDF / JPG / PNG)</label>
+                        <input type="file" id="id-affidavit" accept=".pdf,image/*" class="input" />
+                    </div>
+                    <p class="card-subtitle id-flow-footnote">Checkout when paid → appointment → staff verifies payment before release.</p>
+                </div>
+            </div>
         </div>
-        <div class="field">
-            <label class="label">What type of ID request is this?</label>
-            <select class="input" id="id-reason">
-                <option value="">— Select —</option>
-                <option value="new">New ID (free — in-person visit)</option>
-                <option value="lost">Lost (affidavit + payment)</option>
-                <option value="damaged">Damaged (surrender old ID + payment)</option>
-                <option value="renewal">Renewal (payment)</option>
-            </select>
-        </div>
-        <p id="id-reason-hint" class="card-subtitle" style="min-height: 3rem; margin-top: 0.5rem;"></p>
-        <div id="id-affidavit-wrap" style="display:none;" class="field">
-            <label class="label">Affidavit of loss (PDF / JPG / PNG)</label>
-            <input type="file" id="id-affidavit" accept=".pdf,image/*" class="input" />
-        </div>
-        <button type="button" class="btn-red" id="id-continue" style="width:100%; margin-top: 0.5rem;">Continue (demo)</button>
-        <p class="card-subtitle" style="margin-top: 1rem;">Full flow: checkout when paid → appointment calendar → staff attendance → staff verifies payment before release.</p>
+        <aside class="svp-rail">
+            <div class="card printing-summary-card">
+                <div class="printing-summary-head">Summary</div>
+                <div class="printing-summary-rows">
+                    <div class="printing-sum-row"><span>Request</span><span id="id-sum-reason">—</span></div>
+                </div>
+                <div class="printing-sum-total">
+                    <span>Est. due</span>
+                    <span class="printing-sum-money" id="id-sum-total">—</span>
+                </div>
+                <div class="printing-actions">
+                    <button type="button" class="btn-order printing-btn-primary" id="id-continue">Continue (demo)</button>
+                </div>
+            </div>
+        </aside>
     </div>
 </main>
 

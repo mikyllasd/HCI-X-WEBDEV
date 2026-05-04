@@ -294,3 +294,26 @@ body { background: var(--color-bg-page); color: var(--color-text); font-size: 1r
 @media (max-width: 480px) { .services-grid-dash { grid-template-columns: 1fr; } .manage-tab { width: 100%; } .qr-box { max-width: 100%; } }
 
 #upress-modal-input:focus { border-color: var(--color-cta); box-shadow: 0 0 0.3125rem rgba(163,32,32,0.2); outline: none; }
+
+/* Pending account verification (dashboard + injected on service pages) */
+.account-status-banner {
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+.account-status-banner--pending {
+    background: #fffbeb;
+    border: 1px solid #f5e0a8;
+    color: #6b5900;
+}
+body > .account-status-banner.account-status-banner--pending {
+    margin: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    padding: 0.65rem 1rem;
+    font-size: 0.8125rem;
+}

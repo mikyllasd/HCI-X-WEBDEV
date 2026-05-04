@@ -246,17 +246,21 @@ function updateTransaction(id, updates) {
  */
 function getArchivedYear(year) {
   const db = getDB();
-  if (db.archives[year]) {
-    return {
-      ...db.archives[year],
-      // Make copies to prevent accidental modification
-      users: db.archives[year].users.map((u) => ({ ...u })),
-      services: db.archives[year].services.map((s) => ({ ...s })),
-      transactions: db.archives[year].transactions.map((t) => ({ ...t })),
-      ratings: db.archives[year].ratings.map((r) => ({ ...r })),
-    };
-  }
-  return null;
+  const snap = db.archives[year];
+  if (!snap) return null;
+  const users = Array.isArray(snap.users) ? snap.users : [];
+  const services = Array.isArray(snap.services) ? snap.services : [];
+  const transactions = Array.isArray(snap.transactions)
+    ? snap.transactions
+    : [];
+  const ratings = Array.isArray(snap.ratings) ? snap.ratings : [];
+  return {
+    ...snap,
+    users: users.map((u) => ({ ...u })),
+    services: services.map((s) => ({ ...s })),
+    transactions: transactions.map((t) => ({ ...t })),
+    ratings: ratings.map((r) => ({ ...r })),
+  };
 }
 
 window.addEventListener("beforeunload", () => {

@@ -351,7 +351,7 @@ function mugOrderNow() {
 
 function mugAddToCart() {
     if (!validateMug()) return;
-    Cart.add(getMugOrderData());
+    if (!Cart.add(getMugOrderData())) return;
     showAlert('Added to Cart', `${_mugTypeName} × ${getMugQty()} added to your cart.`);
 }
 

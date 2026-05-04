@@ -378,7 +378,7 @@ function lanyardOrderNow() {
 
 function lanyardAddToCart() {
     if (!validateLanyard()) return;
-    Cart.add(getLanyardOrderData());
+    if (!Cart.add(getLanyardOrderData())) return;
     showAlert('Added to Cart', `${_lanyardTypeName} × ${getLanyardQty()} added to your cart.`);
 }
 

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="svp-root">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Mug Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/mug.css" />
+    <link rel="stylesheet" href="../../css/student/printing.css" />
+    <link rel="stylesheet" href="../../css/student/student-service-viewport.css" />
     <script src="../../js/site-pricing.js"></script>
 </head>
-<body>
+<body class="svp-fill">
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
@@ -19,9 +21,10 @@
         <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span>
     </button>
 </header>
-<main class="page" id="mug-page">
-    <div class="layout-2col">
-        <div class="col-main">
+<main class="page page--svp" id="mug-page">
+    <div class="svp-app">
+        <div class="svp-work">
+            <div class="svp-work-scroll">
 
             <!-- Step 1: Design Type -->
             <div class="card">
@@ -128,35 +131,28 @@
             <!-- Step 4: Per-piece slots -->
             <div id="mug-piece-slots"></div>
 
-            <!-- Step 5: Special Instructions -->
-            <div class="card">
-                <div class="card-head">
-                    <div class="card-title">Step 5 — Special Instructions</div>
-                    <div class="card-subtitle">Optional notes for the entire order</div>
-                </div>
-                <div class="field">
-                    <textarea class="input textarea" id="mug-special" placeholder="Any special instructions for the whole order (optional)..."></textarea>
-                </div>
             </div>
-
         </div>
-        <aside class="col-side">
-            <div class="card card-sticky">
-                <div class="card-head"><div class="card-title">Order Summary</div></div>
-                <div class="summary">
-                    <div class="summary-row"><span class="summary-label">Design</span><span class="summary-value" id="mug-sum-type">WMSU Standard</span></div>
-                    <div class="summary-row"><span class="summary-label">Size</span><span class="summary-value" id="mug-sum-size">Standard (11oz)</span></div>
-                    <div class="summary-row"><span class="summary-label">Price/piece</span><span class="summary-value" id="mug-sum-unit">₱200.00</span></div>
-                    <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="mug-sum-qty">1</span></div>
-                    <hr class="divider" />
-                    <div class="summary-row">
-                        <span class="summary-label summary-total-label">Total</span>
-                        <span class="summary-money" id="mug-sum-total">₱200.00</span>
-                    </div>
-                    <button type="button" class="btn-order" onclick="mugOrderNow()">
+        <aside class="svp-rail">
+            <div class="card printing-summary-card">
+                <div class="printing-summary-head">Summary</div>
+                <div class="printing-summary-rows">
+                    <div class="printing-sum-row"><span>Design</span><span id="mug-sum-type">WMSU Standard</span></div>
+                    <div class="printing-sum-row"><span>Size</span><span id="mug-sum-size">Standard (11oz)</span></div>
+                    <div class="printing-sum-row"><span>Price/piece</span><span id="mug-sum-unit">₱200.00</span></div>
+                    <div class="printing-sum-row"><span>Quantity</span><span id="mug-sum-qty">1</span></div>
+                </div>
+                <div class="printing-sum-total">
+                    <span>Total</span>
+                    <span class="printing-sum-money" id="mug-sum-total">₱200.00</span>
+                </div>
+                <label class="printing-notes-label" for="mug-special">Order notes (optional)</label>
+                <textarea class="input textarea printing-notes-textarea" id="mug-special" rows="2" placeholder="Notes for the whole order…"></textarea>
+                <div class="printing-actions">
+                    <button type="button" class="btn-order printing-btn-primary" onclick="mugOrderNow()">
                         <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now
                     </button>
-                    <button class="btn-cart" onclick="mugAddToCart()">+ Add to Cart</button>
+                    <button type="button" class="btn-cart printing-btn-secondary" onclick="mugAddToCart()">+ Cart</button>
                 </div>
             </div>
         </aside>

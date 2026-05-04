@@ -807,6 +807,8 @@
             const course = type === "student" ? document.getElementById("signup-course").value : "";
             const campusId = document.getElementById("signup-campus-id").value.trim();
             const isWmsu = /@wmsu\.edu\.ph$/i.test(email);
+            const accountStatus = "verified";
+            const signupPath = isWmsu ? "A" : "B";
 
             User.save({
                 name,
@@ -818,8 +820,8 @@
                 course,
                 year,
                 password: pass,
-                accountStatus: isWmsu ? "verified" : "pending",
-                signupPath: isWmsu ? "A" : "B",
+                accountStatus,
+                signupPath,
             });
 
             showAlert("Account created", "Welcome, " + name + "! You can now sign in at the portal.", function () {

@@ -1,5 +1,4 @@
 (function () {
-  const db = getDB();
   const requestsContainer = document.getElementById("verificationList");
   const emptyState = document.getElementById("verificationEmpty");
   const totalEl = document.getElementById("verificationTotal");
@@ -23,6 +22,7 @@
   let filterState = { ...initialState };
 
   function getVerificationRequests() {
+    const db = getDB();
     return (db.users || []).filter((user) => {
       const role = String(user.role || "").toLowerCase();
       const hasStudentDetails = Boolean(
@@ -37,9 +37,16 @@
   }
 
   function normalizeStatus(user) {
-    const status = String(user.status || "pending").toLowerCase();
+    const raw = user.status;
+    const status = String(raw != null ? raw : "").toLowerCase();
     if (["approved", "rejected", "disabled", "pending"].includes(status)) {
       return status;
+    }
+    /* Legacy demo roster rows had no status field — treat as already cleared. */
+    if (raw === undefined || raw === null || raw === "") {
+      const id = String(user.id || "");
+      if (id.startsWith("stu_pending")) return "pending";
+      return "approved";
     }
     return "pending";
   }
@@ -203,24 +210,33 @@
   }
 
   function saveChanges() {
-    saveDB(db);
     renderRequests();
   }
 
   function updateUserStatus(id, newStatus) {
+    const db = getDB();
     const user = (db.users || []).find((item) => item.id === id);
     if (!user) return;
     user.status = newStatus;
     user.verified = newStatus === "approved";
     user.active = newStatus === "approved";
+    user.accountStatus =
+      newStatus === "approved"
+        ? "verified"
+        : newStatus === "rejected"
+          ? "rejected"
+          : "pending";
     user.reviewedAt = new Date().toISOString();
+    saveDB(db);
     saveChanges();
   }
 
   function toggleFlagged(id) {
+    const db = getDB();
     const user = (db.users || []).find((item) => item.id === id);
     if (!user) return;
     user.flagged = !user.flagged;
+    saveDB(db);
     saveChanges();
   }
 

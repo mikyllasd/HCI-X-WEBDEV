@@ -171,6 +171,7 @@
 
       /* Demo: allow first-time student login with any password to create a minimal session */
       var inferredName = rawId.split("@")[0].replace(/[._]/g, " ");
+      var pathTag = /@wmsu\.edu\.ph$/i.test(rawId) ? "A" : "B";
       localStorage.setItem(
         "upressUser",
         JSON.stringify({
@@ -181,8 +182,10 @@
           college: "",
           course: "",
           year: "",
-          accountStatus: /@wmsu\.edu\.ph$/i.test(rawId) ? "verified" : "pending",
-          signupPath: /@wmsu\.edu\.ph$/i.test(rawId) ? "A" : "B",
+          accountType: "student",
+          campusId: "",
+          accountStatus: "verified",
+          signupPath: pathTag,
         }),
       );
       writeFails(failKey, 0);

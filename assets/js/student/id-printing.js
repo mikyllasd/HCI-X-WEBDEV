@@ -4,22 +4,24 @@
         window.location.href = '../auth/portal.html';
         return;
     }
-    if ((u.accountStatus || 'verified') !== 'verified') {
-        showAlert('Verification required', 'ID requests require a verified account.', () => {
-            window.location.href = 'dashboard.html';
-        });
-        return;
-    }
-
     const sel = document.getElementById('id-reason');
     const hint = document.getElementById('id-reason-hint');
     const affWrap = document.getElementById('id-affidavit-wrap');
+    const sumReason = document.getElementById('id-sum-reason');
+    const sumTotal = document.getElementById('id-sum-total');
 
     const hints = {
         new: 'New IDs are free. You will schedule an in-person visit for photo capture and verification at UPress.',
         lost: 'A notarized affidavit of loss is required. Payment applies before scheduling.',
         damaged: 'Bring your damaged ID to the appointment; it will be surrendered when you receive the replacement.',
         renewal: 'No surrender required. Payment applies before scheduling.'
+    };
+
+    const reasonShort = {
+        new: 'New ID',
+        lost: 'Lost',
+        damaged: 'Damaged',
+        renewal: 'Renewal'
     };
 
     function idFeePeso(key) {
@@ -39,11 +41,30 @@
         return base + ' Estimated fee: ₱' + fee.toFixed(2) + '.';
     }
 
+    function updateIdSummary() {
+        const v = sel.value;
+        if (sumReason) sumReason.textContent = v && reasonShort[v] ? reasonShort[v] : '—';
+        if (!sumTotal) return;
+        if (!v) {
+            sumTotal.textContent = '—';
+            return;
+        }
+        if (v === 'new') {
+            sumTotal.textContent = 'Free';
+            return;
+        }
+        const fee = idFeePeso(v);
+        sumTotal.textContent = fee != null ? '₱' + fee.toFixed(2) : '—';
+    }
+
     sel.addEventListener('change', function () {
         const v = sel.value;
         hint.textContent = v && hints[v] ? hintWithFee(v) : '';
         affWrap.style.display = v === 'lost' ? 'block' : 'none';
+        updateIdSummary();
     });
+
+    updateIdSummary();
 
     document.getElementById('id-continue').addEventListener('click', function () {
         if (!sel.value) {

@@ -1,0 +1,69 @@
+/* Superadmin — Academic year archives (read-only) */
+
+#page-archive .archive-meta {
+  font-size: 13px;
+  color: var(--clr-text-muted, #6b7280);
+  margin-top: 6px;
+}
+
+#page-archive .archive-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+#page-archive .archive-toolbar .form-group {
+  margin: 0;
+  min-width: min(280px, 100%);
+}
+
+#page-archive .archive-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#page-archive .archive-tab {
+  border: 1px solid var(--clr-border, #e5e7eb);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--clr-text-muted, #6b7280);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#page-archive .archive-tab:hover {
+  border-color: var(--clr-primary, #7b0000);
+  color: var(--clr-primary, #7b0000);
+}
+
+#page-archive .archive-tab.is-active {
+  background: var(--clr-primary, #7b0000);
+  border-color: var(--clr-primary, #7b0000);
+  color: #fff;
+}
+
+#page-archive .archive-panel {
+  display: none;
+}
+
+#page-archive .archive-panel.is-active {
+  display: block;
+}
+
+#page-archive .archive-panel .record-search {
+  width: min(520px, 100%);
+}
+
+#page-archive .archive-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--clr-text-muted, #6b7280);
+  font-size: 14px;
+}

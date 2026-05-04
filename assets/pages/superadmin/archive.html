@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Superadmin Archives</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-super-content.css" />
+    <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="archive.css" />
+  </head>
+  <body class="staff-dashboard-body" data-page="archive">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Superadmin sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Superadmin</span>
+          </div>
+          <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close sidebar"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button
+            class="user-pill"
+            type="button"
+            aria-label="Logged in as superadmin"
+          >
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Superadmin</span>
+          </button>
+          <p class="user-handle">@superadmin</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="users.html" class="nav-link" data-page="users">
+                <i data-lucide="users" aria-hidden="true"></i
+                ><span>Manage Users</span></a
+              >
+            </li>
+            <li>
+              <a href="services.html" class="nav-link" data-page="services">
+                <i data-lucide="settings" aria-hidden="true"></i
+                ><span>Services</span></a
+              >
+            </li>
+            <li>
+              <a href="reports.html" class="nav-link" data-page="reports">
+                <i data-lucide="bar-chart-2" aria-hidden="true"></i
+                ><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="ratings.html" class="nav-link" data-page="ratings">
+                <i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span></a
+              >
+            </li>
+            <li>
+              <a
+                href="archive.html"
+                class="nav-link active"
+                data-page="archive"
+                aria-current="page"
+              >
+                <i data-lucide="archive" aria-hidden="true"></i
+                ><span>Archives</span></a
+              >
+            </li>
+            <li>
+              <a href="settings.html" class="nav-link" data-page="settings">
+                <i data-lucide="settings" aria-hidden="true"></i
+                ><span>System Settings</span></a
+              >
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="#"
+                class="nav-link nav-link--logout"
+                id="logoutBtn"
+                data-page="logout"
+                aria-label="Logout"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <section
+          class="page-section active"
+          id="page-archive"
+          aria-labelledby="archive-heading"
+        >
+          <div class="page-header">
+            <h1 id="archive-heading">Academic year archives</h1>
+            <p class="page-subtitle">
+              Read-only snapshots saved when the school year changes. Select a
+              year to review users, transactions, services, and ratings from that
+              period.
+            </p>
+            <p class="archive-meta" id="archiveCurrentYear"></p>
+          </div>
+
+          <div class="card sp">
+            <div class="archive-toolbar">
+              <div class="form-group">
+                <label class="form-label" for="archiveYearSelect"
+                  >School year</label
+                >
+                <select
+                  class="form-input form-select"
+                  id="archiveYearSelect"
+                  aria-label="Select archived school year"
+                >
+                  <option value="">— Select school year —</option>
+                </select>
+              </div>
+            </div>
+            <p class="archive-meta" id="archiveArchivedAt"></p>
+            <div class="archive-empty" id="archiveEmptyState">
+              Loading archives…
+            </div>
+          </div>
+
+          <div id="archiveContent" class="hidden">
+            <div class="stats-grid stats-grid--4 sp" style="margin-top: 8px">
+              <article class="stat-card stat-card--blue">
+                <div class="stat-card__header">
+                  <span>Users</span>
+                  <i data-lucide="users" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="archiveStatUsers">0</p>
+                <p class="stat-card__text">Accounts in archive</p>
+              </article>
+              <article class="stat-card stat-card--green">
+                <div class="stat-card__header">
+                  <span>Transactions</span>
+                  <i data-lucide="file-text" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="archiveStatTransactions">0</p>
+                <p class="stat-card__text">Orders / payments</p>
+              </article>
+              <article class="stat-card stat-card--yellow">
+                <div class="stat-card__header">
+                  <span>Services</span>
+                  <i data-lucide="layers" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="archiveStatServices">0</p>
+                <p class="stat-card__text">Catalog snapshot</p>
+              </article>
+              <article class="stat-card stat-card--purple">
+                <div class="stat-card__header">
+                  <span>Ratings</span>
+                  <i data-lucide="star" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="archiveStatRatings">0</p>
+                <p class="stat-card__text">Feedback entries</p>
+              </article>
+            </div>
+
+            <div class="sp" style="margin-top: 12px">
+              <div class="archive-tabs" role="tablist" aria-label="Archive data">
+                <button
+                  type="button"
+                  class="archive-tab is-active"
+                  data-archive-tab="transactions"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  Transactions
+                </button>
+                <button
+                  type="button"
+                  class="archive-tab"
+                  data-archive-tab="users"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Users
+                </button>
+                <button
+                  type="button"
+                  class="archive-tab"
+                  data-archive-tab="services"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Services
+                </button>
+                <button
+                  type="button"
+                  class="archive-tab"
+                  data-archive-tab="ratings"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Ratings
+                </button>
+              </div>
+
+              <div
+                class="card archive-panel is-active"
+                data-archive-panel="transactions"
+                role="tabpanel"
+              >
+                <div class="record-search" style="margin-bottom: 12px">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    id="archiveSearchTransactions"
+                    class="form-input archive-list-search"
+                    placeholder="Search by ID, service, amount, status, email, date…"
+                    aria-label="Search archived transactions"
+                  />
+                </div>
+                <div class="table-wrapper">
+                  <table class="data-table" aria-label="Archived transactions">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Service</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody id="archiveTxBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                class="card archive-panel"
+                data-archive-panel="users"
+                role="tabpanel"
+              >
+                <div class="record-search" style="margin-bottom: 12px">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    id="archiveSearchUsers"
+                    class="form-input archive-list-search"
+                    placeholder="Search by name, email, or role…"
+                    aria-label="Search archived users"
+                  />
+                </div>
+                <div class="table-wrapper">
+                  <table class="data-table" aria-label="Archived users">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                      </tr>
+                    </thead>
+                    <tbody id="archiveUsersBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                class="card archive-panel"
+                data-archive-panel="services"
+                role="tabpanel"
+              >
+                <div class="record-search" style="margin-bottom: 12px">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    id="archiveSearchServices"
+                    class="form-input archive-list-search"
+                    placeholder="Search by name, category, or price…"
+                    aria-label="Search archived services"
+                  />
+                </div>
+                <div class="table-wrapper">
+                  <table class="data-table" aria-label="Archived services">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody id="archiveServicesBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                class="card archive-panel"
+                data-archive-panel="ratings"
+                role="tabpanel"
+              >
+                <div class="record-search" style="margin-bottom: 12px">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    id="archiveSearchRatings"
+                    class="form-input archive-list-search"
+                    placeholder="Search by transaction, stars, comment, or date…"
+                    aria-label="Search archived ratings"
+                  />
+                </div>
+                <div class="table-wrapper">
+                  <table class="data-table" aria-label="Archived ratings">
+                    <thead>
+                      <tr>
+                        <th>Transaction</th>
+                        <th>Stars</th>
+                        <th>Comment</th>
+                        <th>Submitted</th>
+                      </tr>
+                    </thead>
+                    <tbody id="archiveRatingsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="archive.js"></script>
+  </body>
+</html>

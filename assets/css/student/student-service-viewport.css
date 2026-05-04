@@ -1,0 +1,412 @@
+/* ============================================================
+   UPRESSease — student-service-viewport.css
+   Single-viewport order flows (no document scroll; inner scroll only)
+   Use with: html.svp-root, body.svp-fill, main.page.page--svp
+   ============================================================ */
+
+html.svp-root {
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+}
+
+body.svp-fill {
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+body.svp-fill .appbar {
+    flex-shrink: 0;
+}
+
+body.svp-fill main.page.page--svp {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0.4rem clamp(0.4rem, 1.5vw, 0.85rem) 0.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Optional compact title row above work+rail */
+.svp-toolbar {
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #e5eaf0;
+    border-radius: 10px;
+    padding: 0.4rem 0.65rem;
+    margin-bottom: 0.35rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.svp-toolbar-title {
+    margin: 0;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    font-weight: 800;
+    color: #8b0000;
+    letter-spacing: -0.02em;
+}
+.svp-toolbar-lead {
+    margin: 0.2rem 0 0;
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Main shell: main column + summary rail */
+.svp-app {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr minmax(200px, 260px);
+    grid-template-rows: 1fr;
+    grid-template-areas: 'work rail';
+    gap: 0.35rem 0.65rem;
+    align-items: stretch;
+}
+
+.svp-app--with-toolbar {
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        'toolbar toolbar'
+        'work      rail';
+}
+
+.svp-app .svp-toolbar {
+    grid-area: toolbar;
+}
+
+.svp-work {
+    grid-area: work;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.svp-work-scroll {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+}
+
+.svp-work-scroll > .card:last-child {
+    margin-bottom: 0.15rem;
+}
+
+.svp-rail {
+    grid-area: rail;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Rail summary uses printing.css (.printing-summary-card, .printing-sum-row, …) */
+
+body.svp-fill .svp-rail .printing-summary-card {
+    flex: 1;
+    min-height: 0;
+}
+
+body.svp-fill .svp-rail .printing-notes-textarea {
+    min-height: 2.35rem;
+    max-height: 4rem;
+    resize: none;
+    line-height: 1.35;
+}
+
+/* Single-column flows (e.g. ID printing) */
+.svp-app--single {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.svp-work-scroll--single {
+    width: 100%;
+    max-width: 36rem;
+    margin: 0 auto;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 0.25rem;
+    box-sizing: border-box;
+}
+
+/* ---- Dense left column (binding / mug / lanyard / id) ---------------- */
+body.svp-fill .svp-work-scroll .card,
+body.svp-fill .svp-work-scroll--single .card {
+    padding: 0.5rem 0.6rem !important;
+}
+
+body.svp-fill .svp-work-scroll .card-head,
+body.svp-fill .svp-work-scroll--single .card-head {
+    margin-bottom: 0.3rem !important;
+}
+
+body.svp-fill .svp-work-scroll .card-title,
+body.svp-fill .svp-work-scroll--single .card-title {
+    font-size: 0.9375rem !important;
+}
+
+body.svp-fill .svp-work-scroll .card-subtitle,
+body.svp-fill .svp-work-scroll--single .card-subtitle {
+    font-size: 0.75rem !important;
+    margin-top: 0.15rem !important;
+}
+
+body.svp-fill .svp-work-scroll .field,
+body.svp-fill .svp-work-scroll--single .field {
+    margin-bottom: 0.55rem !important;
+}
+
+body.svp-fill .svp-work-scroll .grid-2,
+body.svp-fill .svp-work-scroll--single .grid-2 {
+    gap: 0.5rem !important;
+    margin-bottom: 0.4rem !important;
+}
+
+body.svp-fill .svp-work-scroll .options,
+body.svp-fill .svp-work-scroll--single .options {
+    gap: 0.5rem !important;
+}
+
+body.svp-fill .svp-work-scroll .option,
+body.svp-fill .svp-work-scroll--single .option {
+    padding: 0.65rem 0.55rem !important;
+}
+
+body.svp-fill .svp-work-scroll .option-img-box,
+body.svp-fill .svp-work-scroll--single .option-img-box {
+    height: 4.25rem !important;
+    margin-bottom: 0.35rem !important;
+}
+
+body.svp-fill .svp-work-scroll .option-img-icon,
+body.svp-fill .svp-work-scroll--single .option-img-icon {
+    font-size: 1.75rem !important;
+}
+
+body.svp-fill .svp-work-scroll .option-icon,
+body.svp-fill .svp-work-scroll--single .option-icon {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.15rem !important;
+}
+
+body.svp-fill .svp-work-scroll .dropzone,
+body.svp-fill .svp-work-scroll--single .dropzone {
+    padding: 1rem 0.75rem !important;
+}
+
+body.svp-fill .svp-work-scroll .dropzone-icon,
+body.svp-fill .svp-work-scroll--single .dropzone-icon {
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    margin-bottom: 0.4rem !important;
+    font-size: 1.35rem !important;
+}
+
+body.svp-fill .svp-work-scroll .encrypt-notice,
+body.svp-fill .svp-work-scroll--single .encrypt-notice {
+    padding: 0.55rem 0.65rem !important;
+    margin-top: 0.5rem !important;
+    gap: 0.5rem !important;
+}
+
+body.svp-fill .svp-work-scroll .binding-process-grid,
+body.svp-fill .svp-work-scroll--single .binding-process-grid {
+    gap: 0.5rem !important;
+    margin-top: 0.35rem !important;
+}
+
+body.svp-fill .svp-work-scroll .binding-process-option,
+body.svp-fill .svp-work-scroll--single .binding-process-option {
+    padding: 0.65rem 0.55rem !important;
+}
+
+body.svp-fill .svp-work-scroll .binding-proc-icon,
+body.svp-fill .svp-work-scroll--single .binding-proc-icon {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.2rem !important;
+}
+
+body.svp-fill .svp-work-scroll .binding-proc-name,
+body.svp-fill .svp-work-scroll--single .binding-proc-name {
+    font-size: 0.875rem !important;
+}
+
+body.svp-fill .svp-work-scroll .binding-proc-desc,
+body.svp-fill .svp-work-scroll--single .binding-proc-desc {
+    font-size: 0.6875rem !important;
+    line-height: 1.35 !important;
+}
+
+body.svp-fill .svp-work-scroll .mug-preview-box,
+body.svp-fill .svp-work-scroll .lanyard-preview-box,
+body.svp-fill .svp-work-scroll--single .mug-preview-box,
+body.svp-fill .svp-work-scroll--single .lanyard-preview-box {
+    padding: 0.3rem 0.45rem !important;
+    margin-top: 0.2rem !important;
+    line-height: 1.2 !important;
+    max-height: 4.1rem;
+    overflow: hidden;
+}
+
+body.svp-fill .svp-work-scroll .mug-preview-box > span:first-of-type,
+body.svp-fill .svp-work-scroll .lanyard-preview-box > span:first-of-type {
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+}
+
+body.svp-fill .svp-work-scroll .mug-preview-box > div,
+body.svp-fill .svp-work-scroll .lanyard-preview-box > div {
+    margin-top: 0.1rem !important;
+    font-size: 0.65rem !important;
+}
+
+body.svp-fill .svp-work-scroll .mug-preview-box > div:first-of-type,
+body.svp-fill .svp-work-scroll .lanyard-preview-box > div:first-of-type {
+    font-weight: 700 !important;
+    color: #8b0000 !important;
+}
+
+body.svp-fill .svp-work-scroll .mug-preview-box > div + div,
+body.svp-fill .svp-work-scroll .lanyard-preview-box > div + div {
+    font-weight: 500 !important;
+    color: #64748b !important;
+}
+
+body.svp-fill .svp-work-scroll .mug-template-link,
+body.svp-fill .svp-work-scroll .lanyard-template-link,
+body.svp-fill .svp-work-scroll--single .mug-template-link,
+body.svp-fill .svp-work-scroll--single .lanyard-template-link {
+    padding: 0.55rem 0.65rem !important;
+    font-size: 0.8125rem !important;
+}
+
+body.svp-fill .svp-work-scroll .piece-slot,
+body.svp-fill .svp-work-scroll--single .piece-slot {
+    padding: 0.45rem 0.55rem !important;
+    margin-bottom: 0.35rem !important;
+}
+
+body.svp-fill .svp-work-scroll .piece-slot-header,
+body.svp-fill .svp-work-scroll--single .piece-slot-header {
+    margin-bottom: 0.3rem !important;
+}
+
+body.svp-fill .svp-work-scroll .piece-slot-title,
+body.svp-fill .svp-work-scroll--single .piece-slot-title {
+    font-size: 0.8125rem !important;
+}
+
+body.svp-fill .svp-work-scroll .textarea,
+body.svp-fill .svp-work-scroll--single .textarea {
+    min-height: 3.25rem !important;
+}
+
+body.svp-fill .id-reason-hint {
+    min-height: 0 !important;
+    margin-top: 0.2rem !important;
+    font-size: 0.7rem !important;
+    line-height: 1.35 !important;
+}
+
+body.svp-fill .id-flow-footnote {
+    margin-top: 0.3rem !important;
+    margin-bottom: 0 !important;
+    font-size: 0.65rem !important;
+    line-height: 1.35 !important;
+    color: #64748b !important;
+}
+
+body.svp-fill #id-sum-total {
+    font-size: 0.95rem;
+}
+
+body.svp-fill #appointment-notice-card {
+    padding: 0.45rem 0.55rem !important;
+}
+
+body.svp-fill #appointment-notice-card .card-head {
+    margin-bottom: 0.2rem !important;
+}
+
+body.svp-fill #appointment-notice-card p {
+    font-size: 0.68rem !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+}
+
+body.svp-fill #mug-piece-slots .dropzone,
+body.svp-fill #lanyard-piece-slots .dropzone {
+    padding: 0.45rem 0.55rem !important;
+}
+
+body.svp-fill #mug-piece-slots .mug-preview-box[style],
+body.svp-fill #lanyard-piece-slots .lanyard-preview-box[style] {
+    margin-bottom: 0.25rem !important;
+    padding: 0.35rem 0.45rem !important;
+    font-size: 0.68rem !important;
+}
+
+body.svp-fill .encrypt-notice .encrypt-text,
+body.svp-fill .encrypt-notice .encrypt-text strong {
+    font-size: 0.68rem !important;
+    line-height: 1.35 !important;
+}
+
+@media (max-width: 780px) {
+    .svp-app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            'rail'
+            'work';
+    }
+
+    .svp-app--with-toolbar {
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas:
+            'toolbar'
+            'rail'
+            'work';
+    }
+
+    .svp-rail {
+        max-height: 40vh;
+    }
+
+    .svp-rail .printing-summary-card {
+        flex: none;
+        max-height: 40vh;
+        overflow: auto;
+    }
+}

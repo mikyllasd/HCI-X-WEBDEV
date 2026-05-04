@@ -81,7 +81,7 @@ function renderSidebarOrders() {
     if (active.length === 0) {
         listEl.innerHTML = `
             <div class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">📦</div>
+                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
                 <p>No active orders yet.</p>
                 <button class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
             </div>`;
@@ -110,7 +110,7 @@ function renderSidebarOrders() {
     if (active.length > 5) {
         listEl.innerHTML += `
         <div style="text-align:center;padding:0.5rem 0;">
-            <button onclick="goToFullOrders()" style="background:none;border:none;color:#8B0000;font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:'Segoe UI',sans-serif;">
+            <button onclick="goToFullOrders()" style="background:none;border:none;color:var(--color-header);font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:var(--font-sans);">
                 View all ${active.length} orders →
             </button>
         </div>`;
@@ -128,7 +128,7 @@ function renderSidebarHistory() {
     if (history.length === 0) {
         listEl.innerHTML = `
             <div class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">🕓</div>
+                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span></div>
                 <p>No completed orders yet.</p>
             </div>`;
         return;
@@ -139,12 +139,14 @@ function renderSidebarHistory() {
         const items = Array.isArray(o.items) ? o.items : [o];
         const total = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
         const name  = items[0]?.service || 'Order';
-        const icon  = o.status === 'Completed' ? '✓' : '✕';
+        const iconHtml = o.status === 'Completed'
+            ? '<span class="upress-icon upress-icon--check" style="width:0.85rem;height:0.85rem;color:#27ae60" aria-hidden="true"></span>'
+            : '<span class="upress-icon upress-icon--x" style="width:0.85rem;height:0.85rem;color:#c0392b" aria-hidden="true"></span>';
         const color = o.status === 'Completed' ? '#27ae60' : '#c0392b';
         return `
         <div class="sidebar-order-item">
             <div class="sidebar-order-name">${escHtml(name)}</div>
-            <div class="sidebar-order-meta" style="color:${color};">${icon} ${escHtml(o.status)} · ${escHtml(o.dateOrdered || '')}</div>
+            <div class="sidebar-order-meta" style="color:${color};display:flex;align-items:center;gap:0.25rem;">${iconHtml}<span>${escHtml(o.status)} · ${escHtml(o.dateOrdered || '')}</span></div>
             <div class="sidebar-order-price">₱${total.toFixed(2)}</div>
         </div>`;
     }).join('');
@@ -152,7 +154,7 @@ function renderSidebarHistory() {
     if (history.length > 5) {
         listEl.innerHTML += `
         <div style="text-align:center;padding:0.5rem 0;">
-            <button onclick="goToFullOrders()" style="background:none;border:none;color:#8B0000;font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:'Segoe UI',sans-serif;">
+            <button onclick="goToFullOrders()" style="background:none;border:none;color:var(--color-header);font-weight:700;cursor:pointer;font-size:0.8125rem;font-family:var(--font-sans);">
                 View all history →
             </button>
         </div>`;
@@ -172,7 +174,7 @@ function renderSidebarCart() {
     if (cart.length === 0) {
         listEl.innerHTML = `
             <div class="sidebar-empty-state">
-                <div class="sidebar-empty-icon">🛒</div>
+                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span></div>
                 <p>Your cart is empty.</p>
                 <button class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
             </div>`;
@@ -205,7 +207,7 @@ function renderSidebarCart() {
             </div>
             <div class="sc-right">
                 <div class="sc-price">₱${parseFloat(item.total).toFixed(2)}</div>
-                <button class="sc-remove-btn" onclick="sidebarRemoveItem('${item.cartId}')">🗑</button>
+                <button type="button" class="sc-remove-btn" onclick="sidebarRemoveItem('${item.cartId}')" aria-label="Remove from cart"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span></button>
             </div>
         </div>`;
     }).join('');
@@ -315,7 +317,7 @@ function toggleNotifPanel() {
 function clearNotifications() {
     document.getElementById('notif-list').innerHTML = `
         <div class="notif-empty">
-            <div class="sidebar-empty-icon">🔔</div>
+            <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span></div>
             <p>No notifications yet.</p>
         </div>`;
     const badge = document.getElementById('notif-badge');
@@ -353,7 +355,7 @@ function renderDashCartPreview() {
     if (container) {
         container.innerHTML = shown.map(item => `
             <div class="dash-cart-preview-item">
-                <span>🛒 ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '…' : '') : ''}</span>
+                <span><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '…' : '') : ''}</span>
                 <span style="font-weight:700;color:#a32020;">₱${item.total}</span>
             </div>`).join('');
         if (cart.length > MAX) {

@@ -46,7 +46,7 @@
         if (filtered.length === 0) {
             listEl.innerHTML = `
                 <div class="orders-empty">
-                    <div class="orders-empty-icon">📦</div>
+                    <div class="orders-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
                     <p>No ${currentFilter === 'all' ? '' : currentFilter.toLowerCase() + ' '}orders yet.</p>
                     <button class="orders-browse-btn" onclick="window.location.href='dashboard.html'">
                         Browse Services
@@ -79,7 +79,7 @@
                 </div>
                 <div class="order-desc">${descParts.join('<br>')}</div>
                 <div class="order-card-bottom">
-                    <span class="order-date">📅 ${escHtml(o.dateOrdered || '')}</span>
+                    <span class="order-date"><span class="upress-icon upress-icon--cal" aria-hidden="true"></span> ${escHtml(o.dateOrdered || '')}</span>
                     <span class="order-total">₱${totalAmt.toFixed(2)}</span>
                 </div>
             </div>`;

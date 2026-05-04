@@ -1,0 +1,295 @@
+@import url("upress-tokens.css");
+
+:root {
+  --pattern-primary: var(--color-header);
+  --pattern-primary-dark: var(--color-header-hover);
+  --pattern-accent: var(--color-cta);
+  --pattern-bg: var(--color-bg-page);
+  --pattern-surface: var(--color-white);
+  --pattern-surface-tint: var(--color-surface-soft);
+  --pattern-line: var(--color-border);
+  --pattern-font: var(--font-sans);
+}
+
+body.page-auth {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--pattern-font);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--pattern-surface-tint);
+  background-image:
+    radial-gradient(ellipse 120% 90% at 50% -25%, color-mix(in srgb, var(--pattern-primary) 16%, transparent), transparent 58%),
+    radial-gradient(ellipse 80% 60% at 100% 10%, color-mix(in srgb, var(--pattern-accent) 10%, transparent), transparent 50%),
+    radial-gradient(ellipse 70% 50% at 0% 80%, color-mix(in srgb, var(--pattern-primary) 6%, transparent), transparent 45%),
+    linear-gradient(180deg, var(--color-surface-soft) 0%, var(--pattern-bg) 42%, #e8e4e0 100%);
+}
+
+.auth-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--pattern-line);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+.auth-topbar .container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.auth-topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  gap: 16px;
+}
+
+.auth-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.auth-logo-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--pattern-primary);
+}
+
+.auth-logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--color-text);
+}
+
+.auth-logo-accent {
+  color: var(--pattern-primary);
+}
+
+.auth-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 5vh, 2.5rem) 20px 40px;
+  width: 100%;
+}
+
+.auth-main--scroll {
+  justify-content: flex-start;
+  align-items: stretch;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: var(--pattern-font);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+  font: inherit;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  background-color: var(--pattern-primary);
+  color: var(--color-white);
+  border-color: var(--pattern-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--pattern-primary-dark);
+  border-color: var(--pattern-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--pattern-primary);
+  border-color: var(--pattern-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--pattern-primary);
+  color: var(--color-white);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-surface);
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 16px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.pattern-hero-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: var(--color-surface);
+  color: var(--pattern-primary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 100px;
+  margin-bottom: 16px;
+  border: 1px solid var(--pattern-line);
+}
+
+.pattern-card {
+  width: 100%;
+  max-width: 28rem;
+  background: var(--pattern-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--pattern-line);
+  box-shadow: var(--shadow-xl);
+  padding: 2.5rem;
+}
+
+.pattern-card-title {
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+
+.pattern-card-lead {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  margin: 0 0 20px;
+}
+
+.pattern-field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.pattern-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--pattern-line);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-family: var(--pattern-font);
+  background: var(--pattern-surface-tint);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+}
+
+.pattern-input:focus {
+  border-color: var(--pattern-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pattern-primary) 18%, transparent);
+  background: var(--pattern-surface);
+}
+
+.pattern-muted {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 16px;
+}
+
+.pattern-muted a {
+  color: var(--color-link);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pattern-muted a:hover {
+  text-decoration: underline;
+}
+
+.pattern-tip {
+  margin: 0 auto 16px;
+  max-width: 28rem;
+  width: 100%;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--pattern-surface) 88%, transparent);
+  border: 1px solid var(--pattern-line);
+  border-radius: var(--radius-md);
+}
+
+.pattern-tip a {
+  color: var(--pattern-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pattern-tip a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .pattern-card {
+    padding: 1.5rem 1.25rem;
+  }
+}

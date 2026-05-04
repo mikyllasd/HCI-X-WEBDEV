@@ -1,36 +1,16 @@
-/* ============================================================
-   index.css — Login Page
-   ============================================================ */
+@import url("../upress-tokens.css");
 
-/* Reset & Base */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", system-ui, sans-serif; }
-body { background: #f3f3f3; color: #333; font-size: 1rem; line-height: 1.6; overflow-x: hidden; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); }
+body { background: var(--color-bg-page); color: var(--color-text); font-size: 1rem; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-/* Variables */
-:root { --primary: #990000; --light: #ffffff; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
-/* Login background */
-.login-bg { display: flex; background: #8B0000; min-height: 100vh; justify-content: center; align-items: center; padding: 1.25rem; }
-
-/* Login card */
-.login-card { background: white; padding: 2.5rem; width: 100%; max-width: 26.25rem; border-radius: 0.9375rem; text-align: center; }
-.login-icon { background: #8B0000; color: white; width: 3.75rem; height: 3.75rem; margin: auto; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.75rem; }
-
-/* Inputs */
-.login-bg input { width: 100%; padding: 0.75rem; margin-bottom: 0.9375rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; font-size: 0.875rem; outline: none; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
-.login-bg input:focus { border-color: #a32020; box-shadow: 0 0 0.3125rem rgba(163,32,32,0.3); }
-.login-label { font-weight: bold; display: block; text-align: left; margin-bottom: 0.25rem; font-size: 0.875rem; }
-
-/* Buttons */
-.btn-red { display: inline-block; width: 100%; padding: 0.75rem; background-color: #a32020; color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; font-family: "Segoe UI", sans-serif; cursor: pointer; transition: 0.3s ease; text-align: center; }
-.btn-red:hover { background-color: #871a1a; }
-
-/* Signup link */
+.login-bg { display: flex; background: linear-gradient(180deg, var(--color-header) 0%, #6a0000 100%); min-height: 100vh; justify-content: center; align-items: center; padding: 1.25rem; }
+.login-card { background: var(--color-white); padding: 2.5rem; width: 100%; max-width: 26.25rem; border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--color-border); }
+.login-icon { background: var(--color-header); color: white; width: 3.75rem; height: 3.75rem; margin: auto; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.75rem; }
+.login-bg input { width: 100%; padding: 0.75rem; margin-bottom: 0.9375rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.875rem; outline: none; box-sizing: border-box; font-family: var(--font-sans); }
+.login-bg input:focus { border-color: var(--color-cta); box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-cta) 25%, transparent); }
+.login-label { font-weight: 700; display: block; text-align: left; margin-bottom: 0.25rem; font-size: 0.875rem; }
+.btn-red { display: inline-block; width: 100%; padding: 0.75rem; background-color: var(--color-cta); color: white; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; font-family: var(--font-sans); cursor: pointer; transition: var(--transition); text-align: center; }
+.btn-red:hover { background-color: var(--color-cta-hover); }
 .signup-link { text-align: center; margin-top: 0.9375rem; font-size: 0.875rem; }
-.signup-link a { color: #b30000; text-decoration: none; font-weight: bold; }
-
-/* Modal input focus */
-#upress-modal-input:focus { border-color: #a32020; box-shadow: 0 0 0.3125rem rgba(163,32,32,0.2); outline: none; }
-
-/* Responsive */
-@media (max-width: 480px) { .login-card { padding: 1.5rem 1.25rem; } }
+.signup-link a { color: var(--color-link); text-decoration: none; font-weight: 700; }
+#upress-modal-input:focus { border-color: var(--color-cta); box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-cta) 22%, transparent); outline: none; }

@@ -88,15 +88,15 @@ function initModals() {
     const el = document.createElement('div');
     el.innerHTML = `
     <div id="upress-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center;">
-        <div id="upress-modal-box" style="background:white;border-radius:0.9375rem;padding:2rem;max-width:26rem;width:90%;box-shadow:0 0.5rem 2rem rgba(0,0,0,0.2);font-family:'Segoe UI',sans-serif;animation:modalIn 0.2s ease;">
+        <div id="upress-modal-box" style="background:white;border-radius:0.9375rem;padding:2rem;max-width:26rem;width:90%;box-shadow:0 0.5rem 2rem rgba(0,0,0,0.2);font-family:var(--font-sans);animation:modalIn 0.2s ease;">
             <h3 id="upress-modal-title" style="margin:0 0 0.75rem;font-size:1.125rem;color:#333;"></h3>
             <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;line-height:1.5;white-space:pre-line;"></p>
             <div id="upress-modal-input-wrap" style="display:none;margin-bottom:1rem;">
-                <input id="upress-modal-input" type="text" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:'Segoe UI',sans-serif;outline:none;">
+                <input id="upress-modal-input" type="text" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);outline:none;">
             </div>
             <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-                <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'Segoe UI',sans-serif;">Cancel</button>
-                <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:#a32020;color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:'Segoe UI',sans-serif;">Confirm</button>
+                <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
+                <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:var(--color-cta);color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Confirm</button>
             </div>
         </div>
     </div>
@@ -189,7 +189,7 @@ function renderDashCartPreview() {
     if (container) {
         container.innerHTML = shown.map(item => `
             <div class="dash-cart-preview-item">
-                <span>🛒 ${item.service} — ${item.desc ? item.desc.substring(0, 40) + (item.desc.length > 40 ? '...' : '') : ''}</span>
+                <span><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '...' : '') : ''}</span>
                 <span style="font-weight:700;color:#a32020;">₱${item.total}</span>
             </div>`).join('');
         if (cart.length > MAX) {
@@ -325,7 +325,7 @@ function sendOtp() {
     const otpInput = document.getElementById('user-otp');
     if (otpInput) { otpInput.disabled = false; otpInput.value = ''; }
     const statusEl = document.getElementById('otp-status');
-    if (statusEl) { statusEl.textContent = `📱 OTP sent to ${phone}. (Demo code: ${_otp})`; statusEl.style.color = '#888'; }
+    if (statusEl) { statusEl.textContent = `OTP sent to ${phone}. (Demo code: ${_otp})`; statusEl.style.color = '#888'; }
 }
 
 function verifyOtp() {
@@ -333,10 +333,10 @@ function verifyOtp() {
     const statusEl = document.getElementById('otp-status');
     if (entered === _otp && _otp) {
         _otpVerified = true;
-        if (statusEl) { statusEl.textContent = '✅ OTP verified!'; statusEl.style.color = 'green'; }
+        if (statusEl) { statusEl.textContent = 'OTP verified.'; statusEl.style.color = 'green'; }
     } else {
         _otpVerified = false;
-        if (statusEl) { statusEl.textContent = '❌ Invalid OTP. Please try again.'; statusEl.style.color = '#d43434'; }
+        if (statusEl) { statusEl.textContent = 'Invalid OTP. Please try again.'; statusEl.style.color = '#d43434'; }
     }
 }
 
@@ -360,7 +360,7 @@ function validateSignup(e) {
         showAlert('Terms Required', 'Please agree to the terms and conditions.'); return false;
     }
     User.save({ name, email, phone, college, course, year });
-    showAlert('Account Created! 🎉', `Welcome, ${name}! Your account has been created successfully.`, () => showPage('login'));
+    showAlert('Account Created', `Welcome, ${name}! Your account has been created successfully.`, () => showPage('login'));
     return false;
 }
 
@@ -431,7 +431,7 @@ function renderCartPage() {
             </div>
             <div class="cart-item-actions">
                 <div class="cart-item-price-tag">₱${parseFloat(item.total).toFixed(2)}</div>
-                <button class="cart-remove-btn" onclick="removeCartItem('${escHtml(item.cartId)}')">🗑 Remove</button>
+                <button type="button" class="cart-remove-btn" onclick="removeCartItem('${escHtml(item.cartId)}')"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Remove</button>
             </div>
         </div>`).join('');
 }
@@ -463,7 +463,15 @@ function initPrinting() {
         fi._bound = true;
         fi.addEventListener('change', function() {
             const d = document.getElementById('print-file-name');
-            if (d) { d.textContent = this.files[0] ? '📎 ' + this.files[0].name : ''; d.style.display = this.files[0] ? 'block' : 'none'; }
+            if (d) {
+                if (this.files[0]) {
+                    d.innerHTML = '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(this.files[0].name);
+                    d.style.display = 'block';
+                } else {
+                    d.innerHTML = '';
+                    d.style.display = 'none';
+                }
+            }
         });
     }
     calcPrintTotal();
@@ -538,7 +546,7 @@ function printAddToCart() {
     if (!validatePrint()) return;
     const data = getPrintOrderData();
     Cart.add(data);
-    showAlert('Added to Cart! 🛒', `Printing order added to your cart successfully.`);
+    showAlert('Added to Cart', `Printing order added to your cart successfully.`);
 }
 
 // ============================================================
@@ -643,7 +651,7 @@ function bindingOrderNow() {
 function bindingAddToCart() {
     if (!validateBindingDetails()) return;
     Cart.add(getBindingOrderData());
-    showAlert('Added to Cart! 🛒', `${Checkout.get().bindingType} × ${Checkout.get().bindingQty} added to your cart.`);
+    showAlert('Added to Cart', `${Checkout.get().bindingType} × ${Checkout.get().bindingQty} added to your cart.`);
 }
 
 // ============================================================
@@ -683,10 +691,10 @@ function buildMugPhotoForms() {
     for (let i = 1; i <= qty; i++) {
         container.innerHTML += `
         <div style="border:1px solid #e0e0e0;border-radius:0.75rem;padding:1.25rem;margin-bottom:1rem;">
-            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">📸 Mug ${i} of ${qty} — Upload Photo</div>
+            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">Mug ${i} of ${qty} — Upload Photo</div>
             <label class="dropzone" style="padding:1.25rem;cursor:pointer;">
                 <input type="file" style="display:none;" id="mug-photo-${i}" accept="image/*">
-                <div style="font-size:1.5rem;">🖼️</div>
+                <div style="display:flex;justify-content:center;"><span class="upress-icon upress-icon--image upress-icon--lg" style="color:#8B0000" aria-hidden="true"></span></div>
                 <div style="color:#a32020;font-weight:700;font-size:0.875rem;">Click to upload photo for Mug ${i}</div>
                 <div style="color:#999;font-size:0.75rem;">PNG, JPG (MAX. 20MB)</div>
             </label>
@@ -701,7 +709,7 @@ function buildMugPhotoForms() {
         const fi = document.getElementById(`mug-photo-${i}`);
         if (fi) fi.addEventListener('change', (function(idx) { return function() {
             const d = document.getElementById(`mug-file-${idx}`);
-            if (d && this.files[0]) { d.textContent = '📎 ' + this.files[0].name; d.style.display = 'block'; }
+            if (d && this.files[0]) { d.innerHTML = '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(this.files[0].name); d.style.display = 'block'; }
         }; })(i));
     }
 }
@@ -755,7 +763,7 @@ function mugOrderNow() {
 function mugAddToCart() {
     if (!validateMug()) return;
     Cart.add(getMugOrderData());
-    showAlert('Added to Cart! 🛒', `${_mugTypeName} × ${document.getElementById('mug-qty')?.value || 1} added to your cart.`);
+    showAlert('Added to Cart', `${_mugTypeName} × ${document.getElementById('mug-qty')?.value || 1} added to your cart.`);
 }
 
 // ============================================================
@@ -794,7 +802,7 @@ function buildLanyardCustomForms() {
     for (let i = 1; i <= qty; i++) {
         container.innerHTML += `
         <div style="border:1px solid #e0e0e0;border-radius:0.75rem;padding:1.25rem;margin-bottom:1rem;">
-            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">🎨 Design ${i} of ${qty}</div>
+            <div style="font-weight:700;color:#8B0000;margin-bottom:0.75rem;">Design ${i} of ${qty}</div>
             <div class="grid-2">
                 <div class="field"><label class="label">Length (cm)</label><input class="input" type="number" id="lanyard-len-${i}" placeholder="e.g. 90" min="1"></div>
                 <div class="field"><label class="label">Width (cm)</label><input class="input" type="number" id="lanyard-wid-${i}" placeholder="e.g. 2" min="1"></div>
@@ -803,7 +811,7 @@ function buildLanyardCustomForms() {
                 <label class="label">Upload Design File</label>
                 <label class="dropzone" style="padding:1.25rem;cursor:pointer;">
                     <input type="file" style="display:none;" id="lanyard-file-${i}" accept="image/*,.pdf">
-                    <div style="font-size:1.25rem;">🎨</div>
+                    <div style="display:flex;justify-content:center;"><span class="upress-icon upress-icon--palette upress-icon--md" style="color:#8B0000" aria-hidden="true"></span></div>
                     <div style="color:#a32020;font-weight:700;font-size:0.875rem;">Click to upload design ${i}</div>
                     <div style="color:#999;font-size:0.75rem;">PNG, JPG, PDF (MAX. 20MB)</div>
                 </label>
@@ -816,7 +824,7 @@ function buildLanyardCustomForms() {
         const fi = document.getElementById(`lanyard-file-${i}`);
         if (fi) fi.addEventListener('change', (function(idx) { return function() {
             const d = document.getElementById(`lanyard-fname-${idx}`);
-            if (d && this.files[0]) { d.textContent = '📎 ' + this.files[0].name; d.style.display = 'block'; }
+            if (d && this.files[0]) { d.innerHTML = '<span class="upress-icon upress-icon--clip" aria-hidden="true"></span> ' + escHtml(this.files[0].name); d.style.display = 'block'; }
         }; })(i));
     }
 }
@@ -864,7 +872,7 @@ function lanyardOrderNow() {
 function lanyardAddToCart() {
     if (!validateLanyard()) return;
     Cart.add(getLanyardOrderData());
-    showAlert('Added to Cart! 🛒', `${_lanyardTypeName} × ${document.getElementById('lanyard-qty')?.value || 1} added to your cart.`);
+    showAlert('Added to Cart', `${_lanyardTypeName} × ${document.getElementById('lanyard-qty')?.value || 1} added to your cart.`);
 }
 
 // ============================================================
@@ -945,16 +953,16 @@ function proceedToPayMethod() {
     if (phoneChanged && !window._checkoutOtpVerified) {
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         showConfirm(
-            '📱 Phone Number Changed',
+            'Phone Number Changed',
             `You entered a different number (${phone}) from your registered one.\n\nAn OTP is required for verification.\nDemo OTP: ${code}\n\nProceed?`,
             () => {
                 showPrompt('Enter OTP', `Enter the 6-digit OTP sent to ${phone}`, 'Enter OTP here', entered => {
                     if (entered === code) {
                         window._checkoutOtpVerified = true;
                         Checkout.set({ customerInfo: { name, date, phone } });
-                        showAlert('✅ Verified!', 'Phone verified.', () => showPage('pay-method'));
+                        showAlert('Verified', 'Phone verified.', () => showPage('pay-method'));
                     } else {
-                        showAlert('❌ Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
+                        showAlert('Invalid OTP', 'The OTP you entered is incorrect. Please try again.');
                     }
                 });
             }
@@ -1168,7 +1176,7 @@ function renderOrders() {
     if (filtered.length === 0) {
         list.innerHTML = `
         <div class="orders-card empty-state">
-            <div class="empty-icon">📦</div>
+            <div class="empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
             <h3>No orders here</h3>
             <p>${_ordersFilter === 'all' ? "You haven't placed any orders yet." : `No ${_ordersFilter} orders found.`}</p>
             <button onclick="showPage('dashboard')" class="browse-btn">Browse Services</button>
@@ -1179,7 +1187,7 @@ function renderOrders() {
         const sc  = statusStyle[order.status] || statusStyle['Pending'];
         const badge = `<span style="display:inline-block;padding:0.25rem 0.875rem;border-radius:1.25rem;font-size:0.8125rem;font-weight:600;background:${sc.bg};color:${sc.color};border:1px solid ${sc.border};">${escHtml(order.status)}</span>`;
         const c   = order.customer || {};
-        const customerRow = c.name ? `<div style="font-size:0.8rem;color:#888;margin-top:0.25rem;">👤 ${escHtml(c.name)}${c.phone ? ' &nbsp;📞 ' + escHtml(c.phone) : ''}${c.date ? ' &nbsp;🗓 Pickup: ' + escHtml(c.date) : ''}</div>` : '';
+        const customerRow = c.name ? `<div style="font-size:0.8rem;color:#888;margin-top:0.25rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.35rem;"><span class="upress-icon upress-icon--user" style="width:0.85rem;height:0.85rem;flex-shrink:0" aria-hidden="true"></span><span>${escHtml(c.name)}</span>${c.phone ? '<span class="upress-icon upress-icon--phone" style="width:0.85rem;height:0.85rem;flex-shrink:0" aria-hidden="true"></span><span>' + escHtml(c.phone) + '</span>' : ''}${c.date ? '<span class="upress-icon upress-icon--cal" style="width:0.85rem;height:0.85rem;flex-shrink:0" aria-hidden="true"></span><span>Pickup: ' + escHtml(c.date) + '</span>' : ''}</div>` : '';
         const addonsRow   = order.addons?.length ? `<div style="font-size:0.8rem;color:#888;">Add-ons: ${escHtml(order.addons.join(', '))}</div>` : '';
         const refRow      = order.refNumber ? `<div style="font-size:0.8rem;color:#888;">GCash Ref: ${escHtml(order.refNumber)}</div>` : '';
         return `
@@ -1193,14 +1201,14 @@ function renderOrders() {
                     </div>
                     <div style="font-size:0.875rem;color:#555;margin-bottom:0.25rem;">${escHtml(order.desc || '')}</div>
                     ${addonsRow}${customerRow}${refRow}
-                    <div style="font-size:0.8rem;color:#aaa;margin-top:0.375rem;">📅 ${escHtml(order.dateOrdered || '—')} &nbsp;|&nbsp; 💳 ${escHtml(order.paymentMethod || '—')}</div>
+                    <div style="font-size:0.8rem;color:#aaa;margin-top:0.375rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.35rem;"><span class="upress-icon upress-icon--cal" style="width:0.85rem;height:0.85rem" aria-hidden="true"></span><span>${escHtml(order.dateOrdered || '—')}</span><span>|</span><span class="upress-icon upress-icon--card" style="width:0.85rem;height:0.85rem" aria-hidden="true"></span><span>${escHtml(order.paymentMethod || '—')}</span></div>
                 </div>
                 <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:0.625rem;">
                     <span style="font-weight:700;font-size:1.25rem;color:#a32020;">₱${escHtml(String(order.total))}</span>
                     <button onclick="deleteOrder('${escHtml(order.orderId)}')"
-                        style="background:none;border:1px solid #e0e0e0;border-radius:0.5rem;padding:0.375rem 0.75rem;cursor:pointer;font-size:0.8125rem;color:#888;font-family:'Segoe UI',sans-serif;"
+                        style="background:none;border:1px solid #e0e0e0;border-radius:0.5rem;padding:0.375rem 0.75rem;cursor:pointer;font-size:0.8125rem;color:#888;font-family:var(--font-sans);"
                         onmouseover="this.style.borderColor='#a32020';this.style.color='#a32020';"
-                        onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#888';">🗑 Remove</button>
+                        onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#888';"><span class="upress-icon upress-icon--trash" style="width:0.85rem;height:0.85rem;vertical-align:-0.1em;margin-right:0.25rem" aria-hidden="true"></span>Remove</button>
                 </div>
             </div>
         </div>`;

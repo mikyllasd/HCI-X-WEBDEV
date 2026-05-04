@@ -14,7 +14,7 @@
         <span class="appbar-title">Binding Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button class="appbar-action" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-badge"></span></button>
+    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span></button>
 </header>
 <main class="page" id="binding-page">
     <div class="layout-2col">
@@ -26,19 +26,19 @@
                 </div>
                 <div class="options">
                     <div class="option" onclick="selectBindingType('thesis', 150, this)">
-                        <div class="option-icon">📖</div>
+                        <div class="option-icon"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
                         <div class="option-name">Thesis Binding</div>
                         <div class="option-desc">High-quality binding for research papers</div>
                         <div class="option-price">₱150</div>
                     </div>
                     <div class="option" onclick="selectBindingType('hardcover', 200, this)">
-                        <div class="option-icon">📚</div>
+                        <div class="option-icon"><span class="upress-icon upress-icon--doc" aria-hidden="true"></span></div>
                         <div class="option-name">Hardcover Binding</div>
                         <div class="option-desc">Durable hardcover for books and documents</div>
                         <div class="option-price">₱200</div>
                     </div>
                     <div class="option" onclick="selectBindingType('spiral', 80, this)">
-                        <div class="option-icon">🗂️</div>
+                        <div class="option-icon"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
                         <div class="option-name">Spiral Binding</div>
                         <div class="option-desc">Perfect for reports, manuals, notebooks</div>
                         <div class="option-price">₱80</div>
@@ -68,7 +68,7 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="binding-sum-total">₱0.00</span>
                     </div>
-                    <button class="btn-order" onclick="bindingOrderNow()">🛒 Order Now</button>
+                    <button type="button" class="btn-order" onclick="bindingOrderNow()"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now</button>
                     <button class="btn-cart" onclick="bindingAddToCart()">+ Add to Cart</button>
                 </div>
             </div>

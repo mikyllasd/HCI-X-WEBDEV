@@ -56,7 +56,7 @@ function handleLogin() {
     const record = CREDENTIALS[username.toLowerCase()];
     if (record && record.password === password) {
       showAlert(
-        `✓ Welcome, ${record.role}! Redirecting to dashboard…`,
+        `Welcome, ${record.role}! Redirecting to dashboard…`,
         "success",
       );
       localStorage.setItem(
@@ -98,10 +98,11 @@ togglePw.addEventListener("click", () => {
 // ── Login Button Click ──
 loginBtn.addEventListener("click", handleLogin);
 
-// ── Student Login Link ──
-studentLink.addEventListener("click", () => {
-  window.location.href = "student/index.html";
-});
+if (studentLink) {
+  studentLink.addEventListener("click", () => {
+    window.location.href = "auth/portal.html";
+  });
+}
 
 // ── Enter Key Submits Form ──
 document.addEventListener("keydown", (e) => {

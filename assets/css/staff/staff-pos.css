@@ -137,7 +137,7 @@
 .pos-line-remove {
   border: none;
   background: none;
-  color: #a32020;
+  color: var(--color-cta);
   cursor: pointer;
   font-size: 0.8rem;
 }

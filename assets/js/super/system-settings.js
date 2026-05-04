@@ -91,7 +91,7 @@
 
       <div class="maintenance-alert ${s.maintenance ? "active" : "normal"}" id="maintenanceAlert">
         <div class="maintenance-alert-text">
-          <strong id="maintenanceStatus">${s.maintenance ? "⚠ Maintenance Mode Active" : "System Operating Normally"}</strong>
+          <strong id="maintenanceStatus">${s.maintenance ? "Maintenance mode active" : "System operating normally"}</strong>
           <span id="maintenanceSubStatus">${s.maintenance ? "Students cannot access the system" : "System is available to all users"}</span>
         </div>
         <button class="btn btn-sm ${s.maintenance ? "btn-danger" : "btn-ghost"}" id="maintenanceToggleBtn">
@@ -127,7 +127,7 @@
 
       if (s.maintenance) {
         alert.className = "maintenance-alert active";
-        statusEl.textContent = "⚠ Maintenance Mode Active";
+        statusEl.textContent = "Maintenance mode active";
         subStatusEl.textContent = "Students cannot access the system";
         btn.className = "btn btn-sm btn-danger";
         btn.textContent = "Disable";

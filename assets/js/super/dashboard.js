@@ -1,57 +1,78 @@
-/* ============================================================
-   UPRESSease Admin Portal – Dashboard Page
-   ============================================================ */
-
 (function () {
   const pageContainer = document.getElementById("pageContainer");
 
   pageContainer.innerHTML = `
-    <div class="page-header">
-      <h1 class="page-title">Dashboard</h1>
-      <p class="page-sub">Today's Overview – ${formatDate(new Date())}</p>
-    </div>
+    <header class="sd-header">
+      <h1 class="sd-title">Dashboard</h1>
+      <div class="sd-subtitle">Today's Overview – ${formatDate(new Date())}</div>
+    </header>
 
-    <div class="stats-grid">
+    <section class="sd-metrics" aria-label="Dashboard metrics">
       ${statCard("Today's Orders", "0", "Total orders today", "red", "accent-red", iconBox())}
       ${statCard("Today's Income", "₱0.00", "From completed orders", "green", "accent-green", iconDollar())}
       ${statCard("Pending/Paid", "0", "Awaiting processing", "yellow", "accent-yellow", iconClock())}
       ${statCard("Processing", "0", "Currently being processed", "purple", "accent-purple", iconBox2())}
       ${statCard("Ready for Pickup", "0", "Ready to be claimed", "green", "accent-green", iconCheck())}
       ${statCard("Completed", "0", "Successfully completed", "gray", "accent-gray", iconCheck2())}
-    </div>
+    </section>
 
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-header">
+    <section class="sd-panel" aria-label="Today's transactions">
+      <div class="sd-panel__head">
         <div>
-          <div class="card-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            Today's Transactions
+          <div class="sd-panel__title">
+            <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+            <span>Today's Transactions</span>
           </div>
-          <div class="card-sub">All orders placed today</div>
+          <div class="sd-panel__sub">All orders placed today</div>
         </div>
-        <a href="reports.html" class="btn btn-primary btn-sm">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>
-          View All Orders
+        <a href="reports.html" class="sd-panel__cta">
+          <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
+          <span>View All</span>
         </a>
       </div>
-      <div class="empty-state">
-        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        <div class="empty-title">No transactions today</div>
-        <div class="empty-desc">Orders placed today will appear here</div>
+      <div class="sd-empty">
+        <div class="sd-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M3.27 6.96 12 12l8.73-5.04M12 22V12"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div class="sd-empty__title">No transactions today</div>
+        <div class="sd-empty__sub">Orders placed today will appear here</div>
       </div>
-    </div>
+    </section>
 
-    <div class="promo-banner">
-      <div class="promo-left">
-        <div class="promo-icon-wrap">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <div>
-          <div class="promo-title">Performance Analytics</div>
-          <div class="promo-desc">View detailed daily, monthly, and yearly performance reports</div>
+    <section class="sd-hero" aria-label="Performance analytics">
+      <div class="sd-hero__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M4 16l5-6 4 3 7-9"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="sd-hero__text">
+        <div class="sd-hero__title">Performance Analytics</div>
+        <div class="sd-hero__sub">
+          View detailed daily, monthly, and yearly performance reports
         </div>
       </div>
-      <a href="reports.html" class="btn btn-promo">View Analytics</a>
-    </div>
+      <a href="reports.html" class="sd-hero__cta">View Analytics</a>
+    </section>
   `;
 })();

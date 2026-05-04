@@ -5,65 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Portal – UPRESSease</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../css/upress-pattern-ui.css" />
     <link rel="stylesheet" href="../css/admin-login-entry-point.css" />
   </head>
-  <body>
-    <div class="grain"></div>
-
-    <div class="card">
-      <div class="shield-wrap">
-        <div class="shield">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z"
-            />
-          </svg>
+  <body class="page-auth">
+    <main class="auth-main">
+      <div class="card">
+        <span class="pattern-hero-badge">Entry hub</span>
+        <div class="shield-wrap">
+          <div class="shield">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z"
+              />
+            </svg>
+          </div>
         </div>
-      </div>
 
-      <h1 class="card-title">Unified sign-in</h1>
-      <p class="card-sub">
-        Students, staff, admin, and superadmin now use the same UPress entry point. Your
-        role is detected from your credentials.
-      </p>
+        <h1 class="card-title">Unified sign-in</h1>
+        <p class="card-sub">
+          Students, staff, admin, and superadmin now use the same UPress entry point. Your
+          role is detected from your credentials.
+        </p>
 
-      <a class="btn-login" href="auth/portal.html" style="text-decoration: none; text-align: center; display: block"
-        >Continue to UPress Sign-In</a
-      >
+        <a class="btn btn-primary btn-lg btn-block btn-login" href="auth/portal.html">Continue to UPress Sign-In</a>
 
-      <div class="divider">
-        <span></span>
-        <p>Students</p>
-        <span></span>
-      </div>
-      <a class="student-link" href="student/signup.html">Create student account</a>
-
-      <div class="demo-section">
-        <p class="demo-label">Demo roles (also on the sign-in page)</p>
-        <div class="demo-cards">
-          <a class="demo-card" href="auth/portal.html?user=superadmin&amp;pass=super123" style="text-decoration: none; color: inherit">
-            <span class="fill-tag">Open</span>
-            <span class="role">Super Admin</span>
-            <span class="cred-user">superadmin</span>
-            <span class="cred-pass">super123</span>
-          </a>
-          <a class="demo-card" href="auth/portal.html?user=admin&amp;pass=admin123" style="text-decoration: none; color: inherit">
-            <span class="fill-tag">Open</span>
-            <span class="role">Admin</span>
-            <span class="cred-user">admin</span>
-            <span class="cred-pass">admin123</span>
-          </a>
-          <a class="demo-card" href="auth/portal.html?user=staff&amp;pass=staff123" style="text-decoration: none; color: inherit">
-            <span class="fill-tag">Open</span>
-            <span class="role">Staff &amp; POS</span>
-            <span class="cred-user">staff</span>
-            <span class="cred-pass">staff123</span>
-          </a>
+        <div class="divider">
+          <span></span>
+          <p>Students</p>
+          <span></span>
         </div>
+        <a class="student-link btn btn-outline btn-lg btn-block" href="student/signup.html">Create student account</a>
+
+        <div class="demo-section">
+          <p class="demo-label">Demo roles (also on the sign-in page)</p>
+          <div class="demo-cards">
+            <a class="demo-card" href="auth/portal.html?user=superadmin&amp;pass=super123">
+              <span class="fill-tag">Open</span>
+              <span class="role">Super Admin</span>
+              <span class="cred-user">superadmin</span>
+              <span class="cred-pass">super123</span>
+            </a>
+            <a class="demo-card" href="auth/portal.html?user=admin&amp;pass=admin123">
+              <span class="fill-tag">Open</span>
+              <span class="role">Admin</span>
+              <span class="cred-user">admin</span>
+              <span class="cred-pass">admin123</span>
+            </a>
+            <a class="demo-card" href="auth/portal.html?user=staff&amp;pass=staff123">
+              <span class="fill-tag">Open</span>
+              <span class="role">Staff &amp; POS</span>
+              <span class="cred-user">staff</span>
+              <span class="cred-pass">staff123</span>
+            </a>
+          </div>
+        </div>
+        <p class="pattern-muted admin-entry-foot">
+          <a href="../../index.html">Back to marketing site</a>
+        </p>
       </div>
-    </div>
+    </main>
   </body>
 </html>

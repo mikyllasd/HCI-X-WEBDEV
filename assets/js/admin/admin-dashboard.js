@@ -275,18 +275,18 @@ let optionRowCount = 1;
    ---------------------------------------------------------- */
 
 /**
- * Maps each page key to its section element ID and topbar label.
- * @type {Object.<string, {id: string, label: string}>}
+ * Maps each page key to its section element ID.
+ * @type {Object.<string, {id: string}>}
  */
 const PAGE_MAP = {
-  dashboard:             { id: "page-dashboard",            label: "Dashboard"            },
-  "student-verification":{ id: "page-student-verification", label: "Student Verification" },
-  orders:                { id: "page-orders",               label: "Orders Management"    },
-  "payment-verification":{ id: "page-payment-verification", label: "Payment Verification" },
-  reports:               { id: "page-reports",              label: "Reports"              },
-  "qr-scanner":          { id: "page-qr-scanner",           label: "QR Code Scanner"      },
-  "active-accounts":     { id: "page-active-accounts",      label: "Active Accounts"      },
-  "add-service":         { id: "page-add-service",          label: "Add Service"          },
+  dashboard:              { id: "page-dashboard" },
+  "student-verification": { id: "page-student-verification" },
+  orders:                 { id: "page-orders" },
+  "payment-verification": { id: "page-payment-verification" },
+  reports:                { id: "page-reports" },
+  "qr-scanner":           { id: "page-qr-scanner" },
+  "active-accounts":      { id: "page-active-accounts" },
+  "add-service":          { id: "page-add-service" },
 };
 
 /** Tracks which Chart.js instances have been initialised */
@@ -295,7 +295,7 @@ const chartInstances = {};
 /**
  * Navigate to a named page.
  * Hides all sections, shows the target, updates the sidebar active
- * state and topbar title, then runs any page-specific init.
+ * state, then runs any page-specific init.
  * @param {string} pageKey - Key from PAGE_MAP
  */
 function navigateTo(pageKey) {
@@ -316,9 +316,6 @@ function navigateTo(pageKey) {
     link.classList.toggle("active", isActive);
     link.setAttribute("aria-current", isActive ? "page" : "false");
   });
-
-  /* Update topbar title */
-  setText("topbar-title", PAGE_MAP[pageKey].label);
 
   /* Close mobile sidebar */
   closeSidebar();
@@ -929,12 +926,12 @@ function renderReportsChart(periodOrders) {
       scales: {
         y: {
           beginAtZero: true,
-          title: { display: true, text: "Orders", font: { family: "DM Sans" } },
+          title: { display: true, text: "Orders", font: { family: "Inter" } },
         },
         y1: {
           beginAtZero: true,
           position: "right",
-          title: { display: true, text: "Income (₱)", font: { family: "DM Sans" } },
+          title: { display: true, text: "Income (₱)", font: { family: "Inter" } },
           grid: { drawOnChartArea: false },
         },
       },
@@ -1166,7 +1163,7 @@ const CHART_DEFAULTS = {
     legend: {
       position: "bottom",
       labels: {
-        font: { family: "DM Sans", size: 12 },
+        font: { family: "Inter", size: 12 },
         usePointStyle: true,
         padding: 20,
       },
@@ -1226,8 +1223,8 @@ function initDailyChart() {
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "DM Sans" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "DM Sans" } }, grid: { drawOnChartArea: false } },
+        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "Inter" } } },
+        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
       },
     },
   });
@@ -1247,8 +1244,8 @@ function initMonthlyChart() {
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "DM Sans" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "DM Sans" } }, grid: { drawOnChartArea: false } },
+        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "Inter" } } },
+        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
       },
     },
   });
@@ -1268,8 +1265,8 @@ function initYearlyChart() {
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "DM Sans" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "DM Sans" } }, grid: { drawOnChartArea: false } },
+        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "Inter" } } },
+        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
       },
     },
   });
@@ -1289,8 +1286,8 @@ function initAnnualCharts() {
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Transactions", font: { family: "DM Sans" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Revenue (₱)", font: { family: "DM Sans" } }, grid: { drawOnChartArea: false } },
+        y:  { beginAtZero: true, title: { display: true, text: "Transactions", font: { family: "Inter" } } },
+        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Revenue (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
       },
     },
   });
@@ -1374,7 +1371,7 @@ function searchOrderById() {
   if (order) {
     result.className = "qr-result found";
     result.innerHTML = `
-      <strong>✓ Order Found</strong><br>
+      <strong>Order found</strong><br>
       <strong>Order ID:</strong> ${escHtml(order.id)}<br>
       <strong>Student:</strong> ${escHtml(order.email)}<br>
       <strong>Service:</strong> ${escHtml(order.service)}<br>
@@ -1387,7 +1384,7 @@ function searchOrderById() {
   } else {
     result.className = "qr-result not-found";
     result.innerHTML = `
-      <strong>✗ Order Not Found</strong><br>
+      <strong>Order not found</strong><br>
       No order matching <code>${escHtml(query)}</code> was found in the system.`;
   }
 }
@@ -1789,7 +1786,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     usePointStyle: true,
                     pointStyle: 'circle',
                     padding: 20,
-                    font: { family: "'DM Sans', sans-serif", size: 13 },
+                    font: { family: "'Inter', sans-serif", size: 13 },
                     color: '#374151',
                   }
                 },
@@ -1819,7 +1816,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   },
                   border: { dash: [4, 4] },
                   ticks: {
-                    font: { family: "'DM Sans', sans-serif", size: 12 },
+                    font: { family: "'Inter', sans-serif", size: 12 },
                     color: '#6B7280',
                     padding: 8,
                   }
@@ -1835,7 +1832,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   },
                   border: { dash: [4, 4] },
                   ticks: {
-                    font: { family: "'DM Sans', sans-serif", size: 12 },
+                    font: { family: "'Inter', sans-serif", size: 12 },
                     color: '#6B7280',
                     padding: 8,
                     stepSize: 1,
@@ -1849,7 +1846,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   beginAtZero: true,
                   grid: { drawOnChartArea: false },
                   ticks: {
-                    font: { family: "'DM Sans', sans-serif", size: 12 },
+                    font: { family: "'Inter', sans-serif", size: 12 },
                     color: '#10B981',
                     padding: 8,
                     callback: function(val) {

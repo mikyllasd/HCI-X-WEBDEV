@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
                     <div>
-                        <div class="card-title">🛒 Cart Items</div>
+                        <div class="card-title"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart Items</div>
                         <div class="card-subtitle" id="cart-item-count">0 item(s)</div>
                     </div>
                     <!-- Select All Toolbar -->
@@ -33,7 +33,7 @@
                 </div>
                 <div id="cart-items-list">dsd</div>
                 <div id="cart-empty-state" style="display:none;text-align:center;padding:2rem;">
-                    <div style="font-size:3rem;margin-bottom:1rem;">🛒</div>
+                    <div class="cart-empty-icon"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span></div>
                     <h3 style="color:#777;margin-bottom:0.5rem;">Your cart is empty</h3>
                     <p style="color:#aaa;margin-bottom:1.5rem;">Add items from our services to get started</p>
                     <button class="btn-red" onclick="window.location.href='dashboard.html'" style="width:auto;padding:0.75rem 2rem;">Browse Services</button>
@@ -58,8 +58,8 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="cart-sum-total">₱0.00</span>
                     </div>
-                    <button class="btn-order" id="cart-checkout-btn" onclick="cartProceedCheckout()">🛍 Proceed to Checkout</button>
-                    <button class="btn-cart" onclick="cartClearAll()">🗑 Clear Cart</button>
+                    <button type="button" class="btn-order" id="cart-checkout-btn" onclick="cartProceedCheckout()"><span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Proceed to Checkout</button>
+                    <button type="button" class="btn-cart" onclick="cartClearAll()"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart</button>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
     <div class="modal-box">
         <div class="modal-header">
             <span class="modal-title">Edit Quantity</span>
-            <button class="modal-close" onclick="closeEditModal()">✕</button>
+            <button type="button" class="modal-close" onclick="closeEditModal()" aria-label="Close"><span class="upress-icon upress-icon--x" aria-hidden="true"></span></button>
         </div>
         <div class="modal-body">
             <p class="modal-item-name" id="edit-modal-item-name"></p>

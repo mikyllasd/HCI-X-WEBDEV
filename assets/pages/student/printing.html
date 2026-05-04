@@ -18,26 +18,26 @@
         <span class="appbar-title">Printing Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button class="appbar-action" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-badge"></span></button>
+    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span></button>
 </header>
 <main class="page">
     <div class="layout-2col">
         <div class="col-main">
             <div class="card">
                 <div class="card-head">
-                    <div class="card-title">⬆ Upload File</div>
+                    <div class="card-title"><span class="upress-icon upress-icon--upload" aria-hidden="true"></span> Upload File</div>
                     <div class="card-subtitle">Upload your document for printing</div>
                 </div>
                 <label class="dropzone">
                     <input type="file" style="display:none;" id="print-file-input" accept=".pdf,.doc,.docx" />
-                    <div class="dropzone-icon">📄</div>
+                    <div class="dropzone-icon"><span class="upress-icon upress-icon--doc" aria-hidden="true"></span></div>
                     <div class="dropzone-primary">Click to upload</div>
                     <div class="dropzone-secondary">or drag and drop</div>
                     <div class="dropzone-hint">PDF, DOC, DOCX (MAX. 50MB)</div>
                 </label>
                 <div id="print-file-name" style="display:none;margin-top:0.75rem;font-size:0.875rem;color:#555;"></div>
                 <div class="encrypt-notice">
-                    <span class="encrypt-icon">🛡</span>
+                    <span class="encrypt-icon"><span class="upress-icon upress-icon--shield" aria-hidden="true"></span></span>
                     <div class="encrypt-text">
                         <strong>Encrypted Upload</strong>
                         <span>Files are securely encrypted and deleted 12 hours after completion.</span>
@@ -106,8 +106,8 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="sum-print-total">₱0.00</span>
                     </div>
-                    <button class="btn-cart btn-print" type="button" id="printPreviewBtn">🖨 Print Preview</button>
-                    <button class="btn-order" onclick="printOrderNow()">🛒 Order Now</button>
+                    <button class="btn-cart btn-print" type="button" id="printPreviewBtn"><span class="upress-icon upress-icon--print" aria-hidden="true"></span> Print Preview</button>
+                    <button type="button" class="btn-order" onclick="printOrderNow()"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now</button>
                     <button class="btn-cart" onclick="printAddToCart()">+ Add to Cart</button>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                 <div class="pp-title" id="ppTitle">Print Preview</div>
                 <div class="pp-sub" id="ppSub">Preview your document before printing</div>
             </div>
-            <button class="pp-close" type="button" data-pp-close aria-label="Close">×</button>
+            <button class="pp-close" type="button" data-pp-close aria-label="Close"><span class="upress-icon upress-icon--x" aria-hidden="true"></span></button>
         </div>
         <div class="pp-body">
             <div class="pp-preview" id="ppPreview">

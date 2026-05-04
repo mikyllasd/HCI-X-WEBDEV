@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Sign Up</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
+    <link rel="stylesheet" href="../../css/upress-pattern-ui.css" />
     <link rel="stylesheet" href="../../css/student/signup.css" />
 </head>
-<body class="signup-bg">
-    <main class="signup-main">
+<body class="page-auth">
+    <main class="auth-main auth-main--scroll signup-main">
         <div class="signup-card">
+            <span class="pattern-hero-badge">New account</span>
             <div class="signup-card-head">
-                <div class="signup-avatar" id="signup-role-avatar" aria-hidden="true">🎓</div>
+                <div class="signup-avatar" id="signup-role-avatar" aria-hidden="true"><span class="upress-icon upress-icon--grad upress-icon--md"></span></div>
                 <h1 class="signup-title">Create Account</h1>
                 <p class="signup-subtitle">Join WMSU UPress — step by step</p>
             </div>
@@ -36,7 +38,6 @@
             <div id="signup-inline-alert" class="signup-inline-alert signup-hidden" role="alert"></div>
 
             <form id="signup-form" class="signup-form" novalidate>
-                <!-- Step 1: account type (v0dev-style role cards) -->
                 <div class="signup-form-step" id="signup-step-1">
                     <h2 class="signup-step-heading">I am a…</h2>
                     <p class="signup-step-lead">Choose how you use UPress so we ask for the right information.</p>
@@ -242,7 +243,7 @@
                             <label class="slabel" for="signup-id" id="signup-doc-id-label">Validated ID *</label>
                             <label class="signup-file-upload" id="signup-id-upload">
                                 <input type="file" id="signup-id" accept="image/*,.pdf" />
-                                <span class="signup-file-upload-icon" aria-hidden="true">⬆</span>
+                                <span class="signup-file-upload-icon" aria-hidden="true"><span class="upress-icon upress-icon--upload upress-icon--md"></span></span>
                                 <span class="signup-file-upload-text">Click or drag to upload</span>
                                 <span class="signup-file-upload-hint">PDF, JPG, PNG</span>
                             </label>
@@ -252,7 +253,7 @@
                             <label class="slabel" for="signup-cor" id="signup-doc-cor-label">First semester COR *</label>
                             <label class="signup-file-upload" id="signup-cor-upload">
                                 <input type="file" id="signup-cor" accept="image/*,.pdf" />
-                                <span class="signup-file-upload-icon" aria-hidden="true">⬆</span>
+                                <span class="signup-file-upload-icon" aria-hidden="true"><span class="upress-icon upress-icon--upload upress-icon--md"></span></span>
                                 <span class="signup-file-upload-text">Click or drag to upload</span>
                                 <span class="signup-file-upload-hint">PDF, JPG, PNG</span>
                             </label>
@@ -276,7 +277,7 @@
                 </div>
             </form>
 
-            <a href="../auth/portal.html" class="back-login-btn">← Back to sign-in</a>
+            <a href="../auth/portal.html" class="btn btn-outline btn-lg btn-block back-login-btn">← Back to sign-in</a>
         </div>
     </main>
 

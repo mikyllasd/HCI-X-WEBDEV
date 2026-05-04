@@ -3,17 +3,17 @@
 .pay-cart-item-mini:last-child { border-bottom: none; }
 .pay-cart-item-mini-name { font-weight: 700; font-size: 0.9375rem; color: #333; margin-bottom: 0.2rem; }
 .pay-cart-item-mini-desc { font-size: 0.8rem; color: #777; }
-.pay-cart-item-mini-price { font-weight: 700; color: #a32020; font-size: 1rem; white-space: nowrap; }
+.pay-cart-item-mini-price { font-weight: 700; color: var(--color-cta); font-size: 1rem; white-space: nowrap; }
 .summary-total-row { display: flex; justify-content: space-between; align-items: center; }
 .summary-total-label { font-size: 1.125rem; font-weight: 700; color: #333; }
-.summary-total-money { font-size: 1.5rem; font-weight: 700; color: #a32020; }
+.summary-total-money { font-size: 1.5rem; font-weight: 700; color: var(--color-cta); }
 .use-number-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
 .use-number-label { font-size: 0.875rem; color: #555; }
 .toggle-btns { display: flex; gap: 0.5rem; }
-.toggle-btn { padding: 0.4375rem 1.125rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; font-family: "Segoe UI", sans-serif; cursor: pointer; border: 1.5px solid #e0e0e0; background: white; color: #555; transition: all 0.2s; }
-.toggle-btn--active { background-color: #a32020; color: white; border-color: #a32020; }
-.toggle-btn:hover:not(.toggle-btn--active) { border-color: #a32020; color: #a32020; }
+.toggle-btn { padding: 0.4375rem 1.125rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; font-family: var(--font-sans); cursor: pointer; border: 1.5px solid #e0e0e0; background: white; color: #555; transition: all 0.2s; }
+.toggle-btn--active { background-color: var(--color-cta); color: white; border-color: var(--color-cta); }
+.toggle-btn:hover:not(.toggle-btn--active) { border-color: var(--color-cta); color: var(--color-cta); }
 .input-icon-wrap { display: flex; align-items: center; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: #f8f8f8; padding: 0 0.75rem; }
 .input-icon { font-size: 1rem; margin-right: 0.5rem; color: #777; flex-shrink: 0; }
 .input-with-icon { border: none; background: transparent; padding: 0.75rem 0; box-shadow: none; width: 100%; outline: none; }
-.input-icon-wrap:focus-within { border-color: #a32020; box-shadow: 0 0 0.3125rem rgba(163,32,32,0.2); background: white; }
+.input-icon-wrap:focus-within { border-color: var(--color-cta); box-shadow: 0 0 0.3125rem rgba(163,32,32,0.2); background: white; }

@@ -1,8 +1,5 @@
-/* ============================================================
-   UPRESSease Admin Portal – Global Stylesheet
-   ============================================================ */
+@import url("../../css/upress-tokens.css");
 
-/* ── Reset & Variables ── */
 *,
 *::before,
 *::after {
@@ -12,8 +9,8 @@
 }
 
 :root {
-  --maroon: #800000;
-  --maroon-dark: #5a0000;
+  --maroon: var(--color-header);
+  --maroon-dark: var(--color-header-hover);
   --maroon-light: #9a1515;
   --maroon-muted: rgba(128, 0, 0, 0.08);
   --gold: #f5a623;
@@ -44,7 +41,7 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
   --transition: 0.2s ease;
-  --font: "Plus Jakarta Sans", sans-serif;
+  --font: var(--font-sans);
   --font-mono: "DM Mono", monospace;
 }
 
@@ -297,6 +294,23 @@ body {
   background: var(--text);
   border-radius: 2px;
   transition: all var(--transition);
+}
+
+.main-content > .main-hamburger {
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 260;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  align-items: center;
 }
 
 .topbar-title {
@@ -1343,10 +1357,7 @@ body {
 
   .main-content {
     margin-left: 0;
-  }
-
-  .hamburger {
-    display: flex;
+    padding-top: 60px;
   }
 
   .page-container {
@@ -1387,10 +1398,11 @@ body {
   .stat-value {
     font-size: 28px;
   }
-  .topbar {
-    padding: 0 16px;
-  }
   .page-container {
     padding: 12px;
   }
+}
+
+body.staff-dashboard-body .main-content.staff-main {
+  margin-left: 0;
 }

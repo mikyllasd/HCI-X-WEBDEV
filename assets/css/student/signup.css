@@ -1,48 +1,34 @@
-/* signup.css — stepped flow (v0dev-inspired), UPress maroon theme */
-
 .signup-hidden {
     display: none !important;
 }
 
-.signup-bg {
-    background: #8b0000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
 
-.back-login-btn {
-    display: block;
+.back-login-btn.btn {
     margin-top: 0.75rem;
-    text-align: center;
-    padding: 0.65rem;
-    background-color: #6e0000;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 0.5rem;
-    font-weight: 700;
-    font-size: 0.875rem;
-}
-
-.back-login-btn:hover {
-    background-color: #5a0000;
 }
 
 .signup-main {
-    flex: 1;
+    width: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 1.25rem 1rem 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .signup-card {
-    background: #fff;
-    border-radius: 1rem;
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
     width: 100%;
     max-width: 32rem;
     padding: 1.5rem 1.35rem 1.75rem;
-    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-xl);
+    margin: 0 auto 2rem;
+}
+
+.signup-card .pattern-hero-badge {
+    margin-bottom: 0.75rem;
 }
 
 .signup-card-head {
@@ -51,32 +37,32 @@
 }
 
 .signup-avatar {
-    background: #8b0000;
-    color: #fff;
+    background: var(--color-surface);
     width: 3rem;
     height: 3rem;
-    border-radius: 50%;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.35rem;
     margin: 0 auto 0.5rem;
 }
+.signup-avatar .upress-icon { color: var(--color-header); }
 
 .signup-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #222;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
     margin: 0 0 0.15rem;
 }
 
 .signup-subtitle {
     font-size: 0.8125rem;
-    color: #777;
+    color: var(--color-text-muted);
     margin: 0;
 }
 
-/* Step indicator (v0dev register-steps) */
 .signup-steps {
     display: flex;
     justify-content: center;
@@ -108,7 +94,7 @@
 }
 
 .signup-step.active .signup-step-number {
-    background: #8b0000;
+    background: var(--color-header);
     color: #fff;
 }
 
@@ -125,7 +111,7 @@
 
 .signup-step.completed + .signup-step-connector,
 .signup-step.active + .signup-step-connector {
-    background: #8b0000;
+    background: var(--color-header);
 }
 
 .signup-inline-alert {
@@ -169,7 +155,6 @@
     margin: 0 0 1rem;
 }
 
-/* Role cards (v0dev role-selection) */
 .role-selection {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -192,7 +177,7 @@
 }
 
 .role-card.selected {
-    border-color: #8b0000;
+    border-color: var(--color-header);
     background: #fff9f9;
 }
 
@@ -216,7 +201,7 @@
 .role-card-icon svg {
     width: 1.25rem;
     height: 1.25rem;
-    color: #8b0000;
+    color: var(--color-header);
 }
 
 .role-card-title {
@@ -261,7 +246,7 @@
     border: 1.5px solid #e0e0e0;
     border-radius: 0.5rem;
     font-size: 0.875rem;
-    font-family: "Segoe UI", sans-serif;
+    font-family: var(--font-sans);
     outline: none;
     color: #333;
     background: #fafafa;
@@ -270,7 +255,7 @@
 }
 
 .sinput:focus {
-    border-color: #8b0000;
+    border-color: var(--color-header);
     background: #fff;
     box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.08);
 }
@@ -297,7 +282,7 @@
 }
 
 .sinput-eye-wrap:focus-within {
-    border-color: #8b0000;
+    border-color: var(--color-header);
     background: #fff;
     box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.08);
 }
@@ -359,23 +344,22 @@
 .verify-btn {
     padding: 0.5rem 0.65rem;
     background: #fff;
-    border: 1.5px solid #8b0000;
+    border: 1.5px solid var(--color-header);
     border-radius: 0.5rem;
-    color: #8b0000;
+    color: var(--color-header);
     font-size: 0.75rem;
     font-weight: 700;
-    font-family: "Segoe UI", sans-serif;
+    font-family: var(--font-sans);
     cursor: pointer;
     white-space: nowrap;
     transition: 0.2s;
 }
 
 .verify-btn:hover {
-    background: #8b0000;
+    background: var(--color-header);
     color: #fff;
 }
 
-/* File upload (v0dev file-upload) */
 .signup-docs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -399,7 +383,7 @@
 }
 
 .signup-file-upload:hover {
-    border-color: #8b0000;
+    border-color: var(--color-header);
     background: #fff0f0;
 }
 
@@ -408,14 +392,16 @@
 }
 
 .signup-file-upload-icon {
-    font-size: 1.25rem;
     margin-bottom: 0.25rem;
+    display: flex;
+    justify-content: center;
 }
+.signup-file-upload-icon .upress-icon { color: var(--color-header); }
 
 .signup-file-upload-text {
     font-size: 0.8125rem;
     font-weight: 700;
-    color: #8b0000;
+    color: var(--color-header);
 }
 
 .signup-file-upload-hint {
@@ -457,7 +443,7 @@
 }
 
 .signup-file-preview-remove:hover {
-    color: #a32020;
+    color: var(--color-cta);
 }
 
 .signup-email-verify-row,
@@ -510,7 +496,7 @@
     font-size: 1.05rem;
     font-weight: 800;
     letter-spacing: 0.12em;
-    color: #8b0000;
+    color: var(--color-header);
     background: #fff;
     padding: 0.2rem 0.5rem;
     border-radius: 0.35rem;
@@ -552,27 +538,29 @@
 }
 
 .signup-terms-row a {
-    color: #8b0000;
+    color: var(--color-header);
     font-weight: 700;
 }
 
 .signup-submit-btn {
     width: 100%;
-    padding: 0.75rem;
-    background: #8b0000;
+    padding: 14px 16px;
+    background: var(--color-header);
     color: #fff;
-    border: none;
-    border-radius: 0.625rem;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    font-family: "Segoe UI", sans-serif;
+    border: 2px solid var(--color-header);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-sans);
     cursor: pointer;
-    transition: background 0.2s;
+    transition: var(--transition);
     margin-top: 0.25rem;
 }
 
 .signup-submit-btn:hover {
-    background: #6e0000;
+    background: var(--color-header-hover);
+    border-color: var(--color-header-hover);
+    transform: translateY(-1px);
 }
 
 .signup-step-actions {
@@ -583,20 +571,22 @@
 
 .signup-btn-outline {
     flex: 1;
-    padding: 0.75rem;
-    background: #fff;
-    color: #555;
-    border: 1.5px solid #ddd;
-    border-radius: 0.625rem;
-    font-size: 0.875rem;
-    font-weight: 700;
-    font-family: "Segoe UI", sans-serif;
+    padding: 12px 14px;
+    background: var(--color-white);
+    color: var(--color-text-muted);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-sans);
     cursor: pointer;
+    transition: var(--transition);
 }
 
 .signup-btn-outline:hover {
-    border-color: #bbb;
-    background: #fafafa;
+    border-color: var(--color-header);
+    color: var(--color-header);
+    background: var(--color-surface-soft);
 }
 
 .signup-btn-inline {

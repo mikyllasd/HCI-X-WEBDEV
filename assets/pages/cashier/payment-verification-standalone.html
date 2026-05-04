@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Verification - UPRESSease Cashier</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="../../css/upress-tokens.css" />
+    <link rel="stylesheet" href="../../css/cashier.css" />
+    <link rel="stylesheet" href="payment-verification.css" />
+  </head>
+  <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i data-lucide="printer"></i>
+          <span>UPRESSease</span>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3 class="nav-section-title">Cashier Module</h3>
+          <a href="cashier.html" class="nav-link">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="payment-types-standalone.html" class="nav-link">
+            <i data-lucide="credit-card"></i>
+            <span>Payment Types</span>
+          </a>
+          <a href="walk-in-payment-standalone.html" class="nav-link">
+            <i data-lucide="wallet"></i>
+            <span>Walk-in Payment</span>
+          </a>
+          <a
+            href="payment-verification-standalone.html"
+            class="nav-link active"
+          >
+            <i data-lucide="check-circle"></i>
+            <span>Payment Verification</span>
+          </a>
+          <a href="cash-on-pickup-standalone.html" class="nav-link">
+            <i data-lucide="package"></i>
+            <span>Cash on Pickup</span>
+          </a>
+          <a href="#" class="nav-link">
+            <i data-lucide="building"></i>
+            <span>Organization Payables</span>
+          </a>
+          <a href="#" class="nav-link">
+            <i data-lucide="dollar-sign"></i>
+            <span>Downpayment Logic</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <h3 class="nav-section-title">Account</h3>
+          <a href="#" class="nav-link" data-page="profile">
+            <i data-lucide="user"></i>
+            <span>Profile</span>
+          </a>
+          <a href="#" class="nav-link" data-page="settings">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+          </a>
+          <a href="#" class="nav-link" data-page="logout">
+            <i data-lucide="log-out"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="hamburger" id="hamburger">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="header-title">
+            <h1>Payment Verification</h1>
+            <p>Verify digital payments and proof of transactions</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="refreshPayments()">
+              <i data-lucide="refresh-cw"></i>
+              Refresh
+            </button>
+            <button class="btn btn-primary" onclick="showBulkActions()">
+              <i data-lucide="settings"></i>
+              Bulk Actions
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content">
+        <!-- Verification Stats -->
+        <div class="verification-stats">
+          <div class="stat-card pending">
+            <div class="stat-icon">
+              <i data-lucide="clock"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="pendingCount">0</h3>
+              <p class="stat-label">Pending Verification</p>
+              <div class="stat-amount" id="pendingAmount">₱0.00</div>
+            </div>
+          </div>
+          <div class="stat-card approved">
+            <div class="stat-icon">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="approvedCount">0</h3>
+              <p class="stat-label">Approved Today</p>
+              <div class="stat-amount" id="approvedAmount">₱0.00</div>
+            </div>
+          </div>
+          <div class="stat-card rejected">
+            <div class="stat-icon">
+              <i data-lucide="x-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="rejectedCount">0</h3>
+              <p class="stat-label">Rejected Today</p>
+              <div class="stat-amount" id="rejectedAmount">₱0.00</div>
+            </div>
+          </div>
+          <div class="stat-card processing">
+            <div class="stat-icon">
+              <i data-lucide="loader"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="processingCount">0</h3>
+              <p class="stat-label">Processing</p>
+              <div class="stat-amount" id="processingAmount">₱0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments Table -->
+        <div class="payments-section">
+          <div class="section-header">
+            <h2>Payment Verifications</h2>
+            <div class="section-actions">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search payments..."
+                class="search-input"
+              />
+              <select id="statusFilter" class="filter-select">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="payments-table" id="paymentsTable">
+              <thead>
+                <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      id="selectAll"
+                      onchange="toggleSelectAll()"
+                    />
+                  </th>
+                  <th>Reference #</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Payment Method</th>
+                  <th>Proof</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsBody">
+                <!-- Payments will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-footer">
+            <div class="table-info">
+              <span id="selectedCount">0</span> of
+              <span id="totalCount">0</span> selected
+            </div>
+            <div class="pagination">
+              <button class="btn btn-sm" id="prevPage" disabled>
+                <i data-lucide="chevron-left"></i>
+                Previous
+              </button>
+              <span class="page-info"
+                >Page <span id="currentPage">1</span> of
+                <span id="totalPages">1</span></span
+              >
+              <button class="btn btn-sm" id="nextPage" disabled>
+                Next
+                <i data-lucide="chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Verification Modal -->
+    <div class="modal" id="verificationModal">
+      <div class="modal-content large">
+        <div class="modal-header">
+          <h2>Verify Payment</h2>
+          <button class="modal-close" onclick="closeVerificationModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="verification-content" id="verificationContent">
+          <!-- Verification details will be populated here -->
+        </div>
+        <div class="verification-actions" id="verificationActions">
+          <!-- Action buttons will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div class="modal" id="bulkActionsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Bulk Actions</h2>
+          <button class="modal-close" onclick="closeBulkActionsModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="bulk-actions-content">
+          <p id="bulkActionMessage">No payments selected</p>
+          <div class="bulk-buttons" id="bulkButtons" style="display: none">
+            <button class="btn btn-success" onclick="bulkApprove()">
+              <i data-lucide="check-circle"></i>
+              Approve Selected
+            </button>
+            <button class="btn btn-danger" onclick="bulkReject()">
+              <i data-lucide="x-circle"></i>
+              Reject Selected
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="modal" id="imagePreviewModal">
+      <div class="modal-content large">
+        <div class="modal-header">
+          <h2>Payment Proof</h2>
+          <button class="modal-close" onclick="closeImagePreviewModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="image-preview-container">
+          <img
+            id="proofImage"
+            src=""
+            alt="Payment Proof"
+            style="max-width: 100%; max-height: 70vh"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast" id="toast">
+      <i data-lucide="check"></i>
+      <span id="toastMsg">Payment verified successfully!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="payment-verification-standalone.js"></script>
+  </body>
+</html>

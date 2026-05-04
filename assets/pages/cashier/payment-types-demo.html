@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Types Demo</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f8f9fb;
+        color: #1a1d23;
+        padding: 20px;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a1d23;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #5a6170;
+      }
+
+      .selected-type {
+        margin-top: 20px;
+        padding: 16px;
+        background: #e7f5e7;
+        border: 1px solid #22c55e;
+        border-radius: 8px;
+        text-align: center;
+        display: none;
+      }
+
+      .selected-type.show {
+        display: block;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #1a1d23;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: none;
+        align-items: center;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      .toast.show {
+        display: flex;
+      }
+    </style>
+    <link rel="stylesheet" href="payment-types.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="title">Payment Types Selection</h1>
+        <p class="subtitle">Choose your preferred payment method</p>
+      </div>
+
+      <div class="payment-types-grid">
+        <div
+          class="payment-type-card gcash"
+          data-type="gcash"
+          onclick="selectPaymentType('gcash')"
+        >
+          <div class="payment-type-icon">
+            <i data-lucide="smartphone"></i>
+          </div>
+          <h3 class="payment-type-title">GCash</h3>
+          <p class="payment-type-desc">Mobile wallet payments via GCash app</p>
+          <button class="btn btn-primary">Select GCash</button>
+        </div>
+
+        <div
+          class="payment-type-card walkin"
+          data-type="cash"
+          onclick="selectPaymentType('cash')"
+        >
+          <div class="payment-type-icon">
+            <i data-lucide="wallet"></i>
+          </div>
+          <h3 class="payment-type-title">Cash (Walk-in)</h3>
+          <p class="payment-type-desc">Direct cash payments at the counter</p>
+          <button class="btn btn-primary">Select Cash</button>
+        </div>
+
+        <div
+          class="payment-type-card pickup"
+          data-type="pickup"
+          onclick="selectPaymentType('pickup')"
+        >
+          <div class="payment-type-icon">
+            <i data-lucide="package"></i>
+          </div>
+          <h3 class="payment-type-title">Cash on Pickup</h3>
+          <p class="payment-type-desc">Pay when collecting your order</p>
+          <button class="btn btn-primary">Select Pickup</button>
+        </div>
+      </div>
+
+      <div class="selected-type" id="selectedType">
+        <h3>Selected: <span id="selectedTypeName"></span></h3>
+        <p id="selectedTypeDesc"></p>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">
+      <i data-lucide="check"></i>
+      <span id="toastMsg">Payment type selected!</span>
+    </div>
+
+    <script>
+      let selectedPaymentType = null;
+
+      function selectPaymentType(type) {
+        // Remove previous selection
+        document.querySelectorAll(".payment-type-card").forEach((card) => {
+          card.classList.remove("selected");
+        });
+
+        // Add selection to clicked card
+        const selectedCard = document.querySelector(`[data-type="${type}"]`);
+        selectedCard.classList.add("selected");
+
+        // Update selected type display
+        selectedPaymentType = type;
+        updateSelectedTypeDisplay(type);
+
+        // Show toast
+        showToast(`${getPaymentTypeName(type)} selected successfully!`);
+      }
+
+      function updateSelectedTypeDisplay(type) {
+        const selectedDiv = document.getElementById("selectedType");
+        const nameSpan = document.getElementById("selectedTypeName");
+        const descP = document.getElementById("selectedTypeDesc");
+
+        nameSpan.textContent = getPaymentTypeName(type);
+
+        switch (type) {
+          case "gcash":
+            descP.textContent =
+              "You will be redirected to GCash payment verification.";
+            break;
+          case "cash":
+            descP.textContent =
+              "Please proceed to the counter for cash payment.";
+            break;
+          case "pickup":
+            descP.textContent =
+              "Payment will be collected when you pick up your order.";
+            break;
+        }
+
+        selectedDiv.classList.add("show");
+      }
+
+      function getPaymentTypeName(type) {
+        switch (type) {
+          case "gcash":
+            return "GCash";
+          case "cash":
+            return "Cash (Walk-in)";
+          case "pickup":
+            return "Cash on Pickup";
+          default:
+            return type;
+        }
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        const toastMsg = document.getElementById("toastMsg");
+
+        toastMsg.textContent = message;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      // Initialize Lucide icons
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+      });
+    </script>
+  </body>
+</html>

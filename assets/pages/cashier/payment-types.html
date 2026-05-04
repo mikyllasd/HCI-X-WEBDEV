@@ -1,0 +1,100 @@
+<div class="sd-header">
+  <h1 class="sd-title">Payment Types</h1>
+  <p class="sd-subtitle">Select and manage different payment methods</p>
+</div>
+
+<div class="payment-types-grid">
+  <div class="payment-type-card gcash" data-type="gcash">
+    <div class="payment-type-icon">
+      <i data-lucide="smartphone"></i>
+    </div>
+    <h3 class="payment-type-title">GCash</h3>
+    <p class="payment-type-desc">Mobile wallet payments via GCash app</p>
+    <button class="btn btn-primary" onclick="selectPaymentType('gcash')">
+      Select GCash
+    </button>
+  </div>
+
+  <div class="payment-type-card walkin" data-type="cash">
+    <div class="payment-type-icon">
+      <i data-lucide="wallet"></i>
+    </div>
+    <h3 class="payment-type-title">Cash (Walk-in)</h3>
+    <p class="payment-type-desc">Direct cash payments at the counter</p>
+    <button class="btn btn-primary" onclick="selectPaymentType('cash')">
+      Select Cash
+    </button>
+  </div>
+
+  <div class="payment-type-card pickup" data-type="pickup">
+    <div class="payment-type-icon">
+      <i data-lucide="package"></i>
+    </div>
+    <h3 class="payment-type-title">Cash on Pickup</h3>
+    <p class="payment-type-desc">Pay when collecting your order</p>
+    <button class="btn btn-primary" onclick="selectPaymentType('pickup')">
+      Select Pickup
+    </button>
+  </div>
+</div>
+
+<div class="sd-panel">
+  <div class="sd-panel__head">
+    <div class="sd-panel__title">
+      <i data-lucide="settings"></i>
+      Payment Settings
+    </div>
+  </div>
+
+  <div class="payment-settings">
+    <div class="form-group">
+      <label class="form-label">GCash Merchant Account</label>
+      <input
+        type="text"
+        class="form-input"
+        id="gcashAccount"
+        placeholder="Enter GCash number"
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Reference Number Format</label>
+      <input
+        type="text"
+        class="form-input"
+        id="refFormat"
+        placeholder="e.g., TXN-{date}-{number}"
+      />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        <input type="checkbox" id="autoVerify" checked />
+        Auto-verify payments under ₱500
+      </label>
+    </div>
+
+    <button class="btn btn-primary" onclick="savePaymentSettings()">
+      Save Settings
+    </button>
+  </div>
+</div>
+
+<div class="sd-panel">
+  <div class="sd-panel__head">
+    <div class="sd-panel__title">
+      <i data-lucide="clock"></i>
+      Recent Payment Activities
+    </div>
+  </div>
+
+  <div class="activities-list" id="activitiesList">
+    <div class="sd-empty">
+      <div class="sd-empty__icon">
+        <i data-lucide="activity"></i>
+      </div>
+      <h3 class="sd-empty__title">No recent activities</h3>
+      <p class="sd-empty__sub">Payment activities will appear here</p>
+    </div>
+  </div>
+</div>

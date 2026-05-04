@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Walk-in Payment - UPRESSease Cashier</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="../../css/upress-tokens.css" />
+    <link rel="stylesheet" href="../../css/cashier.css" />
+    <link rel="stylesheet" href="walk-in-payment.css" />
+  </head>
+  <body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i data-lucide="printer"></i>
+          <span>UPRESSease</span>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3 class="nav-section-title">Cashier Module</h3>
+          <a href="cashier.html" class="nav-link">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="payment-types-standalone.html" class="nav-link">
+            <i data-lucide="credit-card"></i>
+            <span>Payment Types</span>
+          </a>
+          <a href="walk-in-payment-standalone.html" class="nav-link active">
+            <i data-lucide="wallet"></i>
+            <span>Walk-in Payment</span>
+          </a>
+          <a href="#" class="nav-link">
+            <i data-lucide="check-circle"></i>
+            <span>Payment Verification</span>
+          </a>
+          <a href="#" class="nav-link">
+            <i data-lucide="package"></i>
+            <span>Cash on Pickup</span>
+          </a>
+          <a href="#" class="nav-link">
+            <i data-lucide="building"></i>
+            <span>Organization Payables</span>
+          </a>
+          <a href="#" class="nav-link">
+            <i data-lucide="dollar-sign"></i>
+            <span>Downpayment Logic</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <h3 class="nav-section-title">Account</h3>
+          <a href="#" class="nav-link" data-page="profile">
+            <i data-lucide="user"></i>
+            <span>Profile</span>
+          </a>
+          <a href="#" class="nav-link" data-page="settings">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+          </a>
+          <a href="#" class="nav-link" data-page="logout">
+            <i data-lucide="log-out"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="hamburger" id="hamburger">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="header-title">
+            <h1>Walk-in Payment</h1>
+            <p>Process cash payments for walk-in customers</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="exportRecords()">
+              <i data-lucide="download"></i>
+              Export
+            </button>
+            <button class="btn btn-primary" onclick="showPaymentForm()">
+              <i data-lucide="plus"></i>
+              New Payment
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i data-lucide="dollar-sign"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="totalAmount">₱0.00</h3>
+              <p class="stat-label">Today's Total</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i data-lucide="receipt"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="totalTransactions">0</h3>
+              <p class="stat-label">Transactions</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i data-lucide="users"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="uniqueCustomers">0</h3>
+              <p class="stat-label">Customers</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i data-lucide="clock"></i>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-value" id="avgTransaction">₱0.00</h3>
+              <p class="stat-label">Avg Transaction</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Form Modal -->
+        <div class="modal" id="paymentModal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Record Walk-in Payment</h2>
+              <button class="modal-close" onclick="closePaymentForm()">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+            <form class="payment-form" id="paymentForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="customerName">Customer Name *</label>
+                  <input
+                    type="text"
+                    id="customerName"
+                    name="customerName"
+                    required
+                    placeholder="Enter customer name"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="contactNumber">Contact Number</label>
+                  <input
+                    type="tel"
+                    id="contactNumber"
+                    name="contactNumber"
+                    placeholder="Enter contact number"
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="amount">Amount (₱) *</label>
+                  <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    step="0.01"
+                    min="0"
+                    required
+                    placeholder="0.00"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="paymentMethod">Payment Method</label>
+                  <select id="paymentMethod" name="paymentMethod">
+                    <option value="cash">Cash</option>
+                    <option value="card">Card</option>
+                    <option value="check">Check</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="serviceType">Service Type</label>
+                <select id="serviceType" name="serviceType">
+                  <option value="printing">Printing</option>
+                  <option value="binding">Binding</option>
+                  <option value="lanyard">Lanyard</option>
+                  <option value="mug">Mug Printing</option>
+                  <option value="id-printing">ID Printing</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="notes">Notes/Description</label>
+                <textarea
+                  id="notes"
+                  name="notes"
+                  rows="3"
+                  placeholder="Additional notes or service details"
+                ></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick="closePaymentForm()"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Record Payment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Records Table -->
+        <div class="records-section">
+          <div class="section-header">
+            <h2>Payment Records</h2>
+            <div class="section-actions">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search records..."
+                class="search-input"
+              />
+              <select id="filterDate" class="filter-select">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="all">All Time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="records-table" id="recordsTable">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Service</th>
+                  <th>Payment Method</th>
+                  <th>Date/Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody">
+                <!-- Records will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-footer">
+            <div class="pagination-info">
+              Showing <span id="showingCount">0</span> of
+              <span id="totalCount">0</span> records
+            </div>
+            <div class="pagination">
+              <button class="btn btn-sm" id="prevPage" disabled>
+                <i data-lucide="chevron-left"></i>
+                Previous
+              </button>
+              <span class="page-info"
+                >Page <span id="currentPage">1</span> of
+                <span id="totalPages">1</span></span
+              >
+              <button class="btn btn-sm" id="nextPage" disabled>
+                Next
+                <i data-lucide="chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast" id="toast">
+      <i data-lucide="check"></i>
+      <span id="toastMsg">Payment recorded successfully!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="walk-in-payment-standalone.js"></script>
+  </body>
+</html>

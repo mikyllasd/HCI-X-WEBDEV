@@ -1,0 +1,189 @@
+<div class="sd-header">
+  <h1 class="sd-title">Organization Payables</h1>
+  <p class="sd-subtitle">
+    Track and manage organization transactions and payments
+  </p>
+</div>
+
+<div class="sd-panel">
+  <div class="sd-panel__head">
+    <div class="sd-panel__title">
+      <i data-lucide="building"></i>
+      Organization Accounts
+    </div>
+    <a href="#" class="sd-panel__cta" onclick="addNewOrganization()">
+      <i data-lucide="plus"></i>
+      Add Organization
+    </a>
+  </div>
+
+  <div class="payables-table">
+    <div class="payables-header">
+      <div>Organization</div>
+      <div>Total Transactions</div>
+      <div>Payments Made</div>
+      <div>Remaining Balance</div>
+      <div>Status</div>
+    </div>
+
+    <div class="payables-body" id="payablesBody">
+      <!-- Organization rows will be loaded here -->
+    </div>
+  </div>
+</div>
+
+<div class="sd-panel">
+  <div class="sd-panel__head">
+    <div class="sd-panel__title">
+      <i data-lucide="receipt"></i>
+      Recent Organization Transactions
+    </div>
+  </div>
+
+  <div class="organization-transactions" id="organizationTransactions">
+    <div class="sd-empty">
+      <div class="sd-empty__icon">
+        <i data-lucide="receipt"></i>
+      </div>
+      <h3 class="sd-empty__title">No organization transactions</h3>
+      <p class="sd-empty__sub">
+        Organization payment transactions will appear here
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for adding organization -->
+<div class="modal-backdrop" id="orgModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">Add New Organization</h3>
+        <p class="modal-sub">Create a new organization account</p>
+      </div>
+      <button class="modal-close" onclick="closeOrgModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Organization Name</label>
+        <input
+          type="text"
+          class="form-input"
+          id="orgName"
+          placeholder="Enter organization name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contact Person</label>
+        <input
+          type="text"
+          class="form-input"
+          id="orgContact"
+          placeholder="Enter contact person"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-input"
+          id="orgEmail"
+          placeholder="Enter email address"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input
+          type="tel"
+          class="form-input"
+          id="orgPhone"
+          placeholder="Enter phone number"
+        />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeOrgModal()">
+        Cancel
+      </button>
+      <button class="btn btn-primary" onclick="saveOrganization()">
+        Save Organization
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for recording payment -->
+<div class="modal-backdrop" id="paymentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">Record Payment</h3>
+        <p class="modal-sub">Record a payment for this organization</p>
+      </div>
+      <button class="modal-close" onclick="closePaymentModal()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="payment-org-info" id="paymentOrgInfo">
+        <!-- Organization info will be loaded here -->
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Amount</label>
+        <input
+          type="number"
+          class="form-input"
+          id="paymentAmount"
+          placeholder="0.00"
+          step="0.01"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment Method</label>
+        <select class="form-input" id="paymentMethod">
+          <option value="cash">Cash</option>
+          <option value="GCash">GCash</option>
+          <option value="bank-transfer">Bank Transfer</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Reference Number</label>
+        <input
+          type="text"
+          class="form-input"
+          id="paymentRef"
+          placeholder="Enter reference number"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea
+          class="form-input form-textarea"
+          id="paymentNotes"
+          placeholder="Payment notes"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closePaymentModal()">
+        Cancel
+      </button>
+      <button class="btn btn-primary" onclick="savePayment()">
+        Record Payment
+      </button>
+    </div>
+  </div>
+</div>

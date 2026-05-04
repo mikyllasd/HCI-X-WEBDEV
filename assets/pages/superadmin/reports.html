@@ -3,19 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Dashboard</title>
+    <title>UPRESSease – Reports</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
-    <link rel="stylesheet" href="../../css/staff/staff.css" />
     <link rel="stylesheet" href="../../css/upress-super-content.css" />
     <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="reports.css" />
   </head>
-  <body class="staff-dashboard-body" data-page="dashboard">
+  <body class="staff-dashboard-body" data-page="reports">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="app-wrapper staff-layout sd-layout">
       <aside
@@ -55,12 +54,7 @@
         <nav class="sidebar-nav" aria-label="Main navigation">
           <ul class="nav-list" role="list">
             <li>
-              <a
-                href="dashboard.html"
-                class="nav-link active"
-                data-page="dashboard"
-                aria-current="page"
-              >
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
                 <i data-lucide="layout-dashboard" aria-hidden="true"></i
                 ><span>Dashboard</span></a
               >
@@ -78,17 +72,17 @@
               >
             </li>
             <li>
-              <a href="reports.html" class="nav-link" data-page="reports">
+              <a
+                href="reports.html"
+                class="nav-link active"
+                data-page="reports"
+              >
                 <i data-lucide="bar-chart-2" aria-hidden="true"></i
                 ><span>Reports</span></a
               >
             </li>
             <li>
-              <a
-                href="system-settings.html"
-                class="nav-link"
-                data-page="settings"
-              >
+              <a href="settings.html" class="nav-link" data-page="settings">
                 <i data-lucide="settings" aria-hidden="true"></i
                 ><span>System Settings</span></a
               >
@@ -119,9 +113,12 @@
         >
           <span></span><span></span><span></span>
         </button>
-        <div class="page-container" id="pageContainer"></div>
+        <div class="page-container" id="pageContainer">
+          <!-- Reports content will be loaded here -->
+        </div>
       </main>
     </div>
+
     <div class="toast" id="toast">
       <svg
         width="18"
@@ -137,6 +134,6 @@
       <span id="toastMsg">Action completed successfully!</span>
     </div>
     <script src="../../js/shared/storage.js"></script>
-    <script src="dashboard.js"></script>
+    <script src="reports.js"></script>
   </body>
 </html>

@@ -3,17 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Dashboard</title>
+    <title>UPRESSease – Superadmin Dashboard</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
-    <link rel="stylesheet" href="../../css/staff/staff.css" />
     <link rel="stylesheet" href="../../css/upress-super-content.css" />
     <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="dashboard.css" />
   </head>
   <body class="staff-dashboard-body" data-page="dashboard">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -84,11 +83,7 @@
               >
             </li>
             <li>
-              <a
-                href="system-settings.html"
-                class="nav-link"
-                data-page="settings"
-              >
+              <a href="settings.html" class="nav-link" data-page="settings">
                 <i data-lucide="settings" aria-hidden="true"></i
                 ><span>System Settings</span></a
               >
@@ -119,7 +114,9 @@
         >
           <span></span><span></span><span></span>
         </button>
-        <div class="page-container" id="pageContainer"></div>
+        <div class="page-container" id="pageContainer">
+          <!-- Dashboard content will be loaded here -->
+        </div>
       </main>
     </div>
     <div class="toast" id="toast">

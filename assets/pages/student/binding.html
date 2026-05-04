@@ -6,6 +6,8 @@
     <title>UPRESSease | Binding Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/binding.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
 <header class="appbar">
@@ -14,53 +16,124 @@
         <span class="appbar-title">Binding Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span></button>
+    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'">
+        <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span>
+    </button>
 </header>
 <main class="page" id="binding-page">
     <div class="layout-2col">
         <div class="col-main">
+
+            <!-- Step 1: Choose process -->
             <div class="card">
                 <div class="card-head">
-                    <div class="card-title">Our Binding Services</div>
-                    <div class="card-subtitle">Choose your preferred binding type</div>
+                    <div class="card-title">How would you like to proceed?</div>
+                    <div class="card-subtitle">Choose the binding option that fits your situation</div>
                 </div>
-                <div class="options">
-                    <div class="option" onclick="selectBindingType('thesis', 150, this)">
-                        <div class="option-icon"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
-                        <div class="option-name">Thesis Binding</div>
-                        <div class="option-desc">High-quality binding for research papers</div>
-                        <div class="option-price">₱150</div>
+                <div class="binding-process-grid">
+                    <div class="binding-process-option active" id="proc-opt-full" onclick="selectBindingProcess('full', this)">
+                        <div class="binding-proc-icon">📄</div>
+                        <div class="binding-proc-name">Print &amp; Bind</div>
+                        <div class="binding-proc-desc">Send your file — UPress prints and binds everything for you</div>
                     </div>
-                    <div class="option" onclick="selectBindingType('hardcover', 200, this)">
-                        <div class="option-icon"><span class="upress-icon upress-icon--doc" aria-hidden="true"></span></div>
-                        <div class="option-name">Hardcover Binding</div>
-                        <div class="option-desc">Durable hardcover for books and documents</div>
-                        <div class="option-price">₱200</div>
-                    </div>
-                    <div class="option" onclick="selectBindingType('spiral', 80, this)">
-                        <div class="option-icon"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
-                        <div class="option-name">Spiral Binding</div>
-                        <div class="option-desc">Perfect for reports, manuals, notebooks</div>
-                        <div class="option-price">₱80</div>
+                    <div class="binding-process-option" id="proc-opt-bindonly" onclick="selectBindingProcess('bindonly', this)">
+                        <div class="binding-proc-icon">📚</div>
+                        <div class="binding-proc-name">Binding Only</div>
+                        <div class="binding-proc-desc">You already printed your pages — just drop them off for binding</div>
                     </div>
                 </div>
             </div>
+
+            <!-- Option 1: Full Online (Print & Bind) -->
+            <div id="section-full">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">Upload Your Document</div>
+                        <div class="card-subtitle">PDF only, maximum 50MB</div>
+                    </div>
+                    <label class="dropzone">
+                        <input type="file" style="display:none;" id="binding-file-input" accept=".pdf" onchange="onBindingFileChange(this)" />
+                        <div class="dropzone-icon"><span class="upress-icon upress-icon--doc" aria-hidden="true"></span></div>
+                        <div class="dropzone-primary">Click to upload PDF</div>
+                        <div class="dropzone-secondary">PDF only (MAX. 50MB)</div>
+                    </label>
+                    <div id="binding-file-name" style="display:none;margin-top:0.75rem;font-size:0.875rem;color:#555;"></div>
+                    <div class="encrypt-notice">
+                        <span class="encrypt-icon"><span class="upress-icon upress-icon--shield" aria-hidden="true"></span></span>
+                        <div class="encrypt-text">
+                            <strong>Encrypted Upload</strong>
+                            <span>Files are securely encrypted and deleted 12 hours after completion.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shared: Binding Details -->
             <div class="card">
                 <div class="card-head">
-                    <div class="card-title">Order Details</div>
-                    <div class="card-subtitle">How many copies do you need?</div>
+                    <div class="card-title">Binding Details</div>
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label class="label">Binding Type *</label>
+                        <select class="select" id="binding-type-select" onchange="onBindingTypeChange()">
+                            <option value="">Select binding type</option>
+                            <option value="Soft Bind">Soft Bind</option>
+                            <option value="Hard Bind">Hard Bind</option>
+                            <option value="Ring Bind">Ring Bind</option>
+                            <option value="Spiral Bind">Spiral Bind</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label class="label">Number of Pages *</label>
+                        <input class="input" type="number" id="binding-pages" value="" min="1" placeholder="Auto-detected or enter manually" oninput="updateBindingSummary()" />
+                    </div>
+                </div>
+                <!-- Cover Color — only for Hard Bind -->
+                <div class="field hidden" id="cover-color-field">
+                    <label class="label">Cover Color *</label>
+                    <select class="select" id="binding-cover-color" onchange="updateBindingSummary()">
+                        <option value="">Select cover color</option>
+                        <option value="Black">Black</option>
+                        <option value="Maroon">Maroon</option>
+                        <option value="Navy Blue">Navy Blue</option>
+                        <option value="Dark Green">Dark Green</option>
+                        <option value="Brown">Brown</option>
+                        <option value="Custom">Custom (specify in notes)</option>
+                    </select>
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label class="label">Quantity *</label>
+                        <input class="input" type="number" id="binding-qty" value="1" min="1" oninput="updateBindingSummary()" />
+                    </div>
                 </div>
                 <div class="field">
-                    <label class="label">Quantity *</label>
-                    <input class="input" type="number" value="1" min="1" id="binding-qty" oninput="updateBindingSummary()" />
+                    <label class="label">Special Instructions (optional)</label>
+                    <textarea class="input textarea" id="binding-special" placeholder="Any special instructions..."></textarea>
                 </div>
             </div>
+
+            <!-- Option 2: Appointment notice -->
+            <div class="card hidden" id="appointment-notice-card" style="border-left: 4px solid #3a6bc9; background:#eef4ff;">
+                <div class="card-head">
+                    <div class="card-title" style="color:#3a6bc9;">📅 Appointment Required</div>
+                    <div class="card-subtitle">After checkout, you will schedule a drop-off appointment for your printed pages.</div>
+                </div>
+                <p style="font-size:0.875rem;color:#3a5a99;line-height:1.6;">
+                    You can reschedule up to 24 hours before your appointment through your dashboard.
+                    Within 24 hours, contact UPress directly. Missing two consecutive appointments will automatically cancel the order.
+                </p>
+            </div>
+
         </div>
         <aside class="col-side">
             <div class="card card-sticky">
                 <div class="card-head"><div class="card-title">Order Summary</div></div>
                 <div class="summary">
-                    <div class="summary-row"><span class="summary-label">Type</span><span class="summary-value" id="binding-sum-type">—</span></div>
+                    <div class="summary-row"><span class="summary-label">Process</span><span class="summary-value" id="binding-sum-process">Print &amp; Bind</span></div>
+                    <div class="summary-row"><span class="summary-label">Binding Type</span><span class="summary-value" id="binding-sum-type">—</span></div>
+                    <div class="summary-row"><span class="summary-label">Pages</span><span class="summary-value" id="binding-sum-pages">—</span></div>
                     <div class="summary-row"><span class="summary-label">Price/copy</span><span class="summary-value" id="binding-sum-unit">₱0.00</span></div>
                     <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="binding-sum-qty">1</span></div>
                     <hr class="divider" />
@@ -68,7 +141,9 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="binding-sum-total">₱0.00</span>
                     </div>
-                    <button type="button" class="btn-order" onclick="bindingOrderNow()"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now</button>
+                    <button type="button" class="btn-order" onclick="bindingOrderNow()">
+                        <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now
+                    </button>
                     <button class="btn-cart" onclick="bindingAddToCart()">+ Add to Cart</button>
                 </div>
             </div>

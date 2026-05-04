@@ -1,21 +1,47 @@
-/* binding.css */
-.binding-page { padding: 1.5rem; padding-bottom: 6rem; display: flex; flex-direction: column; gap: 1.25rem; }
-.services-grid-bind { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-.service-option { border: 2px solid #e0e0e0; border-radius: 1rem; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: 0.2s; background: white; }
-.service-option:hover { border-color: var(--color-cta); }
-.service-option.selected { border-color: var(--color-cta); background: #fff5f5; }
-.service-icon-box { width: 3.5rem; height: 3.5rem; background: var(--color-header); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-size: 1.5rem; }
-.service-option h3 { font-size: 1rem; margin-bottom: 0.3rem; }
-.service-option p { font-size: 0.8rem; color: #777; margin-bottom: 0.6rem; }
-.service-price { font-size: 1.1rem; font-weight: 700; color: var(--color-cta); }
-.quantity-row { display: flex; align-items: center; gap: 0.75rem; }
-.qty-btn { width: 2.2rem; height: 2.2rem; border-radius: 0.5rem; border: 1.5px solid #e0e0e0; background: white; font-size: 1.2rem; cursor: pointer; color: var(--color-cta); font-weight: 700; }
-.qty-btn:hover { border-color: var(--color-cta); background: #fff5f5; }
-.qty-display { font-size: 1rem; font-weight: 700; min-width: 2rem; text-align: center; }
-.qty-label { font-size: 0.85rem; color: #777; }
-.bottom-bar { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; background: transparent; }
-.bottom-summary { text-align: center; }
-.bottom-type { font-size: 0.85rem; color: #777; display: block; }
-.bottom-total { font-size: 1.4rem; font-weight: 800; color: var(--color-cta); display: block; }
-.btn-next { padding: 0.9rem 2rem; background: var(--color-header); color: white; border: none; border-radius: 999px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-family: var(--font-sans); }
-.btn-next:hover { background: var(--color-header-hover); }
+/* ============================================================
+   UPRESSease — binding.css
+   ============================================================ */
+
+.binding-process-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.binding-process-option {
+    border: 2px solid #e0e0e0;
+    border-radius: 14px;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+.binding-process-option:hover {
+    border-color: var(--color-cta);
+    background: #fff9f9;
+}
+.binding-process-option.active {
+    border-color: var(--color-cta);
+    background: #fff5f5;
+}
+.binding-proc-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+.binding-proc-name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+.binding-proc-desc {
+    font-size: 0.8125rem;
+    color: #777;
+    line-height: 1.45;
+}
+
+@media (max-width: 600px) {
+    .binding-process-grid { grid-template-columns: 1fr; }
+}

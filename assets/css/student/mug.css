@@ -1,4 +1,65 @@
-/* mug.css */
+/* ============================================================
+   UPRESSease — mug.css
+   ============================================================ */
+
 .option-img-box { background: #f5e6e6; border-radius: 0.625rem; width: 100%; height: 6rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; }
 .option-img-icon { font-size: 2.5rem; color: var(--color-header); }
 .textarea { resize: vertical; min-height: 5rem; }
+
+.mug-preview-box {
+    background: #fff5f5;
+    border: 1px dashed #f5c0c0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #555;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+}
+
+.mug-template-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    background: #eef4ff;
+    border: 1px solid #d0e2ff;
+    border-radius: 10px;
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    color: #3a5a99;
+    line-height: 1.5;
+}
+
+/* Per-piece slot */
+.piece-slot {
+    background: #fff;
+    border: 1px solid #e5eaf0;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+}
+.piece-slot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.piece-slot-title { font-size: 0.9375rem; font-weight: 800; color: #8B0000; }
+.piece-slot-badge {
+    font-size: 0.75rem;
+    background: #fff0f0;
+    color: #8B0000;
+    border: 1px solid #f5c0c0;
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-weight: 700;
+}
+.piece-slot-error {
+    color: #c0392b;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    margin-top: 0.4rem;
+    display: none;
+}
+.piece-slot-error.visible { display: block; }

@@ -15,59 +15,140 @@
         <span class="appbar-title">Lanyard Order</span>
         <span class="appbar-subtitle">UPRESSease - WMSU</span>
     </div>
-    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span></button>
+    <button type="button" class="appbar-action" onclick="window.location.href='cart.html'">
+        <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart <span class="cart-badge"></span>
+    </button>
 </header>
 <main class="page" id="lanyard-page">
     <div class="layout-2col">
         <div class="col-main">
+
+            <!-- Step 1: Design Type -->
             <div class="card">
                 <div class="card-head">
-                    <div class="card-title">Our Lanyard Designs</div>
+                    <div class="card-title">Step 1 — Design Type</div>
                     <div class="card-subtitle">Choose from our official designs or create your own</div>
                 </div>
                 <div class="options">
                     <div class="option active" onclick="selectLanyardType('wmsu', this)">
                         <div class="option-icon"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></div>
-                        <div class="option-name">WMSU Official Lanyard</div>
-                        <div class="option-desc">Standard WMSU lanyard</div>
+                        <div class="option-name">🏫 WMSU Standard</div>
+                        <div class="option-desc">Official WMSU design — no customization needed</div>
                         <div class="option-price" id="lanyard-opt-price-wmsu">₱120</div>
                     </div>
                     <div class="option" onclick="selectLanyardType('department', this)">
                         <div class="option-icon"><span class="upress-icon upress-icon--building" aria-hidden="true"></span></div>
-                        <div class="option-name">Department Lanyard</div>
-                        <div class="option-desc">Customized with department</div>
+                        <div class="option-name">🎓 Department Design</div>
+                        <div class="option-desc">Customized with your department design</div>
                         <div class="option-price" id="lanyard-opt-price-dept">₱150</div>
                     </div>
                     <div class="option" onclick="selectLanyardType('custom', this)">
                         <div class="option-icon"><span class="upress-icon upress-icon--edit" aria-hidden="true"></span></div>
-                        <div class="option-name">Customize</div>
-                        <div class="option-desc">Create your own design</div>
+                        <div class="option-name">🎨 Upload Custom</div>
+                        <div class="option-desc">Upload your own design file</div>
                         <div class="option-price" id="lanyard-opt-price-custom">₱200</div>
                     </div>
                 </div>
             </div>
+
+            <!-- Step 2: Design Details -->
+            <!-- WMSU Standard preview -->
+            <div class="card" id="lanyard-wmsu-preview-card">
+                <div class="card-head">
+                    <div class="card-title">Step 2 — Design Preview</div>
+                </div>
+                <div class="lanyard-preview-box">
+                    <span style="font-size:3rem;">🏫</span>
+                    <div style="font-weight:700;color:#8B0000;margin-top:0.5rem;">WMSU Standard Design</div>
+                    <div style="font-size:0.8125rem;color:#777;">UPress already has this design on file — no upload needed.</div>
+                </div>
+            </div>
+
+            <!-- Department fields -->
+            <div class="card hidden" id="lanyard-dept-card">
+                <div class="card-head">
+                    <div class="card-title">Step 2 — Department Design</div>
+                </div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label class="label">College / Department *</label>
+                        <select class="select" id="lanyard-college-select" onchange="populateCourses('lanyard-college-select','lanyard-course-select');updateLanyardSummary()">
+                            <option value="">Select college</option>
+                            <option>College of Arts and Sciences</option>
+                            <option>College of Education</option>
+                            <option>College of Engineering</option>
+                            <option>College of Business Administration</option>
+                            <option>College of Computing Studies</option>
+                            <option>College of Home Science and Industry</option>
+                            <option>College of Law</option>
+                            <option>College of Medicine</option>
+                            <option>College of Nursing</option>
+                            <option>College of Sports, Physical Education and Athletics</option>
+                            <option>College of Forestry and Environmental Studies</option>
+                            <option>College of Agriculture</option>
+                            <option>College of Social Science and Humanities</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label class="label">Course *</label>
+                        <select class="select" id="lanyard-course-select" onchange="updateLanyardSummary()">
+                            <option value="">-- Select Course --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="lanyard-preview-box" id="lanyard-dept-preview" style="display:none;">
+                    <span style="font-size:2rem;">🎓</span>
+                    <div style="font-weight:700;color:#8B0000;margin-top:0.5rem;" id="lanyard-dept-preview-label">Department Design Preview</div>
+                </div>
+            </div>
+
+            <!-- Custom upload -->
+            <div class="card hidden" id="lanyard-custom-card">
+                <div class="card-head">
+                    <div class="card-title">Step 2 — Upload Custom Design</div>
+                </div>
+                <div class="lanyard-template-link">
+                    <span>📐</span>
+                    <span>Need the correct dimensions? <a href="#" onclick="showAlert('Template Download','Lanyard template download will be available soon.');return false;" style="color:var(--color-cta);font-weight:700;">Download our lanyard template</a> before uploading.</span>
+                </div>
+            </div>
+
+            <!-- Step 3: Quantity -->
             <div class="card">
                 <div class="card-head">
-                    <div class="card-title">Order Details</div>
-                    <div class="card-subtitle">Fill in the details for your lanyard order</div>
+                    <div class="card-title">Step 3 — Quantity</div>
                 </div>
-                <div class="field"><label class="label">Quantity *</label><input class="input" type="number" value="1" min="1" id="lanyard-qty" oninput="onLanyardQtyChange()" /></div>
-                <div class="field hidden" id="lanyard-dept-field">
-                    <label class="label">Select Department *</label>
-                    <select class="select" id="lanyard-dept-select">
-                        <option value="">Choose department</option>
-                        <option>IT</option><option>Education</option><option>Engineering</option>
-                        <option>Business Administration</option><option>Arts and Sciences</option>
-                    </select>
+                <div class="field">
+                    <label class="label">Number of Lanyards *</label>
+                    <input class="input" type="number" value="1" min="1" id="lanyard-qty" oninput="onLanyardQtyChange()" style="max-width:180px;" />
                 </div>
-                <div id="lanyard-custom-forms"></div>
+                <label class="checkbox-row" id="lanyard-same-row" style="display:none;margin-top:0.5rem;">
+                    <input type="checkbox" id="lanyard-same-all" onchange="onLanyardSameToggle()" />
+                    Same details for all pieces
+                </label>
             </div>
+
+            <!-- Step 4: Per-piece slots -->
+            <div id="lanyard-piece-slots"></div>
+
+            <!-- Step 5: Special Instructions -->
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">Step 5 — Special Instructions</div>
+                    <div class="card-subtitle">Optional notes for the entire order</div>
+                </div>
+                <div class="field">
+                    <textarea class="input textarea" id="lanyard-special" placeholder="Any special instructions for the whole order (optional)..."></textarea>
+                </div>
+            </div>
+
         </div>
         <aside class="col-side">
             <div class="card card-sticky">
                 <div class="card-head"><div class="card-title">Order Summary</div></div>
                 <div class="summary">
-                    <div class="summary-row"><span class="summary-label">Type</span><span class="summary-value" id="lanyard-sum-type">WMSU Official</span></div>
+                    <div class="summary-row"><span class="summary-label">Type</span><span class="summary-value" id="lanyard-sum-type">WMSU Standard</span></div>
                     <div class="summary-row"><span class="summary-label">Price/piece</span><span class="summary-value" id="lanyard-sum-unit">₱120.00</span></div>
                     <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="lanyard-sum-qty">1</span></div>
                     <hr class="divider" />
@@ -75,7 +156,9 @@
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="lanyard-sum-total">₱120.00</span>
                     </div>
-                    <button type="button" class="btn-order" onclick="lanyardOrderNow()"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now</button>
+                    <button type="button" class="btn-order" onclick="lanyardOrderNow()">
+                        <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Order Now
+                    </button>
                     <button class="btn-cart" onclick="lanyardAddToCart()">+ Add to Cart</button>
                 </div>
             </div>

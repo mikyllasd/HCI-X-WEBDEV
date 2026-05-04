@@ -373,9 +373,18 @@ input, select, textarea { font-family: inherit; }
    ---------------------------------------------------------- */
 .card {
   background: var(--clr-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 22px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--clr-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  padding: 20px;
+  transition:
+    box-shadow var(--t),
+    transform var(--t);
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .card-header {
@@ -396,16 +405,20 @@ input, select, textarea { font-family: inherit; }
 .stats-grid--3      { grid-template-columns: repeat(3, 1fr); }
 .stats-grid--4      { grid-template-columns: repeat(4, 1fr); }
 
-/* Base stat card */
+/* Base stat card — chrome aligned with superadmin dashboard metric tiles */
 .stat-card {
   background: var(--clr-surface);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--clr-border);
   border-left: 4px solid transparent;
   transition: box-shadow var(--t), transform var(--t);
 }
-.stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
 
 .stat-card__header {
   display: flex; align-items: center; justify-content: space-between;
@@ -610,18 +623,22 @@ input, select, textarea { font-family: inherit; }
    ---------------------------------------------------------- */
 .table-wrapper { overflow-x: auto; border-radius: var(--radius-md); margin-top: 12px; }
 
-.data-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); white-space: nowrap; }
+.data-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); white-space: normal; }
 .data-table thead { background: var(--clr-bg); }
 .data-table th {
   padding: 10px 14px; text-align: left;
   font-weight: 600; color: var(--clr-text-muted);
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
   border-bottom: 1px solid var(--clr-border);
+  white-space: nowrap;
 }
 .data-table td {
   padding: 12px 14px;
   border-bottom: 1px solid var(--clr-border);
-  color: var(--clr-text); vertical-align: middle;
+  color: var(--clr-text);
+  vertical-align: top;
+  white-space: normal;
+  line-height: 1.35;
 }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tbody tr:hover   { background: var(--clr-bg); }
@@ -1311,6 +1328,100 @@ input, select, textarea { font-family: inherit; }
   width: 1rem;
   height: 1rem;
   color: var(--clr-text-muted);
+}
+
+.reports-records-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.reports-records-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Payment Verification header: left (title + search), right (count) */
+#page-payment-verification .pv-head {
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+#page-payment-verification .pv-head-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: min(520px, 100%);
+}
+
+#page-payment-verification #pv-card-count {
+  white-space: nowrap;
+}
+
+.record-search {
+  position: relative;
+  width: min(360px, 100%);
+  color: var(--clr-text-muted);
+}
+
+.record-search i,
+.record-search svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.record-search .form-input {
+  padding-left: 38px;
+}
+
+.reports-records-count,
+.reports-pagination__summary {
+  color: var(--clr-text-muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+
+.reports-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.reports-pagination__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.reports-pagination .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .reports-records-head,
+  .reports-records-tools,
+  .reports-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .record-search {
+    width: 100%;
+  }
 }
 
 .pv-modal {

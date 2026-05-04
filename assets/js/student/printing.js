@@ -9,8 +9,45 @@ const PRINT_ACCEPTED = ['.pdf', '.jpg', '.jpeg', '.png'];
 let printSlots = [{ file: null, paperSize: '', colorMode: '', notes: '' }];
 let ppPdfBlobUrl = null;
 
-// ── Pricing (from data-price attributes on color options, or defaults) ──
-const COLOR_PRICES = { 'Black & White': 3, 'Colored': 6 };
+function getPrintingPrices() {
+    const def = {
+        shortBw: 3,
+        shortColor: 5,
+        a4Bw: 3,
+        a4Color: 5,
+        a3Bw: 3,
+        a3Color: 5,
+        longBw: 3,
+        longColor: 5,
+        customBw: 3,
+        customColor: 5,
+        surcharge: 15
+    };
+    if (typeof window.UPressPricing === 'undefined' || !UPressPricing.readPricingFromSession) return def;
+    const p = UPressPricing.readPricingFromSession();
+    return Object.assign({}, def, p && p.printing ? p.printing : {});
+}
+
+function getPrintPaperKey(paperSize) {
+    const map = {
+        'Short': 'short',
+        'A4': 'a4',
+        'A3': 'a3',
+        'Long': 'long',
+        'Custom': 'custom'
+    };
+    return map[paperSize] || 'a4';
+}
+
+function getPrintSlotPrice(slot) {
+    const prices = getPrintingPrices();
+    const key = getPrintPaperKey(slot.paperSize);
+    const colorKey = slot.colorMode === 'Full Color' ? `${key}Color` : `${key}Bw`;
+    const base = Number(prices[colorKey] ?? prices.a4Bw ?? 0);
+    const fileName = String(slot.file?.name || '').toLowerCase();
+    const hasImage = /\.(jpg|jpeg|png)$/.test(fileName);
+    return base + (hasImage ? Number(prices.surcharge || 0) : 0);
+}
 
 // ── Build slots UI ──
 function buildPrintSlots() {
@@ -203,11 +240,11 @@ function onPrintQtyChange() {
 
 function calcPrintTotal() {
     const qty = getPrintQty();
-    // Use first slot's color/paper for summary display
     const slot0 = printSlots[0];
-    const pricePerPage = COLOR_PRICES[slot0.colorMode] || 0;
-    // Simple total: price per page × 1 page × qty (more accurate would need page count per file)
-    const total = pricePerPage * qty;
+    const visibleSlots = printSlots.slice(0, qty);
+    const total = visibleSlots.reduce((sum, slot) => sum + getPrintSlotPrice(slot), 0);
+    const imageCount = visibleSlots.filter((slot) => /\.(jpg|jpeg|png)$/i.test(slot.file?.name || '')).length;
+    const surcharge = Number(getPrintingPrices().surcharge || 0);
 
     setText('sum-print-qty', qty);
     setText('sum-print-paper', slot0.paperSize || '—');
@@ -215,7 +252,13 @@ function calcPrintTotal() {
     setText('sum-print-total', '₱' + total.toFixed(2));
 
     const addonsRow = document.getElementById('print-addons-row');
-    if (addonsRow) addonsRow.style.display = 'none';
+    const addonsText = document.getElementById('sum-print-addons');
+    if (addonsRow) addonsRow.style.display = imageCount > 0 ? 'flex' : 'none';
+    if (addonsText) {
+        addonsText.textContent = imageCount > 0
+            ? `${imageCount} image surcharge${imageCount > 1 ? 's' : ''} (+₱${(imageCount * surcharge).toFixed(2)})`
+            : '';
+    }
     return total;
 }
 

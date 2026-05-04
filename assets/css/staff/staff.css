@@ -157,9 +157,10 @@ body:not(.staff-dashboard-body) .signup a {
 .staff-header {
   background: #fff;
   border-radius: 12px;
-  padding: 18px 20px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  padding: 20px;
   margin-bottom: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .staff-header h1 {
@@ -184,9 +185,18 @@ body:not(.staff-dashboard-body) .signup a {
 .staff-card {
   background: #fff;
   border-radius: 12px;
-  padding: 18px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  border-left: 5px solid var(--color-header);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-left: 4px solid var(--color-header);
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.staff-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .staff-card h3 {
@@ -230,12 +240,12 @@ body:not(.staff-dashboard-body) .signup a {
 
 .sd-hero {
   background: linear-gradient(90deg, #7e0000 0%, #8f0000 55%, #6f0000 100%);
-  border-radius: 14px;
-  padding: 14px 14px;
+  border-radius: 12px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: 0 16px 30px rgba(126, 0, 0, 0.22);
+  box-shadow: 0 4px 12px rgba(126, 0, 0, 0.18);
   border: 1px solid rgba(0, 0, 0, 0.06);
   margin: 14px 0 0;
 }
@@ -307,13 +317,21 @@ body:not(.staff-dashboard-body) .signup a {
 
 .sd-card {
   background: #fff;
-  border-radius: 14px;
-  padding: 14px 16px 12px;
-  box-shadow: 0 6px 14px rgba(18, 24, 40, 0.06);
-  border: 1px solid rgba(17, 24, 39, 0.06);
-  border-left: 5px solid #d11a2a;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-left: 4px solid #d11a2a;
   position: relative;
   overflow: hidden;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sd-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .sd-card__top {
@@ -379,10 +397,18 @@ body:not(.staff-dashboard-body) .signup a {
 
 .sd-panel {
   background: #fff;
-  border-radius: 14px;
-  padding: 14px 14px 18px;
-  box-shadow: 0 8px 18px rgba(18, 24, 40, 0.06);
-  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sd-panel:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .sd-panel__head {
@@ -457,7 +483,7 @@ body:not(.staff-dashboard-body) .signup a {
 
 .sd-empty {
   margin-top: 10px;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #f8fafc;
   border: 1px dashed rgba(148, 163, 184, 0.55);
   padding: 44px 18px;
@@ -499,8 +525,17 @@ body:not(.staff-dashboard-body) .signup a {
 .staff-panel {
   background: #fff;
   border-radius: 12px;
-  padding: 18px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.staff-panel:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .staff-panel h3 {
@@ -552,6 +587,20 @@ body:not(.staff-dashboard-body) .signup a {
 
 .staff-panel td {
   color: #3a4a50;
+  white-space: normal;
+  vertical-align: top;
+  line-height: 1.35;
+}
+
+/* Staff tables use the shared .data-table styles from admin CSS.
+   Allow multi-line cells (e.g. service + order type) to expand safely. */
+.staff-dashboard-body .data-table td {
+  white-space: normal;
+  vertical-align: top;
+  line-height: 1.35;
+}
+.staff-dashboard-body .data-table th {
+  white-space: nowrap;
 }
 
 @media (max-width: 1100px) {
@@ -689,8 +738,17 @@ body:not(.staff-dashboard-body) .signup a {
 .staff-panel-full {
   background: #fff;
   border-radius: 12px;
-  padding: 20px 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.staff-panel-full:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 .staff-panel-full h3 {
   margin: 0 0 16px 0;
@@ -1630,18 +1688,17 @@ body.staff-dashboard-body .stats-grid--4 {
 }
 
 body.staff-dashboard-body .stat-card {
-  padding: 14px 16px 12px;
-  box-shadow: 0 6px 14px rgba(18, 24, 40, 0.06);
-  border-top: 1px solid rgba(17, 24, 39, 0.06);
-  border-right: 1px solid rgba(17, 24, 39, 0.06);
-  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
-  border-left-width: 5px;
-  border-left-style: solid;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border-top-color: rgba(17, 24, 39, 0.08);
+  border-right-color: rgba(17, 24, 39, 0.08);
+  border-bottom-color: rgba(17, 24, 39, 0.08);
+  border-left-width: 4px;
 }
 
 body.staff-dashboard-body .stat-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(18, 24, 40, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 body.staff-dashboard-body .stat-card__value {
@@ -1658,17 +1715,25 @@ body.staff-dashboard-body .stat-card__label {
 
 body.staff-dashboard-body .main-content .card {
   background: #fff;
-  border-radius: 14px;
-  border: 1px solid rgba(17, 24, 39, 0.06);
-  box-shadow: 0 8px 18px rgba(18, 24, 40, 0.06);
+  border-radius: 12px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   padding: 0;
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+body.staff-dashboard-body .main-content .card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 body.staff-dashboard-body .main-content .card:not(:has(> .card-header)) {
-  padding: 20px 18px;
+  padding: 20px;
 }
 
 body.staff-dashboard-body .main-content .card:has(> .card-header) {
@@ -1677,7 +1742,7 @@ body.staff-dashboard-body .main-content .card:has(> .card-header) {
 
 body.staff-dashboard-body .main-content .card.sp,
 body.staff-dashboard-body .main-content .staff-panel-full.card {
-  padding: 20px 18px;
+  padding: 20px;
 }
 
 body.staff-dashboard-body .main-content .card.sp:has(> .card-header) {
@@ -1696,12 +1761,12 @@ body.staff-dashboard-body .main-content .card-body {
 
 body.staff-dashboard-body .promo-banner {
   background: linear-gradient(90deg, #7e0000 0%, #8f0000 55%, #6f0000 100%);
-  border-radius: 14px;
-  padding: 14px;
+  border-radius: 12px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: 0 16px 30px rgba(126, 0, 0, 0.22);
+  box-shadow: 0 4px 12px rgba(126, 0, 0, 0.18);
   border: 1px solid rgba(0, 0, 0, 0.06);
   margin-top: 14px;
 }
@@ -1722,7 +1787,7 @@ body.staff-dashboard-body .promo-desc {
 
 body.staff-dashboard-body .empty-state {
   margin-top: 10px;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #f8fafc;
   border: 1px dashed rgba(148, 163, 184, 0.55);
   padding: 44px 18px;

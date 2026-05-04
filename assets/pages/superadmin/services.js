@@ -12,6 +12,13 @@
   const historyCloseBtn = document.getElementById("historyCloseBtn");
 
   let editingServiceId = null;
+  let serviceSearchQuery = "";
+  let servicePage = 1;
+  const SERVICES_PAGE_SIZE = 6;
+  let pricingState =
+    window.UPressPricing && typeof UPressPricing.readPricingFromSession === "function"
+      ? UPressPricing.readPricingFromSession()
+      : null;
 
   function generateServiceId() {
     return "service_" + Math.random().toString(36).substr(2, 9);
@@ -43,9 +50,22 @@
     });
   }
 
+  function syncAddServiceButton() {
+    const btn = document.getElementById("addServiceBtn");
+    if (!btn) return;
+    const ok = !!db.academicYear;
+    btn.disabled = !ok;
+    btn.setAttribute("aria-disabled", ok ? "false" : "true");
+    btn.title = ok
+      ? ""
+      : "Set the academic year in System Settings before adding services.";
+  }
+
   function renderServices() {
     const servicesSection = document.getElementById("servicesSection");
     if (!servicesSection) return;
+
+    syncAddServiceButton();
 
     if (!db.academicYear) {
       servicesSection.innerHTML = `
@@ -61,6 +81,36 @@
         </div>
       `;
       return;
+    }
+
+    const filteredServices = db.services.filter((service) => {
+      const query = serviceSearchQuery.trim().toLowerCase();
+      if (!query) return true;
+      return [
+        service.name,
+        service.description,
+        service.category,
+        service.price,
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(query);
+    });
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filteredServices.length / SERVICES_PAGE_SIZE),
+    );
+    servicePage = Math.min(Math.max(servicePage, 1), totalPages);
+    const start = (servicePage - 1) * SERVICES_PAGE_SIZE;
+    const visibleServices = filteredServices.slice(
+      start,
+      start + SERVICES_PAGE_SIZE,
+    );
+
+    const countEl = document.getElementById("servicesResultCount");
+    if (countEl) {
+      countEl.textContent = `${filteredServices.length} of ${db.services.length} services`;
     }
 
     if (db.services.length === 0) {
@@ -79,20 +129,44 @@
       return;
     }
 
-    // Group services by category
+    if (filteredServices.length === 0) {
+      servicesSection.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state__title">No services found</div>
+          <div class="empty-state__sub">Try a different service name, category, description, or price.</div>
+        </div>
+      `;
+      return;
+    }
+
     const categories = {
       printing: [],
       merchandise: [],
       special: [],
     };
 
-    db.services.forEach((service) => {
+    visibleServices.forEach((service) => {
       if (categories[service.category]) {
         categories[service.category].push(service);
       }
     });
 
     let html = "";
+
+    function getServicePriceLabel(service) {
+      const key = getServicePricingKey(service?.name);
+      if (
+        key === "printing" ||
+        key === "binding" ||
+        key === "lanyards" ||
+        key === "idAccessories" ||
+        key === "mugs"
+      ) {
+        return `<span class="service-price service-price--detail">Detailed pricing</span>`;
+      }
+      const n = Number(service?.price || 0);
+      return `<span class="service-price">₱${n.toFixed(2)}</span>`;
+    }
 
     Object.entries(categories).forEach(([category, services]) => {
       if (services.length > 0) {
@@ -123,7 +197,7 @@
                     </div>
                     <h3 class="service-name">${service.name}</h3>
                     ${service.description ? `<p class="service-description">${service.description}</p>` : ""}
-                    <div class="service-price">₱${parseFloat(service.price).toFixed(2)}</div>
+                    ${getServicePriceLabel(service)}
                     ${
                       rating.average > 0
                         ? `
@@ -184,9 +258,17 @@
       }
     });
 
-    servicesSection.innerHTML = html;
+    servicesSection.innerHTML = `
+      ${html}
+      <div class="list-pagination" aria-label="Services pagination">
+        <span class="list-pagination__summary">Page ${servicePage} of ${totalPages}</span>
+        <div class="list-pagination__actions">
+          <button type="button" class="btn btn-ghost btn-sm" id="servicesPrevPage" ${servicePage === 1 ? "disabled" : ""}>Previous</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="servicesNextPage" ${servicePage === totalPages ? "disabled" : ""}>Next</button>
+        </div>
+      </div>
+    `;
 
-    // Attach event listeners
     document.querySelectorAll(".edit-btn").forEach((btn) => {
       btn.addEventListener("click", () => openEditModal(btn.dataset.id));
     });
@@ -197,6 +279,16 @@
 
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", () => deleteService(btn.dataset.id));
+    });
+
+    document.getElementById("servicesPrevPage")?.addEventListener("click", () => {
+      servicePage -= 1;
+      renderServices();
+    });
+
+    document.getElementById("servicesNextPage")?.addEventListener("click", () => {
+      servicePage += 1;
+      renderServices();
     });
   }
 
@@ -217,11 +309,16 @@
   }
 
   function openAddModal() {
+    if (!db.academicYear) {
+      showToast("Set the academic year in System Settings before adding services.");
+      return;
+    }
     editingServiceId = null;
     modalTitle.textContent = "Add Service";
     modalSub.textContent = "Create a new service";
     modalSaveBtn.textContent = "Save Service";
     serviceForm.reset();
+    renderServicePricingFields("");
     serviceModal.classList.add("open");
   }
 
@@ -237,9 +334,9 @@
     document.getElementById("formName").value = service.name;
     document.getElementById("formDescription").value =
       service.description || "";
-    document.getElementById("formPrice").value = service.price;
     document.getElementById("formCategory").value = service.category;
 
+    renderServicePricingFields(service.name);
     serviceModal.classList.add("open");
   }
 
@@ -247,21 +344,22 @@
     serviceModal.classList.remove("open");
     editingServiceId = null;
     serviceForm.reset();
+    const pricingFields = document.getElementById("servicePricingFields");
+    if (pricingFields) pricingFields.innerHTML = "";
   }
 
   function saveService() {
     const name = document.getElementById("formName").value.trim();
     const description = document.getElementById("formDescription").value.trim();
-    const price = document.getElementById("formPrice").value;
     const category = document.getElementById("formCategory").value;
 
-    if (!name || !price || !category) {
+    if (!name || !category) {
       showToast("Please fill in all required fields");
       return;
     }
 
     if (editingServiceId) {
-      // Update existing service
+      applyPricingEditsFromModal();
       const serviceIndex = db.services.findIndex(
         (s) => s.id === editingServiceId,
       );
@@ -271,7 +369,7 @@
           ...oldService,
           name,
           description,
-          price: parseFloat(price),
+          price: Number(oldService.price || 0),
           category,
           updatedAt: new Date().toISOString(),
         };
@@ -279,12 +377,11 @@
       }
       showToast("Service updated successfully");
     } else {
-      // Create new service
       const newService = {
         id: generateServiceId(),
         name,
         description,
-        price: parseFloat(price),
+        price: 0,
         category,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -361,7 +458,164 @@
     }, 3000);
   }
 
-  // Render initial page
+  function persistPricing() {
+    if (!window.UPressPricing || !pricingState) return;
+    UPressPricing.mirrorPublicPricing(pricingState);
+  }
+
+  function getServicePricingKey(serviceName) {
+    const name = String(serviceName || "").trim().toLowerCase();
+    if (name === "printing") return "printing";
+    if (name === "binding") return "binding";
+    if (name === "lanyards" || name === "lanyard") return "lanyards";
+    if (name.startsWith("mug printing")) return "mugs";
+    if (name.startsWith("id printing")) return "idAccessories";
+    return null;
+  }
+
+  function collectPricingFromMiniForm(root) {
+    if (!window.UPressPricing || !root) return null;
+    const out = UPressPricing.getDefaultPricing();
+    root.querySelectorAll("[data-pricing-path]").forEach((inp) => {
+      const pathStr = inp.getAttribute("data-pricing-path");
+      if (!pathStr) return;
+      const parts = pathStr.split(".");
+      let cur = out;
+      for (let i = 0; i < parts.length - 1; i++) {
+        const k = parts[i];
+        if (cur[k] == null || typeof cur[k] !== "object") cur[k] = {};
+        cur = cur[k];
+      }
+      cur[parts[parts.length - 1]] = parseFloat(inp.value) || 0;
+    });
+    return out;
+  }
+
+  function renderServicePricingFields(serviceName) {
+    const container = document.getElementById("servicePricingFields");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!window.UPressPricing) return;
+    pricingState = UPressPricing.normalizePricing(pricingState);
+    const key = getServicePricingKey(serviceName);
+    if (!key) return;
+
+    const p = pricingState;
+    const get = (path) => UPressPricing.getByPath(p, path);
+
+    if (key === "printing") {
+      const rows = [
+        ["Short", "printing.shortBw", "printing.shortColor", ["printing", "shortBw"], ["printing", "shortColor"]],
+        ["A4", "printing.a4Bw", "printing.a4Color", ["printing", "a4Bw"], ["printing", "a4Color"]],
+        ["A3", "printing.a3Bw", "printing.a3Color", ["printing", "a3Bw"], ["printing", "a3Color"]],
+        ["Long", "printing.longBw", "printing.longColor", ["printing", "longBw"], ["printing", "longColor"]],
+        ["Legal", "printing.legalBw", "printing.legalColor", ["printing", "legalBw"], ["printing", "legalColor"]],
+        ["Custom", "printing.customBw", "printing.customColor", ["printing", "customBw"], ["printing", "customColor"]],
+      ];
+
+      container.innerHTML = `
+        <div class="service-pricing-block">
+          <div class="service-pricing-title">Printing details</div>
+          <div class="service-pricing-sub">Per-page BW/Color prices and image surcharge.</div>
+          <div class="pricing-print-table" role="group" aria-label="Printing per page">
+            <div class="pricing-print-row pricing-print-row--head">
+              <span>Size</span><span>B&amp;W</span><span>Color</span>
+            </div>
+            ${rows
+              .map(
+                ([label, bwPathStr, cPathStr, bwPath, cPath]) => `
+              <div class="pricing-print-row">
+                <span class="pricing-print-size">${label}</span>
+                <div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="${bwPathStr}" value="${Number(get(bwPath) || 0).toFixed(2)}" step="0.5" min="0" /></div>
+                <div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="${cPathStr}" value="${Number(get(cPath) || 0).toFixed(2)}" step="0.5" min="0" /></div>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>
+          <div class="pricing-surcharge-row">
+            <span class="pricing-surcharge-label">Image surcharge</span>
+            <div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="printing.surcharge" value="${Number(get(["printing", "surcharge"]) || 0).toFixed(2)}" step="0.5" min="0" /></div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (key === "binding") {
+      container.innerHTML = `
+        <div class="service-pricing-block">
+          <div class="service-pricing-title">Binding details</div>
+          <div class="service-pricing-sub">Flat fee per binding type.</div>
+          <div class="pricing-mini-grid">
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Soft</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.softBind" value="${Number(get(["binding","softBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Hard</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.hardBind" value="${Number(get(["binding","hardBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Ring</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.ringBind" value="${Number(get(["binding","ringBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Spiral</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.spiralBind" value="${Number(get(["binding","spiralBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (key === "lanyards") {
+      container.innerHTML = `
+        <div class="service-pricing-block">
+          <div class="service-pricing-title">Lanyard details</div>
+          <div class="service-pricing-sub">Per-piece pricing.</div>
+          <div class="pricing-mini-grid pricing-mini-grid--3">
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Official</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.official" value="${Number(get(["lanyards","official"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Department</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.department" value="${Number(get(["lanyards","department"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Custom</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.custom" value="${Number(get(["lanyards","custom"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (key === "idAccessories") {
+      container.innerHTML = `
+        <div class="service-pricing-block">
+          <div class="service-pricing-title">ID printing details</div>
+          <div class="service-pricing-sub">Per-request pricing (New, Lost, Damaged, Renewal).</div>
+          <div class="pricing-mini-grid pricing-mini-grid--2">
+            <div class="pricing-mini-field"><span class="pricing-mini-label">New</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.newId" value="${Number(get(["idAccessories","newId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Lost</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.lostId" value="${Number(get(["idAccessories","lostId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Damaged</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.damagedId" value="${Number(get(["idAccessories","damagedId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Renewal</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.renewalId" value="${Number(get(["idAccessories","renewalId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (key === "mugs") {
+      container.innerHTML = `
+        <div class="service-pricing-block">
+          <div class="service-pricing-title">Mug printing details</div>
+          <div class="service-pricing-sub">WMSU standard and customization options.</div>
+          <div class="pricing-mini-grid">
+            <div class="pricing-mini-field"><span class="pricing-mini-label">WMSU standard</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.wmsuLogo" value="${Number(get(["mugs","wmsuLogo"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Department</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.department" value="${Number(get(["mugs","department"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Customization</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.photo" value="${Number(get(["mugs","photo"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">15oz add-on</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.largeSizeAddon" value="${Number(get(["mugs","largeSizeAddon"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+  }
+
+  function applyPricingEditsFromModal() {
+    const root = document.getElementById("servicePricingFields");
+    if (!root || !window.UPressPricing) return;
+    const patch = collectPricingFromMiniForm(root);
+    if (!patch) return;
+    pricingState = UPressPricing.normalizePricing(patch);
+    persistPricing();
+  }
+
   pageContainer.innerHTML = `
     <div class="page-header">
       <div>
@@ -377,12 +631,24 @@
         </button>
       </div>
     </div>
+    <div class="list-toolbar">
+      <label class="list-search" for="servicesSearchInput">
+        <span>Search services</span>
+        <input type="search" id="servicesSearchInput" class="list-search__input" placeholder="Search name, category, description, or price" />
+      </label>
+      <div class="list-toolbar__count" id="servicesResultCount">0 services</div>
+    </div>
     <div id="servicesSection"></div>
   `;
 
   document
     .getElementById("addServiceBtn")
     .addEventListener("click", openAddModal);
+  document.getElementById("servicesSearchInput").addEventListener("input", (event) => {
+    serviceSearchQuery = event.target.value;
+    servicePage = 1;
+    renderServices();
+  });
   modalCloseBtn.addEventListener("click", closeModal);
   modalCancelBtn.addEventListener("click", closeModal);
   modalSaveBtn.addEventListener("click", saveService);
@@ -394,7 +660,6 @@
     saveService();
   });
 
-  // Close modal when clicking outside
   serviceModal.addEventListener("click", (e) => {
     if (e.target === serviceModal) {
       closeModal();

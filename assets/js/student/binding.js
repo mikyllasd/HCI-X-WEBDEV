@@ -5,12 +5,24 @@
 let _bindingProcess = 'full'; // 'full' | 'bindonly'
 let _bindingType = '';
 let _bindingPrice = 0;
-const BINDING_PRICES = {
-    'Soft Bind': 80,
-    'Hard Bind': 200,
-    'Ring Bind': 100,
-    'Spiral Bind': 80
-};
+
+function getBindingPrices() {
+    const def = {
+        'Soft Bind': 50,
+        'Hard Bind': 350,
+        'Ring Bind': 45,
+        'Spiral Bind': 55
+    };
+    if (typeof window.UPressPricing === 'undefined' || !UPressPricing.readPricingFromSession) return def;
+    const p = UPressPricing.readPricingFromSession();
+    const b = p && p.binding ? p.binding : {};
+    return {
+        'Soft Bind': typeof b.softBind === 'number' ? b.softBind : def['Soft Bind'],
+        'Hard Bind': typeof b.hardBind === 'number' ? b.hardBind : def['Hard Bind'],
+        'Ring Bind': typeof b.ringBind === 'number' ? b.ringBind : def['Ring Bind'],
+        'Spiral Bind': typeof b.spiralBind === 'number' ? b.spiralBind : def['Spiral Bind']
+    };
+}
 
 function selectBindingProcess(process, el) {
     document.querySelectorAll('.binding-process-option').forEach(o => o.classList.remove('active'));
@@ -76,7 +88,7 @@ async function detectPdfPages(file) {
 function onBindingTypeChange() {
     const val = document.getElementById('binding-type-select')?.value;
     _bindingType = val || '';
-    _bindingPrice = BINDING_PRICES[val] || 0;
+    _bindingPrice = getBindingPrices()[val] || 0;
 
     const coverField = document.getElementById('cover-color-field');
     if (coverField) {
@@ -87,6 +99,7 @@ function onBindingTypeChange() {
 }
 
 function updateBindingSummary() {
+    if (_bindingType) _bindingPrice = getBindingPrices()[_bindingType] || 0;
     const qty = Math.max(1, parseInt(document.getElementById('binding-qty')?.value) || 1);
     const pages = parseInt(document.getElementById('binding-pages')?.value) || 0;
     setText('binding-sum-type', _bindingType || '—');

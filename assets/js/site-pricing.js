@@ -4,15 +4,19 @@
 
   const defaultPricing = {
     printing: {
-      shortBw: 2,
-      shortColor: 10,
+      shortBw: 3,
+      shortColor: 5,
       a4Bw: 3,
-      a4Color: 15,
-      longBw: 3.5,
-      longColor: 18,
-      legalBw: 4,
-      legalColor: 20,
-      surcharge: 5,
+      a4Color: 5,
+      a3Bw: 3,
+      a3Color: 5,
+      longBw: 3,
+      longColor: 5,
+      legalBw: 3,
+      legalColor: 5,
+      customBw: 3,
+      customColor: 5,
+      surcharge: 15,
     },
     binding: {
       softBind: 50,
@@ -109,6 +113,26 @@
     return p;
   }
 
+  function migrateLegacyDefaultPrinting(p) {
+    if (!p || !p.printing) return p;
+    const pr = p.printing;
+    const looksLikeOldDefaults =
+      pr.shortBw === 2 &&
+      pr.shortColor === 10 &&
+      pr.a4Bw === 3 &&
+      pr.a4Color === 15 &&
+      pr.surcharge === 5;
+    if (!looksLikeOldDefaults) return p;
+    const d = getDefaultPricing().printing;
+    p.printing = deepMergeNumbers(d, {
+      a3Bw: pr.a3Bw,
+      a3Color: pr.a3Color,
+      customBw: pr.customBw,
+      customColor: pr.customColor,
+    });
+    return p;
+  }
+
   function normalizePricing(raw) {
     const d = getDefaultPricing();
     let merged;
@@ -123,6 +147,7 @@
       if (typeof raw.surcharge === "number") merged.printing.surcharge = raw.surcharge;
     } else merged = stripLegacyPricingKeys(deepMergeNumbers(d, raw));
     merged = migrateLegacySplitFields(merged);
+    merged = migrateLegacyDefaultPrinting(merged);
     return deepMergeNumbers(getDefaultPricing(), merged);
   }
 
@@ -215,8 +240,10 @@
     const printSpec = [
       ["Short", ["printing", "shortBw"], ["printing", "shortColor"]],
       ["A4", ["printing", "a4Bw"], ["printing", "a4Color"]],
+      ["A3", ["printing", "a3Bw"], ["printing", "a3Color"]],
       ["Long", ["printing", "longBw"], ["printing", "longColor"]],
       ["Legal", ["printing", "legalBw"], ["printing", "legalColor"]],
+      ["Custom", ["printing", "customBw"], ["printing", "customColor"]],
     ];
     const printingBody = `
       <div class="pricing-print-table" role="group" aria-label="Printing per page">

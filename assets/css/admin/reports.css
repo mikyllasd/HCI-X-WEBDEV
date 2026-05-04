@@ -47,6 +47,59 @@
 .reports-records-card .data-table td {
   white-space: nowrap;
 }
+.reports-records-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.reports-records-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.record-search {
+  position: relative;
+  width: min(360px, 100%);
+  color: var(--clr-text-muted);
+}
+.record-search i,
+.record-search svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.record-search .form-input {
+  padding-left: 38px;
+}
+.reports-records-count,
+.reports-pagination__summary {
+  color: var(--clr-text-muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+.reports-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+}
+.reports-pagination__actions {
+  display: flex;
+  gap: 8px;
+}
+.reports-pagination .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .reports-records-card tbody tr:hover {
   background: rgba(37, 99, 235, 0.06);
 }
@@ -62,5 +115,14 @@
 @media (max-width: 900px) {
   .reports-filter-row {
     grid-template-columns: 1fr;
+  }
+  .reports-records-head,
+  .reports-records-tools,
+  .reports-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .record-search {
+    width: 100%;
   }
 }

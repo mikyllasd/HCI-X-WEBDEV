@@ -25,244 +25,45 @@
    In production these would come from an API / database.
    ---------------------------------------------------------- */
 
-/** Student verification requests */
-const VERIFICATION_REQUESTS = [
-  {
-    id: "VR-001",
-    name: "Maria Santos",
-    studentId: "2024-00123",
-    program: "Computer Science",
-    yearLevel: "3rd Year",
-    email: "maria.santos@university.edu",
-    submitted: "4/26/2026, 9:53:09 PM",
-    status: "pending",
-  },
-  {
-    id: "VR-002",
-    name: "Juan Dela Cruz",
-    studentId: "2024-00124",
-    program: "Information Technology",
-    yearLevel: "2nd Year",
-    email: "juan.delacruz@university.edu",
-    submitted: "4/26/2026, 6:53:09 PM",
-    status: "pending",
-  },
-  {
-    id: "VR-003",
-    name: "Ana Reyes",
-    studentId: "2024-00125",
-    program: "Business Administration",
-    yearLevel: "4th Year",
-    email: "ana.reyes@university.edu",
-    submitted: "4/25/2026, 11:53:09 PM",
-    status: "approved",
-  },
-  {
-    id: "VR-004",
-    name: "Pedro Garcia",
-    studentId: "2024-00126",
-    program: "Engineering",
-    yearLevel: "1st Year",
-    email: "pedro.garcia@university.edu",
-    submitted: "4/24/2026, 11:53:09 PM",
-    status: "rejected",
-  },
-];
+/**
+ * Portal sample data — single source in assets/js/shared/demo-seed.js
+ * (verification, orders, payments, accounts). Load demo-seed.js before this file.
+ */
+const __upressPortalDemo =
+  typeof window !== "undefined" &&
+  window.UpressDemoSeed &&
+  typeof window.UpressDemoSeed.getAdminPortalSampleData === "function"
+    ? window.UpressDemoSeed.getAdminPortalSampleData()
+    : null;
+
+if (!__upressPortalDemo) {
+  console.warn(
+    "UPRESS: include demo-seed.js before admin-dashboard.js so verification, orders, and payments use the shared demo dataset.",
+  );
+}
+
+function __cloneDemoList(key, fallback) {
+  const src = __upressPortalDemo && __upressPortalDemo[key];
+  if (Array.isArray(src) && src.length) {
+    return JSON.parse(JSON.stringify(src));
+  }
+  return Array.isArray(fallback) ? JSON.parse(JSON.stringify(fallback)) : [];
+}
+
+/** Student verification requests (aligned with superadmin users / demo seed) */
+const VERIFICATION_REQUESTS = __cloneDemoList("verificationRequests", []);
 
 /** All student orders */
-const ORDERS = [
-  {
-    id: "ORD-2026-101",
-    email: "student@wmsu.edu.ph",
-    service: "Printing",
-    amount: 60,
-    status: "pending",
-    payment: "Not selected",
-    date: "Apr 5, 2026",
-  },
-  {
-    id: "ORD-2026-102",
-    email: "student@wmsu.edu.ph",
-    service: "Binding",
-    amount: 150,
-    status: "processing",
-    payment: "Online Payment",
-    date: "Apr 4, 2026",
-  },
-  {
-    id: "ORD-2026-103",
-    email: "student@wmsu.edu.ph",
-    service: "Lanyards",
-    amount: 300,
-    status: "ready",
-    payment: "Pay Onsite",
-    date: "Apr 3, 2026",
-  },
-  {
-    id: "ORD-2026-104",
-    email: "student@wmsu.edu.ph",
-    service: "Mug Printing",
-    amount: 1000,
-    status: "completed",
-    payment: "Online Payment",
-    date: "Apr 1, 2026",
-  },
-  {
-    id: "ORD-2026-004",
-    email: "anna.lopez@wmsu.edu.ph",
-    service: "Lanyards",
-    amount: 750,
-    status: "paid",
-    payment: "Online Payment",
-    date: "Feb 19, 2026",
-  },
-  {
-    id: "ORD-2026-003",
-    email: "pedro.reyes@wmsu.edu.ph",
-    service: "Printing",
-    amount: 170,
-    status: "pending",
-    payment: "Not selected",
-    date: "Feb 19, 2026",
-  },
-  {
-    id: "ORD-2026-002",
-    email: "maria.santos@wmsu.edu.ph",
-    service: "Mug Printing",
-    amount: 400,
-    status: "processing",
-    payment: "Pay Onsite",
-    date: "Feb 19, 2026",
-  },
-  {
-    id: "ORD-2026-001",
-    email: "juan.delacruz@wmsu.edu.ph",
-    service: "Printing",
-    amount: 150,
-    status: "ready",
-    payment: "Online Payment",
-    date: "Feb 19, 2026",
-  },
-  {
-    id: "ORD-2026-005",
-    email: "carlo.garcia@wmsu.edu.ph",
-    service: "Merchandise",
-    amount: 750,
-    status: "completed",
-    payment: "Pay Onsite",
-    date: "Feb 18, 2026",
-  },
-];
+const ORDERS = __cloneDemoList("orders", []);
 
-/**
- * Payment submissions — derived from orders that have a payment method selected.
- * In production this would be a separate payments collection from the API.
- */
-const PAYMENT_SUBMISSIONS = [
-  {
-    id: "PAY-2026-001",
-    orderId: "ORD-2026-102",
-    email: "student@wmsu.edu.ph",
-    amount: 150,
-    method: "Online Payment",
-    reference: "GCash-78421",
-    submitted: "Apr 4, 2026",
-    status: "pending",
-    proofUrl: null,
-  },
-  {
-    id: "PAY-2026-002",
-    orderId: "ORD-2026-104",
-    email: "student@wmsu.edu.ph",
-    amount: 1000,
-    method: "Online Payment",
-    reference: "Maya-99132",
-    submitted: "Apr 1, 2026",
-    status: "verified",
-    proofUrl: null,
-  },
-  {
-    id: "PAY-2026-003",
-    orderId: "ORD-2026-004",
-    email: "anna.lopez@wmsu.edu.ph",
-    amount: 750,
-    method: "Online Payment",
-    reference: "GCash-55098",
-    submitted: "Feb 19, 2026",
-    status: "verified",
-    proofUrl: null,
-  },
-  {
-    id: "PAY-2026-004",
-    orderId: "ORD-2026-001",
-    email: "juan.delacruz@wmsu.edu.ph",
-    amount: 150,
-    method: "Online Payment",
-    reference: "BDO-34412",
-    submitted: "Feb 19, 2026",
-    status: "pending",
-    proofUrl: null,
-  },
-  {
-    id: "PAY-2026-005",
-    orderId: "ORD-2026-005",
-    email: "carlo.garcia@wmsu.edu.ph",
-    amount: 750,
-    method: "Pay Onsite",
-    reference: "Cash",
-    submitted: "Feb 18, 2026",
-    status: "verified",
-    proofUrl: null,
-  },
-  {
-    id: "PAY-2026-006",
-    orderId: "ORD-2026-002",
-    email: "maria.santos@wmsu.edu.ph",
-    amount: 400,
-    method: "Pay Onsite",
-    reference: "Cash",
-    submitted: "Feb 19, 2026",
-    status: "rejected",
-    proofUrl: null,
-  },
-];
+/** Payment submissions — linked to orders in demo-seed.js */
+const PAYMENT_SUBMISSIONS = __cloneDemoList("paymentSubmissions", []);
 
 /**
  * Student accounts with registration/COR dates.
  * expiryDays is computed relative to today (positive = still valid, negative = expired).
  */
-const ACCOUNTS = [
-  {
-    name: "Juan Dela Cruz",
-    email: "juan.delacruz@wmsu.edu.ph",
-    registrationDate: "2025-03-01",
-    lastCOR: "2025-03-01",
-  },
-  {
-    name: "Maria Santos",
-    email: "maria.santos@wmsu.edu.ph",
-    registrationDate: "2025-06-15",
-    lastCOR: "2025-06-15",
-  },
-  {
-    name: "Pedro Reyes",
-    email: "pedro.reyes@wmsu.edu.ph",
-    registrationDate: "2025-09-20",
-    lastCOR: "2025-09-20",
-  },
-  {
-    name: "Anna Lopez",
-    email: "anna.lopez@wmsu.edu.ph",
-    registrationDate: "2025-01-10",
-    lastCOR: "2025-01-10",
-  },
-  {
-    name: "Carlo Garcia",
-    email: "carlo.garcia@wmsu.edu.ph",
-    registrationDate: "2024-12-05",
-    lastCOR: "2024-12-05",
-  },
-];
+const ACCOUNTS = __cloneDemoList("accounts", []);
 
 /** Services created via Add Service form (starts empty) */
 const CREATED_SERVICES = [];
@@ -323,6 +124,7 @@ function navigateTo(pageKey) {
   /* Page-specific lazy initialisers */
   if (pageKey === "payment-verification") renderPaymentVerificationTable();
   if (pageKey === "reports")              initReportsPage();
+  if (pageKey === "dashboard")            renderDashboardOverview();
 
   /* Scroll main area to top */
   const main = document.getElementById("main-content");
@@ -528,7 +330,14 @@ function renderOrdersTable() {
         <tr>
           <td><strong>${escHtml(o.id)}</strong></td>
           <td>${escHtml(o.email)}</td>
-          <td>${escHtml(o.service)}</td>
+          <td>
+            <div>${escHtml(o.service)}</div>
+            <div class="text-muted" style="font-size:12px;opacity:.85">
+              ${String(o.order_type || "individual").toLowerCase() === "organization"
+                ? `Organization${o.order_org ? ": " + escHtml(o.order_org) : ""}`
+                : "Individual"}
+            </div>
+          </td>
           <td style="color:var(--clr-primary);font-weight:600">₱${o.amount.toFixed(2)}</td>
           <td>${statusBadgeHTML(o.status)}</td>
           <td>${escHtml(o.payment)}</td>
@@ -560,6 +369,14 @@ function openOrderModal(orderId) {
       <div class="detail-row"><dt>Order ID</dt>      <dd><strong>${escHtml(o.id)}</strong></dd></div>
       <div class="detail-row"><dt>Student Email</dt> <dd>${escHtml(o.email)}</dd></div>
       <div class="detail-row"><dt>Service</dt>       <dd>${escHtml(o.service)}</dd></div>
+      <div class="detail-row"><dt>Order Type</dt>
+        <dd>${String(o.order_type || "individual").toLowerCase() === "organization" ? "Organization" : "Individual"}</dd>
+      </div>
+      ${
+        String(o.order_type || "individual").toLowerCase() === "organization"
+          ? `<div class="detail-row"><dt>Organization</dt> <dd>${escHtml(o.order_org || "—")}</dd></div>`
+          : ""
+      }
       <div class="detail-row"><dt>Amount</dt>
         <dd style="color:var(--clr-primary);font-weight:700">₱${o.amount.toFixed(2)}</dd>
       </div>
@@ -582,12 +399,179 @@ function closeOrderModal() {
 
 /** Currently active filter for the payment verification table */
 let pvFilter = "all";
+let pvCardSearchQuery = "";
+let pvCardPagePending = 1;
+let pvCardPageVerified = 1;
+let pvCardPageInvalid = 1;
+const PV_CARDS_PAGE_SIZE = 6;
+
+function getPaymentCardStatus(status) {
+  return status === "rejected" ? "invalid" : status;
+}
+
+function getPaymentStudentName(payment) {
+  const account = ACCOUNTS.find((item) => item.email === payment.email);
+  if (account?.name) return account.name;
+  return payment.email ? payment.email.split("@")[0] : "Student";
+}
+
+function getPaymentOrder(payment) {
+  return ORDERS.find((order) => order.id === payment.orderId) || {};
+}
+
+function paymentSubmissionCardHTML(payment) {
+  const status = getPaymentCardStatus(payment.status);
+  const order = getPaymentOrder(payment);
+  const student = getPaymentStudentName(payment);
+  const service = order.service || "Payment";
+  const amount = `₱${Number(payment.amount || 0).toFixed(2)}`;
+  const method = payment.method || "—";
+  const reference = payment.reference || "—";
+  const submitted = payment.submitted || "—";
+  const actionLabel = status === "pending" ? "Review" : "View";
+
+  return `
+    <div class="pv-card"
+      data-payment-id="${escHtml(payment.id)}"
+      data-pv-id="${escHtml(payment.orderId)}"
+      data-pv-name="${escHtml(student)}"
+      data-pv-service="${escHtml(service)}"
+      data-pv-amount="${escHtml(amount)}"
+      data-pv-method="${escHtml(method)}"
+      data-pv-ref="${escHtml(reference)}"
+      data-pv-submitted="${escHtml(submitted)}"
+      data-pv-status="${escHtml(status)}"
+      data-pv-proof="${escHtml(payment.proofUrl || "")}">
+      <div class="pv-card__header">
+        <span class="pv-order-id">${escHtml(payment.orderId)}</span>
+        <span class="pv-badge pv-badge--${escHtml(status)}">${status === "invalid" ? "Invalid" : capitalise(status)}</span>
+      </div>
+      <p class="pv-customer">${escHtml(student)}</p>
+      <div class="pv-details">
+        <div class="pv-detail"><span class="pv-detail__label">Service</span><span class="pv-detail__val">${escHtml(service)}</span></div>
+        <div class="pv-detail"><span class="pv-detail__label">Amount</span><span class="pv-detail__val pv-amount">${escHtml(amount)}</span></div>
+        <div class="pv-detail"><span class="pv-detail__label">Method</span><span class="pv-detail__val">${escHtml(method)}</span></div>
+        <div class="pv-detail"><span class="pv-detail__label">Reference</span><span class="pv-detail__val">${escHtml(reference)}</span></div>
+      </div>
+      <p class="pv-submitted">Submitted: ${escHtml(submitted)}</p>
+      <button class="btn btn--primary pv-review-btn" onclick="openPvModal(this.closest('.pv-card'))">
+        ${eyeIconSVG(14)} ${actionLabel}
+      </button>
+    </div>`;
+}
+
+function renderPaymentVerificationCards() {
+  const pendingGrid = document.getElementById("pv-pending-grid");
+  const verifiedGrid = document.getElementById("pv-verified-grid");
+  const invalidGrid = document.getElementById("pv-invalid-grid");
+  if (!pendingGrid || !verifiedGrid || !invalidGrid) return false;
+
+  const q = String(
+    document.getElementById("pv-card-search")?.value || pvCardSearchQuery || "",
+  )
+    .trim()
+    .toLowerCase();
+  pvCardSearchQuery = q;
+
+  const matchQuery = (payment) => {
+    if (!q) return true;
+    const order = getPaymentOrder(payment);
+    const student = getPaymentStudentName(payment);
+    const hay = [
+      payment.id,
+      payment.orderId,
+      payment.email,
+      payment.method,
+      payment.reference,
+      payment.submitted,
+      student,
+      order.service,
+      order.status,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return hay.includes(q);
+  };
+
+  const buckets = {
+    pending: [],
+    verified: [],
+    invalid: [],
+  };
+
+  PAYMENT_SUBMISSIONS.filter(matchQuery).forEach((payment) => {
+    const status = getPaymentCardStatus(payment.status);
+    if (status === "verified") buckets.verified.push(payment);
+    else if (status === "invalid") buckets.invalid.push(payment);
+    else buckets.pending.push(payment);
+  });
+
+  const totalFiltered =
+    buckets.pending.length + buckets.verified.length + buckets.invalid.length;
+  const countEl = document.getElementById("pv-card-count");
+  if (countEl) {
+    countEl.textContent = `${totalFiltered} submission${
+      totalFiltered !== 1 ? "s" : ""
+    }`;
+  }
+
+  const paginate = (items, page) => {
+    const totalPages = Math.max(1, Math.ceil(items.length / PV_CARDS_PAGE_SIZE));
+    const safePage = Math.min(Math.max(1, page), totalPages);
+    const start = (safePage - 1) * PV_CARDS_PAGE_SIZE;
+    return { totalPages, page: safePage, slice: items.slice(start, start + PV_CARDS_PAGE_SIZE) };
+  };
+
+  const pendingPg = paginate(buckets.pending, pvCardPagePending);
+  pvCardPagePending = pendingPg.page;
+  pendingGrid.innerHTML = pendingPg.slice.length
+    ? pendingPg.slice.map(paymentSubmissionCardHTML).join("")
+    : '<p class="pv-empty-msg text-muted" style="margin-top:.5rem;">No pending submissions.</p>';
+
+  const verifiedPg = paginate(buckets.verified, pvCardPageVerified);
+  pvCardPageVerified = verifiedPg.page;
+  verifiedGrid.innerHTML = verifiedPg.slice.map(paymentSubmissionCardHTML).join("");
+
+  const invalidPg = paginate(buckets.invalid, pvCardPageInvalid);
+  pvCardPageInvalid = invalidPg.page;
+  invalidGrid.innerHTML = invalidPg.slice.map(paymentSubmissionCardHTML).join("");
+
+  function syncPager(prefix, page, totalPages) {
+    document.getElementById(`${prefix}-page`)?.replaceChildren(
+      document.createTextNode(`Page ${page} of ${totalPages}`),
+    );
+    const prev = document.getElementById(`${prefix}-prev`);
+    const next = document.getElementById(`${prefix}-next`);
+    if (prev) prev.disabled = page <= 1;
+    if (next) next.disabled = page >= totalPages;
+    const wrap = document.getElementById(`${prefix}-pagination`);
+    if (wrap) wrap.classList.toggle("hidden", totalPages <= 1);
+  }
+
+  syncPager("pv-pending", pendingPg.page, pendingPg.totalPages);
+  syncPager("pv-verified", verifiedPg.page, verifiedPg.totalPages);
+  syncPager("pv-invalid", invalidPg.page, invalidPg.totalPages);
+
+  document
+    .getElementById("pv-verified-section")
+    ?.classList.toggle("hidden", buckets.verified.length === 0);
+  document
+    .getElementById("pv-invalid-section")
+    ?.classList.toggle("hidden", buckets.invalid.length === 0);
+
+  refreshPaymentCounters();
+  if (typeof lucide !== "undefined") lucide.createIcons();
+  return true;
+}
 
 /**
- * Renders the payment submissions table, applying the active
- * status filter and any search query.
+ * Renders payment submissions. Supports the current card-grid UI and keeps a
+ * table fallback for older markup.
  */
 function renderPaymentVerificationTable() {
+  if (renderPaymentVerificationCards()) return;
+
   const query  = (document.getElementById("pv-search")?.value || "").toLowerCase();
   const empty  = document.getElementById("pv-empty");
   const table  = document.getElementById("pv-table");
@@ -676,6 +660,7 @@ function setPaymentStatus(id, newStatus) {
   }
 
   renderPaymentVerificationTable();
+  renderDashboardOverview();
   showToast(`Payment ${payment.id} has been ${newStatus}.`);
 }
 
@@ -709,11 +694,15 @@ function refreshPaymentCounters() {
   const total    = PAYMENT_SUBMISSIONS.length;
   const pending  = PAYMENT_SUBMISSIONS.filter((p) => p.status === "pending").length;
   const verified = PAYMENT_SUBMISSIONS.filter((p) => p.status === "verified").length;
-  const rejected = PAYMENT_SUBMISSIONS.filter((p) => p.status === "rejected").length;
+  const rejected = PAYMENT_SUBMISSIONS.filter((p) => {
+    const status = getPaymentCardStatus(p.status);
+    return status === "invalid";
+  }).length;
   setText("pv-total",    total);
   setText("pv-pending",  pending);
   setText("pv-verified", verified);
   setText("pv-rejected", rejected);
+  setText("pv-invalid", rejected);
 }
 
 /**
@@ -737,6 +726,9 @@ function paymentStatusBadgeHTML(status) {
 
 /** Currently selected report period tab */
 let reportsTab = "daily";
+let rptRecordSearchQuery = "";
+let rptRecordPage = 1;
+const RPT_RECORDS_PAGE_SIZE = 10;
 
 /**
  * Initialises the Reports page: sets up tab handlers (once),
@@ -769,15 +761,33 @@ function initReportsPage() {
 function renderReportsData() {
   const now   = new Date();
   const today = now.toDateString();
+  const startInput = document.getElementById("rpt-start-date");
+  const endInput = document.getElementById("rpt-end-date");
+  const customStart = startInput?.value ? new Date(startInput.value) : null;
+  const customEnd = endInput?.value ? new Date(endInput.value) : null;
+  if (customStart) customStart.setHours(0, 0, 0, 0);
+  if (customEnd) customEnd.setHours(23, 59, 59, 999);
 
   /* Filter orders to relevant period */
   let periodOrders = [];
 
   if (reportsTab === "daily") {
-    /* Orders placed today — use the sample data date field as a rough proxy */
     periodOrders = ORDERS.filter((o) => {
       const d = new Date(o.date);
       return d.toDateString() === today;
+    });
+  } else if (reportsTab === "weekly") {
+    const day = now.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - diff);
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+    periodOrders = ORDERS.filter((o) => {
+      const d = new Date(o.date);
+      return d >= weekStart && d <= weekEnd;
     });
   } else if (reportsTab === "monthly") {
     periodOrders = ORDERS.filter((o) => {
@@ -792,6 +802,16 @@ function renderReportsData() {
     periodOrders = ORDERS.filter((o) => {
       const d = new Date(o.date);
       return d.getFullYear() === now.getFullYear();
+    });
+  }
+
+  if (customStart || customEnd) {
+    periodOrders = periodOrders.filter((o) => {
+      const d = new Date(o.date);
+      if (Number.isNaN(d.getTime())) return false;
+      if (customStart && d < customStart) return false;
+      if (customEnd && d > customEnd) return false;
+      return true;
     });
   }
 
@@ -816,16 +836,39 @@ function renderReportsData() {
 
   if (!tbody) return;
 
-  if (periodOrders.length === 0) {
+  const query = rptRecordSearchQuery.trim().toLowerCase();
+  const tableOrders = !query
+    ? periodOrders
+    : periodOrders.filter((o) =>
+        [o.id, o.email, o.service, o.payment, o.status, o.amount, o.date]
+          .join(" ")
+          .toLowerCase()
+          .includes(query),
+      );
+  const countEl = document.getElementById("rpt-record-count");
+  if (countEl) {
+    countEl.textContent = `${tableOrders.length} record${tableOrders.length === 1 ? "" : "s"}`;
+  }
+
+  if (tableOrders.length === 0) {
     empty?.classList.remove("hidden");
     table?.classList.add("hidden");
+    renderRptPagination(0, 1);
     return;
   }
 
   empty?.classList.add("hidden");
   table?.classList.remove("hidden");
 
-  tbody.innerHTML = periodOrders
+  const totalPages = Math.max(
+    1,
+    Math.ceil(tableOrders.length / RPT_RECORDS_PAGE_SIZE),
+  );
+  rptRecordPage = Math.min(Math.max(rptRecordPage, 1), totalPages);
+  const start = (rptRecordPage - 1) * RPT_RECORDS_PAGE_SIZE;
+  const visibleOrders = tableOrders.slice(start, start + RPT_RECORDS_PAGE_SIZE);
+
+  tbody.innerHTML = visibleOrders
     .map(
       (o) => `
       <tr>
@@ -838,6 +881,31 @@ function renderReportsData() {
       </tr>`,
     )
     .join("");
+  renderRptPagination(tableOrders.length, totalPages);
+}
+
+function renderRptPagination(totalRecords, totalPages) {
+  const container = document.getElementById("rpt-pagination");
+  if (!container) return;
+  if (totalRecords === 0) {
+    container.innerHTML = "";
+    return;
+  }
+  container.innerHTML = `
+    <span class="reports-pagination__summary">Page ${rptRecordPage} of ${totalPages}</span>
+    <div class="reports-pagination__actions">
+      <button type="button" class="btn btn--outline" id="rptPrevPage" ${rptRecordPage === 1 ? "disabled" : ""}>Previous</button>
+      <button type="button" class="btn btn--outline" id="rptNextPage" ${rptRecordPage === totalPages ? "disabled" : ""}>Next</button>
+    </div>
+  `;
+  document.getElementById("rptPrevPage")?.addEventListener("click", () => {
+    rptRecordPage -= 1;
+    renderReportsData();
+  });
+  document.getElementById("rptNextPage")?.addEventListener("click", () => {
+    rptRecordPage += 1;
+    renderReportsData();
+  });
 }
 
 /**
@@ -872,6 +940,27 @@ function renderReportsChart(periodOrders) {
       hourIncome.slice(12, 18).reduce((a, b) => a + b, 0),
       hourIncome.slice(18, 24).reduce((a, b) => a + b, 0),
     ];
+  } else if (reportsTab === "weekly") {
+    const labelsByDay = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const dOrders = new Array(7).fill(0);
+    const dIncome = new Array(7).fill(0);
+    const now = new Date();
+    const day = now.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - diff);
+    weekStart.setHours(0, 0, 0, 0);
+    periodOrders.forEach((o) => {
+      const d = new Date(o.date);
+      if (Number.isNaN(d.getTime())) return;
+      const idx = Math.floor((d - weekStart) / 86400000);
+      if (idx < 0 || idx > 6) return;
+      dOrders[idx]++;
+      if (o.status === "completed" || o.status === "ready") dIncome[idx] += o.amount;
+    });
+    labels = labelsByDay;
+    orderCounts = dOrders;
+    incomeValues = dIncome;
   } else if (reportsTab === "monthly") {
     /* Group by week of month (W1–W5) */
     const weeks = 5;
@@ -1399,6 +1488,7 @@ function releaseOrder(orderId) {
     order.status = "completed";
     searchOrderById();
     renderOrdersTable();
+    renderDashboardOverview();
     showToast(`Order ${orderId} marked as completed.`);
   }
 }
@@ -1419,6 +1509,81 @@ function setDashboardDate() {
     month:   "long",
     day:     "numeric",
   })}`;
+}
+
+function parseOrderDateForDash(o) {
+  const d = new Date(o.date);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Fills dashboard metric cards and "Today's transactions" from ORDERS
+ * (demo-seed / in-memory SPA data).
+ */
+function renderDashboardOverview() {
+  const now = new Date();
+  const todayStr = now.toDateString();
+
+  const todayOrders = ORDERS.filter((o) => {
+    const d = parseOrderDateForDash(o);
+    return d && d.toDateString() === todayStr;
+  });
+
+  const todayIncome = todayOrders
+    .filter((o) => {
+      const s = String(o.status || "").toLowerCase();
+      return s === "completed" || s === "paid";
+    })
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+
+  const countPending = ORDERS.filter((o) => o.status === "pending").length;
+  const countProcessing = ORDERS.filter((o) => o.status === "processing").length;
+  const countReady = ORDERS.filter((o) => o.status === "ready").length;
+  const countCompleted = ORDERS.filter((o) => {
+    const s = String(o.status || "").toLowerCase();
+    return s === "completed" || s === "paid";
+  }).length;
+
+  setText("dash-orders", String(todayOrders.length));
+  setText("dash-income", `₱${todayIncome.toFixed(2)}`);
+  setText("dash-pending", String(countPending));
+  setText("dash-processing", String(countProcessing));
+  setText("dash-ready", String(countReady));
+  setText("dash-completed", String(countCompleted));
+
+  const empty = document.getElementById("dash-empty");
+  const tableWrap = document.getElementById("dash-table");
+  const tbody = document.getElementById("dash-table-body");
+  if (!tbody) return;
+
+  const todayRows = todayOrders.slice().sort((a, b) => {
+    const da = parseOrderDateForDash(a)?.getTime() || 0;
+    const db = parseOrderDateForDash(b)?.getTime() || 0;
+    return db - da;
+  });
+
+  if (todayRows.length === 0) {
+    empty?.classList.remove("hidden");
+    tableWrap?.classList.add("hidden");
+    tbody.innerHTML = "";
+    return;
+  }
+
+  empty?.classList.add("hidden");
+  tableWrap?.classList.remove("hidden");
+  tbody.innerHTML = todayRows
+    .map(
+      (o) => `
+    <tr>
+      <td><strong>${escHtml(o.id)}</strong></td>
+      <td>${escHtml(o.email)}</td>
+      <td>${escHtml(o.service)}</td>
+      <td style="color:var(--clr-primary);font-weight:600">₱${Number(o.amount).toFixed(2)}</td>
+      <td>${statusBadgeHTML(o.status)}</td>
+      <td>${escHtml(o.payment)}</td>
+    </tr>`,
+    )
+    .join("");
 }
 
 /** Sets the daily analytics date label */
@@ -1599,6 +1764,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---- Payment Verification search ---- */
   document.getElementById("pv-search")?.addEventListener("input", renderPaymentVerificationTable);
+  document.getElementById("pv-card-search")?.addEventListener("input", (e) => {
+    pvCardSearchQuery = e.target.value || "";
+    pvCardPagePending = 1;
+    pvCardPageVerified = 1;
+    pvCardPageInvalid = 1;
+    renderPaymentVerificationTable();
+  });
+
+  document.getElementById("pv-pending-prev")?.addEventListener("click", () => {
+    pvCardPagePending = Math.max(1, pvCardPagePending - 1);
+    renderPaymentVerificationTable();
+  });
+  document.getElementById("pv-pending-next")?.addEventListener("click", () => {
+    pvCardPagePending += 1;
+    renderPaymentVerificationTable();
+  });
+  document.getElementById("pv-verified-prev")?.addEventListener("click", () => {
+    pvCardPageVerified = Math.max(1, pvCardPageVerified - 1);
+    renderPaymentVerificationTable();
+  });
+  document.getElementById("pv-verified-next")?.addEventListener("click", () => {
+    pvCardPageVerified += 1;
+    renderPaymentVerificationTable();
+  });
+  document.getElementById("pv-invalid-prev")?.addEventListener("click", () => {
+    pvCardPageInvalid = Math.max(1, pvCardPageInvalid - 1);
+    renderPaymentVerificationTable();
+  });
+  document.getElementById("pv-invalid-next")?.addEventListener("click", () => {
+    pvCardPageInvalid += 1;
+    renderPaymentVerificationTable();
+  });
 
   /* ---- Payment Verification filter tabs ---- */
   document.querySelectorAll("#page-payment-verification .filter-tab[data-filter]").forEach((tab) => {
@@ -1626,6 +1823,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---- Active Accounts search ---- */
   document.getElementById("aa-search")?.addEventListener("input", renderAccountsTable);
+
+  /* ---- Reports date range filters ---- */
+  document.getElementById("rpt-start-date")?.addEventListener("change", () => {
+    rptRecordPage = 1;
+    renderReportsData();
+  });
+  document.getElementById("rpt-end-date")?.addEventListener("change", () => {
+    rptRecordPage = 1;
+    renderReportsData();
+  });
+  document.getElementById("rpt-record-search")?.addEventListener("input", (event) => {
+    rptRecordSearchQuery = event.target.value;
+    rptRecordPage = 1;
+    renderReportsData();
+  });
 
   /* ---- Add Service: Add Option button ---- */
   document.getElementById("add-option-btn")?.addEventListener("click", addServiceOption);
@@ -1678,6 +1890,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const labelMap = {
           daily: 'Daily Report',
+          weekly: 'Weekly Report',
           monthly: 'Monthly Report',
           yearly: 'Yearly Report'
         };
@@ -1687,6 +1900,9 @@ document.addEventListener("DOMContentLoaded", () => {
           // Update chart sub-label
           const lbl = document.getElementById('rpt-chart-label');
           if (lbl) lbl.textContent = labelMap[val] || '';
+          reportsTab = val;
+          rptRecordPage = 1;
+          renderReportsData();
 
           // If external JS exposes a function to reload the report section, call it
           if (typeof window.loadReportData === 'function') {
@@ -1705,6 +1921,9 @@ document.addEventListener("DOMContentLoaded", () => {
         function buildReportsChart(type) {
           const canvas = document.getElementById('reports-chart');
           if (!canvas) return;
+          reportsTab = type || 'daily';
+          renderReportsData();
+          return;
 
           // Destroy any existing Chart.js instance on this canvas
           const existing = Chart.getChart(canvas);
@@ -1871,7 +2090,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (select) {
           select.addEventListener('change', function () {
             buildReportsChart(this.value);
-            const labelMap = { daily: 'Daily Report', monthly: 'Monthly Report', yearly: 'Yearly Report' };
+            const labelMap = { daily: 'Daily Report', weekly: 'Weekly Report', monthly: 'Monthly Report', yearly: 'Yearly Report' };
             const lbl = document.getElementById('rpt-chart-label');
             if (lbl) lbl.textContent = labelMap[this.value] || '';
           });
@@ -1952,12 +2171,17 @@ function closePvModal() {
  */
 function handlePvVerify() {
   if (!_pvCurrentCard) return;
-  _pvCurrentCard.dataset.pvStatus = 'verified';
-  _movePvCard(_pvCurrentCard, 'verified');
-  _updatePvCounters();
+  const paymentId = _pvCurrentCard.dataset.paymentId;
+  if (paymentId) {
+    setPaymentStatus(paymentId, 'verified');
+  } else {
+    _pvCurrentCard.dataset.pvStatus = 'verified';
+    _movePvCard(_pvCurrentCard, 'verified');
+    _updatePvCounters();
+    if (typeof showToast === 'function')
+      showToast('Payment verified successfully.');
+  }
   closePvModal();
-  if (typeof showToast === 'function')
-    showToast('Payment verified successfully.');
 }
 
 /**
@@ -1966,12 +2190,17 @@ function handlePvVerify() {
  */
 function handlePvInvalid() {
   if (!_pvCurrentCard) return;
-  _pvCurrentCard.dataset.pvStatus = 'invalid';
-  _movePvCard(_pvCurrentCard, 'invalid');
-  _updatePvCounters();
+  const paymentId = _pvCurrentCard.dataset.paymentId;
+  if (paymentId) {
+    setPaymentStatus(paymentId, 'rejected');
+  } else {
+    _pvCurrentCard.dataset.pvStatus = 'invalid';
+    _movePvCard(_pvCurrentCard, 'invalid');
+    _updatePvCounters();
+    if (typeof showToast === 'function')
+      showToast('Payment marked as invalid.');
+  }
   closePvModal();
-  if (typeof showToast === 'function')
-    showToast('Payment marked as invalid.');
 }
 
 /**

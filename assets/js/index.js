@@ -44,7 +44,20 @@ const Cart = {
 // ORDERS SYSTEM
 // ============================================================
 const Orders = {
-    getAll() { try { return JSON.parse(localStorage.getItem('upressOrders') || '[]'); } catch { return []; } },
+    getAll() {
+        try {
+            const list = JSON.parse(localStorage.getItem('upressOrders') || '[]');
+            if (!Array.isArray(list)) return [];
+            // Backfill legacy orders so UI/admin/staff filters can rely on these fields.
+            return list.map(o => ({
+                ...o,
+                order_type: o?.order_type || 'individual',
+                order_org: o?.order_org || ''
+            }));
+        } catch {
+            return [];
+        }
+    },
     save(orders) { localStorage.setItem('upressOrders', JSON.stringify(orders)); },
     add(orderData) {
         const orders = this.getAll();
@@ -52,9 +65,19 @@ const Orders = {
         const pm = orderData.paymentMethod || '';
         const paymentStatus =
             pm.indexOf('GCash') !== -1 ? 'awaiting_proof' : 'due_at_pickup';
+        const order_type =
+            orderData?.order_type ||
+            localStorage.getItem('upress_order_type') ||
+            'individual';
+        const order_org =
+            (order_type === 'organization')
+                ? (orderData?.order_org || localStorage.getItem('upress_order_org') || '')
+                : (orderData?.order_org || '');
         const fullOrder = {
             ...orderData,
             orderId,
+            order_type,
+            order_org,
             dateOrdered: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }),
             status: 'Pending',
             paymentVerified: false,

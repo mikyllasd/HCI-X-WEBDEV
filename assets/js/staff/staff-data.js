@@ -15,7 +15,85 @@
   }
 
   function getWebOrders() {
-    return safeJsonParse(localStorage.getItem(LS_ORDERS), []);
+    const fromLs = safeJsonParse(localStorage.getItem(LS_ORDERS), []);
+    const fromDb =
+      typeof window.getDB === "function" ? window.getDB()?.transactions : null;
+
+    // Prefer canonical DB transactions when available (superadmin source of truth),
+    // but keep `upressOrders` for compatibility with older pages/demo flows.
+    const txRows = Array.isArray(fromDb) ? fromDb : [];
+    const lsRows = Array.isArray(fromLs) ? fromLs : [];
+
+    function normalizeStatus(s) {
+      const v = String(s || "").toLowerCase();
+      if (v === "paid" || v === "completed") return "Completed";
+      if (v === "ready" || v.includes("for pickup")) return "Ready";
+      if (v === "processing") return "Processing";
+      return "Pending";
+    }
+
+    function txToWebOrder(tx) {
+      const id = tx?.id || tx?.orderId || "";
+      return {
+        orderId: String(id || ""),
+        // Keep the same surface fields staff UI expects.
+        customer: {
+          name:
+            tx?.customerName ||
+            tx?.customer?.name ||
+            tx?.email ||
+            tx?.username ||
+            "—",
+        },
+        service: tx?.serviceName || tx?.service || "—",
+        total: tx?.amount ?? tx?.total ?? 0,
+        status: normalizeStatus(tx?.status),
+        paymentMethod: tx?.paymentMethod || tx?.payment || "—",
+        dateOrdered: tx?.date || tx?.dateOrdered || "—",
+        refNumber: tx?.refNumber || "—",
+        desc: tx?.desc || "",
+        paymentVerified: !!tx?.paymentVerified,
+        paymentStatus: tx?.paymentStatus || "",
+        // Carry through if present (set by student checkout flow)
+        order_type: tx?.order_type || "individual",
+        order_org: tx?.order_org || "",
+        __source: "db",
+      };
+    }
+
+    function lsToWebOrder(o) {
+      return {
+        ...o,
+        orderId: String(o?.orderId || ""),
+        order_type: o?.order_type || "individual",
+        order_org: o?.order_org || "",
+        __source: "ls",
+      };
+    }
+
+    const merged = [];
+    const seen = new Set();
+
+    // DB first so it wins on conflicts.
+    txRows.forEach((tx) => {
+      const row = txToWebOrder(tx);
+      if (!row.orderId) return;
+      if (seen.has(row.orderId)) return;
+      seen.add(row.orderId);
+      merged.push(row);
+    });
+
+    lsRows.forEach((o) => {
+      const row = lsToWebOrder(o);
+      if (!row.orderId) return;
+      if (seen.has(row.orderId)) return;
+      seen.add(row.orderId);
+      merged.push(row);
+    });
+
+    // Sort newest first when dates are parseable; otherwise keep insertion order.
+    merged.sort((a, b) => (Date.parse(b.dateOrdered) || 0) - (Date.parse(a.dateOrdered) || 0));
+    return merged;
   }
 
   function saveWebOrders(list) {
@@ -56,6 +134,10 @@
     const ref = o.refNumber || "—";
     const amt = "₱" + parseFloat(o.total || 0).toFixed(2);
     const file = o.desc ? String(o.desc).slice(0, 48) : "—";
+    const orderTypeKey = String(o.order_type || "").toLowerCase();
+    const isOrg = orderTypeKey === "organization" || orderTypeKey === "org";
+    const orderTypeLabel = isOrg ? "Organization" : "Individual";
+    const orderOrg = isOrg ? String(o.order_org || "") : "";
     return {
       orderId: o.orderId,
       student: name,
@@ -72,19 +154,43 @@
       notes: "—",
       paymentVerified: !!o.paymentVerified,
       paymentStatus: o.paymentStatus || "",
+      orderType: orderTypeLabel,
+      orderOrg,
       raw: o,
     };
   }
 
   function verifyWebPayment(orderId) {
-    const list = getWebOrders();
-    const i = list.findIndex((x) => x.orderId === orderId);
-    if (i === -1) return false;
-    list[i].paymentVerified = true;
-    list[i].paymentStatus = "verified";
-    if (list[i].status === "Pending") list[i].status = "Processing";
-    saveWebOrders(list);
-    return true;
+    let updated = false;
+
+    // Update LS copy (compat / demo).
+    const lsList = safeJsonParse(localStorage.getItem(LS_ORDERS), []);
+    if (Array.isArray(lsList)) {
+      const i = lsList.findIndex((x) => x?.orderId === orderId);
+      if (i !== -1) {
+        lsList[i].paymentVerified = true;
+        lsList[i].paymentStatus = "verified";
+        if (lsList[i].status === "Pending") lsList[i].status = "Processing";
+        saveWebOrders(lsList);
+        updated = true;
+      }
+    }
+
+    // Update canonical DB transaction if available.
+    if (typeof window.updateTransaction === "function") {
+      try {
+        window.updateTransaction(orderId, {
+          paymentVerified: true,
+          paymentStatus: "verified",
+          status: "processing",
+        });
+        updated = true;
+      } catch {
+        // ignore if missing in DB
+      }
+    }
+
+    return updated;
   }
 
   function persistWebOrderStatus(orderId, staffNextKey) {
@@ -96,11 +202,34 @@
     };
     const next = map[staffNextKey];
     if (!next) return;
-    const list = getWebOrders();
-    const i = list.findIndex((x) => x.orderId === orderId);
-    if (i === -1) return;
-    list[i].status = next;
-    saveWebOrders(list);
+
+    // Update LS copy (compat / demo).
+    const lsList = safeJsonParse(localStorage.getItem(LS_ORDERS), []);
+    if (Array.isArray(lsList)) {
+      const i = lsList.findIndex((x) => x?.orderId === orderId);
+      if (i !== -1) {
+        lsList[i].status = next;
+        saveWebOrders(lsList);
+      }
+    }
+
+    // Update canonical DB transaction if available.
+    if (typeof window.updateTransaction === "function") {
+      try {
+        // Superadmin expects lowercase-ish statuses; keep it consistent.
+        const nextDb =
+          next === "Completed"
+            ? "completed"
+            : next === "Ready"
+              ? "ready"
+              : next === "Processing"
+                ? "processing"
+                : "pending";
+        window.updateTransaction(orderId, { status: nextDb });
+      } catch {
+        // ignore if missing in DB
+      }
+    }
   }
 
   function modalPayload(p) {
@@ -120,6 +249,8 @@
       rush: p.rush,
       notes: p.notes,
       paymentVerified: p.paymentVerified,
+      orderType: p.orderType || "Individual",
+      orderOrg: p.orderOrg || "",
     };
   }
 
@@ -137,6 +268,10 @@
         : '<span class="badge badge-process" style="font-size:10px">Due at pickup</span>');
 
     const enc = encAttr(modalPayload(p));
+    const typeLine =
+      String(p.orderType || "").toLowerCase() === "organization"
+        ? `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Organization${p.orderOrg ? ": " + escapeHtmlStaff(p.orderOrg) : ""}</div>`
+        : `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Individual</div>`;
 
     const verifyBtn =
       !p.paymentVerified && String(p.payment || "").includes("GCash")
@@ -147,7 +282,7 @@
       <tr data-order-full="${enc}">
         <td>${escapeHtmlStaff(p.orderId)}</td>
         <td>${escapeHtmlStaff(p.student)}</td>
-        <td>${escapeHtmlStaff(p.service)}</td>
+        <td>${escapeHtmlStaff(p.service)}${typeLine}</td>
         <td>${escapeHtmlStaff(p.date)}</td>
         <td><span class="badge ${bcls}">${escapeHtmlStaff(badge)}</span></td>
         <td>${payTag} ${verifyBtn} <button class="btn-action">View</button></td>
@@ -158,11 +293,15 @@
     const badge = statusLabel(p.status);
     const bcls = statusToBadgeClass(p.status);
     const enc = encAttr(modalPayload(p));
+    const typeLine =
+      String(p.orderType || "").toLowerCase() === "organization"
+        ? `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Organization${p.orderOrg ? ": " + escapeHtmlStaff(p.orderOrg) : ""}</div>`
+        : `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Individual</div>`;
     return `
       <tr data-order-full="${enc}">
         <td>${escapeHtmlStaff(p.orderId)}</td>
         <td>${escapeHtmlStaff(p.student)}</td>
-        <td>${escapeHtmlStaff(p.service)}</td>
+        <td>${escapeHtmlStaff(p.service)}${typeLine}</td>
         <td>${escapeHtmlStaff(p.date)}</td>
         <td><span class="badge ${bcls}">${escapeHtmlStaff(badge)}</span></td>
         <td><button class="btn-action release">Release</button></td>
@@ -171,11 +310,15 @@
 
   function buildCompletedRowHtml(p) {
     const enc = encAttr(modalPayload(p));
+    const typeLine =
+      String(p.orderType || "").toLowerCase() === "organization"
+        ? `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Organization${p.orderOrg ? ": " + escapeHtmlStaff(p.orderOrg) : ""}</div>`
+        : `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Individual</div>`;
     return `
       <tr data-order-full="${enc}">
         <td>${escapeHtmlStaff(p.orderId)}</td>
         <td>${escapeHtmlStaff(p.student)}</td>
-        <td>${escapeHtmlStaff(p.service)}</td>
+        <td>${escapeHtmlStaff(p.service)}${typeLine}</td>
         <td>${escapeHtmlStaff(p.date)}</td>
         <td>Web / Staff</td>
         <td><span class="badge badge-complete">${escapeHtmlStaff(statusLabel(p.status))}</span></td>
@@ -299,4 +442,11 @@
     statusToBadgeClass,
     statusLabel,
   };
+
+  if (
+    window.UpressDemoSeed &&
+    typeof window.UpressDemoSeed.seedStaffWebOrdersIfEmpty === "function"
+  ) {
+    window.UpressDemoSeed.seedStaffWebOrdersIfEmpty();
+  }
 })();

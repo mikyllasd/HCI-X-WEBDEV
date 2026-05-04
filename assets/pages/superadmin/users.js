@@ -10,6 +10,9 @@
   const modalCancelBtn = document.getElementById("modalCancelBtn");
 
   let editingUserId = null;
+  let userSearchQuery = "";
+  let userPage = 1;
+  const USERS_PAGE_SIZE = 6;
 
   function generateUserId() {
     return "user_" + Math.random().toString(36).substr(2, 9);
@@ -24,9 +27,22 @@
       .slice(0, 2);
   }
 
+  function syncAddUserButton() {
+    const btn = document.getElementById("addUserBtn");
+    if (!btn) return;
+    const ok = !!db.academicYear;
+    btn.disabled = !ok;
+    btn.setAttribute("aria-disabled", ok ? "false" : "true");
+    btn.title = ok
+      ? ""
+      : "Set the academic year in System Settings before adding users.";
+  }
+
   function renderUsers() {
     const usersSection = document.getElementById("usersSection");
     if (!usersSection) return;
+
+    syncAddUserButton();
 
     if (!db.academicYear) {
       usersSection.innerHTML = `
@@ -42,6 +58,31 @@
         </div>
       `;
       return;
+    }
+
+    const filteredUsers = db.users.filter((user) => {
+      const query = userSearchQuery.trim().toLowerCase();
+      if (!query) return true;
+      return [
+        user.fullName,
+        user.email,
+        user.username,
+        user.role,
+        user.suspended ? "suspended" : "active",
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(query);
+    });
+
+    const totalPages = Math.max(1, Math.ceil(filteredUsers.length / USERS_PAGE_SIZE));
+    userPage = Math.min(Math.max(userPage, 1), totalPages);
+    const start = (userPage - 1) * USERS_PAGE_SIZE;
+    const visibleUsers = filteredUsers.slice(start, start + USERS_PAGE_SIZE);
+
+    const countEl = document.getElementById("usersResultCount");
+    if (countEl) {
+      countEl.textContent = `${filteredUsers.length} of ${db.users.length} users`;
     }
 
     if (db.users.length === 0) {
@@ -61,9 +102,19 @@
       return;
     }
 
+    if (filteredUsers.length === 0) {
+      usersSection.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state__title">No users found</div>
+          <div class="empty-state__sub">Try a different name, email, username, role, or status.</div>
+        </div>
+      `;
+      return;
+    }
+
     usersSection.innerHTML = `
       <div class="users-grid">
-        ${db.users
+        ${visibleUsers
           .map(
             (user) => `
           <div class="user-card role-${user.role} ${user.suspended ? "suspended" : ""}">
@@ -109,9 +160,15 @@
           )
           .join("")}
       </div>
+      <div class="list-pagination" aria-label="Users pagination">
+        <span class="list-pagination__summary">Page ${userPage} of ${totalPages}</span>
+        <div class="list-pagination__actions">
+          <button type="button" class="btn btn-ghost btn-sm" id="usersPrevPage" ${userPage === 1 ? "disabled" : ""}>Previous</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="usersNextPage" ${userPage === totalPages ? "disabled" : ""}>Next</button>
+        </div>
+      </div>
     `;
 
-    // Attach event listeners
     document.querySelectorAll(".edit-btn").forEach((btn) => {
       btn.addEventListener("click", () => openEditModal(btn.dataset.id));
     });
@@ -123,9 +180,23 @@
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", () => deleteUser(btn.dataset.id));
     });
+
+    document.getElementById("usersPrevPage")?.addEventListener("click", () => {
+      userPage -= 1;
+      renderUsers();
+    });
+
+    document.getElementById("usersNextPage")?.addEventListener("click", () => {
+      userPage += 1;
+      renderUsers();
+    });
   }
 
   function openAddModal() {
+    if (!db.academicYear) {
+      showToast("Set the academic year in System Settings before adding users.");
+      return;
+    }
     editingUserId = null;
     modalTitle.textContent = "Add User";
     modalSub.textContent = "Create a new system user";
@@ -169,7 +240,6 @@
     }
 
     if (editingUserId) {
-      // Update existing user
       const userIndex = db.users.findIndex((u) => u.id === editingUserId);
       if (userIndex !== -1) {
         db.users[userIndex] = {
@@ -182,7 +252,6 @@
       }
       showToast("User updated successfully");
     } else {
-      // Create new user
       const newUser = {
         id: generateUserId(),
         fullName,
@@ -248,10 +317,22 @@
         Add User
       </button>
     </div>
+    <div class="list-toolbar">
+      <label class="list-search" for="usersSearchInput">
+        <span>Search users</span>
+        <input type="search" id="usersSearchInput" class="list-search__input" placeholder="Search name, email, username, role, or status" />
+      </label>
+      <div class="list-toolbar__count" id="usersResultCount">0 users</div>
+    </div>
     <div id="usersSection"></div>
   `;
 
   document.getElementById("addUserBtn").addEventListener("click", openAddModal);
+  document.getElementById("usersSearchInput").addEventListener("input", (event) => {
+    userSearchQuery = event.target.value;
+    userPage = 1;
+    renderUsers();
+  });
   modalCloseBtn.addEventListener("click", closeModal);
   modalCancelBtn.addEventListener("click", closeModal);
   modalSaveBtn.addEventListener("click", saveUser);
@@ -260,7 +341,6 @@
     saveUser();
   });
 
-  // Close modal when clicking outside
   userModal.addEventListener("click", (e) => {
     if (e.target === userModal) {
       closeModal();

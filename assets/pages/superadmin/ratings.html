@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Admin Ratings</title>
+    <title>UPRESSease – Superadmin Ratings</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -11,19 +11,21 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <link rel="stylesheet" href="../../css/admin/admin.css" />
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-super-content.css" />
+    <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
     <link rel="stylesheet" href="../../css/admin/ratings.css" />
   </head>
-  <body class="staff-dashboard-body">
+  <body class="staff-dashboard-body" data-page="ratings">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="app-wrapper staff-layout sd-layout">
       <aside
         class="sidebar staff-sidebar"
         id="sidebar"
         role="navigation"
-        aria-label="Admin sidebar"
+        aria-label="Superadmin sidebar"
       >
         <div class="sidebar-brand">
           <div class="brand-icon" aria-hidden="true">
@@ -31,7 +33,7 @@
           </div>
           <div>
             <span class="brand-name">UPRESSease</span>
-            <span class="brand-sub">Admin Portal</span>
+            <span class="brand-sub">Superadmin</span>
           </div>
           <button
             class="sidebar-close"
@@ -47,73 +49,70 @@
           <button
             class="user-pill"
             type="button"
-            aria-label="Logged in as Admin"
+            aria-label="Logged in as superadmin"
           >
             <i data-lucide="user" aria-hidden="true"></i>
-            <span>Admin</span>
+            <span>Superadmin</span>
           </button>
-          <p class="user-handle">@admin</p>
+          <p class="user-handle">@superadmin</p>
         </div>
 
         <nav class="sidebar-nav" aria-label="Main navigation">
           <ul class="nav-list" role="list">
             <li>
-              <a href="dashboard.html" class="nav-link">
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
                 <i data-lucide="layout-dashboard" aria-hidden="true"></i
-                ><span>Dashboard</span>
-              </a>
+                ><span>Dashboard</span></a
+              >
             </li>
             <li>
-              <a href="verification.html" class="nav-link">
-                <i data-lucide="user-check" aria-hidden="true"></i
-                ><span>Student Verification</span>
-              </a>
+              <a href="users.html" class="nav-link" data-page="users">
+                <i data-lucide="users" aria-hidden="true"></i
+                ><span>Manage Users</span></a
+              >
             </li>
             <li>
-              <a href="reports.html" class="nav-link">
+              <a href="services.html" class="nav-link" data-page="services">
+                <i data-lucide="settings" aria-hidden="true"></i
+                ><span>Services</span></a
+              >
+            </li>
+            <li>
+              <a href="reports.html" class="nav-link" data-page="reports">
                 <i data-lucide="bar-chart-2" aria-hidden="true"></i
-                ><span>Reports</span>
-              </a>
+                ><span>Reports</span></a
+              >
             </li>
             <li>
               <a
                 href="ratings.html"
                 class="nav-link active"
+                data-page="ratings"
                 aria-current="page"
               >
                 <i data-lucide="star" aria-hidden="true"></i
-                ><span>Ratings</span>
-              </a>
+                ><span>Ratings</span></a
+              >
             </li>
             <li>
-              <a href="information.html" class="nav-link">
-                <i data-lucide="book-open" aria-hidden="true"></i
-                ><span>Information</span>
-              </a>
-            </li>
-            <li>
-              <a href="pricing-settings.html" class="nav-link">
+              <a href="settings.html" class="nav-link" data-page="settings">
                 <i data-lucide="settings" aria-hidden="true"></i
-                ><span>Pricing Settings</span>
-              </a>
-            </li>
-            <li>
-              <a href="accounts.html" class="nav-link">
-                <i data-lucide="users" aria-hidden="true"></i
-                ><span>Accounts</span>
-              </a>
+                ><span>System Settings</span></a
+              >
             </li>
           </ul>
           <ul class="nav-list nav-list--bottom" role="list">
             <li>
               <a
-                href="../../pages/admin-login-entry-point.html"
+                href="#"
                 class="nav-link nav-link--logout"
                 id="logoutBtn"
+                data-page="logout"
+                aria-label="Logout"
               >
                 <i data-lucide="log-out" aria-hidden="true"></i
-                ><span>Logout</span>
-              </a>
+                ><span>Logout</span></a
+              >
             </li>
           </ul>
         </nav>
@@ -136,10 +135,7 @@
         >
           <div class="page-header">
             <h1 id="ratings-heading">Ratings</h1>
-            <p class="page-subtitle">
-              Review feedback from completed transactions and rating
-              submissions.
-            </p>
+            <p class="page-subtitle">Review feedback from completed transactions.</p>
           </div>
 
           <div class="stats-grid stats-grid--4 ratings-summary-grid">
@@ -191,9 +187,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label" for="ratingsPaymentType"
-                  >Payment Type</label
-                >
+                <label class="form-label" for="ratingsPaymentType">Payment Type</label>
                 <select class="form-input form-select" id="ratingsPaymentType">
                   <option value="all">All Payment Types</option>
                   <option value="gcash">GCash</option>
@@ -213,17 +207,13 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label" for="ratingsYearLevel"
-                  >Year Level</label
-                >
+                <label class="form-label" for="ratingsYearLevel">Year Level</label>
                 <select class="form-input form-select" id="ratingsYearLevel">
                   <option value="all">All Year Levels</option>
                 </select>
               </div>
               <div class="form-group ratings-date-range">
-                <label class="form-label" for="ratingsDateRange"
-                  >Date Range</label
-                >
+                <label class="form-label">Date Range</label>
                 <div class="ratings-date-inputs">
                   <input class="form-input" id="ratingsStartDate" type="date" />
                   <input class="form-input" id="ratingsEndDate" type="date" />
@@ -237,16 +227,11 @@
               <div class="card-title-group">
                 <div>
                   <h2 class="card-title">Star Distribution</h2>
-                  <p class="card-subtitle">
-                    Rating breakdown from 1 to 5 stars.
-                  </p>
+                  <p class="card-subtitle">Rating breakdown from 1 to 5 stars.</p>
                 </div>
               </div>
               <div class="ratings-chart-wrapper">
-                <canvas
-                  id="ratingsChart"
-                  aria-label="Ratings distribution chart"
-                ></canvas>
+                <canvas id="ratingsChart" aria-label="Ratings distribution chart"></canvas>
               </div>
             </div>
 
@@ -254,32 +239,15 @@
               <div class="card-title-group">
                 <div>
                   <h2 class="card-title">Feedback Summary</h2>
-                  <p class="card-subtitle">
-                    Quick insights for the active academic year.
-                  </p>
+                  <p class="card-subtitle">Quick insights for the active academic year.</p>
                 </div>
               </div>
               <div class="ratings-breakdown-list">
-                <div class="ratings-breakdown-item">
-                  <span>5 Star</span>
-                  <strong id="ratingsFiveCount">0</strong>
-                </div>
-                <div class="ratings-breakdown-item">
-                  <span>4 Star</span>
-                  <strong id="ratingsFourCount">0</strong>
-                </div>
-                <div class="ratings-breakdown-item">
-                  <span>3 Star</span>
-                  <strong id="ratingsThreeCount">0</strong>
-                </div>
-                <div class="ratings-breakdown-item">
-                  <span>2 Star</span>
-                  <strong id="ratingsTwoCount">0</strong>
-                </div>
-                <div class="ratings-breakdown-item">
-                  <span>1 Star</span>
-                  <strong id="ratingsOneCount">0</strong>
-                </div>
+                <div class="ratings-breakdown-item"><span>5 Star</span><strong id="ratingsFiveCount">0</strong></div>
+                <div class="ratings-breakdown-item"><span>4 Star</span><strong id="ratingsFourCount">0</strong></div>
+                <div class="ratings-breakdown-item"><span>3 Star</span><strong id="ratingsThreeCount">0</strong></div>
+                <div class="ratings-breakdown-item"><span>2 Star</span><strong id="ratingsTwoCount">0</strong></div>
+                <div class="ratings-breakdown-item"><span>1 Star</span><strong id="ratingsOneCount">0</strong></div>
               </div>
             </div>
           </div>
@@ -288,9 +256,7 @@
             <div class="card-title-group">
               <div>
                 <h2 class="card-title">Feedback Records</h2>
-                <p class="card-subtitle">
-                  All ratings linked to completed transactions.
-                </p>
+                <p class="card-subtitle">All ratings linked to completed transactions.</p>
               </div>
             </div>
             <div class="table-wrapper">
@@ -308,17 +274,12 @@
                 <tbody id="ratingsRecordsBody"></tbody>
               </table>
             </div>
-            <div
-              class="empty-state empty-state--mini hidden"
-              id="ratingsEmptyState"
-            >
+            <div class="empty-state empty-state--mini hidden" id="ratingsEmptyState">
               <div class="empty-state__icon" aria-hidden="true">
                 <i data-lucide="star"></i>
               </div>
               <div class="empty-state__title">No rating records found</div>
-              <div class="empty-state__sub">
-                Filtered ratings will appear here once available.
-              </div>
+              <div class="empty-state__sub">Filtered ratings will appear here once available.</div>
             </div>
           </div>
         </section>
@@ -331,3 +292,4 @@
     <script src="../../js/admin/ratings.js"></script>
   </body>
 </html>
+

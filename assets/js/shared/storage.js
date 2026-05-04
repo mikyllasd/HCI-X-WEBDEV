@@ -284,3 +284,88 @@ function getArchivedServices(fromYear) {
   const archived = getArchivedYear(fromYear);
   return archived ? archived.services : [];
 }
+
+/**
+ * Persist shared demo dataset (see demo-seed.js) into `upressease_db` so
+ * superadmin pages match admin SPA + staff demo data.
+ *
+ * - Missing key: write full demo DB.
+ * - Key exists but users, services, and transactions are all empty: merge demo
+ *   rows in (keeps archives / systemSettings); sets academic year from demo if
+ *   unset; re-tags transaction `academicYear` to the active year so filters work.
+ */
+(function ensureUpressDemoStorage() {
+  if (
+    typeof window === "undefined" ||
+    !window.UpressDemoSeed ||
+    typeof window.UpressDemoSeed.getDemoDatabase !== "function"
+  ) {
+    return;
+  }
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(window.UpressDemoSeed.getDemoDatabase()),
+      );
+      return;
+    }
+
+    const db = mergeWithDefaults(JSON.parse(raw));
+    const hasUsers = db.users.length > 0;
+    const hasServices = db.services.length > 0;
+    const hasTransactions = db.transactions.length > 0;
+    const demo = window.UpressDemoSeed.getDemoDatabase();
+
+    // If the DB already has data, we still want to merge in any NEW demo services
+    // introduced in newer versions (e.g., ID Printing variants) so users don't
+    // need to manually clear localStorage.
+    if (hasServices && Array.isArray(demo.services) && demo.services.length) {
+      // Clean up legacy demo services that were previously split into variants.
+      // We now keep a single card per service type (details live in the pricing editor).
+      const deprecatedDemoServiceIds = new Set([
+        "svc_demo_id_new",
+        "svc_demo_id_lost",
+        "svc_demo_id_damaged",
+        "svc_demo_id_renewal",
+        "svc_demo_mug_wmsu",
+        "svc_demo_mug_custom",
+      ]);
+      const beforeLen = db.services.length;
+      db.services = db.services.filter(
+        (s) => !deprecatedDemoServiceIds.has(String(s?.id || "")),
+      );
+
+      const byId = new Set(db.services.map((s) => String(s.id || "")));
+      const toAdd = demo.services.filter((s) => !byId.has(String(s.id || "")));
+      if (toAdd.length) {
+        db.services = db.services.concat(JSON.parse(JSON.stringify(toAdd)));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      } else if (db.services.length !== beforeLen) {
+        // Persist removal even if we didn't add anything new.
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      }
+      return;
+    }
+
+    if (hasUsers || hasServices || hasTransactions) {
+      return;
+    }
+
+    const year = db.academicYear || demo.academicYear;
+    db.academicYear = year;
+    db.users = JSON.parse(JSON.stringify(demo.users));
+    db.services = JSON.parse(JSON.stringify(demo.services));
+    db.transactions = JSON.parse(JSON.stringify(demo.transactions)).map(
+      (tx) => ({
+        ...tx,
+        academicYear: year,
+      }),
+    );
+    db.ratings = JSON.parse(JSON.stringify(demo.ratings));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  } catch (e) {
+    console.warn("UPRESS demo storage ensure skipped:", e);
+  }
+})();

@@ -54,21 +54,21 @@
 
   function renderEmptyState() {
     pageContainer.innerHTML = `
-      <div class="sd-header">
-        <h1 class="sd-title">Dashboard</h1>
-        <div class="sd-subtitle">System setup required</div>
-      </div>
-      <div class="sd-panel">
-        <div class="sd-empty">
-          <div class="sd-empty__icon">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="sd-empty__title">Academic Year Not Set</div>
-          <div class="sd-empty__sub">Please set the academic year in System Settings to access the dashboard.</div>
-          <a href="settings.html" class="sd-hero__cta" style="margin-top: 16px; display: inline-block;">Go to Settings</a>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-sub">Monitor orders, income, and transaction activity</p>
         </div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-state__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+          </svg>
+        </div>
+        <div class="empty-state__title">Academic Year Not Set</div>
+        <div class="empty-state__sub">Please set the academic year in System Settings before using the dashboard.</div>
+        <a href="settings.html" class="sd-hero__cta" style="margin-top: 16px; display: inline-block;">Go to Settings</a>
       </div>
     `;
   }

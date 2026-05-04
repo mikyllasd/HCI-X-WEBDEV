@@ -4,7 +4,7 @@
  */
 (function () {
   const STAFF = {
-    superadmin: { password: "super123", role: "Super Admin", path: "../super/dashboard.html" },
+    superadmin: { password: "super123", role: "Super Admin", path: "../superadmin/dashboard.html" },
     admin: { password: "admin123", role: "Admin", path: "../admin/admin-dashboard.html" },
     staff: { password: "staff123", role: "Staff & POS", path: "../staff/staff.html" },
   };

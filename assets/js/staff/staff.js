@@ -354,6 +354,8 @@ function getOrderFromRow(tr) {
         orderId: parsed.orderId || '',
         student: parsed.student || '',
         service: parsed.service || '',
+        orderType: parsed.orderType || '',
+        orderOrg: parsed.orderOrg || '',
         date: parsed.date || '',
         status: parsed.status || '',
         payment: parsed.payment || '',
@@ -499,6 +501,15 @@ function renderOrderModal(order, mode) {
     `
     : '';
 
+  const typeLine = (function () {
+    const t = String(order.orderType || '').toLowerCase();
+    if (t === 'organization' || t === 'org') {
+      return order.orderOrg ? `Organization (${escapeHtml(order.orderOrg)})` : 'Organization';
+    }
+    if (t) return escapeHtml(order.orderType);
+    return 'Individual';
+  })();
+
   const body = `
     ${flowHtml}
     <div class="sd-modal__grid">
@@ -513,6 +524,10 @@ function renderOrderModal(order, mode) {
       <div class="sd-modal__field">
         <div class="sd-modal__label">Service</div>
         <div class="sd-modal__value">${escapeHtml(order.service || '—')}</div>
+      </div>
+      <div class="sd-modal__field">
+        <div class="sd-modal__label">Order Type</div>
+        <div class="sd-modal__value">${typeLine}</div>
       </div>
       <div class="sd-modal__field">
         <div class="sd-modal__label">Date</div>

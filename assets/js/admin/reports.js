@@ -11,7 +11,11 @@
   const semesterEl = document.getElementById("reportsSemester");
   const paymentChartCanvas = document.getElementById("reportsPaymentChart");
   const emptyState = document.getElementById("reportsEmptyState");
+  const recordsSearchInput = document.getElementById("reportsRecordsSearch");
+  const recordsCountEl = document.getElementById("reportsRecordsCount");
+  const recordsPagination = document.getElementById("reportsRecordsPagination");
 
+  const periodSelect = document.getElementById("reportsPeriod");
   const paymentTypeSelect = document.getElementById("reportsPaymentType");
   const userTypeSelect = document.getElementById("reportsUserType");
   const collegeSelect = document.getElementById("reportsCollege");
@@ -21,6 +25,9 @@
   const endDateInput = document.getElementById("reportsEndDate");
 
   let paymentChart = null;
+  let recordsSearchQuery = "";
+  let recordsPage = 1;
+  const RECORDS_PAGE_SIZE = 10;
 
   function parseDate(value) {
     const date = new Date(value);
@@ -69,6 +76,41 @@
     return true;
   }
 
+  function getPeriodRange(period) {
+    const now = new Date();
+    const start = new Date(now);
+    const end = new Date(now);
+
+    if (period === "weekly") {
+      const day = now.getDay();
+      const diff = day === 0 ? 6 : day - 1;
+      start.setDate(now.getDate() - diff);
+      start.setHours(0, 0, 0, 0);
+      end.setTime(start.getTime());
+      end.setDate(start.getDate() + 6);
+      end.setHours(23, 59, 59, 999);
+      return { start, end };
+    }
+
+    if (period === "monthly") {
+      return {
+        start: new Date(now.getFullYear(), now.getMonth(), 1),
+        end: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999),
+      };
+    }
+
+    if (period === "yearly") {
+      return {
+        start: new Date(now.getFullYear(), 0, 1),
+        end: new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999),
+      };
+    }
+
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+    return { start, end };
+  }
+
   function getCurrentAcademicTransactions() {
     return (db.transactions || []).filter((transaction) => {
       const date = parseDate(transaction.date);
@@ -88,10 +130,15 @@
     const college = collegeSelect?.value || "all";
     const course = courseSelect?.value || "all";
     const yearLevel = yearLevelSelect?.value || "all";
+    const period = periodSelect?.value || "daily";
+    const periodRange = getPeriodRange(period);
     const startDate = parseDate(startDateInput?.value);
     const endDate = parseDate(endDateInput?.value);
 
     return transactions.filter((transaction) => {
+      const date = parseDate(transaction.date);
+      if (!inDateRange(date, periodRange.start, periodRange.end)) return false;
+
       const type = getPaymentType(transaction);
       if (paymentType !== "all" && type !== paymentType) return false;
 
@@ -112,7 +159,6 @@
       const yearValue = String(user.yearLevel || "").toLowerCase();
       if (yearLevel !== "all" && yearValue !== yearLevel) return false;
 
-      const date = parseDate(transaction.date);
       return inDateRange(date, startDate, endDate);
     });
   }
@@ -194,7 +240,9 @@
     if (creditSalesEl) creditSalesEl.textContent = toMoney(metrics.credit);
     if (verifiedUsersEl)
       verifiedUsersEl.textContent = (db.users || []).filter(
-        (user) => String(user.status || "").toLowerCase() === "approved",
+        (user) =>
+          String(user.status || "approved").toLowerCase() === "approved" &&
+          String(user.role || "student").toLowerCase() === "student",
       ).length;
     if (dailyEl) dailyEl.textContent = toMoney(metrics.daily);
     if (weeklyEl) weeklyEl.textContent = toMoney(metrics.weekly);
@@ -285,7 +333,37 @@
 
   function renderRecords(transactions) {
     if (!recordsBody) return;
-    const rows = transactions
+    const query = recordsSearchQuery.trim().toLowerCase();
+    const searched = !query
+      ? transactions
+      : transactions.filter((transaction) => {
+          const paymentType = getPaymentType(transaction);
+          return [
+            transaction.id,
+            transaction.studentName,
+            transaction.email,
+            transaction.serviceName,
+            transaction.service,
+            paymentType,
+            transaction.amount,
+            transaction.status,
+            transaction.date,
+          ]
+            .join(" ")
+            .toLowerCase()
+            .includes(query);
+        });
+
+    if (recordsCountEl) {
+      recordsCountEl.textContent = `${searched.length} record${searched.length === 1 ? "" : "s"}`;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(searched.length / RECORDS_PAGE_SIZE));
+    recordsPage = Math.min(Math.max(recordsPage, 1), totalPages);
+    const start = (recordsPage - 1) * RECORDS_PAGE_SIZE;
+    const visibleRows = searched.slice(start, start + RECORDS_PAGE_SIZE);
+
+    const rows = visibleRows
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .map((transaction) => {
         const paymentType = getPaymentType(transaction);
@@ -307,14 +385,40 @@
       recordsBody.innerHTML =
         '<tr><td colspan=6 class="text-center">No matching transaction records found.</td></tr>';
       emptyState?.classList.remove("hidden");
+      renderRecordsPagination(0, 1);
       return;
     }
 
     recordsBody.innerHTML = rows;
     emptyState?.classList.add("hidden");
+    renderRecordsPagination(searched.length, totalPages);
+  }
+
+  function renderRecordsPagination(totalRecords, totalPages) {
+    if (!recordsPagination) return;
+    if (totalRecords === 0) {
+      recordsPagination.innerHTML = "";
+      return;
+    }
+    recordsPagination.innerHTML = `
+      <span class="reports-pagination__summary">Page ${recordsPage} of ${totalPages}</span>
+      <div class="reports-pagination__actions">
+        <button type="button" class="btn btn--outline" id="reportsRecordsPrev" ${recordsPage === 1 ? "disabled" : ""}>Previous</button>
+        <button type="button" class="btn btn--outline" id="reportsRecordsNext" ${recordsPage === totalPages ? "disabled" : ""}>Next</button>
+      </div>
+    `;
+    document.getElementById("reportsRecordsPrev")?.addEventListener("click", () => {
+      recordsPage -= 1;
+      applyFilters();
+    });
+    document.getElementById("reportsRecordsNext")?.addEventListener("click", () => {
+      recordsPage += 1;
+      applyFilters();
+    });
   }
 
   function applyFilters() {
+    recordsPage = Math.max(recordsPage, 1);
     const filtered = getFilteredTransactions();
     updateSummaryCards(filtered);
     renderPaymentChart(filtered);
@@ -324,6 +428,7 @@
   function initFilters() {
     const inputs = [
       paymentTypeSelect,
+      periodSelect,
       userTypeSelect,
       collegeSelect,
       courseSelect,
@@ -333,7 +438,15 @@
     ];
     inputs.forEach((input) => {
       if (!input) return;
-      input.addEventListener("change", applyFilters);
+      input.addEventListener("change", () => {
+        recordsPage = 1;
+        applyFilters();
+      });
+    });
+    recordsSearchInput?.addEventListener("input", (event) => {
+      recordsSearchQuery = event.target.value;
+      recordsPage = 1;
+      applyFilters();
     });
   }
 

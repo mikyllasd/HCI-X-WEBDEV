@@ -26,4 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (_error) {}
     window.location.href = "../../../index.html";
   });
+
+  if (typeof lucide !== "undefined" && lucide.createIcons) {
+    lucide.createIcons();
+  }
 });

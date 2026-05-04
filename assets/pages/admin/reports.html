@@ -179,6 +179,15 @@
           <div class="card reports-filter-card">
             <div class="reports-filter-row">
               <div class="form-group">
+                <label class="form-label" for="reportsPeriod">Report Period</label>
+                <select class="form-input form-select" id="reportsPeriod">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label class="form-label" for="reportsPaymentType"
                   >Payment Type</label
                 >
@@ -279,13 +288,26 @@
           </div>
 
           <div class="card reports-records-card">
-            <div class="card-title-group">
+            <div class="card-title-group reports-records-head">
               <div>
                 <h2 class="card-title">Transaction Records</h2>
                 <p class="card-subtitle">
                   Completed transactions filtered by user, college, and payment
                   type.
                 </p>
+              </div>
+              <div class="reports-records-tools">
+                <div class="record-search">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    class="form-input"
+                    id="reportsRecordsSearch"
+                    type="search"
+                    placeholder="Search records"
+                    aria-label="Search transaction records"
+                  />
+                </div>
+                <span class="reports-records-count" id="reportsRecordsCount">0 records</span>
               </div>
             </div>
             <div class="table-wrapper">
@@ -306,6 +328,7 @@
                 <tbody id="reportsRecordsBody"></tbody>
               </table>
             </div>
+            <div class="reports-pagination" id="reportsRecordsPagination" aria-label="Transaction records pagination"></div>
             <div
               class="empty-state empty-state--mini hidden"
               id="reportsEmptyState"
@@ -325,6 +348,7 @@
       </main>
     </div>
 
+    <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
     <script src="../../js/admin/reports.js"></script>

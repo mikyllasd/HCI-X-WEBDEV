@@ -9,12 +9,13 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
     <link rel="stylesheet" href="../../css/upress-super-content.css" />
-    <link rel="stylesheet" href="../super/superadmin.css" />
     <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/admin/reports.css" />
     <link rel="stylesheet" href="reports.css" />
   </head>
   <body class="staff-dashboard-body" data-page="reports">
@@ -85,6 +86,12 @@
               >
             </li>
             <li>
+              <a href="ratings.html" class="nav-link" data-page="ratings">
+                <i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span></a
+              >
+            </li>
+            <li>
               <a href="settings.html" class="nav-link" data-page="settings">
                 <i data-lucide="settings" aria-hidden="true"></i
                 ><span>System Settings</span></a
@@ -136,6 +143,7 @@
       </svg>
       <span id="toastMsg">Action completed successfully!</span>
     </div>
+    <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
     <script src="reports.js"></script>

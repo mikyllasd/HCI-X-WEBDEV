@@ -638,6 +638,23 @@
               </article>
             </div>
 
+            <div class="reports-records-head sp pv-head" style="margin-top: 6px;">
+              <div class="pv-head-left">
+                <h2 class="card-title" style="margin:0;">Payment submissions</h2>
+                <div class="record-search">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    id="pv-card-search"
+                    class="form-input"
+                    placeholder="Search order, student, method, reference…"
+                    aria-label="Search payment submissions"
+                  />
+                </div>
+              </div>
+              <span class="list-toolbar__count" id="pv-card-count">0 submissions</span>
+            </div>
+
             <!-- Pending Review Cards -->
             <div class="sp">
               <h2 class="card-title" style="margin-bottom:1rem;">Pending Review</h2>
@@ -686,17 +703,38 @@
                 </div>
 
               </div>
+              <div class="list-pagination" id="pv-pending-pagination" aria-label="Pending payments pagination">
+                <span class="list-pagination__summary" id="pv-pending-page">Page 1 of 1</span>
+                <div class="list-pagination__actions">
+                  <button type="button" class="btn btn--outline btn--sm" id="pv-pending-prev" disabled>Previous</button>
+                  <button type="button" class="btn btn--outline btn--sm" id="pv-pending-next" disabled>Next</button>
+                </div>
+              </div>
             </div>
             <!-- Verified Section (hidden until items exist) -->
             <div id="pv-verified-section" class="sp hidden">
               <h2 class="card-title" style="margin-bottom:1rem;">Verified</h2>
               <div class="pv-cards-grid" id="pv-verified-grid"></div>
+              <div class="list-pagination" id="pv-verified-pagination" aria-label="Verified payments pagination">
+                <span class="list-pagination__summary" id="pv-verified-page">Page 1 of 1</span>
+                <div class="list-pagination__actions">
+                  <button type="button" class="btn btn--outline btn--sm" id="pv-verified-prev" disabled>Previous</button>
+                  <button type="button" class="btn btn--outline btn--sm" id="pv-verified-next" disabled>Next</button>
+                </div>
+              </div>
             </div>
 
             <!-- Invalid Section (hidden until items exist) -->
             <div id="pv-invalid-section" class="sp hidden">
               <h2 class="card-title" style="margin-bottom:1rem;">Invalid</h2>
               <div class="pv-cards-grid" id="pv-invalid-grid"></div>
+              <div class="list-pagination" id="pv-invalid-pagination" aria-label="Invalid payments pagination">
+                <span class="list-pagination__summary" id="pv-invalid-page">Page 1 of 1</span>
+                <div class="list-pagination__actions">
+                  <button type="button" class="btn btn--outline btn--sm" id="pv-invalid-prev" disabled>Previous</button>
+                  <button type="button" class="btn btn--outline btn--sm" id="pv-invalid-next" disabled>Next</button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -811,9 +849,10 @@
                 <label class="form-label" for="rpt-type-select">Report Type</label>
                 <div class="rpt-select-wrapper">
                   <select id="rpt-type-select" class="form-input rpt-select" aria-label="Report Type">
-                    <option value="daily">Daily (Last 7 Days)</option>
-                    <option value="monthly">Monthly (Last 12 Months)</option>
-                    <option value="yearly">Yearly (Last 5 Years)</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
                   </select>
                   <i data-lucide="chevron-down" aria-hidden="true" class="rpt-select-chevron"></i>
                 </div>
@@ -872,8 +911,25 @@
 
           <!-- Transaction History Table -->
           <div class="card sp mt-6">
-            <h2 class="card-title">Transaction History</h2>
-            <p class="card-subtitle">All completed transactions in selected period</p>
+            <div class="reports-records-head">
+              <div>
+                <h2 class="card-title">Transaction History</h2>
+                <p class="card-subtitle">All completed transactions in selected period</p>
+              </div>
+              <div class="reports-records-tools">
+                <div class="record-search">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  <input
+                    class="form-input"
+                    id="rpt-record-search"
+                    type="search"
+                    placeholder="Search records"
+                    aria-label="Search report transactions"
+                  />
+                </div>
+                <span class="reports-records-count" id="rpt-record-count">0 records</span>
+              </div>
+            </div>
             <div class="empty-state" id="rpt-empty">
               <i data-lucide="file-text" aria-hidden="true"></i>
               <p class="empty-state__title">No transactions found</p>
@@ -894,6 +950,7 @@
                 <tbody id="rpt-table-body"></tbody>
               </table>
             </div>
+            <div class="reports-pagination" id="rpt-pagination" aria-label="Report transaction pagination"></div>
           </div>
           </div>
         </section>
@@ -2035,6 +2092,8 @@
       id="sidebar-overlay"
       aria-hidden="true"
     ></div>
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
     <script src="../../js/admin/admin-dashboard.js"></script>
   </body>
 </html>

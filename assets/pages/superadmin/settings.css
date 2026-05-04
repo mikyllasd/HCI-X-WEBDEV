@@ -208,6 +208,144 @@
   color: #ef4444;
 }
 
+/* Roles & config */
+.role-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .role-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+.role-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: -4px;
+}
+
+.role-list-head {
+  margin-top: 18px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.role-count {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.role-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.role-empty {
+  padding: 14px;
+  border: 1px dashed var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-white);
+}
+
+.role-main {
+  min-width: 0;
+}
+
+.role-label {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.role-meta {
+  margin-top: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.role-desc {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role-key {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.toggle-list {
+  display: grid;
+  gap: 10px;
+}
+
+.toggle-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--color-white);
+}
+
+.toggle-row input[type="checkbox"] {
+  margin-top: 4px;
+  transform: scale(1.05);
+  flex: 0 0 auto;
+}
+
+.toggle-text {
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.toggle-text strong {
+  display: block;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.toggle-text span {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
 .toast {
   position: fixed;
   bottom: 28px;

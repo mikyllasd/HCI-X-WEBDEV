@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
     <link rel="stylesheet" href="../../css/upress-super-content.css" />
-    <link rel="stylesheet" href="../super/superadmin.css" />
     <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
     <link rel="stylesheet" href="services.css" />
@@ -82,6 +81,12 @@
               <a href="reports.html" class="nav-link" data-page="reports">
                 <i data-lucide="bar-chart-2" aria-hidden="true"></i
                 ><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="ratings.html" class="nav-link" data-page="ratings">
+                <i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span></a
               >
             </li>
             <li>
@@ -157,17 +162,11 @@
               ></textarea>
             </div>
             <div class="form-group">
-              <label class="form-label"
-                >Base Price (₱) <span class="required">*</span></label
-              >
-              <input
-                type="number"
-                class="form-input"
-                id="formPrice"
-                step="0.01"
-                min="0"
-                required
-              />
+              <label class="form-label">Pricing</label>
+              <div class="form-hint" style="margin-top: 6px">
+                Pricing is managed per service type below (e.g., Printing sizes,
+                Binding types, Lanyards variants).
+              </div>
             </div>
             <div class="form-group" style="margin-bottom: 0">
               <label class="form-label"
@@ -180,6 +179,7 @@
                 <option value="special">Special Services</option>
               </select>
             </div>
+            <div id="servicePricingFields"></div>
           </form>
         </div>
         <div class="modal-footer">
@@ -230,8 +230,10 @@
       </svg>
       <span id="toastMsg">Action completed successfully!</span>
     </div>
+    <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="../../js/site-pricing.js"></script>
     <script src="services.js"></script>
   </body>
 </html>

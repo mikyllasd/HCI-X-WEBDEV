@@ -85,8 +85,15 @@
             </div>
         </div>
     </div>
-</aside>
 
+    <!-- Logout Button -->
+    <div class="sidebar-footer">
+        <button type="button" class="sidebar-logout-btn" onclick="logout()" title="Logout">
+            <span class="upress-icon upress-icon--x" aria-hidden="true"></span> Logout
+        </button>
+    </div>
+</aside>
+ 
 <!-- Navbar -->
 <header class="dashboard-navbar">
     <div class="nav-left">
@@ -153,40 +160,51 @@
     </div>
 
     <div class="page-section-head">
-        <span class="page-section-badge">Services</span>
-        <h2 class="services-title">Our Services</h2>
-        <p class="page-section-lead">Pick a service to begin an order. Track progress anytime from the menu.</p>
+        <span class="page-section-badge">Get Started</span>
+        <h2 class="services-title">Create Your Order</h2>
+        <p class="page-section-lead">Select what you need and we'll walk you through the ordering process.</p>
     </div>
-    <div class="services-grid-dash">
-        <div class="service-card-dash">
-            <div class="service-icon-dash"><span class="upress-icon upress-icon--print" aria-hidden="true"></span></div>
-            <h3>Printing</h3>
-            <p>Document printing services</p>
-            <button type="button" class="btn-red" onclick="serviceHref('printing.html')">Order Now</button>
+    <div style="text-align:center;padding:2rem 0;">
+        <button type="button" class="btn-red" onclick="showCreateOrderModal()" style="padding:1rem 3rem;font-size:1.125rem;">+ Create Order</button>
+    </div>
+
+    <div id="services-section" style="display:none;">
+        <div class="page-section-head">
+            <span class="page-section-badge">Services</span>
+            <h2 class="services-title">Our Services</h2>
+            <p class="page-section-lead">Pick a service to begin an order. Track progress anytime from the menu.</p>
         </div>
-        <div class="service-card-dash">
-            <div class="service-icon-dash"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
-            <h3>Binding</h3>
-            <p>Professional binding services</p>
-            <button type="button" class="btn-red" onclick="serviceHref('binding.html')">Order Now</button>
-        </div>
-        <div class="service-card-dash">
-            <div class="service-icon-dash"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
-            <h3>Lanyards</h3>
-            <p>Custom lanyards</p>
-            <button type="button" class="btn-red" onclick="serviceHref('lanyard.html')">Order Now</button>
-        </div>
-        <div class="service-card-dash">
-            <div class="service-icon-dash"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></div>
-            <h3>Mug Printing</h3>
-            <p>Customized mug printing services</p>
-            <button type="button" class="btn-red" onclick="serviceHref('mug.html')">Order Now</button>
-        </div>
-        <div class="service-card-dash">
-            <div class="service-icon-dash"><span class="upress-icon upress-icon--id" aria-hidden="true"></span></div>
-            <h3>ID printing</h3>
-            <p>New, lost, damaged, or renewal</p>
-            <button type="button" class="btn-red" onclick="serviceHref('id-printing.html')">Start request</button>
+        <div class="services-grid-dash">
+            <div class="service-card-dash">
+                <div class="service-icon-dash"><span class="upress-icon upress-icon--print" aria-hidden="true"></span></div>
+                <h3>Printing</h3>
+                <p>Document printing services</p>
+                <button type="button" class="btn-red" onclick="serviceHref('printing.html')">Order Now</button>
+            </div>
+            <div class="service-card-dash">
+                <div class="service-icon-dash"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
+                <h3>Binding</h3>
+                <p>Professional binding services</p>
+                <button type="button" class="btn-red" onclick="serviceHref('binding.html')">Order Now</button>
+            </div>
+            <div class="service-card-dash">
+                <div class="service-icon-dash"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
+                <h3>Lanyards</h3>
+                <p>Custom lanyards</p>
+                <button type="button" class="btn-red" onclick="serviceHref('lanyard.html')">Order Now</button>
+            </div>
+            <div class="service-card-dash">
+                <div class="service-icon-dash"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></div>
+                <h3>Mug Printing</h3>
+                <p>Customized mug printing services</p>
+                <button type="button" class="btn-red" onclick="serviceHref('mug.html')">Order Now</button>
+            </div>
+            <div class="service-card-dash">
+                <div class="service-icon-dash"><span class="upress-icon upress-icon--id" aria-hidden="true"></span></div>
+                <h3>ID printing</h3>
+                <p>New, lost, damaged, or renewal</p>
+                <button type="button" class="btn-red" onclick="serviceHref('id-printing.html')">Start request</button>
+            </div>
         </div>
     </div>
 </div>
@@ -194,4 +212,4 @@
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/dashboard.js"></script>
 </body>
-</html>
+</html> 

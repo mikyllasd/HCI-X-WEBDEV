@@ -3,6 +3,7 @@
 // ============================================================
 
 let _mugType = 'wmsu';
+let _mugSubType = null; // 'department' or 'custom' when type is 'customization'
 let _mugTypeName = 'WMSU Standard';
 let _mugBasePrice = 200;
 let mugSlots = [];
@@ -23,10 +24,8 @@ function getMugPrices() {
 function syncMugOptionLabels() {
     const pr = getMugPrices();
     const w  = document.getElementById('mug-opt-price-wmsu');
-    const d  = document.getElementById('mug-opt-price-dept');
     const c  = document.getElementById('mug-opt-price-custom');
     if (w) w.textContent = '₱' + pr.wmsu;
-    if (d) d.textContent = '₱' + pr.department;
     if (c) c.textContent = '₱' + pr.custom;
 }
 
@@ -35,23 +34,123 @@ function selectMugType(type, el) {
     el.classList.add('active');
     _mugType = type;
 
-    const pr = getMugPrices();
-    if (type === 'wmsu')       { _mugBasePrice = pr.wmsu;       _mugTypeName = 'WMSU Standard'; }
-    if (type === 'department') { _mugBasePrice = pr.department; _mugTypeName = 'Department Design'; }
-    if (type === 'custom')     { _mugBasePrice = pr.custom;     _mugTypeName = 'Custom Upload'; }
+    if (type === 'wmsu') {
+        const pr = getMugPrices();
+        _mugBasePrice = pr.wmsu;
+        _mugTypeName = 'WMSU Standard';
+        _mugSubType = null;
+        toggleMugSections('wmsu');
+        buildMugSlots();
+        updateMugSummary();
+    } else if (type === 'customization') {
+        showMugDesignSourceModal();
+    }
+}
 
-    toggleMugSections(type);
-    buildMugSlots();
-    updateMugSummary();
+function showMugDesignSourceModal() {
+    initModals();
+    const overlay = document.getElementById('upress-modal-overlay');
+    const modalBox = document.getElementById('upress-modal-box');
+    
+    const customOptions = `
+        <h3 id="upress-modal-title" style="margin:0 0 1rem;font-size:1.125rem;color:#333;">What is your design source?</h3>
+        <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;">Choose how you want to customize your mug.</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
+            <button type="button" id="source-dept" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
+                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">🎓 Department Design</div>
+                <div style="font-size:0.8125rem;color:#888;">Select college/department and course</div>
+            </button>
+            <button type="button" id="source-custom" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
+                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">🎨 Upload Custom Design</div>
+                <div style="font-size:0.8125rem;color:#888;">Upload your own design file</div>
+            </button>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
+            <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:var(--color-cta);color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Select</button>
+        </div>`;
+    
+    modalBox.innerHTML = customOptions;
+    overlay.style.display = 'flex';
+    
+    let selectedSource = null;
+    
+    function updateStyle(btn, selected) {
+        if (selected) {
+            btn.style.borderColor = '#a32020';
+            btn.style.background = '#fff9f9';
+        } else {
+            btn.style.borderColor = '#e0e0e0';
+            btn.style.background = 'white';
+        }
+    }
+    
+    document.getElementById('source-dept').addEventListener('click', () => {
+        selectedSource = 'department';
+        updateStyle(document.getElementById('source-dept'), true);
+        updateStyle(document.getElementById('source-custom'), false);
+    });
+    
+    document.getElementById('source-custom').addEventListener('click', () => {
+        selectedSource = 'custom';
+        updateStyle(document.getElementById('source-dept'), false);
+        updateStyle(document.getElementById('source-custom'), true);
+    });
+    
+    document.getElementById('upress-modal-confirm').onclick = () => {
+        if (!selectedSource) {
+            showAlert('Selection Required', 'Please select a design source.');
+            return;
+        }
+        
+        overlay.style.display = 'none';
+        
+        const pr = getMugPrices();
+        _mugType = 'customization';
+        _mugSubType = selectedSource;
+        
+        if (selectedSource === 'department') {
+            _mugBasePrice = pr.department;
+            _mugTypeName = 'Department Design';
+        } else {
+            _mugBasePrice = pr.custom;
+            _mugTypeName = 'Custom Upload';
+        }
+        
+        toggleMugSections('customization');
+        buildMugSlots();
+        updateMugSummary();
+    };
+    
+    document.getElementById('upress-modal-cancel').onclick = () => {
+        overlay.style.display = 'none';
+        // Reset the selection
+        document.querySelectorAll('#mug-page .option').forEach(o => o.classList.remove('active'));
+        document.querySelectorAll('#mug-page .option')[0].classList.add('active');
+        _mugType = 'wmsu';
+        _mugSubType = null;
+    };
 }
 
 function toggleMugSections(type) {
     const wmsuCard   = document.getElementById('mug-wmsu-preview-card');
     const deptCard   = document.getElementById('mug-dept-card');
     const customCard = document.getElementById('mug-custom-card');
-    if (wmsuCard)   wmsuCard.classList.toggle('hidden',   type !== 'wmsu');
-    if (deptCard)   deptCard.classList.toggle('hidden',   type !== 'department');
-    if (customCard) customCard.classList.toggle('hidden', type !== 'custom');
+    
+    if (type === 'wmsu') {
+        if (wmsuCard)   wmsuCard.classList.remove('hidden');
+        if (deptCard)   deptCard.classList.add('hidden');
+        if (customCard) customCard.classList.add('hidden');
+    } else if (type === 'customization') {
+        if (wmsuCard)   wmsuCard.classList.add('hidden');
+        if (_mugSubType === 'department') {
+            if (deptCard)   deptCard.classList.remove('hidden');
+            if (customCard) customCard.classList.add('hidden');
+        } else {
+            if (deptCard)   deptCard.classList.add('hidden');
+            if (customCard) customCard.classList.remove('hidden');
+        }
+    }
 }
 
 function onMugQtyChange() {
@@ -73,7 +172,7 @@ function buildMugSlots() {
     container.innerHTML = '';
 
     for (let i = 0; i < qty; i++) {
-        const customFileSection = _mugType === 'custom' ? `
+        const customFileSection = _mugSubType === 'custom' ? `
             <div class="field">
                 <label class="label">Upload Design File *</label>
                 <label class="dropzone" style="padding:1rem;cursor:pointer;">
@@ -84,7 +183,7 @@ function buildMugSlots() {
                 <div id="mslot-fname-${i}" style="display:none;font-size:0.8rem;color:#555;margin-top:0.4rem;"></div>
                 <div class="piece-slot-error" id="mslot-err-${i}">Please complete the details for Mug ${i + 1}.</div>
             </div>` : `<div class="mug-preview-box" style="margin-bottom:0.75rem;padding:0.75rem;font-size:0.8125rem;">
-                ${_mugType === 'wmsu' ? '🏫 WMSU Standard design will be used.' : '🎓 Department design will be used.'}
+                🎓 Department design will be used.
             </div>`;
 
         container.innerHTML += `

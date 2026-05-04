@@ -26,6 +26,16 @@
                     <span class="summary-total-label">Total Amount</span>
                     <span class="summary-total-money" id="gcash-sum-total">₱0.00</span>
                 </div>
+                <div id="gcash-downpayment-section" style="display:none;margin-top:1rem;padding:1rem;background:#f9f3f3;border-left:4px solid #a32020;border-radius:0.25rem;">
+                    <div class="summary-row" style="font-size:0.875rem;margin-bottom:0.5rem;">
+                        <span>50% Downpayment Required</span>
+                        <span id="gcash-downpayment" style="font-weight:700;color:#a32020;">₱0.00</span>
+                    </div>
+                    <div class="summary-row" style="font-size:0.875rem;">
+                        <span>Balance Due at Pickup</span>
+                        <span id="gcash-balance" style="font-weight:700;color:#666;">₱0.00</span>
+                    </div>
+                </div>
             </div>
             <div class="card card-blue">
                 <div class="card-head">
@@ -34,6 +44,7 @@
                 </div>
                 <div class="gcash-number">UPRESSease | 0912 345 6789</div>
                 <div class="gcash-amount">Amount to send: <strong id="gcash-amount">₱0.00</strong></div>
+                <div id="gcash-amount-info" style="font-size:0.75rem;color:#555;margin-top:0.5rem;display:none;"></div>
                 <div class="qr-wrapper">
                     <div class="qr-box">
                         <div class="qr-placeholder"><span class="upress-icon upress-icon--phone" aria-hidden="true"></span><span>GCash QR Code</span></div>

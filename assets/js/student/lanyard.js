@@ -3,6 +3,7 @@
 // ============================================================
 
 let _lanyardType = 'wmsu';
+let _lanyardSubType = null; // 'department' or 'custom' when type is 'customization'
 let _lanyardTypeName = 'WMSU Standard';
 let _lanyardPrice = 120;
 let lanyardSlots = [];
@@ -22,10 +23,8 @@ function getLanyardPrices() {
 function syncLanyardOptionLabels() {
     const pr = getLanyardPrices();
     const w = document.getElementById('lanyard-opt-price-wmsu');
-    const d = document.getElementById('lanyard-opt-price-dept');
     const c = document.getElementById('lanyard-opt-price-custom');
     if (w) w.textContent = '₱' + pr.official;
-    if (d) d.textContent = '₱' + pr.department;
     if (c) c.textContent = '₱' + pr.custom;
 }
 
@@ -34,15 +33,102 @@ function selectLanyardType(type, el) {
     el.classList.add('active');
     _lanyardType = type;
 
-    const pr = getLanyardPrices();
-    if (type === 'wmsu') { _lanyardPrice = pr.official; _lanyardTypeName = 'WMSU Standard'; }
-    if (type === 'department') { _lanyardPrice = pr.department; _lanyardTypeName = 'Department Design'; }
-    if (type === 'custom') { _lanyardPrice = pr.custom; _lanyardTypeName = 'Custom Design'; }
+    if (type === 'wmsu') {
+        const pr = getLanyardPrices();
+        _lanyardPrice = pr.official;
+        _lanyardTypeName = 'WMSU Standard';
+        _lanyardSubType = null;
+        toggleLanyardSections('wmsu');
+        buildLanyardSlots();
+        updateLanyardSummary();
+    } else if (type === 'customization') {
+        showLanyardDesignSourceModal();
+    }
+}
 
-    // Show/hide design detail sections
-    toggleLanyardSections(type);
-    buildLanyardSlots();
-    updateLanyardSummary();
+function showLanyardDesignSourceModal() {
+    initModals();
+    const overlay = document.getElementById('upress-modal-overlay');
+    const modalBox = document.getElementById('upress-modal-box');
+    
+    const customOptions = `
+        <h3 id="upress-modal-title" style="margin:0 0 1rem;font-size:1.125rem;color:#333;">What is your design source?</h3>
+        <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;">Choose how you want to customize your lanyard.</p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
+            <button type="button" id="source-dept" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
+                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">🎓 Department Design</div>
+                <div style="font-size:0.8125rem;color:#888;">Select college/department and course</div>
+            </button>
+            <button type="button" id="source-custom" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
+                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">🎨 Upload Custom Design</div>
+                <div style="font-size:0.8125rem;color:#888;">Upload your own design file</div>
+            </button>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
+            <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:var(--color-cta);color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Select</button>
+        </div>`;
+    
+    modalBox.innerHTML = customOptions;
+    overlay.style.display = 'flex';
+    
+    let selectedSource = null;
+    
+    function updateStyle(btn, selected) {
+        if (selected) {
+            btn.style.borderColor = '#a32020';
+            btn.style.background = '#fff9f9';
+        } else {
+            btn.style.borderColor = '#e0e0e0';
+            btn.style.background = 'white';
+        }
+    }
+    
+    document.getElementById('source-dept').addEventListener('click', () => {
+        selectedSource = 'department';
+        updateStyle(document.getElementById('source-dept'), true);
+        updateStyle(document.getElementById('source-custom'), false);
+    });
+    
+    document.getElementById('source-custom').addEventListener('click', () => {
+        selectedSource = 'custom';
+        updateStyle(document.getElementById('source-dept'), false);
+        updateStyle(document.getElementById('source-custom'), true);
+    });
+    
+    document.getElementById('upress-modal-confirm').onclick = () => {
+        if (!selectedSource) {
+            showAlert('Selection Required', 'Please select a design source.');
+            return;
+        }
+        
+        overlay.style.display = 'none';
+        
+        const pr = getLanyardPrices();
+        _lanyardType = 'customization';
+        _lanyardSubType = selectedSource;
+        
+        if (selectedSource === 'department') {
+            _lanyardPrice = pr.department;
+            _lanyardTypeName = 'Department Design';
+        } else {
+            _lanyardPrice = pr.custom;
+            _lanyardTypeName = 'Custom Design';
+        }
+        
+        toggleLanyardSections('customization');
+        buildLanyardSlots();
+        updateLanyardSummary();
+    };
+    
+    document.getElementById('upress-modal-cancel').onclick = () => {
+        overlay.style.display = 'none';
+        // Reset the selection
+        document.querySelectorAll('#lanyard-page .option').forEach(o => o.classList.remove('active'));
+        document.querySelectorAll('#lanyard-page .option')[0].classList.add('active');
+        _lanyardType = 'wmsu';
+        _lanyardSubType = null;
+    };
 }
 
 function toggleLanyardSections(type) {
@@ -50,9 +136,20 @@ function toggleLanyardSections(type) {
     const deptCard   = document.getElementById('lanyard-dept-card');
     const customCard = document.getElementById('lanyard-custom-card');
 
-    if (wmsuCard)   wmsuCard.classList.toggle('hidden',   type !== 'wmsu');
-    if (deptCard)   deptCard.classList.toggle('hidden',   type !== 'department');
-    if (customCard) customCard.classList.toggle('hidden', type !== 'custom');
+    if (type === 'wmsu') {
+        if (wmsuCard)   wmsuCard.classList.remove('hidden');
+        if (deptCard)   deptCard.classList.add('hidden');
+        if (customCard) customCard.classList.add('hidden');
+    } else if (type === 'customization') {
+        if (wmsuCard)   wmsuCard.classList.add('hidden');
+        if (_lanyardSubType === 'department') {
+            if (deptCard)   deptCard.classList.remove('hidden');
+            if (customCard) customCard.classList.add('hidden');
+        } else {
+            if (deptCard)   deptCard.classList.add('hidden');
+            if (customCard) customCard.classList.remove('hidden');
+        }
+    }
 }
 
 function onLanyardQtyChange() {
@@ -71,7 +168,7 @@ function buildLanyardSlots() {
 
     for (let i = 0; i < qty; i++) {
         const slot = lanyardSlots[i];
-        const customFileSection = _lanyardType === 'custom' ? `
+        const customFileSection = _lanyardSubType === 'custom' ? `
             <div class="field">
                 <label class="label">Upload Design File *</label>
                 <label class="dropzone" style="padding:1rem;cursor:pointer;">
@@ -82,7 +179,7 @@ function buildLanyardSlots() {
                 <div id="lslot-fname-${i}" style="display:none;font-size:0.8rem;color:#555;margin-top:0.4rem;"></div>
                 <div class="piece-slot-error" id="lslot-err-${i}">Please complete the details for Lanyard ${i + 1}.</div>
             </div>` : `<div class="lanyard-preview-box" style="margin-bottom:0.75rem;padding:0.75rem;font-size:0.8125rem;">
-                ${_lanyardType === 'wmsu' ? '🏫 WMSU Standard design will be used.' : '🎓 Department design will be used.'}
+                🎓 Department design will be used.
             </div>`;
 
         container.innerHTML += `

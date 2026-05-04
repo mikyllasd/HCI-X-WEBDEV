@@ -19,9 +19,38 @@ if (listEl) {
         </div>`).join('');
 }
 
+// ===================== DOWNPAYMENT RULE =====================
+const DOWNPAYMENT_THRESHOLD = 600;
+let gcashAmountToPay = total;
+let downpaymentInfo = {};
+
+if (total >= DOWNPAYMENT_THRESHOLD) {
+    const downpayment = total * 0.5;
+    const balance = total - downpayment;
+    gcashAmountToPay = downpayment;
+    downpaymentInfo = {
+        requiresDownpayment: true,
+        downpaymentAmount: downpayment.toFixed(2),
+        balanceDueAtPickup: balance.toFixed(2)
+    };
+    
+    const downpaymentSection = document.getElementById('gcash-downpayment-section');
+    if (downpaymentSection) {
+        downpaymentSection.style.display = 'block';
+        document.getElementById('gcash-downpayment').textContent = '₱' + downpayment.toFixed(2);
+        document.getElementById('gcash-balance').textContent = '₱' + balance.toFixed(2);
+    }
+    
+    const amountInfo = document.getElementById('gcash-amount-info');
+    if (amountInfo) {
+        amountInfo.style.display = 'block';
+        amountInfo.textContent = '(50% downpayment - remaining ₱' + balance.toFixed(2) + ' due at pickup)';
+    }
+}
+
 const totalStr = '₱' + total.toFixed(2);
 if (totalEl) totalEl.textContent = totalStr;
-if (amtEl)   amtEl.textContent   = totalStr;
+if (amtEl)   amtEl.textContent   = '₱' + gcashAmountToPay.toFixed(2);
 
 setText('gcash-info-name',  customer.name  || '—');
 setText('gcash-info-phone', customer.phone || '—');
@@ -33,7 +62,7 @@ function submitGcashPayment() {
     if (!ref)   { showAlert('Missing Info', 'Please enter your GCash reference number.'); return; }
     if (!proof) { showAlert('Missing Info', 'Please upload your proof of payment screenshot.'); return; }
     cart.forEach(item => {
-        Orders.add({ ...item, customer, paymentMethod: 'GCash', refNumber: ref });
+        Orders.add({ ...item, customer, paymentMethod: 'GCash', refNumber: ref, ...downpaymentInfo });
     });
     Cart.clear();
     Checkout.clear();

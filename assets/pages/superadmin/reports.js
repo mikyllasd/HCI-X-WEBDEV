@@ -11,49 +11,15 @@
 
   let chartType = "monthly";
 
-  function generateMockTransactions() {
-    // Only generate mock data if no transactions exist
-    if (!db.transactions || db.transactions.length === 0) {
-      db.transactions = [];
-      const services = db.services || [];
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-
-      if (services.length > 0) {
-        months.forEach((month, idx) => {
-          for (let i = 0; i < Math.floor(Math.random() * 5) + 2; i++) {
-            const service =
-              services[Math.floor(Math.random() * services.length)];
-            db.transactions.push({
-              id: "txn_" + Math.random().toString(36).substr(2, 9),
-              serviceId: service.id,
-              serviceName: service.name,
-              amount: service.price,
-              category: service.category,
-              status: ["completed", "pending", "cancelled"][
-                Math.floor(Math.random() * 3)
-              ],
-              semester: Math.random() > 0.5 ? "1st" : "2nd",
-              date: new Date(
-                2026,
-                idx,
-                Math.floor(Math.random() * 28) + 1,
-              ).toISOString(),
-            });
-          }
-        });
-        saveDB(db);
-      }
-    }
-  }
-
   function getFilteredData() {
-    generateMockTransactions();
-
-    if (!db.transactions || db.transactions.length === 0) {
+    if (!db.academicYear || !db.transactions || db.transactions.length === 0) {
       return [];
     }
 
     return db.transactions.filter((txn) => {
+      if (txn.academicYear && txn.academicYear !== db.academicYear) {
+        return false;
+      }
       if (currentFilters.service && txn.serviceId !== currentFilters.service) {
         return false;
       }
@@ -200,20 +166,11 @@
     if (!tbody) return;
 
     if (filtered.length === 0) {
-      const tableContainer = document.getElementById("transactionsSection");
-      if (tableContainer) {
-        tableContainer.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 3H5a2 2 0 0 0-2 2v4m0 0v10a2 2 0 0 0 2 2h4m0-14h4a2 2 0 0 1 2 2v4m0 0v10a2 2 0 0 1-2 2h-4"/>
-              </svg>
-            </div>
-            <div class="empty-state__title">No data available</div>
-            <div class="empty-state__sub">Try adjusting your filters</div>
-          </div>
-        `;
-      }
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center">No transaction records match the selected filters.</td>
+        </tr>
+      `;
       return;
     }
 
@@ -240,7 +197,27 @@
   }
 
   function renderPage() {
-    generateMockTransactions();
+    if (!db.academicYear) {
+      pageContainer.innerHTML = `
+        <div class="page-header">
+          <h1 class="page-title">Reports & Analytics</h1>
+          <p class="page-sub">Academic year is not configured.</p>
+        </div>
+        <div class="sd-panel">
+          <div class="sd-empty">
+            <div class="sd-empty__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+            </div>
+            <div class="sd-empty__title">Academic Year Not Set</div>
+            <div class="sd-empty__sub">Set the current academic year in System Settings to view reports.</div>
+            <a href="settings.html" class="sd-hero__cta" style="margin-top: 16px; display: inline-block;">Go to Settings</a>
+          </div>
+        </div>
+      `;
+      return;
+    }
 
     const services = db.services || [];
     const serviceOptions = services
@@ -372,7 +349,6 @@
       </div>
     `;
 
-    // Attach event listeners
     document.getElementById("applyFiltersBtn").addEventListener("click", () => {
       currentFilters.service = document.getElementById("filterService").value;
       currentFilters.category = document.getElementById("filterCategory").value;
@@ -384,7 +360,6 @@
       currentFilters = {
         service: "",
         category: "",
-        academicYear: db.academicYear,
         semester: "",
       };
       document.getElementById("filterService").value = "";
@@ -404,7 +379,6 @@
       });
     });
 
-    // Initial render
     applyFilters();
   }
 
@@ -422,13 +396,12 @@
         : "₱0.00";
   }
 
-  const originalRender = window.applyFilters;
-  window.applyFilters = function () {
+  function applyFilters() {
     renderChart();
     renderSummary();
     renderTransactions();
     updateStats();
-  };
+  }
 
   renderPage();
 })();

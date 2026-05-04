@@ -61,24 +61,13 @@
     .getElementById("maintenanceToggleBtn")
     .addEventListener("click", () => {
       db.systemSettings.maintenanceMode = !db.systemSettings.maintenanceMode;
-      const alert = document.getElementById("maintenanceAlert");
-      const statusEl = document.getElementById("maintenanceStatus");
-      const subStatusEl = document.getElementById("maintenanceSubStatus");
-      const btn = document.getElementById("maintenanceToggleBtn");
-
-      if (db.systemSettings.maintenanceMode) {
-        alert.className = "maintenance-alert active";
-        statusEl.textContent = "Maintenance mode active";
-        subStatusEl.textContent = "Students cannot access the system";
-        btn.className = "btn btn-sm btn-danger";
-        btn.textContent = "Disable";
-      } else {
-        alert.className = "maintenance-alert normal";
-        statusEl.textContent = "System Operating Normally";
-        subStatusEl.textContent = "System is available to all users";
-        btn.className = "btn btn-sm btn-ghost";
-        btn.textContent = "Enable";
-      }
+      saveDB(db);
+      updateMaintenanceUI();
+      showToast(
+        db.systemSettings.maintenanceMode
+          ? "Maintenance mode enabled"
+          : "Maintenance mode disabled",
+      );
     });
 
   document.getElementById("saveSettings").addEventListener("click", () => {
@@ -87,16 +76,40 @@
       showToast("Academic year is required!");
       return;
     }
-    // Basic validation for YYYY-YYYY format
     if (!/^\d{4}-\d{4}$/.test(academicYear)) {
       showToast("Invalid academic year format! Use YYYY-YYYY");
       return;
     }
 
-    db.academicYear = academicYear;
-    saveDB(db);
+    if (db.academicYear !== academicYear) {
+      setAcademicYear(academicYear);
+    } else {
+      saveDB(db);
+    }
+
     showToast("System settings saved!");
   });
+
+  function updateMaintenanceUI() {
+    const alert = document.getElementById("maintenanceAlert");
+    const statusEl = document.getElementById("maintenanceStatus");
+    const subStatusEl = document.getElementById("maintenanceSubStatus");
+    const btn = document.getElementById("maintenanceToggleBtn");
+
+    if (db.systemSettings.maintenanceMode) {
+      alert.className = "maintenance-alert active";
+      statusEl.textContent = "Maintenance mode active";
+      subStatusEl.textContent = "Students cannot access the system";
+      btn.className = "btn btn-sm btn-danger";
+      btn.textContent = "Disable";
+    } else {
+      alert.className = "maintenance-alert normal";
+      statusEl.textContent = "System operating normally";
+      subStatusEl.textContent = "System is available to all users";
+      btn.className = "btn btn-sm btn-ghost";
+      btn.textContent = "Enable";
+    }
+  }
 
   function showToast(message) {
     const toast = document.getElementById("toast");

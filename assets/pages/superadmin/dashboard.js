@@ -10,6 +10,15 @@
     });
   }
 
+  function sameDay(dateString, compareDate) {
+    const date = new Date(dateString);
+    return (
+      date.getFullYear() === compareDate.getFullYear() &&
+      date.getMonth() === compareDate.getMonth() &&
+      date.getDate() === compareDate.getDate()
+    );
+  }
+
   function statCard(label, value, sublabel, accent, icon) {
     return `
       <div class="stat-card accent-${accent}">
@@ -39,15 +48,15 @@
     return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
   }
 
-  function iconCheck2() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
+  function iconStatus() {
+    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>`;
   }
 
-  if (!db.academicYear) {
+  function renderEmptyState() {
     pageContainer.innerHTML = `
       <div class="sd-header">
         <h1 class="sd-title">Dashboard</h1>
-        <div class="sd-subtitle">System Setup Required</div>
+        <div class="sd-subtitle">System setup required</div>
       </div>
       <div class="sd-panel">
         <div class="sd-empty">
@@ -62,83 +71,112 @@
         </div>
       </div>
     `;
-    return;
   }
 
-  const usersCount = db.users.length;
-  const servicesCount = db.services.length;
-  const transactionsCount = db.transactions.length;
+  function renderDashboard() {
+    if (!db.academicYear) {
+      renderEmptyState();
+      return;
+    }
 
-  pageContainer.innerHTML = `
-    <header class="sd-header">
-      <h1 class="sd-title">Dashboard</h1>
-      <div class="sd-subtitle">Academic Year ${db.academicYear} – ${formatDate(new Date())}</div>
-    </header>
+    const today = new Date();
+    const todayTransactions = (db.transactions || []).filter((txn) =>
+      sameDay(txn.date, today),
+    );
+    const completedTransactions = (db.transactions || []).filter(
+      (txn) => txn.status === "completed",
+    );
+    const pendingTransactions = (db.transactions || []).filter(
+      (txn) => txn.status === "pending",
+    );
+    const processingTransactions = (db.transactions || []).filter(
+      (txn) => txn.status === "processing",
+    );
+    const readyTransactions = (db.transactions || []).filter((txn) => {
+      const status = (txn.status || "").toLowerCase();
+      return ["ready", "for pickup", "ready for pickup"].includes(status);
+    });
 
-    <section class="sd-metrics" aria-label="System metrics">
-      ${statCard("Total Users", usersCount, "System users", "red", iconBox())}
-      ${statCard("Total Services", servicesCount, "Available services", "green", iconDollar())}
-      ${statCard("Total Transactions", transactionsCount, "All time transactions", "yellow", iconClock())}
-      ${statCard("Active Sessions", "0", "Current active users", "purple", iconCheck())}
-    </section>
+    const todayIncome = todayTransactions.reduce(
+      (sum, txn) => sum + (parseFloat(txn.amount) || 0),
+      0,
+    );
 
-    <section class="sd-panel" aria-label="Recent transactions">
-      <div class="sd-panel__head">
-        <div>
-          <div class="sd-panel__title">
-            <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
-            <span>Recent Transactions</span>
+    pageContainer.innerHTML = `
+      <header class="sd-header">
+        <h1 class="sd-title">Dashboard</h1>
+        <div class="sd-subtitle">Academic Year ${db.academicYear} – ${formatDate(today)}</div>
+      </header>
+
+      <section class="sd-metrics" aria-label="System metrics">
+        ${statCard("Today's Orders", todayTransactions.length, "Orders placed today", "red", iconBox())}
+        ${statCard("Today's Income", `₱${todayIncome.toFixed(2)}`, "From completed orders today", "green", iconDollar())}
+        ${statCard("Pending Orders", pendingTransactions.length, "Awaiting processing", "yellow", iconClock())}
+        ${statCard("Processing", processingTransactions.length, "Currently in progress", "purple", iconStatus())}
+        ${statCard("Ready for Pickup", readyTransactions.length, "Ready to be claimed", "green", iconCheck())}
+        ${statCard("Completed", completedTransactions.length, "Successfully completed", "gray", iconCheck())}
+      </section>
+
+      <section class="sd-panel" aria-label="Recent transactions">
+        <div class="sd-panel__head">
+          <div>
+            <div class="sd-panel__title">
+              <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+              <span>Recent Transactions</span>
+            </div>
+            <div class="sd-panel__sub">Latest system activity</div>
           </div>
-          <div class="sd-panel__sub">Latest system activity</div>
+          <a href="reports.html" class="sd-panel__cta">
+            <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
+            <span>View All</span>
+          </a>
         </div>
-        <a href="reports.html" class="sd-panel__cta">
-          <span class="sd-panel__ctaIcon" aria-hidden="true">≡</span>
-          <span>View All</span>
-        </a>
-      </div>
-      <div class="sd-empty">
-        <div class="sd-empty__icon" aria-hidden="true">
+        <div class="sd-empty">
+          <div class="sd-empty__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3.27 6.96 12 12l8.73-5.04M12 22V12"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="sd-empty__title">No recent transactions</div>
+          <div class="sd-empty__sub">Transaction activity will appear here</div>
+        </div>
+      </section>
+
+      <section class="sd-hero" aria-label="Reports overview">
+        <div class="sd-hero__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
             <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+              d="M4 16l5-6 4 3 7-9"
               stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M3.27 6.96 12 12l8.73-5.04M12 22V12"
-              stroke="currentColor"
-              stroke-width="1.6"
+              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
+            <path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
         </div>
-        <div class="sd-empty__title">No recent transactions</div>
-        <div class="sd-empty__sub">Transaction activity will appear here</div>
-      </div>
-    </section>
-
-    <section class="sd-hero" aria-label="Reports overview">
-      <div class="sd-hero__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path
-            d="M4 16l5-6 4 3 7-9"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </div>
-      <div class="sd-hero__text">
-        <div class="sd-hero__title">System Reports</div>
-        <div class="sd-hero__sub">
-          View detailed reports and analytics for the current academic year
+        <div class="sd-hero__text">
+          <div class="sd-hero__title">System Reports</div>
+          <div class="sd-hero__sub">
+            View detailed reports and analytics for the current academic year
+          </div>
         </div>
-      </div>
-      <a href="reports.html" class="sd-hero__cta">View Reports</a>
-    </section>
-  `;
+        <a href="reports.html" class="sd-hero__cta">View Reports</a>
+      </section>
+    `;
+  }
+
+  renderDashboard();
 })();

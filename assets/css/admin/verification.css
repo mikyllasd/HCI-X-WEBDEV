@@ -1,0 +1,109 @@
+.verification-filter-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: end;
+}
+.verification-filter-card {
+  margin-bottom: 22px;
+}
+.verification-list {
+  display: grid;
+  gap: 18px;
+}
+.request-card {
+  border-radius: 16px;
+  border: 1px solid var(--clr-border);
+  background: var(--clr-surface);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+.request-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+}
+.request-card__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.request-card__item {
+  display: grid;
+  gap: 4px;
+}
+.request-card__label {
+  font-size: 12px;
+  color: var(--clr-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.request-card__value {
+  font-size: 15px;
+  font-weight: 600;
+}
+.request-card__image {
+  width: 100%;
+  min-height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--clr-gray-lt);
+  color: var(--clr-gray);
+  text-align: center;
+}
+.request-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.request-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.request-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.request-card__badge--approved {
+  background: rgba(16, 185, 129, 0.14);
+  color: #047857;
+}
+.request-card__badge--pending {
+  background: rgba(250, 204, 21, 0.16);
+  color: #a16207;
+}
+.request-card__badge--rejected {
+  background: rgba(248, 113, 113, 0.16);
+  color: #b91c1c;
+}
+.empty-state {
+  display: none;
+  text-align: center;
+  padding: 40px 0;
+}
+.empty-state.active {
+  display: block;
+}
+.empty-state__icon {
+  font-size: 36px;
+  color: var(--clr-blue);
+  margin-bottom: 16px;
+}
+@media (max-width: 960px) {
+  .verification-filter-row {
+    grid-template-columns: 1fr;
+  }
+}

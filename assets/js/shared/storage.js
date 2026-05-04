@@ -259,6 +259,13 @@ function getArchivedYear(year) {
   return null;
 }
 
+window.addEventListener("beforeunload", () => {
+  const db = getDB();
+  if (db.academicYear) {
+    archiveCurrentYear();
+  }
+});
+
 /**
  * Get all archived academic years
  * @returns {Array} Array of archived year strings

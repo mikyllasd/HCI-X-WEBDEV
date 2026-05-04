@@ -1,0 +1,41 @@
+.accounts-summary-grid {
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.accounts-filter-card {
+  margin-bottom: 22px;
+}
+.accounts-filter-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.accounts-table-card {
+  margin-bottom: 22px;
+}
+.accounts-table-card .data-table th,
+.accounts-table-card .data-table td {
+  white-space: nowrap;
+}
+.accounts-table-card tbody tr:hover {
+  background: rgba(245, 158, 11, 0.06);
+}
+.accounts-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.accounts-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.accounts-button--flagged {
+  color: #be185d;
+}
+@media (max-width: 960px) {
+  .accounts-filter-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,30 @@
+.information-summary-grid {
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.information-filter-card {
+  margin-bottom: 22px;
+}
+.information-filter-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.information-chart-card {
+  margin-bottom: 22px;
+}
+.information-chart-wrapper {
+  min-height: 320px;
+}
+.information-records-card .data-table th,
+.information-records-card .data-table td {
+  white-space: nowrap;
+}
+.information-records-card tbody tr:hover {
+  background: rgba(37, 99, 235, 0.06);
+}
+@media (max-width: 960px) {
+  .information-filter-grid {
+    grid-template-columns: 1fr;
+  }
+}

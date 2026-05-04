@@ -1,0 +1,26 @@
+.pricing-summary-grid {
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.pricing-table-card {
+  margin-bottom: 22px;
+}
+.pricing-table-card .data-table th,
+.pricing-table-card .data-table td {
+  white-space: nowrap;
+}
+.pricing-table-card tbody tr:hover {
+  background: rgba(16, 185, 129, 0.06);
+}
+.pricing-edit-input {
+  width: 100%;
+  max-width: 120px;
+}
+.pricing-action-btn {
+  min-width: 120px;
+}
+@media (max-width: 960px) {
+  .pricing-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

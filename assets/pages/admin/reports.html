@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Admin Reports</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/admin/reports.css" />
+  </head>
+  <body class="staff-dashboard-body">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Admin sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Admin Portal</span>
+          </div>
+          <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close sidebar"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button
+            class="user-pill"
+            type="button"
+            aria-label="Logged in as Admin"
+          >
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Admin</span>
+          </button>
+          <p class="user-handle">@admin</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link">
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="verification.html" class="nav-link">
+                <i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Student Verification</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="reports.html"
+                class="nav-link active"
+                aria-current="page"
+              >
+                <i data-lucide="bar-chart-2" aria-hidden="true"></i
+                ><span>Reports</span>
+              </a>
+            </li>
+            <li>
+              <a href="ratings.html" class="nav-link">
+                <i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span>
+              </a>
+            </li>
+            <li>
+              <a href="information.html" class="nav-link">
+                <i data-lucide="book-open" aria-hidden="true"></i
+                ><span>Information</span>
+              </a>
+            </li>
+            <li>
+              <a href="pricing-settings.html" class="nav-link">
+                <i data-lucide="settings" aria-hidden="true"></i
+                ><span>Pricing Settings</span>
+              </a>
+            </li>
+            <li>
+              <a href="accounts.html" class="nav-link">
+                <i data-lucide="users" aria-hidden="true"></i
+                ><span>Accounts</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="../../pages/admin-login-entry-point.html"
+                class="nav-link nav-link--logout"
+                id="logoutBtn"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <section
+          class="page-section active"
+          id="page-reports"
+          aria-labelledby="reports-heading"
+        >
+          <div class="page-header">
+            <h1 id="reports-heading">Reports</h1>
+            <p class="page-subtitle">
+              Filter activity and sales records for the active academic year.
+            </p>
+          </div>
+
+          <div class="stats-grid stats-grid--4 reports-summary-grid">
+            <article class="stat-card stat-card--blue">
+              <div class="stat-card__header">
+                <span>Completed Sales</span>
+                <i data-lucide="check-circle" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="reportsTotalSales">₱0.00</p>
+              <p class="stat-card__text">Only completed transactions</p>
+            </article>
+            <article class="stat-card stat-card--green">
+              <div class="stat-card__header">
+                <span>GCash Paid</span>
+                <i data-lucide="credit-card" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="reportsGCashSales">₱0.00</p>
+              <p class="stat-card__text">Automatically paid orders</p>
+            </article>
+            <article class="stat-card stat-card--yellow">
+              <div class="stat-card__header">
+                <span>Credit Unpaid</span>
+                <i data-lucide="clock" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="reportsCreditSales">₱0.00</p>
+              <p class="stat-card__text">Credit orders pending settlement</p>
+            </article>
+            <article class="stat-card stat-card--purple">
+              <div class="stat-card__header">
+                <span>Verified Users</span>
+                <i data-lucide="users" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="reportsVerifiedUsers">0</p>
+              <p class="stat-card__text">Approved student accounts</p>
+            </article>
+          </div>
+
+          <div class="card reports-filter-card">
+            <div class="reports-filter-row">
+              <div class="form-group">
+                <label class="form-label" for="reportsPaymentType"
+                  >Payment Type</label
+                >
+                <select class="form-input form-select" id="reportsPaymentType">
+                  <option value="all">All Payment Types</option>
+                  <option value="gcash">GCash</option>
+                  <option value="credit">Credit</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reportsUserType"
+                  >User Type</label
+                >
+                <select class="form-input form-select" id="reportsUserType">
+                  <option value="all">All User Types</option>
+                  <option value="student">Student</option>
+                  <option value="faculty">Faculty</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reportsCollege">College</label>
+                <select class="form-input form-select" id="reportsCollege">
+                  <option value="all">All Colleges</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reportsCourse">Course</label>
+                <select class="form-input form-select" id="reportsCourse">
+                  <option value="all">All Courses</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reportsYearLevel"
+                  >Year Level</label
+                >
+                <select class="form-input form-select" id="reportsYearLevel">
+                  <option value="all">All Year Levels</option>
+                </select>
+              </div>
+              <div class="form-group reports-date-range">
+                <label class="form-label" for="reportsStartDate"
+                  >Date Range</label
+                >
+                <div class="reports-date-inputs">
+                  <input class="form-input" id="reportsStartDate" type="date" />
+                  <input class="form-input" id="reportsEndDate" type="date" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reports-grid">
+            <div class="card reports-chart-card">
+              <div class="card-title-group">
+                <div>
+                  <h2 class="card-title">Paid vs Unpaid</h2>
+                  <p class="card-subtitle">
+                    Compare completed GCash and credit sales.
+                  </p>
+                </div>
+              </div>
+              <div class="reports-chart-wrapper">
+                <canvas
+                  id="reportsPaymentChart"
+                  aria-label="Payment type comparison chart"
+                ></canvas>
+              </div>
+            </div>
+
+            <div class="card reports-summary-card">
+              <div class="card-title-group">
+                <div>
+                  <h2 class="card-title">Sales Breakdown</h2>
+                  <p class="card-subtitle">
+                    Daily, weekly, monthly, and semestral totals.
+                  </p>
+                </div>
+              </div>
+              <div class="reports-breakdown-list">
+                <div class="reports-breakdown-item">
+                  <span>Daily</span>
+                  <strong id="reportsDaily">₱0.00</strong>
+                </div>
+                <div class="reports-breakdown-item">
+                  <span>Weekly</span>
+                  <strong id="reportsWeekly">₱0.00</strong>
+                </div>
+                <div class="reports-breakdown-item">
+                  <span>Monthly</span>
+                  <strong id="reportsMonthly">₱0.00</strong>
+                </div>
+                <div class="reports-breakdown-item">
+                  <span>Semestral</span>
+                  <strong id="reportsSemester">₱0.00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reports-records-card">
+            <div class="card-title-group">
+              <div>
+                <h2 class="card-title">Transaction Records</h2>
+                <p class="card-subtitle">
+                  Completed transactions filtered by user, college, and payment
+                  type.
+                </p>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table
+                class="data-table"
+                aria-label="Filtered transaction records"
+              >
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Service</th>
+                    <th>Payment</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="reportsRecordsBody"></tbody>
+              </table>
+            </div>
+            <div
+              class="empty-state empty-state--mini hidden"
+              id="reportsEmptyState"
+            >
+              <div class="empty-state__icon" aria-hidden="true">
+                <i data-lucide="activity"></i>
+              </div>
+              <div class="empty-state__title">
+                No transactions match the selected filters
+              </div>
+              <div class="empty-state__sub">
+                Adjust filters or try a broader date range.
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="../../js/admin/reports.js"></script>
+  </body>
+</html>

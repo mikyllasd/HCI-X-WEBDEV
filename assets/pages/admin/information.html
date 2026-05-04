@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Admin Information</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/admin/information.css" />
+  </head>
+  <body class="staff-dashboard-body">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Admin sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Admin Portal</span>
+          </div>
+          <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close sidebar"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button
+            class="user-pill"
+            type="button"
+            aria-label="Logged in as Admin"
+          >
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Admin</span>
+          </button>
+          <p class="user-handle">@admin</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link"
+                ><i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="verification.html" class="nav-link"
+                ><i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Student Verification</span></a
+              >
+            </li>
+            <li>
+              <a href="reports.html" class="nav-link"
+                ><i data-lucide="bar-chart-2" aria-hidden="true"></i
+                ><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="ratings.html" class="nav-link"
+                ><i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span></a
+              >
+            </li>
+            <li>
+              <a
+                href="information.html"
+                class="nav-link active"
+                aria-current="page"
+                ><i data-lucide="book-open" aria-hidden="true"></i
+                ><span>Information</span></a
+              >
+            </li>
+            <li>
+              <a href="pricing-settings.html" class="nav-link"
+                ><i data-lucide="settings" aria-hidden="true"></i
+                ><span>Pricing Settings</span></a
+              >
+            </li>
+            <li>
+              <a href="accounts.html" class="nav-link"
+                ><i data-lucide="users" aria-hidden="true"></i
+                ><span>Accounts</span></a
+              >
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="../../pages/admin-login-entry-point.html"
+                class="nav-link nav-link--logout"
+                id="logoutBtn"
+                ><i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <section
+          class="page-section active"
+          id="page-information"
+          aria-labelledby="information-heading"
+        >
+          <div class="page-header">
+            <h1 id="information-heading">Student Information</h1>
+            <p class="page-subtitle">
+              View the latest signup data by college, program, year level, and
+              student type.
+            </p>
+          </div>
+
+          <div class="stats-grid stats-grid--4 information-summary-grid">
+            <article class="stat-card stat-card--blue">
+              <div class="stat-card__header">
+                <span>Total Accounts</span
+                ><i data-lucide="users" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="infoTotalAccounts">0</p>
+              <p class="stat-card__text">All registered users</p>
+            </article>
+            <article class="stat-card stat-card--green">
+              <div class="stat-card__header">
+                <span>Active Students</span
+                ><i data-lucide="user-check" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="infoActiveStudents">0</p>
+              <p class="stat-card__text">Approved and active</p>
+            </article>
+            <article class="stat-card stat-card--yellow">
+              <div class="stat-card__header">
+                <span>Faculty Accounts</span
+                ><i data-lucide="user-plus" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="infoFacultyAccounts">0</p>
+              <p class="stat-card__text">Faculty or staff records</p>
+            </article>
+            <article class="stat-card stat-card--purple">
+              <div class="stat-card__header">
+                <span>Pending Verification</span
+                ><i data-lucide="clock" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="infoPending">0</p>
+              <p class="stat-card__text">Still under review</p>
+            </article>
+          </div>
+
+          <div class="card information-filter-card">
+            <div class="form-grid information-filter-grid">
+              <div class="form-group">
+                <label class="form-label" for="infoRole">Role</label
+                ><select id="infoRole" class="form-input form-select">
+                  <option value="all">All roles</option>
+                  <option value="student">Student</option>
+                  <option value="faculty">Faculty</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="infoCollege">College</label
+                ><select id="infoCollege" class="form-input form-select">
+                  <option value="all">All colleges</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="infoCourse">Program</label
+                ><select id="infoCourse" class="form-input form-select">
+                  <option value="all">All programs</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="infoYearLevel">Year Level</label
+                ><select id="infoYearLevel" class="form-input form-select">
+                  <option value="all">All years</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="infoStudentType"
+                  >Student Type</label
+                ><select id="infoStudentType" class="form-input form-select">
+                  <option value="all">All student types</option>
+                  <option value="regular">Regular</option>
+                  <option value="irregular">Irregular</option>
+                  <option value="shiftee">Shiftee</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card information-chart-card">
+            <div class="card-title-group">
+              <div>
+                <h2 class="card-title">College Distribution</h2>
+                <p class="card-subtitle">
+                  Number of users per college for the active academic year.
+                </p>
+              </div>
+            </div>
+            <div class="information-chart-wrapper">
+              <canvas
+                id="informationChart"
+                aria-label="User distribution by college"
+              ></canvas>
+            </div>
+          </div>
+
+          <div class="card information-records-card">
+            <div class="card-title-group">
+              <div>
+                <h2 class="card-title">User Information Records</h2>
+                <p class="card-subtitle">
+                  All signups grouped by college, program, year level, and
+                  student type.
+                </p>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table" aria-label="User information records">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>College</th>
+                    <th>Program</th>
+                    <th>Year</th>
+                    <th>Student Type</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="informationRecordsBody"></tbody>
+              </table>
+            </div>
+            <div
+              class="empty-state empty-state--mini hidden"
+              id="informationEmptyState"
+            >
+              <div class="empty-state__icon" aria-hidden="true">
+                <i data-lucide="book-open"></i>
+              </div>
+              <div class="empty-state__title">No user records found</div>
+              <div class="empty-state__sub">
+                Users will appear here once signup data is available.
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="../../js/admin/information.js"></script>
+  </body>
+</html>

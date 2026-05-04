@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Pricing Settings</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/admin/pricing-settings.css" />
+  </head>
+  <body class="staff-dashboard-body">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Admin sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span
+            ><span class="brand-sub">Admin Portal</span>
+          </div>
+          <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close sidebar"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button
+            class="user-pill"
+            type="button"
+            aria-label="Logged in as Admin"
+          >
+            <i data-lucide="user" aria-hidden="true"></i><span>Admin</span>
+          </button>
+          <p class="user-handle">@admin</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link"
+                ><i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="verification.html" class="nav-link"
+                ><i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Student Verification</span></a
+              >
+            </li>
+            <li>
+              <a href="reports.html" class="nav-link"
+                ><i data-lucide="bar-chart-2" aria-hidden="true"></i
+                ><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="ratings.html" class="nav-link"
+                ><i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span></a
+              >
+            </li>
+            <li>
+              <a href="information.html" class="nav-link"
+                ><i data-lucide="book-open" aria-hidden="true"></i
+                ><span>Information</span></a
+              >
+            </li>
+            <li>
+              <a
+                href="pricing-settings.html"
+                class="nav-link active"
+                aria-current="page"
+                ><i data-lucide="settings" aria-hidden="true"></i
+                ><span>Pricing Settings</span></a
+              >
+            </li>
+            <li>
+              <a href="accounts.html" class="nav-link"
+                ><i data-lucide="users" aria-hidden="true"></i
+                ><span>Accounts</span></a
+              >
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="../../pages/admin-login-entry-point.html"
+                class="nav-link nav-link--logout"
+                id="logoutBtn"
+                ><i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <section
+          class="page-section active"
+          id="page-pricing"
+          aria-labelledby="pricing-heading"
+        >
+          <div class="page-header">
+            <h1 id="pricing-heading">Pricing Settings</h1>
+            <p class="page-subtitle">
+              Edit service prices stored in the system for the current academic
+              year.
+            </p>
+          </div>
+          <div class="stats-grid stats-grid--4 pricing-summary-grid">
+            <article class="stat-card stat-card--blue">
+              <div class="stat-card__header">
+                <span>Services</span
+                ><i data-lucide="box" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="pricingServiceCount">0</p>
+              <p class="stat-card__text">Active service entries</p>
+            </article>
+            <article class="stat-card stat-card--green">
+              <div class="stat-card__header">
+                <span>Categories</span
+                ><i data-lucide="layers" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="pricingCategoryCount">0</p>
+              <p class="stat-card__text">Unique service categories</p>
+            </article>
+            <article class="stat-card stat-card--yellow">
+              <div class="stat-card__header">
+                <span>Editable</span
+                ><i data-lucide="edit-3" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value">Yes</p>
+              <p class="stat-card__text">Prices can be updated instantly</p>
+            </article>
+            <article class="stat-card stat-card--purple">
+              <div class="stat-card__header">
+                <span>Saved</span><i data-lucide="save" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="pricingSavedCount">0</p>
+              <p class="stat-card__text">Edited prices this session</p>
+            </article>
+          </div>
+          <div class="card pricing-table-card">
+            <div class="card-title-group">
+              <div>
+                <h2 class="card-title">Service Price List</h2>
+                <p class="card-subtitle">
+                  Update system service prices for checkout and reporting.
+                </p>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table" aria-label="Service pricing list">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Category</th>
+                    <th>Current Price</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="pricingServicesBody"></tbody>
+              </table>
+            </div>
+            <div
+              class="empty-state empty-state--mini hidden"
+              id="pricingEmptyState"
+            >
+              <div class="empty-state__icon" aria-hidden="true">
+                <i data-lucide="dollar-sign"></i>
+              </div>
+              <div class="empty-state__title">No services available</div>
+              <div class="empty-state__sub">
+                Add service records in the system settings or service management
+                section.
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="../../js/admin/pricing-settings.js"></script>
+  </body>
+</html>

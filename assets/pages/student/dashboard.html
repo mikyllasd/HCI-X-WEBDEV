@@ -72,7 +72,6 @@
     <!-- Cart Panel -->
     <div class="sidebar-panel" id="panel-cart">
         <div class="sidebar-panel-inner">
-            <!-- Select All Row -->
             <div class="sidebar-cart-toolbar">
                 <label class="sidebar-check-label">
                     <input type="checkbox" id="sidebar-select-all" onchange="sidebarSelectAll(this.checked)" />
@@ -115,10 +114,16 @@
         </button>
     </div>
 </aside>
- 
+
 <!-- Navbar -->
 <header class="dashboard-navbar">
     <div class="nav-left">
+        <button type="button" class="nav-icon-btn sidebar-toggle-btn" onclick="openSidebar()" title="Menu" aria-label="Open menu">
+            <span class="hamburger-icon">
+                <span></span><span></span><span></span>
+            </span>
+            <span class="sidebar-cart-nav-badge" id="sidebar-cart-nav-badge" style="display:none;">0</span>
+        </button>
         <div class="nav-logo"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></div>
         <div class="nav-title">
             <h1>UPRESSease</h1>
@@ -130,14 +135,9 @@
             <span class="upress-icon upress-icon--bell" aria-hidden="true"></span>
             <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
         </button>
-        <button type="button" class="nav-icon-btn" onclick="logout()" title="Logout" aria-label="Logout">
-            <span class="upress-icon upress-icon--x" aria-hidden="true"></span> Logout
-        </button>
-        <button type="button" class="nav-icon-btn sidebar-toggle-btn" onclick="openSidebar()" title="Menu" aria-label="Open menu">
-            <span class="hamburger-icon">
-                <span></span><span></span><span></span>
-            </span>
-            <span class="sidebar-cart-nav-badge" id="sidebar-cart-nav-badge" style="display:none;">0</span>
+        <button type="button" class="nav-icon-btn nav-logout-btn" onclick="logout()" title="Logout" aria-label="Logout">
+            <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
+            <span class="nav-logout-label">Logout</span>
         </button>
     </div>
 </header>
@@ -151,6 +151,53 @@
     <div id="notif-list" class="notif-empty">
         <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span></div>
         <p>No notifications yet.</p>
+    </div>
+</div>
+
+<!-- ===================== CREATE ORDER DEDICATED MODAL ===================== -->
+<div class="co-overlay" id="co-overlay" style="display:none;">
+    <div class="co-modal" id="co-modal">
+        <h3 class="co-title">Who is this order for?</h3>
+        <p class="co-desc">Select the type of order you want to create.</p>
+
+        <div class="co-type-btns">
+            <button type="button" class="co-type-btn" id="co-individual">
+                <span class="co-type-icon">👤</span>
+                <div>
+                    <div class="co-type-name">Individual Order</div>
+                    <div class="co-type-sub">For personal use</div>
+                </div>
+            </button>
+            <button type="button" class="co-type-btn" id="co-organization">
+                <span class="co-type-icon">🏫</span>
+                <div>
+                    <div class="co-type-name">Organization Order</div>
+                    <div class="co-type-sub">For your student organization</div>
+                </div>
+            </button>
+        </div>
+
+        <div class="co-org-wrap" id="co-org-wrap" style="display:none;">
+            <label class="co-label">Select Organization *</label>
+            <select id="co-org-dropdown" class="co-select">
+                <option value="">-- Choose Organization --</option>
+                <option value="Computer Science Club">Computer Science Club</option>
+                <option value="Engineering Society">Engineering Society</option>
+                <option value="Business Club">Business Club</option>
+                <option value="Arts and Culture Guild">Arts and Culture Guild</option>
+                <option value="Sports Association">Sports Association</option>
+                <option value="Science Club">Science Club</option>
+                <option value="Others">Others</option>
+            </select>
+            <div class="co-others-wrap" id="co-others-wrap" style="display:none;">
+                <input type="text" id="co-others-input" class="co-others-input" placeholder="Please specify your organization" />
+            </div>
+        </div>
+
+        <div class="co-actions">
+            <button type="button" class="co-btn-cancel" id="co-cancel">Cancel</button>
+            <button type="button" class="co-btn-confirm" id="co-confirm">Confirm</button>
+        </div>
     </div>
 </div>
 

@@ -217,16 +217,48 @@
     const db = getDB();
     const user = (db.users || []).find((item) => item.id === id);
     if (!user) return;
-    user.status = newStatus;
-    user.verified = newStatus === "approved";
-    user.active = newStatus === "approved";
-    user.accountStatus =
+    const updatedStatus =
       newStatus === "approved"
         ? "verified"
         : newStatus === "rejected"
           ? "rejected"
           : "pending";
+
+    user.status = newStatus;
+    user.verified = newStatus === "approved";
+    user.active = newStatus === "approved";
+    user.accountStatus = updatedStatus;
     user.reviewedAt = new Date().toISOString();
+
+    db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
+    let authUser = db.authUsers.find(
+      (item) =>
+        item.email &&
+        item.email.toLowerCase() === user.email.toLowerCase(),
+    );
+
+    if (authUser) {
+      authUser.accountStatus = updatedStatus;
+      authUser.verified = newStatus === "approved";
+      authUser.active = newStatus === "approved";
+      authUser.reviewedAt = user.reviewedAt;
+    } else {
+      authUser = {
+        id: user.id || `auth_${Date.now()}`,
+        email: user.email,
+        password: user.password || "",
+        fullName: user.fullName || `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+        phone: user.phone || "",
+        accountType: user.accountType || "student",
+        accountStatus: updatedStatus,
+        verified: newStatus === "approved",
+        active: newStatus === "approved",
+        reviewedAt: user.reviewedAt,
+        createdAt: user.createdAt || new Date().toISOString(),
+      };
+      db.authUsers.push(authUser);
+    }
+
     saveDB(db);
     saveChanges();
   }

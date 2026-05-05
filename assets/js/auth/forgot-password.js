@@ -2,6 +2,9 @@
   var fpOTP = "";
   var fpTargetEmail = "";
   var fpTimerID = null;
+  var fpAttempts = 0;
+  var fpMaxAttempts = 5;
+  var fpLockedUntil = null;
 
   function openFP() {
     fpReset();
@@ -51,6 +54,68 @@
     el.style.display = "none";
   }
 
+  function isAccountLocked() {
+    if (!fpLockedUntil) return false;
+    var now = Date.now();
+    if (now > fpLockedUntil) {
+      fpLockedUntil = null;
+      fpAttempts = 0;
+      return false;
+    }
+    return true;
+  }
+
+  function getRemainingLockTime() {
+    if (!fpLockedUntil) return 0;
+    var remaining = Math.ceil((fpLockedUntil - Date.now()) / 1000);
+    return remaining > 0 ? remaining : 0;
+  }
+
+  function getUserByEmail(email) {
+    try {
+      if (typeof getAuthUser === "function") {
+        return getAuthUser(email);
+      }
+      if (typeof getDB === "function") {
+        var db = getDB();
+        if (db && db.authUsers && Array.isArray(db.authUsers)) {
+          return db.authUsers.find(function (u) {
+            return String(u.email || "").toLowerCase() === String(email).toLowerCase();
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Error checking user database:", err);
+    }
+    return null;
+  }
+
+  function updateUserPassword(email, newPassword) {
+    try {
+      if (typeof updateAuthUser === "function") {
+        var result = updateAuthUser(email, { password: newPassword });
+        return result !== null;
+      }
+      if (typeof getDB === "function" && typeof saveDB === "function") {
+        var db = getDB();
+        if (db && db.authUsers && Array.isArray(db.authUsers)) {
+          var userIndex = db.authUsers.findIndex(function (u) {
+            return String(u.email || "").toLowerCase() === String(email).toLowerCase();
+          });
+          if (userIndex !== -1) {
+            db.authUsers[userIndex].password = newPassword;
+            db.authUsers[userIndex].passwordUpdatedAt = new Date().toISOString();
+            saveDB(db);
+            return true;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error updating password:", err);
+    }
+    return false;
+  }
+
   window.openFP = openFP;
   window.closeFP = closeFP;
   window.fpSendOTP = function () {
@@ -58,35 +123,52 @@
     var email = emailEl ? emailEl.value.trim() : "";
     fpHideErr("fp-email-err");
 
+    if (isAccountLocked()) {
+      var remaining = getRemainingLockTime();
+      fpShowErr("fp-email-err", "Too many attempts. Please wait " + remaining + " seconds.");
+      return;
+    }
+
     if (!email) {
       fpShowErr("fp-email-err", "Please enter your email address.");
       return;
     }
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       fpShowErr("fp-email-err", "Please enter a valid email address.");
       return;
     }
 
+    var user = getUserByEmail(email);
+    if (!user) {
+      fpAttempts++;
+      if (fpAttempts >= fpMaxAttempts) {
+        fpLockedUntil = Date.now() + 300000;
+      }
+      fpShowErr(
+        "fp-email-err",
+        "No account found with this email. Please check your email or create a new account."
+      );
+      return;
+    }
+
+    fpAttempts = 0;
     fpOTP = String(Math.floor(100000 + Math.random() * 900000));
     fpTargetEmail = email;
 
-    showAlert(
-      "OTP sent",
-      "A reset code has been sent to " +
-        email +
-        ".\n\n" +
-        "(Demo mode — your code is: " +
-        fpOTP +
-        ")",
-      function () {
-        var hint = document.getElementById("fp-otp-hint");
-        if (hint) {
-          hint.textContent = "We sent a 6-digit code to " + email + ". Enter it below.";
-        }
-        showStep("fp-step2");
-        fpStartResendTimer();
-      },
-    );
+    var hint = document.getElementById("fp-otp-hint");
+    if (hint) {
+      hint.textContent = "We sent a 6-digit code to " + email + ". Enter it below. Code expires in 10 minutes.\n\nDemo mode — your code is: " + fpOTP;
+    }
+    
+    var otpInput = document.getElementById("fp-otp-input");
+    if (otpInput) {
+      otpInput.value = "";
+      otpInput.focus();
+    }
+    
+    showStep("fp-step2");
+    fpStartResendTimer();
   };
 
   window.fpBackToStep1 = function () {
@@ -104,6 +186,12 @@
       fpShowErr("fp-otp-err", "Please enter the 6-digit code.");
       return;
     }
+
+    if (entered.length !== 6 || !/^\d+$/.test(entered)) {
+      fpShowErr("fp-otp-err", "Code must be exactly 6 digits.");
+      return;
+    }
+
     if (entered !== fpOTP) {
       fpShowErr("fp-otp-err", "Incorrect code. Please check and try again.");
       return;
@@ -136,15 +224,12 @@
   window.fpResend = function (e) {
     e.preventDefault();
     fpOTP = String(Math.floor(100000 + Math.random() * 900000));
-    showAlert(
-      "New code sent",
-      "A new reset code has been sent to " +
-        fpTargetEmail +
-        ".\n\n" +
-        "(Demo mode — your new code is: " +
-        fpOTP +
-        ")",
-    );
+    
+    var hint = document.getElementById("fp-otp-hint");
+    if (hint) {
+      hint.textContent = "A new reset code has been sent to " + fpTargetEmail + ".\n\nDemo mode — your new code is: " + fpOTP;
+    }
+    
     var otpIn = document.getElementById("fp-otp-input");
     if (otpIn) otpIn.value = "";
     fpHideErr("fp-otp-err");
@@ -162,28 +247,31 @@
       fpShowErr("fp-pass-err", "Please enter a new password.");
       return;
     }
+
     if (newPass.length < 8) {
       fpShowErr("fp-pass-err", "Password must be at least 8 characters.");
       return;
     }
+
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPass)) {
+      fpShowErr("fp-pass-err", "Password must contain uppercase, lowercase, and numbers.");
+      return;
+    }
+
     if (newPass !== confirmPass) {
       fpShowErr("fp-pass-err", "Passwords do not match.");
       return;
     }
 
-    var existing = User.get();
-    if (existing && existing.email === fpTargetEmail) {
-      User.update({ password: newPass });
-    } else {
-      User.save({
-        name: fpTargetEmail.split("@")[0],
-        email: fpTargetEmail,
-        password: newPass,
-        phone: "",
-        college: "",
-        course: "",
-        year: "",
-      });
+    if (!fpTargetEmail) {
+      fpShowErr("fp-pass-err", "Session error. Please start over.");
+      return;
+    }
+
+    var updated = updateUserPassword(fpTargetEmail, newPass);
+    if (!updated) {
+      fpShowErr("fp-pass-err", "Error updating password. Please try again.");
+      return;
     }
 
     showStep("fp-step4");

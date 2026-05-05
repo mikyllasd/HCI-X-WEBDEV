@@ -13,6 +13,38 @@ setText('welcome-email', u?.email || 'student@wmsu.edu.ph');
 // Update profile section in sidebar
 updateProfileSection(u);
 
+// Smart phone verification when switching accounts
+if (localStorage.getItem('upress_verify_phone_on_load') === 'true') {
+    localStorage.removeItem('upress_verify_phone_on_load');
+    const storedPhone = u?.phone || '';
+    if (storedPhone) {
+        showConfirm(
+            'Confirm Phone Number',
+            `Are you still using ${storedPhone}?`,
+            () => {
+                // User confirmed same phone — proceed
+            },
+            () => {
+                // User said no — show phone update prompt
+                showPrompt(
+                    'Update Phone Number',
+                    'Please enter your new phone number (09XXXXXXXXX)',
+                    '09123456789',
+                    (newPhone) => {
+                        if (!/^09[0-9]{9}$/.test(newPhone.replace(/\s/g, ''))) {
+                            showAlert('Invalid Phone', 'Please enter a valid PH mobile number.');
+                            return;
+                        }
+                        User.update({ phone: newPhone });
+                        // In a real system, would trigger OTP here
+                        showAlert('Phone Updated', 'Your phone number has been updated.');
+                    }
+                );
+            }
+        );
+    }
+}
+
 function serviceHref(page) {
     window.location.href = page;
 }
@@ -514,12 +546,6 @@ function updateProfileSection(user) {
     const profileEmailEl = document.getElementById('profile-email');
     if (profileEmailEl) {
         profileEmailEl.textContent = user.email || 'Email not set';
-    }
-
-    // Update profile organization/affiliation
-    const profileOrgEl = document.getElementById('profile-organization');
-    if (profileOrgEl) {
-        profileOrgEl.textContent = user.organization || 'No organization selected';
     }
 
     // Update profile status

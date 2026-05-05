@@ -232,16 +232,41 @@ function updateAuthUser(email, updates) {
  * @returns {Object|null} User object if authenticated, null otherwise
  */
 function authenticateUser(email, password) {
-  const user = getAuthUser(email);
-  if (!user) return null;
+  const normalizedEmail = String(email || "").toLowerCase();
+  let user = getAuthUser(normalizedEmail);
+  const db = getDB();
 
+  if (!user) {
+    user = (db.users || []).find(
+      (item) =>
+        String(item.email || "").toLowerCase() === normalizedEmail,
+    );
+
+    if (user) {
+      const authUser = {
+        id: user.id || generateStorageId("auth"),
+        email: user.email,
+        password: user.password || "",
+        fullName:
+          user.fullName || `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+        phone: user.phone || "",
+        accountType: user.accountType || "student",
+        accountStatus: user.accountStatus || user.status || "pending",
+        createdAt: user.createdAt || new Date().toISOString(),
+      };
+
+      db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
+      db.authUsers.push(authUser);
+      saveDB(db);
+      user = authUser;
+    }
+  }
+
+  if (!user) return null;
   if (user.password !== password) return null;
 
-  if (
-    user.accountStatus === "suspended" ||
-    user.accountStatus === "deactivated"
-  )
-    return null;
+  const status = user.accountStatus || user.status;
+  if (status === "suspended" || status === "deactivated") return null;
 
   return user;
 }

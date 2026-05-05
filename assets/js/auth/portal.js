@@ -198,18 +198,48 @@
           return;
         }
         writeFails(failKey, 0);
-        // Store current user session
-        localStorage.setItem(
-          "currentUser",
-          JSON.stringify({
-            id: authenticatedUser.id,
-            name: authenticatedUser.fullName,
-            email: authenticatedUser.email,
-            role: "student",
-            accountType: authenticatedUser.accountType,
-            accountStatus: authenticatedUser.accountStatus,
-          }),
-        );
+        // Store current user session for both auth and student pages
+        // Fetch full user record from db to get all fields (campusId, college, etc)
+        const db = getDB();
+        const fullUserRecord = (db.users || []).find(
+          (item) =>
+            String(item.email || "").toLowerCase() ===
+            String(rawId || "").toLowerCase(),
+        ) || {};
+
+        const loggedInStudent = {
+          id: authenticatedUser.id,
+          name: authenticatedUser.fullName,
+          email: authenticatedUser.email,
+          role: "student",
+          accountType: authenticatedUser.accountType,
+          accountStatus: authenticatedUser.accountStatus,
+          campusId: fullUserRecord.campusId || "",
+          college: fullUserRecord.college || "",
+          course: fullUserRecord.course || "",
+          yearLevel: fullUserRecord.yearLevel || "",
+          phone: fullUserRecord.phone || "",
+          firstName: fullUserRecord.firstName || "",
+          lastName: fullUserRecord.lastName || "",
+        };
+
+        // Check if switching accounts — if so, clear cart and orders
+        const previousUser = JSON.parse(localStorage.getItem("upressUser") || "null");
+        if (
+          previousUser &&
+          previousUser.email &&
+          previousUser.email.toLowerCase() !== loggedInStudent.email.toLowerCase()
+        ) {
+          // Different account — clear cart and mark for phone verification
+          localStorage.removeItem("upressCart");
+          localStorage.removeItem("upressOrders");
+          localStorage.removeItem("upressCheckout");
+          localStorage.setItem("upress_verify_phone_on_load", "true");
+        }
+
+        localStorage.setItem("currentUser", JSON.stringify(loggedInStudent));
+        localStorage.setItem("upressUser", JSON.stringify(loggedInStudent));
+
         showAlert(
           "Welcome back, " + authenticatedUser.fullName + ". Redirecting…",
           "success",

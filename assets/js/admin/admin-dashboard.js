@@ -286,12 +286,66 @@ function closeVerificationModal() {
  */
 function setVerificationStatus(id, newStatus) {
   const req = VERIFICATION_REQUESTS.find((r) => r.id === id);
-  if (req) {
-    req.status = newStatus;
-    refreshVerificationCounters();
-    renderVerificationList();
-    showToast(`Request for ${req.name} has been ${newStatus}.`);
+  if (!req) return;
+
+  const updatedStatus =
+    newStatus === "approved"
+      ? "verified"
+      : newStatus === "rejected"
+      ? "rejected"
+      : "pending";
+  const reviewedAt = new Date().toISOString();
+
+  req.status = newStatus;
+  req.reviewedAt = reviewedAt;
+
+  const db = getDB();
+  const user = (db.users || []).find(
+    (item) =>
+      item.email &&
+      item.email.toLowerCase() === req.email.toLowerCase(),
+  );
+
+  if (user) {
+    user.status = newStatus;
+    user.verified = newStatus === "approved";
+    user.active = newStatus === "approved";
+    user.accountStatus = updatedStatus;
+    user.reviewedAt = reviewedAt;
   }
+
+  db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
+  let authUser = db.authUsers.find(
+    (item) =>
+      item.email &&
+      item.email.toLowerCase() === req.email.toLowerCase(),
+  );
+
+  if (authUser) {
+    authUser.accountStatus = updatedStatus;
+    authUser.verified = newStatus === "approved";
+    authUser.active = newStatus === "approved";
+    authUser.reviewedAt = reviewedAt;
+  } else {
+    db.authUsers.push({
+      id: user?.id || `auth_${Date.now()}`,
+      email: req.email,
+      password: user?.password || "",
+      fullName: user?.fullName || req.name,
+      phone: user?.phone || "",
+      accountType: user?.accountType || "student",
+      accountStatus: updatedStatus,
+      verified: newStatus === "approved",
+      active: newStatus === "approved",
+      reviewedAt,
+      createdAt: user?.createdAt || reviewedAt,
+    });
+  }
+
+  saveDB(db);
+  refreshVerificationCounters();
+  renderVerificationList();
+  showToast(`Request for ${req.name} has been ${newStatus}.`);
 }
 
 /** Recomputes and updates the four summary counter cards */

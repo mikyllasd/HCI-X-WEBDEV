@@ -10,6 +10,9 @@ if (u.accountStatus === 'pending') {
 setText('welcome-name',  u?.name  || 'Student');
 setText('welcome-email', u?.email || 'student@wmsu.edu.ph');
 
+// Update profile section in sidebar
+updateProfileSection(u);
+
 function serviceHref(page) {
     window.location.href = page;
 }
@@ -492,10 +495,120 @@ function hideServicesSection() {
     }
 }
 
-function doLogout() {
+function updateProfileSection(user) {
+    if (!user) return;
+
+    // Update profile name
+    const profileNameEl = document.getElementById('profile-name');
+    if (profileNameEl) {
+        profileNameEl.textContent = user.name || 'Student Name';
+    }
+
+    // Update profile ID
+    const profileIdEl = document.getElementById('profile-id');
+    if (profileIdEl) {
+        profileIdEl.textContent = `ID: ${user.campusId || '0000-0000'}`;
+    }
+
+    // Update profile status
+    const profileStatusEl = document.getElementById('profile-status');
+    if (profileStatusEl) {
+        const status = user.accountStatus || 'pending';
+        let statusClass = 'status-pending';
+        let statusText = 'Pending';
+
+        if (status === 'verified' || status === 'active') {
+            statusClass = 'status-verified';
+            statusText = status === 'verified' ? 'Verified' : 'Active';
+        } else if (status === 'suspended') {
+            statusClass = 'status-suspended';
+            statusText = 'Suspended';
+        } else {
+            statusClass = 'status-other';
+            statusText = status.charAt(0).toUpperCase() + status.slice(1);
+        }
+
+        profileStatusEl.innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+    }
+
+    // Hide update email button for Path A students (WMSU email)
+    const updateEmailBtn = document.getElementById('update-email-btn');
+    if (updateEmailBtn) {
+        const isPathA = user.signupPath === 'A' || (user.email && user.email.endsWith('@wmsu.edu.ph'));
+        updateEmailBtn.style.display = isPathA ? 'none' : 'flex';
+    }
+}
+
+function logout() {
     showConfirm('Logout', 'Are you sure you want to log out?', () => {
         User.clear();
         Checkout.clear();
         window.location.href = '../auth/portal.html';
     });
+}
+
+function showUpdateEmailModal() {
+    const user = User.get();
+    if (!user) return;
+
+    // Step 1: Password verification
+    showPrompt(
+        'Verify Identity',
+        'Enter your current password to continue:',
+        'Current password',
+        (password) => {
+            // In a real app, this would verify against a backend
+            // For demo purposes, we'll accept any non-empty password
+            if (!password.trim()) {
+                showAlert('Error', 'Password is required.');
+                return;
+            }
+
+            // Step 2: New email input
+            showPrompt(
+                'Update Email',
+                'Enter your new email address:',
+                'newemail@example.com',
+                (newEmail) => {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(newEmail)) {
+                        showAlert('Error', 'Please enter a valid email address.');
+                        return;
+                    }
+
+                    if (newEmail === user.email) {
+                        showAlert('Error', 'New email must be different from current email.');
+                        return;
+                    }
+
+                    // Step 3: Send verification (simulated)
+                    showAlert('Verification Sent', 'A verification link has been sent to your new email. Please check your inbox and click the link to complete the update.', () => {
+                        // In a real app, this would send an email with a verification link
+                        // For demo, we'll simulate the verification process
+                        simulateEmailVerification(newEmail);
+                    });
+                },
+                () => {} // Cancel
+            );
+        },
+        () => {} // Cancel
+    );
+}
+
+function simulateEmailVerification(newEmail) {
+    // Simulate clicking the verification link
+    // In a real app, this would be handled by a backend endpoint
+    const user = User.get();
+    if (user) {
+        // Update the email
+        User.update({ email: newEmail });
+
+        // Update the profile section
+        updateProfileSection(User.get());
+
+        // Show success message
+        showAlert('Email Updated', 'Your email has been successfully updated.');
+
+        // In a real app, would also send notification to old email
+    }
 }

@@ -130,6 +130,108 @@
 .sidebar-close-btn .upress-icon { width: 1rem; height: 1rem; color: #fff; }
 .sidebar-close-btn:hover { background: rgba(255,255,255,0.3); }
 
+/* Profile Section */
+.sidebar-profile {
+    background: var(--color-white);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+.profile-avatar {
+    width: 3rem;
+    height: 3rem;
+    background: var(--color-surface);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-border);
+    flex-shrink: 0;
+}
+.profile-avatar .upress-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-text-secondary);
+}
+.profile-info {
+    flex: 1;
+    min-width: 0;
+}
+.profile-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: 0.125rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.profile-id {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.25rem;
+}
+.profile-status {
+    display: flex;
+}
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.status-badge.status-pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+.status-badge.status-verified,
+.status-badge.status-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+.status-badge.status-suspended,
+.status-badge.status-other {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Update Email Button */
+.sidebar-profile-actions {
+    background: var(--color-white);
+    padding: 0 1.25rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+.sidebar-update-email-btn {
+    width: 100%;
+    background: var(--color-cta);
+    color: white;
+    border: none;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+.sidebar-update-email-btn .upress-icon {
+    width: 1rem;
+    height: 1rem;
+}
+.sidebar-update-email-btn:hover {
+    background: var(--color-cta-hover);
+}
+
 /* Tabs */
 .sidebar-tabs {
     display: flex; border-bottom: 1px solid var(--color-border);

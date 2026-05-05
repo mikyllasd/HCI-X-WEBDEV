@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,7 +22,9 @@
           <span class="pattern-hero-badge">Sign in</span>
           <div class="portal-brand">
             <div class="portal-brand-icon" aria-hidden="true">
-              <span class="upress-icon upress-icon--grad upress-icon--lg"></span>
+              <span
+                class="upress-icon upress-icon--grad upress-icon--lg"
+              ></span>
             </div>
             <div>
               <h1>UPress Sign-In</h1>
@@ -30,13 +32,16 @@
             </div>
           </div>
           <p class="portal-lead">
-            Students use your WMSU email. Staff, admin, and superadmin use your assigned username.
+            Students use your WMSU email. Staff, admin, and superadmin use your
+            assigned username.
           </p>
 
           <div class="portal-alert" id="portal-alert" role="status"></div>
 
           <form id="portal-form" autocomplete="on">
-            <label class="portal-label pattern-field-label" for="portal-id">Email or username</label>
+            <label class="portal-label pattern-field-label" for="portal-id"
+              >Email or username</label
+            >
             <div class="portal-input-wrap">
               <input
                 type="text"
@@ -49,7 +54,9 @@
               />
             </div>
 
-            <label class="portal-label pattern-field-label" for="portal-pw">Password</label>
+            <label class="portal-label pattern-field-label" for="portal-pw"
+              >Password</label
+            >
             <div class="portal-input-wrap portal-input-wrap--pw">
               <input
                 type="password"
@@ -60,33 +67,52 @@
                 placeholder="Enter password"
                 required
               />
-              <button type="button" class="portal-toggle-pw" id="portal-toggle-pw" aria-label="Show password">
-                <span class="upress-icon upress-icon--eye" aria-hidden="true"></span>
+              <button
+                type="button"
+                class="portal-toggle-pw"
+                id="portal-toggle-pw"
+                aria-label="Show password"
+              >
+                <span
+                  class="upress-icon upress-icon--eye"
+                  aria-hidden="true"
+                ></span>
               </button>
             </div>
 
             <div class="portal-row">
-              <label><input type="checkbox" id="portal-remember" /> Remember me</label>
+              <label
+                ><input type="checkbox" id="portal-remember" /> Remember
+                me</label
+              >
               <a href="#" id="portal-forgot">Forgot password?</a>
             </div>
 
             <div class="remember-device-prompt" id="remember-device-prompt">
               <strong>Is this your personal device?</strong>
               <p class="remember-device-hint">
-                If you choose Yes, your session can stay signed in longer. If No, the session ends when
-                you close the browser.
+                If you choose Yes, your session can stay signed in longer. If
+                No, the session ends when you close the browser.
               </p>
               <div class="btn-row">
-                <button type="button" id="remember-yes" class="primary">Yes</button>
+                <button type="button" id="remember-yes" class="primary">
+                  Yes
+                </button>
                 <button type="button" id="remember-no">No</button>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg btn-block" id="portal-submit">Sign in</button>
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg btn-block"
+              id="portal-submit"
+            >
+              Sign in
+            </button>
           </form>
 
           <div class="portal-links pattern-muted">
-            New student? <a href="../student/signup.html">Create an account</a>
+            New here? <a href="../student/signup.html">Create an account</a>
             ·
             <a href="../../../index.html">Home</a>
           </div>
@@ -94,24 +120,39 @@
           <div class="portal-divider">Demo credentials (click to fill)</div>
           <p class="portal-demo-label">Operational roles</p>
           <div class="portal-demo-grid">
-            <div class="portal-demo-card" data-user="superadmin" data-pass="super123">
+            <div
+              class="portal-demo-card"
+              data-user="superadmin"
+              data-pass="super123"
+            >
               <span class="role">Super Admin</span>
               <span class="cred">superadmin / super123</span>
             </div>
-            <div class="portal-demo-card" data-user="admin" data-pass="admin123">
+            <div
+              class="portal-demo-card"
+              data-user="admin"
+              data-pass="admin123"
+            >
               <span class="role">Admin (monitoring &amp; reports)</span>
               <span class="cred">admin / admin123</span>
             </div>
-            <div class="portal-demo-card" data-user="staff" data-pass="staff123">
-              <span class="role">Staff &amp; POS (web orders + walk-in counter)</span>
+            <div
+              class="portal-demo-card"
+              data-user="staff"
+              data-pass="staff123"
+            >
+              <span class="role"
+                >Staff &amp; POS (web orders + walk-in counter)</span
+              >
               <span class="cred">staff / staff123</span>
             </div>
           </div>
 
           <p class="portal-footnote">
-            Web: student submits order → staff verifies files &amp; produces → verify GCash / pickup
-            payment on the queue → release. Walk-in: use Walk-in POS for on-site customers (cash /
-            GCash). Superadmin sets policy, academic year, and pricing.
+            Web: student submits order → staff verifies files &amp; produces →
+            verify GCash / pickup payment on the queue → release. Walk-in: use
+            Walk-in POS for on-site customers (cash / GCash). Superadmin sets
+            policy, academic year, and pricing.
           </p>
         </div>
       </div>
@@ -120,55 +161,149 @@
     <div id="fp-overlay" class="fp-overlay">
       <div class="fp-modal">
         <div id="fp-step1">
-          <div class="fp-modal-icon"><span class="upress-icon upress-icon--key upress-icon--lg" aria-hidden="true"></span></div>
+          <div class="fp-modal-icon">
+            <span
+              class="upress-icon upress-icon--key upress-icon--lg"
+              aria-hidden="true"
+            ></span>
+          </div>
           <h3 class="fp-modal-title">Forgot password</h3>
-          <p class="fp-modal-desc">Enter your registered student email. We will send a reset code (demo).</p>
-          <label class="portal-label pattern-field-label" for="fp-email">Email</label>
-          <input type="email" id="fp-email" class="fp-input" placeholder="student@wmsu.edu.ph" />
+          <p class="fp-modal-desc">
+            Enter your registered student email. We will send a reset code
+            (demo).
+          </p>
+          <label class="portal-label pattern-field-label" for="fp-email"
+            >Email</label
+          >
+          <input
+            type="email"
+            id="fp-email"
+            class="fp-input"
+            placeholder="student@wmsu.edu.ph"
+          />
           <p id="fp-email-err" class="fp-error"></p>
           <div class="fp-btn-row">
-            <button type="button" class="fp-btn-cancel" onclick="closeFP()">Cancel</button>
-            <button type="button" class="fp-btn-confirm" onclick="fpSendOTP()">Send code</button>
+            <button type="button" class="fp-btn-cancel" onclick="closeFP()">
+              Cancel
+            </button>
+            <button type="button" class="fp-btn-confirm" onclick="fpSendOTP()">
+              Send code
+            </button>
           </div>
         </div>
 
         <div id="fp-step2">
-          <div class="fp-modal-icon"><span class="upress-icon upress-icon--mail upress-icon--lg" aria-hidden="true"></span></div>
+          <div class="fp-modal-icon">
+            <span
+              class="upress-icon upress-icon--mail upress-icon--lg"
+              aria-hidden="true"
+            ></span>
+          </div>
           <h3 class="fp-modal-title">Check your email</h3>
           <p id="fp-otp-hint" class="fp-modal-desc"></p>
-          <label class="portal-label pattern-field-label" for="fp-otp-input">6-digit code</label>
-          <input type="text" id="fp-otp-input" class="fp-input fp-otp-input" maxlength="6" placeholder="······" />
+          <label class="portal-label pattern-field-label" for="fp-otp-input"
+            >6-digit code</label
+          >
+          <input
+            type="text"
+            id="fp-otp-input"
+            class="fp-input fp-otp-input"
+            maxlength="6"
+            placeholder="······"
+          />
           <p id="fp-otp-err" class="fp-error"></p>
           <div class="fp-btn-row">
-            <button type="button" class="fp-btn-cancel" onclick="fpBackToStep1()">Back</button>
-            <button type="button" class="fp-btn-confirm" onclick="fpVerifyOTP()">Verify</button>
+            <button
+              type="button"
+              class="fp-btn-cancel"
+              onclick="fpBackToStep1()"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              class="fp-btn-confirm"
+              onclick="fpVerifyOTP()"
+            >
+              Verify
+            </button>
           </div>
           <p class="fp-resend-row">
-            <a href="#" id="fp-resend-link" class="fp-resend-link" onclick="fpResend(event)">Resend code</a>
-            <span id="fp-resend-timer" class="fp-resend-timer"> (wait <span id="fp-countdown">60</span>s) </span>
+            <a
+              href="#"
+              id="fp-resend-link"
+              class="fp-resend-link"
+              onclick="fpResend(event)"
+              >Resend code</a
+            >
+            <span id="fp-resend-timer" class="fp-resend-timer">
+              (wait <span id="fp-countdown">60</span>s)
+            </span>
           </p>
         </div>
 
         <div id="fp-step3">
-          <div class="fp-modal-icon"><span class="upress-icon upress-icon--lock upress-icon--lg" aria-hidden="true"></span></div>
+          <div class="fp-modal-icon">
+            <span
+              class="upress-icon upress-icon--lock upress-icon--lg"
+              aria-hidden="true"
+            ></span>
+          </div>
           <h3 class="fp-modal-title">Set new password</h3>
-          <p class="fp-modal-desc">Choose a strong password for your account.</p>
-          <label class="portal-label pattern-field-label" for="fp-new-pass">New password</label>
-          <input type="password" id="fp-new-pass" class="fp-input" placeholder="At least 8 characters" />
-          <label class="portal-label pattern-field-label fp-label-spaced" for="fp-confirm-pass">Confirm password</label>
-          <input type="password" id="fp-confirm-pass" class="fp-input" placeholder="Repeat new password" />
+          <p class="fp-modal-desc">
+            Choose a strong password for your account.
+          </p>
+          <label class="portal-label pattern-field-label" for="fp-new-pass"
+            >New password</label
+          >
+          <input
+            type="password"
+            id="fp-new-pass"
+            class="fp-input"
+            placeholder="At least 8 characters"
+          />
+          <label
+            class="portal-label pattern-field-label fp-label-spaced"
+            for="fp-confirm-pass"
+            >Confirm password</label
+          >
+          <input
+            type="password"
+            id="fp-confirm-pass"
+            class="fp-input"
+            placeholder="Repeat new password"
+          />
           <p id="fp-pass-err" class="fp-error"></p>
           <div class="fp-btn-row">
-            <button type="button" class="fp-btn-cancel" onclick="closeFP()">Cancel</button>
-            <button type="button" class="fp-btn-confirm" onclick="fpResetPassword()">Reset password</button>
+            <button type="button" class="fp-btn-cancel" onclick="closeFP()">
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="fp-btn-confirm"
+              onclick="fpResetPassword()"
+            >
+              Reset password
+            </button>
           </div>
         </div>
 
         <div id="fp-step4" class="fp-step-center">
-          <div class="fp-modal-icon fp-modal-icon--success"><span class="upress-icon upress-icon--check upress-icon--lg" aria-hidden="true"></span></div>
+          <div class="fp-modal-icon fp-modal-icon--success">
+            <span
+              class="upress-icon upress-icon--check upress-icon--lg"
+              aria-hidden="true"
+            ></span>
+          </div>
           <h3 class="fp-modal-title fp-modal-title--success">Password reset</h3>
           <p class="fp-modal-desc">You can sign in with your new password.</p>
-          <button type="button" class="fp-btn-confirm fp-btn-confirm--block" onclick="closeFP()">Back to sign in</button>
+          <button
+            type="button"
+            class="fp-btn-confirm fp-btn-confirm--block"
+            onclick="closeFP()"
+          >
+            Back to sign in
+          </button>
         </div>
       </div>
     </div>

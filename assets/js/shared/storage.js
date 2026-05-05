@@ -3,6 +3,7 @@ const STORAGE_KEY = "upressease_db";
 const defaultDB = {
   academicYear: "",
   users: [],
+  authUsers: [],
   services: [],
   transactions: [],
   ratings: [],
@@ -69,6 +70,7 @@ function mergeWithDefaults(db) {
   return {
     academicYear: db.academicYear || "",
     users: Array.isArray(db.users) ? db.users : [],
+    authUsers: Array.isArray(db.authUsers) ? db.authUsers : [],
     services: Array.isArray(db.services) ? db.services : [],
     transactions: Array.isArray(db.transactions) ? db.transactions : [],
     ratings: Array.isArray(db.ratings) ? db.ratings : [],
@@ -162,33 +164,86 @@ function archiveCurrentYear() {
 }
 
 /**
- * Add user to current database
- * @param {Object} user - User object
+ * Add authenticated user to database
+ * @param {Object} user - User object with email, password, etc.
  * @returns {Object} Added user with ID
- * @throws {Error} If academic year not set
  */
-function addUser(user) {
+function addAuthUser(user) {
   const db = getDB();
 
-  if (!db.academicYear) {
-    throw new Error(
-      "Academic year not set. Please set academic year in settings.",
-    );
-  }
-
   const newUser = {
-    id: user.id || generateStorageId("user"),
-    fullName: user.fullName,
+    id: user.id || generateStorageId("auth"),
     email: user.email,
-    username: user.username,
-    role: user.role,
-    suspended: user.suspended || false,
+    password: user.password,
+    fullName: user.fullName,
+    phone: user.phone || "",
+    accountType: user.accountType || "student",
+    accountStatus: user.accountStatus || "pending",
     createdAt: user.createdAt || new Date().toISOString(),
   };
 
-  db.users.push(newUser);
+  db.authUsers.push(newUser);
   saveDB(db);
   return newUser;
+}
+
+/**
+ * Get authenticated user by email
+ * @param {string} email - User email
+ * @returns {Object|null} User object or null if not found
+ */
+function getAuthUser(email) {
+  const db = getDB();
+  return (
+    db.authUsers.find(
+      (user) => user.email.toLowerCase() === email.toLowerCase(),
+    ) || null
+  );
+}
+
+/**
+ * Update authenticated user
+ * @param {string} email - User email
+ * @param {Object} updates - Fields to update
+ * @returns {Object|null} Updated user or null if not found
+ */
+function updateAuthUser(email, updates) {
+  const db = getDB();
+  const userIndex = db.authUsers.findIndex(
+    (user) => user.email.toLowerCase() === email.toLowerCase(),
+  );
+
+  if (userIndex === -1) return null;
+
+  db.authUsers[userIndex] = {
+    ...db.authUsers[userIndex],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  saveDB(db);
+  return db.authUsers[userIndex];
+}
+
+/**
+ * Authenticate user login
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @returns {Object|null} User object if authenticated, null otherwise
+ */
+function authenticateUser(email, password) {
+  const user = getAuthUser(email);
+  if (!user) return null;
+
+  if (user.password !== password) return null;
+
+  if (
+    user.accountStatus === "suspended" ||
+    user.accountStatus === "deactivated"
+  )
+    return null;
+
+  return user;
 }
 
 /**

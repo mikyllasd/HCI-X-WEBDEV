@@ -1,345 +1,607 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Sign Up</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/upress-pattern-ui.css" />
     <link rel="stylesheet" href="../../css/student/signup.css" />
-</head>
-<body class="page-auth">
+  </head>
+  <body class="page-auth">
     <main class="auth-main auth-main--scroll signup-main">
-        <div class="signup-card">
-            <span class="pattern-hero-badge">New account</span>
-            <div class="signup-card-head">
-                <div class="signup-avatar" id="signup-role-avatar" aria-hidden="true"><span class="upress-icon upress-icon--grad upress-icon--md"></span></div>
-                <h1 class="signup-title">Create Account</h1>
-                <p class="signup-subtitle">Join WMSU UPress — step by step</p>
-            </div>
-
-            <div class="signup-steps" id="signup-steps" aria-label="Sign-up progress">
-                <div class="signup-step active" data-step="1">
-                    <span class="signup-step-number">1</span>
-                    <span class="signup-step-label">Account type</span>
-                </div>
-                <div class="signup-step-connector" aria-hidden="true"></div>
-                <div class="signup-step" data-step="2">
-                    <span class="signup-step-number">2</span>
-                    <span class="signup-step-label">Your details</span>
-                </div>
-                <div class="signup-step-connector" aria-hidden="true"></div>
-                <div class="signup-step" data-step="3">
-                    <span class="signup-step-number">3</span>
-                    <span class="signup-step-label">Verify</span>
-                </div>
-            </div>
-
-            <div id="signup-inline-alert" class="signup-inline-alert signup-hidden" role="alert"></div>
-
-            <form id="signup-form" class="signup-form" novalidate>
-                <div class="signup-form-step" id="signup-step-1">
-                    <h2 class="signup-step-heading">I am a…</h2>
-                    <p class="signup-step-lead">Choose how you use UPress so we ask for the right information.</p>
-                    <div class="role-selection" role="radiogroup" aria-label="Account type">
-                        <label class="role-card selected" data-role="student">
-                            <input type="radio" name="signup-account-type" value="student" checked />
-                            <div class="role-card-icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                                </svg>
-                            </div>
-                            <div class="role-card-title">Student</div>
-                            <div class="role-card-description">Enrolled at WMSU</div>
-                        </label>
-                        <label class="role-card" data-role="faculty">
-                            <input type="radio" name="signup-account-type" value="faculty" />
-                            <div class="role-card-icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                            </div>
-                            <div class="role-card-title">Faculty</div>
-                            <div class="role-card-description">WMSU employee</div>
-                        </label>
-                    </div>
-                    <button type="button" class="signup-submit-btn" id="signup-btn-step1">Continue</button>
-                </div>
-
-                <!-- Step 2: personal & security -->
-                <div class="signup-form-step signup-hidden" id="signup-step-2">
-                    <h2 class="signup-step-heading">Your details</h2>
-                    <p class="signup-step-lead" id="signup-step2-lead">Tell us who you are and how to reach you.</p>
-
-                    <div class="signup-grid-2">
-                        <div class="sfield">
-                            <label class="slabel" for="signup-first">First name *</label>
-                            <input class="sinput" type="text" id="signup-first" autocomplete="given-name" placeholder="Juan" required />
-                        </div>
-                        <div class="sfield">
-                            <label class="slabel" for="signup-last">Last name *</label>
-                            <input class="sinput" type="text" id="signup-last" autocomplete="family-name" placeholder="Dela Cruz" required />
-                        </div>
-                    </div>
-
-                    <div class="sfield">
-                        <label class="slabel" for="signup-campus-id" id="signup-campus-id-label">Student ID *</label>
-                        <input class="sinput" type="text" id="signup-campus-id" placeholder="e.g. 2024-12345" required />
-                    </div>
-
-                    <div class="sfield">
-                        <label class="slabel" for="signup-college" id="signup-college-label">College *</label>
-                        <select class="sinput" id="signup-college" required>
-                            <option value="">Select your college</option>
-                            <option>College of Computing Studies</option>
-                            <option>College of Business Administration</option>
-                            <option>College of Engineering</option>
-                            <option>College of Education</option>
-                            <option>College of Arts and Sciences</option>
-                            <option>College of Home Science and Industry</option>
-                            <option>College of Law</option>
-                            <option>College of Medicine</option>
-                            <option>College of Nursing</option>
-                            <option>College of Sports, Physical Education and Athletics</option>
-                            <option>College of Forestry and Environmental Studies</option>
-                            <option>College of Agriculture</option>
-                            <option>College of Social Science and Humanities</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="signup-grid-2" id="signup-student-only">
-                        <div class="sfield">
-                            <label class="slabel" for="signup-year">Year level *</label>
-                            <select class="sinput" id="signup-year" required>
-                                <option value="">e.g. 3rd Year</option>
-                                <option>1st Year</option>
-                                <option>2nd Year</option>
-                                <option>3rd Year</option>
-                                <option>4th Year</option>
-                                <option>5th Year</option>
-                            </select>
-                        </div>
-                        <div class="sfield">
-                            <label class="slabel" for="signup-course">Course *</label>
-                            <select class="sinput" id="signup-course" required>
-                                <option value="">Select a college first</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="sfield sfield--email-otp">
-                        <label class="slabel" for="signup-email">WMSU email *</label>
-                        <div class="signup-email-verify-row">
-                            <input
-                                class="sinput signup-email-verify-row__input"
-                                type="email"
-                                id="signup-email"
-                                autocomplete="email"
-                                placeholder="you@wmsu.edu.ph"
-                                required
-                            />
-                            <button type="button" class="verify-btn signup-email-verify-row__btn" id="signup-email-verify-btn">Verify</button>
-                        </div>
-                        <div id="signup-otp-sample" class="signup-otp-sample signup-hidden" role="status" aria-live="polite">
-                            <span class="signup-otp-sample__label">Demo — your code:</span>
-                            <code class="signup-otp-sample__code" id="signup-otp-code-display"></code>
-                        </div>
-                        <p class="signup-otp-hint">
-                            Tap <strong>Verify</strong> to send a code to this email (demo shows the code in the box). Enter it below and tap
-                            <strong>Verify code</strong> next to the code field. <strong>Continue</strong> stays off until your email is verified.
-                        </p>
-                    </div>
-
-                    <div class="sfield">
-                        <label class="slabel" for="user-otp">Email verification code *</label>
-                        <div class="signup-otp-verify-row">
-                            <input
-                                type="text"
-                                class="sinput signup-otp-verify-row__input"
-                                id="user-otp"
-                                inputmode="numeric"
-                                maxlength="8"
-                                placeholder="Enter the 6-digit code"
-                                disabled
-                                autocomplete="one-time-code"
-                            />
-                            <button type="button" class="verify-btn signup-otp-verify-row__btn" id="signup-otp-verify-btn" disabled>Verify code</button>
-                        </div>
-                        <div id="otp-status" class="sotp-status"></div>
-                    </div>
-
-                    <div class="sfield">
-                        <label class="slabel" for="signup-phone">Mobile number *</label>
-                        <input
-                            class="sinput"
-                            type="tel"
-                            id="signup-phone"
-                            autocomplete="tel"
-                            placeholder="09XXXXXXXXX"
-                            pattern="09[0-9]{9}"
-                            required
-                        />
-                    </div>
-
-                    <div class="signup-grid-2">
-                        <div class="sfield">
-                            <label class="slabel" for="signup-pass">Password *</label>
-                            <div class="sinput-eye-wrap">
-                                <input class="sinput" type="password" id="signup-pass" autocomplete="new-password" placeholder="At least 6 characters" required />
-                                <button type="button" class="eye-btn" data-toggle-pass="signup-pass" aria-label="Show password">
-                                    <svg class="eye-btn__icon eye-btn__icon--show" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
-                                        <path fill="currentColor" d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                        <path fill="currentColor" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                    </svg>
-                                    <svg class="eye-btn__icon eye-btn__icon--hide" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
-                                        <path
-                                            fill="currentColor"
-                                            d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088 7.31 3.18A7.029 7.029 0 0 1 8 3.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.094 3.088A7.029 7.029 0 0 0 0 8c0 .573.089 1.12.256 1.639z"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="sfield">
-                            <label class="slabel" for="signup-pass2">Confirm password *</label>
-                            <div class="sinput-eye-wrap">
-                                <input class="sinput" type="password" id="signup-pass2" autocomplete="new-password" placeholder="Re-enter password" required />
-                                <button type="button" class="eye-btn" data-toggle-pass="signup-pass2" aria-label="Show password">
-                                    <svg class="eye-btn__icon eye-btn__icon--show" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
-                                        <path fill="currentColor" d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                        <path fill="currentColor" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                    </svg>
-                                    <svg class="eye-btn__icon eye-btn__icon--hide" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true">
-                                        <path
-                                            fill="currentColor"
-                                            d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088 7.31 3.18A7.029 7.029 0 0 1 8 3.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.094 3.088A7.029 7.029 0 0 0 0 8c0 .573.089 1.12.256 1.639z"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="signup-step-actions">
-                        <button type="button" class="signup-btn-outline" id="signup-btn-step2-back">Back</button>
-                        <button type="button" class="signup-submit-btn signup-btn-inline" id="signup-btn-step2-next" disabled>Continue</button>
-                    </div>
-                </div>
-
-                <!-- Step 3: documents & OTP & terms -->
-                <div class="signup-form-step signup-hidden" id="signup-step-3">
-                    <h2 class="signup-step-heading" id="signup-step3-title">Upload verification</h2>
-                    <p class="signup-step-lead" id="signup-step3-lead">
-                        Upload clear photos or scans. PDF, JPG, or PNG up to 5MB each (demo — files stay in your browser only).
-                    </p>
-
-                    <div class="signup-docs-grid">
-                        <div class="sfield">
-                            <label class="slabel" for="signup-id" id="signup-doc-id-label">Validated ID *</label>
-                            
-                            <!-- Camera capture section for ID -->
-                            <div id="camera-capture-section" class="camera-capture-section">
-                                <div id="camera-step-1" class="camera-step">
-                                    <div class="camera-guide-container">
-                                        <video id="id-camera-video" class="camera-video" playsinline></video>
-                                        <div class="id-card-guide" aria-hidden="true">
-                                            <div class="id-card-outline">
-                                                <span>Align ID card within box</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camera-controls">
-                                        <button type="button" class="camera-btn camera-btn-primary" id="capture-id-btn">Capture ID</button>
-                                    </div>
-                                </div>
-
-                                <div id="camera-step-2" class="camera-step signup-hidden">
-                                    <div class="preview-container">
-                                        <img id="id-preview-img" class="preview-img" />
-                                        <div id="ocr-spinner" class="ocr-spinner signup-hidden">
-                                            <div class="spinner"></div>
-                                            <p>Reading ID...</p>
-                                        </div>
-                                        <div id="ocr-results" class="ocr-results signup-hidden"></div>
-                                    </div>
-                                    <div class="camera-controls">
-                                        <button type="button" class="camera-btn camera-btn-outline" id="retake-id-btn">Retake</button>
-                                        <button type="button" class="camera-btn camera-btn-primary" id="next-after-id-btn">Next</button>
-                                    </div>
-                                </div>
-
-                                <div id="camera-step-4" class="camera-step signup-hidden">
-                                    <div class="camera-guide-container">
-                                        <video id="cor-camera-video" class="camera-video" playsinline></video>
-                                        <div class="id-card-guide" aria-hidden="true">
-                                            <div class="id-card-outline">
-                                                <span>Align COR document within box</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="camera-controls">
-                                        <button type="button" class="camera-btn camera-btn-primary" id="capture-cor-btn">Capture COR</button>
-                                    </div>
-                                </div>
-
-                                <div id="camera-step-5" class="camera-step signup-hidden">
-                                    <div class="preview-container">
-                                        <img id="cor-preview-img" class="preview-img" />
-                                    </div>
-                                    <div class="camera-controls">
-                                        <button type="button" class="camera-btn camera-btn-outline" id="retake-cor-btn">Retake</button>
-                                        <button type="button" class="camera-btn camera-btn-primary" id="continue-to-face-btn">Continue</button>
-                                    </div>
-                                </div>
-
-                                <div id="camera-step-3" class="camera-step signup-hidden">
-                                    <h3 class="camera-step-title">Face Verification</h3>
-                                    <p class="camera-step-subtitle">Look at the camera for verification</p>
-                                    <div class="camera-guide-container">
-                                        <video id="face-camera-video" class="camera-video" playsinline></video>
-                                        <div class="face-guide" aria-hidden="true">
-                                            <div class="face-outline"></div>
-                                        </div>
-                                    </div>
-                                    <div class="face-status" id="face-status">Scanning...</div>
-                                    <div id="face-warning" class="face-warning signup-hidden">No face detected for 10 seconds. Please position your face in the circle.</div>
-                                </div>
-                            </div>
-
-                            <!-- Hidden file input for fallback ID file storage -->
-                            <input type="hidden" id="signup-id" />
-                            <div id="signup-id-preview" class="signup-file-preview-wrap signup-hidden"></div>
-                        </div>
-                    </div>
-
-                    <div class="signup-terms-row signup-hidden">
-                        <input type="checkbox" id="terms-check" required />
-                        <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
-                    </div>
-                    <div class="signup-terms-row signup-hidden">
-                        <input type="checkbox" id="privacy-check" required />
-                        <label for="privacy-check">I consent to the processing of my personal data in line with the Data Privacy Act of 2012 (RA 10173).</label>
-                    </div>
-
-                    <div class="signup-step-actions signup-hidden">
-                        <button type="button" class="signup-btn-outline" id="signup-btn-step3-back">Back</button>
-                        <button type="submit" class="signup-submit-btn signup-btn-inline" id="signup-submit">Create account</button>
-                    </div>
-                </div>
-            </form>
-
-            <a href="../auth/portal.html" class="btn btn-outline btn-lg btn-block back-login-btn">← Back to sign-in</a>
+      <div class="signup-card">
+        <span class="pattern-hero-badge">New account</span>
+        <div class="signup-card-head">
+          <div class="signup-avatar" id="signup-role-avatar" aria-hidden="true">
+            <span class="upress-icon upress-icon--grad upress-icon--md"></span>
+          </div>
+          <h1 class="signup-title">Create Account</h1>
+          <p class="signup-subtitle">Join WMSU UPress — step by step</p>
         </div>
+
+        <div
+          class="signup-steps"
+          id="signup-steps"
+          aria-label="Sign-up progress"
+        >
+          <div class="signup-step active" data-step="1">
+            <span class="signup-step-number">1</span>
+            <span class="signup-step-label">Account type</span>
+          </div>
+          <div class="signup-step-connector" aria-hidden="true"></div>
+          <div class="signup-step" data-step="2">
+            <span class="signup-step-number">2</span>
+            <span class="signup-step-label">Your details</span>
+          </div>
+          <div class="signup-step-connector" aria-hidden="true"></div>
+          <div class="signup-step" data-step="3">
+            <span class="signup-step-number">3</span>
+            <span class="signup-step-label">Verify</span>
+          </div>
+        </div>
+
+        <div
+          id="signup-inline-alert"
+          class="signup-inline-alert signup-hidden"
+          role="alert"
+        ></div>
+
+        <form id="signup-form" class="signup-form" novalidate>
+          <div class="signup-form-step" id="signup-step-1">
+            <h2 class="signup-step-heading">I am a…</h2>
+            <p class="signup-step-lead">
+              Choose how you use UPress so we ask for the right information.
+            </p>
+            <div
+              class="role-selection"
+              role="radiogroup"
+              aria-label="Account type"
+            >
+              <label class="role-card selected" data-role="student">
+                <input
+                  type="radio"
+                  name="signup-account-type"
+                  value="student"
+                  checked
+                />
+                <div class="role-card-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                  </svg>
+                </div>
+                <div class="role-card-title">Student</div>
+                <div class="role-card-description">Enrolled at WMSU</div>
+              </label>
+              <label class="role-card" data-role="faculty">
+                <input
+                  type="radio"
+                  name="signup-account-type"
+                  value="faculty"
+                />
+                <div class="role-card-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+                <div class="role-card-title">Faculty</div>
+                <div class="role-card-description">WMSU employee</div>
+              </label>
+            </div>
+            <button
+              type="button"
+              class="signup-submit-btn"
+              id="signup-btn-step1"
+            >
+              Continue
+            </button>
+          </div>
+
+          <!-- Step 2: personal & security -->
+          <div class="signup-form-step signup-hidden" id="signup-step-2">
+            <h2 class="signup-step-heading">Your details</h2>
+            <p class="signup-step-lead" id="signup-step2-lead">
+              Tell us who you are and how to reach you.
+            </p>
+
+            <div class="signup-grid-2">
+              <div class="sfield">
+                <label class="slabel" for="signup-first">First name *</label>
+                <input
+                  class="sinput"
+                  type="text"
+                  id="signup-first"
+                  autocomplete="given-name"
+                  placeholder="Juan"
+                  required
+                />
+              </div>
+              <div class="sfield">
+                <label class="slabel" for="signup-last">Last name *</label>
+                <input
+                  class="sinput"
+                  type="text"
+                  id="signup-last"
+                  autocomplete="family-name"
+                  placeholder="Dela Cruz"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="sfield">
+              <label
+                class="slabel"
+                for="signup-campus-id"
+                id="signup-campus-id-label"
+                >Student ID *</label
+              >
+              <input
+                class="sinput"
+                type="text"
+                id="signup-campus-id"
+                placeholder="e.g. 2024-12345"
+                required
+              />
+            </div>
+
+            <div class="sfield">
+              <label
+                class="slabel"
+                for="signup-college"
+                id="signup-college-label"
+                >College *</label
+              >
+              <select class="sinput" id="signup-college" required>
+                <option value="">Select your college</option>
+                <option>College of Computing Studies</option>
+                <option>College of Business Administration</option>
+                <option>College of Engineering</option>
+                <option>College of Education</option>
+                <option>College of Arts and Sciences</option>
+                <option>College of Home Science and Industry</option>
+                <option>College of Law</option>
+                <option>College of Medicine</option>
+                <option>College of Nursing</option>
+                <option>
+                  College of Sports, Physical Education and Athletics
+                </option>
+                <option>College of Forestry and Environmental Studies</option>
+                <option>College of Agriculture</option>
+                <option>College of Social Science and Humanities</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="signup-grid-2" id="signup-student-only">
+              <div class="sfield">
+                <label class="slabel" for="signup-year">Year level *</label>
+                <select class="sinput" id="signup-year" required>
+                  <option value="">e.g. 3rd Year</option>
+                  <option>1st Year</option>
+                  <option>2nd Year</option>
+                  <option>3rd Year</option>
+                  <option>4th Year</option>
+                  <option>5th Year</option>
+                </select>
+              </div>
+              <div class="sfield">
+                <label class="slabel" for="signup-course">Course *</label>
+                <select class="sinput" id="signup-course" required>
+                  <option value="">Select a college first</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="sfield sfield--email-otp">
+              <label class="slabel" for="signup-email">WMSU email *</label>
+              <div class="signup-email-verify-row">
+                <input
+                  class="sinput signup-email-verify-row__input"
+                  type="email"
+                  id="signup-email"
+                  autocomplete="email"
+                  placeholder="you@wmsu.edu.ph"
+                  required
+                />
+                <button
+                  type="button"
+                  class="verify-btn signup-email-verify-row__btn"
+                  id="signup-email-verify-btn"
+                >
+                  Verify
+                </button>
+              </div>
+              <div
+                id="signup-otp-sample"
+                class="signup-otp-sample signup-hidden"
+                role="status"
+                aria-live="polite"
+              >
+                <span class="signup-otp-sample__label">Demo — your code:</span>
+                <code
+                  class="signup-otp-sample__code"
+                  id="signup-otp-code-display"
+                ></code>
+              </div>
+              <p class="signup-otp-hint">
+                Tap <strong>Verify</strong> to send a code to this email (demo
+                shows the code in the box). Enter it below and tap
+                <strong>Verify code</strong> next to the code field.
+                <strong>Continue</strong> stays off until your email is
+                verified.
+              </p>
+            </div>
+
+            <div class="sfield">
+              <label class="slabel" for="user-otp"
+                >Email verification code *</label
+              >
+              <div class="signup-otp-verify-row">
+                <input
+                  type="text"
+                  class="sinput signup-otp-verify-row__input"
+                  id="user-otp"
+                  inputmode="numeric"
+                  maxlength="8"
+                  placeholder="Enter the 6-digit code"
+                  disabled
+                  autocomplete="one-time-code"
+                />
+                <button
+                  type="button"
+                  class="verify-btn signup-otp-verify-row__btn"
+                  id="signup-otp-verify-btn"
+                  disabled
+                >
+                  Verify code
+                </button>
+              </div>
+              <div id="otp-status" class="sotp-status"></div>
+            </div>
+
+            <div class="sfield">
+              <label class="slabel" for="signup-phone">Mobile number *</label>
+              <input
+                class="sinput"
+                type="tel"
+                id="signup-phone"
+                autocomplete="tel"
+                placeholder="09XXXXXXXXX"
+                pattern="09[0-9]{9}"
+                required
+              />
+            </div>
+
+            <div class="signup-grid-2">
+              <div class="sfield">
+                <label class="slabel" for="signup-pass">Password *</label>
+                <div class="sinput-eye-wrap">
+                  <input
+                    class="sinput"
+                    type="password"
+                    id="signup-pass"
+                    autocomplete="new-password"
+                    placeholder="At least 6 characters"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="eye-btn"
+                    data-toggle-pass="signup-pass"
+                    aria-label="Show password"
+                  >
+                    <svg
+                      class="eye-btn__icon eye-btn__icon--show"
+                      viewBox="0 0 16 16"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"
+                      />
+                    </svg>
+                    <svg
+                      class="eye-btn__icon eye-btn__icon--hide"
+                      viewBox="0 0 16 16"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088 7.31 3.18A7.029 7.029 0 0 1 8 3.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.094 3.088A7.029 7.029 0 0 0 0 8c0 .573.089 1.12.256 1.639z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="sfield">
+                <label class="slabel" for="signup-pass2"
+                  >Confirm password *</label
+                >
+                <div class="sinput-eye-wrap">
+                  <input
+                    class="sinput"
+                    type="password"
+                    id="signup-pass2"
+                    autocomplete="new-password"
+                    placeholder="Re-enter password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="eye-btn"
+                    data-toggle-pass="signup-pass2"
+                    aria-label="Show password"
+                  >
+                    <svg
+                      class="eye-btn__icon eye-btn__icon--show"
+                      viewBox="0 0 16 16"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"
+                      />
+                    </svg>
+                    <svg
+                      class="eye-btn__icon eye-btn__icon--hide"
+                      viewBox="0 0 16 16"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088 7.31 3.18A7.029 7.029 0 0 1 8 3.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.094 3.088A7.029 7.029 0 0 0 0 8c0 .573.089 1.12.256 1.639z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="signup-step-actions">
+              <button
+                type="button"
+                class="signup-btn-outline"
+                id="signup-btn-step2-back"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                class="signup-submit-btn signup-btn-inline"
+                id="signup-btn-step2-next"
+                disabled
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: documents & OTP & terms -->
+          <div class="signup-form-step signup-hidden" id="signup-step-3">
+            <h2 class="signup-step-heading" id="signup-step3-title">
+              Upload verification
+            </h2>
+            <p class="signup-step-lead" id="signup-step3-lead">
+              Upload clear photos or scans. PDF, JPG, or PNG up to 5MB each
+              (demo — files stay in your browser only).
+            </p>
+
+            <div class="signup-docs-grid">
+              <div class="sfield">
+                <label class="slabel" for="signup-id" id="signup-doc-id-label"
+                  >Validated ID *</label
+                >
+
+                <!-- Camera capture section for ID -->
+                <div id="camera-capture-section" class="camera-capture-section">
+                  <div id="camera-step-1" class="camera-step">
+                    <div class="camera-guide-container">
+                      <video
+                        id="id-camera-video"
+                        class="camera-video"
+                        playsinline
+                      ></video>
+                      <div class="id-card-guide" aria-hidden="true">
+                        <div class="id-card-outline">
+                          <span>Align ID card within box</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="camera-controls">
+                      <button
+                        type="button"
+                        class="camera-btn camera-btn-primary"
+                        id="capture-id-btn"
+                      >
+                        Capture ID
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="camera-step-2" class="camera-step signup-hidden">
+                    <div class="preview-container">
+                      <img id="id-preview-img" class="preview-img" />
+                      <div id="ocr-spinner" class="ocr-spinner signup-hidden">
+                        <div class="spinner"></div>
+                        <p>Reading ID...</p>
+                      </div>
+                      <div
+                        id="ocr-results"
+                        class="ocr-results signup-hidden"
+                      ></div>
+                    </div>
+                    <div class="camera-controls">
+                      <button
+                        type="button"
+                        class="camera-btn camera-btn-outline"
+                        id="retake-id-btn"
+                      >
+                        Retake
+                      </button>
+                      <button
+                        type="button"
+                        class="camera-btn camera-btn-primary"
+                        id="next-after-id-btn"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="camera-step-4" class="camera-step signup-hidden">
+                    <div class="camera-guide-container">
+                      <video
+                        id="cor-camera-video"
+                        class="camera-video"
+                        playsinline
+                      ></video>
+                      <div class="id-card-guide" aria-hidden="true">
+                        <div class="id-card-outline">
+                          <span>Align COR document within box</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="camera-controls">
+                      <button
+                        type="button"
+                        class="camera-btn camera-btn-primary"
+                        id="capture-cor-btn"
+                      >
+                        Capture COR
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="camera-step-5" class="camera-step signup-hidden">
+                    <div class="preview-container">
+                      <img id="cor-preview-img" class="preview-img" />
+                    </div>
+                    <div class="camera-controls">
+                      <button
+                        type="button"
+                        class="camera-btn camera-btn-outline"
+                        id="retake-cor-btn"
+                      >
+                        Retake
+                      </button>
+                      <button
+                        type="button"
+                        class="camera-btn camera-btn-primary"
+                        id="continue-to-face-btn"
+                      >
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="camera-step-3" class="camera-step signup-hidden">
+                    <h3 class="camera-step-title">Face Verification</h3>
+                    <p class="camera-step-subtitle">
+                      Look at the camera for verification
+                    </p>
+                    <div class="camera-guide-container">
+                      <video
+                        id="face-camera-video"
+                        class="camera-video"
+                        playsinline
+                      ></video>
+                      <div class="face-guide" aria-hidden="true">
+                        <div class="face-outline"></div>
+                      </div>
+                    </div>
+                    <div class="face-status" id="face-status">Scanning...</div>
+                    <div id="face-warning" class="face-warning signup-hidden">
+                      No face detected for 10 seconds. Please position your face
+                      in the circle.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Hidden file input for fallback ID file storage -->
+                <input type="hidden" id="signup-id" />
+                <div
+                  id="signup-id-preview"
+                  class="signup-file-preview-wrap signup-hidden"
+                ></div>
+              </div>
+            </div>
+
+            <div class="signup-terms-row signup-hidden">
+              <input type="checkbox" id="terms-check" required />
+              <label for="terms-check"
+                >I agree to the
+                <a href="terms.html">terms and conditions</a>.</label
+              >
+            </div>
+            <div class="signup-terms-row signup-hidden">
+              <input type="checkbox" id="privacy-check" required />
+              <label for="privacy-check"
+                >I consent to the processing of my personal data in line with
+                the Data Privacy Act of 2012 (RA 10173).</label
+              >
+            </div>
+
+            <div class="signup-step-actions signup-hidden">
+              <button
+                type="button"
+                class="signup-btn-outline"
+                id="signup-btn-step3-back"
+              >
+                Back
+              </button>
+              <button
+                type="submit"
+                class="signup-submit-btn signup-btn-inline"
+                id="signup-submit"
+              >
+                Create account
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <a
+          href="../auth/portal.html"
+          class="btn btn-outline btn-lg btn-block back-login-btn"
+          >← Back to sign-in</a
+        >
+      </div>
     </main>
 
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/student/student.js"></script>
     <script src="../../js/student/signup.js"></script>
-</body>
+  </body>
 </html>

@@ -269,7 +269,31 @@
                                     </div>
                                     <div class="camera-controls">
                                         <button type="button" class="camera-btn camera-btn-outline" id="retake-id-btn">Retake</button>
-                                        <button type="button" class="camera-btn camera-btn-primary" id="continue-after-id-btn">Continue to Face Match</button>
+                                        <button type="button" class="camera-btn camera-btn-primary" id="next-after-id-btn">Next</button>
+                                    </div>
+                                </div>
+
+                                <div id="camera-step-4" class="camera-step signup-hidden">
+                                    <div class="camera-guide-container">
+                                        <video id="cor-camera-video" class="camera-video" playsinline></video>
+                                        <div class="id-card-guide" aria-hidden="true">
+                                            <div class="id-card-outline">
+                                                <span>Align COR document within box</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="camera-controls">
+                                        <button type="button" class="camera-btn camera-btn-primary" id="capture-cor-btn">Capture COR</button>
+                                    </div>
+                                </div>
+
+                                <div id="camera-step-5" class="camera-step signup-hidden">
+                                    <div class="preview-container">
+                                        <img id="cor-preview-img" class="preview-img" />
+                                    </div>
+                                    <div class="camera-controls">
+                                        <button type="button" class="camera-btn camera-btn-outline" id="retake-cor-btn">Retake</button>
+                                        <button type="button" class="camera-btn camera-btn-primary" id="continue-to-face-btn">Continue</button>
                                     </div>
                                 </div>
 
@@ -287,32 +311,22 @@
                                 </div>
                             </div>
 
-                            <!-- Hidden file input for COR and fallback ID file storage -->
+                            <!-- Hidden file input for fallback ID file storage -->
                             <input type="hidden" id="signup-id" />
                             <div id="signup-id-preview" class="signup-file-preview-wrap signup-hidden"></div>
                         </div>
-                        <div class="sfield">
-                            <label class="slabel" for="signup-cor" id="signup-doc-cor-label">First semester COR *</label>
-                            <label class="signup-file-upload" id="signup-cor-upload">
-                                <input type="file" id="signup-cor" accept="image/*,.pdf" />
-                                <span class="signup-file-upload-icon" aria-hidden="true"><span class="upress-icon upress-icon--upload upress-icon--md"></span></span>
-                                <span class="signup-file-upload-text">Click or drag to upload</span>
-                                <span class="signup-file-upload-hint">PDF, JPG, PNG</span>
-                            </label>
-                            <div id="signup-cor-preview" class="signup-file-preview-wrap signup-hidden"></div>
-                        </div>
                     </div>
 
-                    <div class="signup-terms-row">
+                    <div class="signup-terms-row signup-hidden">
                         <input type="checkbox" id="terms-check" required />
                         <label for="terms-check">I agree to the <a href="terms.html">terms and conditions</a>.</label>
                     </div>
-                    <div class="signup-terms-row">
+                    <div class="signup-terms-row signup-hidden">
                         <input type="checkbox" id="privacy-check" required />
                         <label for="privacy-check">I consent to the processing of my personal data in line with the Data Privacy Act of 2012 (RA 10173).</label>
                     </div>
 
-                    <div class="signup-step-actions">
+                    <div class="signup-step-actions signup-hidden">
                         <button type="button" class="signup-btn-outline" id="signup-btn-step3-back">Back</button>
                         <button type="submit" class="signup-submit-btn signup-btn-inline" id="signup-submit">Create account</button>
                     </div>

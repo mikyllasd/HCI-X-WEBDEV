@@ -37,6 +37,67 @@
 
 <div id="orders-list" class="orders-list-wrapper"></div>
 
+<!-- Rating Modal -->
+<div id="rating-modal" class="rating-modal-overlay" style="display:none;">
+    <div class="rating-modal">
+        <div class="rating-modal-header">
+            <h3>Rate Your Experience</h3>
+            <button class="rating-close-btn" id="rating-close-btn">✕</button>
+        </div>
+        <p class="rating-order-label" id="rating-order-label"></p>
+
+        <div class="rating-categories">
+
+            <div class="rating-category">
+                <div class="rating-cat-title">
+                    <span class="rating-cat-icon">🖥️</span> System
+                </div>
+                <div class="star-group" data-category="system">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <div class="rating-category">
+                <div class="rating-cat-title">
+                    <span class="rating-cat-icon">👤</span> Staff
+                </div>
+                <div class="star-group" data-category="staff">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+            <div class="rating-category">
+                <div class="rating-cat-title">
+                    <span class="rating-cat-icon">🛡️</span> Admin
+                </div>
+                <div class="star-group" data-category="admin">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rating-message-wrap">
+            <label for="rating-message">Message <span>(optional)</span></label>
+            <textarea id="rating-message" placeholder="Share your feedback..." rows="3"></textarea>
+        </div>
+
+        <button class="rating-submit-btn" id="rating-submit-btn">Submit Rating</button>
+    </div>
+</div>
+
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/orders.js"></script>
 </body>

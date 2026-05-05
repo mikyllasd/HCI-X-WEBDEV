@@ -911,43 +911,10 @@
           .getElementById("signup-campus-id")
           .value.trim();
 
-        // Save to facultyStudentAccounts for superadmin review
-        const db = getDB();
-        const newAccount = {
-          id: "account_" + Math.random().toString(36).substr(2, 9),
-          fullName: name,
-          email: email,
-          phone: phone,
-          college: college,
-          role: type,
-          status: "pending", // All new accounts start as pending for review
-          suspicious: false,
-          createdAt: new Date().toISOString(),
-          idPhoto: capturedIdDataUrl, // Store the captured ID photo
-        };
-
-        if (type === "student") {
-          newAccount.studentId = campusId;
-          newAccount.yearLevel = year;
-          newAccount.course = course;
-        } else {
-          newAccount.employeeId = campusId;
-          // For faculty, extract department from college selection if it contains department info
-          const collegeParts = college.split(" - ");
-          if (collegeParts.length > 1) {
-            newAccount.college = collegeParts[0];
-            newAccount.department = collegeParts[1];
-          } else {
-            newAccount.department = "General";
-          }
-        }
-
-        db.facultyStudentAccounts.push(newAccount);
-        saveDB(db);
-
+        // Student/faculty account creation is disabled
         showAlert(
-          "Account submitted for review",
-          "Your account has been submitted and is pending approval by the superadmin. You will be notified once it's reviewed.",
+          "Account creation disabled",
+          "Student and faculty account creation has been disabled. Please contact your administrator for account setup.",
           function () {
             window.location.href = "../auth/portal.html";
           },

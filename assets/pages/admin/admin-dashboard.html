@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/admin/ratings.css" />
   </head>
   <body class="staff-dashboard-body">
     <!-- ============================================================
@@ -93,6 +94,18 @@
               >
             </li>
             <li>
+              <a href="#" class="nav-link" data-page="sales-reports">
+                <i data-lucide="trending-up" aria-hidden="true"></i
+                ><span>Sales Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-page="ratings">
+                <i data-lucide="star" aria-hidden="true"></i
+                ><span>Ratings</span></a
+              >
+            </li>
+            <li>
               <a href="#" class="nav-link" data-page="qr-scanner">
                 <i data-lucide="scan-qr-code" aria-hidden="true"></i
                 ><span>QR Scanner</span></a
@@ -121,7 +134,11 @@
       <!-- ==========================================================
        MAIN CONTENT — all page sections
        ========================================================== -->
-      <main class="main-content staff-main sd-main" id="main-content" role="main">
+      <main
+        class="main-content staff-main sd-main"
+        id="main-content"
+        role="main"
+      >
         <button
           class="hamburger main-hamburger"
           id="hamburger-btn"
@@ -189,7 +206,10 @@
               <div class="sd-card__hint">From completed orders</div>
             </article>
 
-            <article class="sd-card sd-card--amber" aria-label="Pending or Paid">
+            <article
+              class="sd-card sd-card--amber"
+              aria-label="Pending or Paid"
+            >
               <div class="sd-card__top">
                 <div class="sd-card__label">Pending/Paid</div>
                 <div
@@ -237,7 +257,10 @@
               <div class="sd-card__hint">Currently being processed</div>
             </article>
 
-            <article class="sd-card sd-card--teal" aria-label="Ready for Pickup">
+            <article
+              class="sd-card sd-card--teal"
+              aria-label="Ready for Pickup"
+            >
               <div class="sd-card__top">
                 <div class="sd-card__label">Ready for Pickup</div>
                 <div
@@ -290,7 +313,8 @@
                   <span>Today's Transactions</span>
                 </div>
                 <div class="sd-panel__sub">
-                  Web orders and walk-in POS receipts dated today (each sale once)
+                  Web orders and walk-in POS receipts dated today (each sale
+                  once)
                 </div>
               </div>
               <button
@@ -609,13 +633,18 @@
         >
           <div class="page-header">
             <h1 id="pv-heading">Payment Verification</h1>
-            <p class="page-subtitle">Review and verify student payment proofs</p>
+            <p class="page-subtitle">
+              Review and verify student payment proofs
+            </p>
           </div>
 
           <div class="page-body">
             <!-- Summary stats -->
             <div class="stats-grid stats-grid--3 sp">
-              <article class="stat-card stat-card--yellow" aria-label="Pending Review">
+              <article
+                class="stat-card stat-card--yellow"
+                aria-label="Pending Review"
+              >
                 <div class="stat-card__header">
                   <span>Pending Review</span
                   ><i data-lucide="alert-circle" aria-hidden="true"></i>
@@ -629,7 +658,10 @@
                 </div>
                 <p class="stat-card__value" id="pv-verified">0</p>
               </article>
-              <article class="stat-card stat-card--red-solid" aria-label="Invalid">
+              <article
+                class="stat-card stat-card--red-solid"
+                aria-label="Invalid"
+              >
                 <div class="stat-card__header">
                   <span>Invalid</span>
                   <i data-lucide="x-circle" aria-hidden="true"></i>
@@ -638,9 +670,14 @@
               </article>
             </div>
 
-            <div class="reports-records-head sp pv-head" style="margin-top: 6px;">
+            <div
+              class="reports-records-head sp pv-head"
+              style="margin-top: 6px"
+            >
               <div class="pv-head-left">
-                <h2 class="card-title" style="margin:0;">Payment submissions</h2>
+                <h2 class="card-title" style="margin: 0">
+                  Payment submissions
+                </h2>
                 <div class="record-search">
                   <i data-lucide="search" aria-hidden="true"></i>
                   <input
@@ -652,87 +689,195 @@
                   />
                 </div>
               </div>
-              <span class="list-toolbar__count" id="pv-card-count">0 submissions</span>
+              <span class="list-toolbar__count" id="pv-card-count"
+                >0 submissions</span
+              >
             </div>
 
             <!-- Pending Review Cards -->
             <div class="sp">
-              <h2 class="card-title" style="margin-bottom:1rem;">Pending Review</h2>
+              <h2 class="card-title" style="margin-bottom: 1rem">
+                Pending Review
+              </h2>
               <div class="pv-cards-grid" id="pv-pending-grid">
-
-                <div class="pv-card" data-pv-id="ORD-2026-001" data-pv-name="Juan Dela Cruz"
-                     data-pv-service="Printing" data-pv-amount="₱150.00"
-                     data-pv-method="GCash" data-pv-ref="GCASH123456789"
-                     data-pv-submitted="4/30/2026, 1:56:48 AM">
+                <div
+                  class="pv-card"
+                  data-pv-id="ORD-2026-001"
+                  data-pv-name="Juan Dela Cruz"
+                  data-pv-service="Printing"
+                  data-pv-amount="₱150.00"
+                  data-pv-method="GCash"
+                  data-pv-ref="GCASH123456789"
+                  data-pv-submitted="4/30/2026, 1:56:48 AM"
+                >
                   <div class="pv-card__header">
                     <span class="pv-order-id">ORD-2026-001</span>
-                    <span class="pv-badge pv-badge--pending">Pending Review</span>
+                    <span class="pv-badge pv-badge--pending"
+                      >Pending Review</span
+                    >
                   </div>
                   <p class="pv-customer">Juan Dela Cruz</p>
                   <div class="pv-details">
-                    <div class="pv-detail"><span class="pv-detail__label">Service</span><span class="pv-detail__val">Printing</span></div>
-                    <div class="pv-detail"><span class="pv-detail__label">Amount</span><span class="pv-detail__val pv-amount">₱150.00</span></div>
-                    <div class="pv-detail"><span class="pv-detail__label">Method</span><span class="pv-detail__val">GCash</span></div>
-                    <div class="pv-detail"><span class="pv-detail__label">Reference</span><span class="pv-detail__val">GCASH123456789</span></div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Service</span
+                      ><span class="pv-detail__val">Printing</span>
+                    </div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Amount</span
+                      ><span class="pv-detail__val pv-amount">₱150.00</span>
+                    </div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Method</span
+                      ><span class="pv-detail__val">GCash</span>
+                    </div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Reference</span
+                      ><span class="pv-detail__val">GCASH123456789</span>
+                    </div>
                   </div>
                   <p class="pv-submitted">Submitted: 4/30/2026, 1:56:48 AM</p>
-                  <button class="btn btn--primary pv-review-btn" onclick="openPvModal(this.closest('.pv-card'))">
+                  <button
+                    class="btn btn--primary pv-review-btn"
+                    onclick="openPvModal(this.closest('.pv-card'))"
+                  >
                     <i data-lucide="eye" aria-hidden="true"></i> Review
                   </button>
                 </div>
 
-                <div class="pv-card" data-pv-id="ORD-2026-002" data-pv-name="Maria Santos"
-                     data-pv-service="Mug Printing" data-pv-amount="₱250.00"
-                     data-pv-method="PayMaya" data-pv-ref="MAYA987654321"
-                     data-pv-submitted="4/30/2026, 12:56:48 AM">
+                <div
+                  class="pv-card"
+                  data-pv-id="ORD-2026-002"
+                  data-pv-name="Maria Santos"
+                  data-pv-service="Mug Printing"
+                  data-pv-amount="₱250.00"
+                  data-pv-method="PayMaya"
+                  data-pv-ref="MAYA987654321"
+                  data-pv-submitted="4/30/2026, 12:56:48 AM"
+                >
                   <div class="pv-card__header">
                     <span class="pv-order-id">ORD-2026-002</span>
-                    <span class="pv-badge pv-badge--pending">Pending Review</span>
+                    <span class="pv-badge pv-badge--pending"
+                      >Pending Review</span
+                    >
                   </div>
                   <p class="pv-customer">Maria Santos</p>
                   <div class="pv-details">
-                    <div class="pv-detail"><span class="pv-detail__label">Service</span><span class="pv-detail__val">Mug Printing</span></div>
-                    <div class="pv-detail"><span class="pv-detail__label">Amount</span><span class="pv-detail__val pv-amount">₱250.00</span></div>
-                    <div class="pv-detail"><span class="pv-detail__label">Method</span><span class="pv-detail__val">PayMaya</span></div>
-                    <div class="pv-detail"><span class="pv-detail__label">Reference</span><span class="pv-detail__val">MAYA987654321</span></div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Service</span
+                      ><span class="pv-detail__val">Mug Printing</span>
+                    </div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Amount</span
+                      ><span class="pv-detail__val pv-amount">₱250.00</span>
+                    </div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Method</span
+                      ><span class="pv-detail__val">PayMaya</span>
+                    </div>
+                    <div class="pv-detail">
+                      <span class="pv-detail__label">Reference</span
+                      ><span class="pv-detail__val">MAYA987654321</span>
+                    </div>
                   </div>
                   <p class="pv-submitted">Submitted: 4/30/2026, 12:56:48 AM</p>
-                  <button class="btn btn--primary pv-review-btn" onclick="openPvModal(this.closest('.pv-card'))">
+                  <button
+                    class="btn btn--primary pv-review-btn"
+                    onclick="openPvModal(this.closest('.pv-card'))"
+                  >
                     <i data-lucide="eye" aria-hidden="true"></i> Review
                   </button>
                 </div>
-
               </div>
-              <div class="list-pagination" id="pv-pending-pagination" aria-label="Pending payments pagination">
-                <span class="list-pagination__summary" id="pv-pending-page">Page 1 of 1</span>
+              <div
+                class="list-pagination"
+                id="pv-pending-pagination"
+                aria-label="Pending payments pagination"
+              >
+                <span class="list-pagination__summary" id="pv-pending-page"
+                  >Page 1 of 1</span
+                >
                 <div class="list-pagination__actions">
-                  <button type="button" class="btn btn--outline btn--sm" id="pv-pending-prev" disabled>Previous</button>
-                  <button type="button" class="btn btn--outline btn--sm" id="pv-pending-next" disabled>Next</button>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="pv-pending-prev"
+                    disabled
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="pv-pending-next"
+                    disabled
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
             <!-- Verified Section (hidden until items exist) -->
             <div id="pv-verified-section" class="sp hidden">
-              <h2 class="card-title" style="margin-bottom:1rem;">Verified</h2>
+              <h2 class="card-title" style="margin-bottom: 1rem">Verified</h2>
               <div class="pv-cards-grid" id="pv-verified-grid"></div>
-              <div class="list-pagination" id="pv-verified-pagination" aria-label="Verified payments pagination">
-                <span class="list-pagination__summary" id="pv-verified-page">Page 1 of 1</span>
+              <div
+                class="list-pagination"
+                id="pv-verified-pagination"
+                aria-label="Verified payments pagination"
+              >
+                <span class="list-pagination__summary" id="pv-verified-page"
+                  >Page 1 of 1</span
+                >
                 <div class="list-pagination__actions">
-                  <button type="button" class="btn btn--outline btn--sm" id="pv-verified-prev" disabled>Previous</button>
-                  <button type="button" class="btn btn--outline btn--sm" id="pv-verified-next" disabled>Next</button>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="pv-verified-prev"
+                    disabled
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="pv-verified-next"
+                    disabled
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
 
             <!-- Invalid Section (hidden until items exist) -->
             <div id="pv-invalid-section" class="sp hidden">
-              <h2 class="card-title" style="margin-bottom:1rem;">Invalid</h2>
+              <h2 class="card-title" style="margin-bottom: 1rem">Invalid</h2>
               <div class="pv-cards-grid" id="pv-invalid-grid"></div>
-              <div class="list-pagination" id="pv-invalid-pagination" aria-label="Invalid payments pagination">
-                <span class="list-pagination__summary" id="pv-invalid-page">Page 1 of 1</span>
+              <div
+                class="list-pagination"
+                id="pv-invalid-pagination"
+                aria-label="Invalid payments pagination"
+              >
+                <span class="list-pagination__summary" id="pv-invalid-page"
+                  >Page 1 of 1</span
+                >
                 <div class="list-pagination__actions">
-                  <button type="button" class="btn btn--outline btn--sm" id="pv-invalid-prev" disabled>Previous</button>
-                  <button type="button" class="btn btn--outline btn--sm" id="pv-invalid-next" disabled>Next</button>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="pv-invalid-prev"
+                    disabled
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--sm"
+                    id="pv-invalid-next"
+                    disabled
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
@@ -754,9 +899,16 @@
             <div class="modal-header">
               <div>
                 <h2 id="pv-modal-title">Payment Verification</h2>
-                <p class="card-subtitle" id="pv-modal-subtitle">Review payment proof and verify transaction</p>
+                <p class="card-subtitle" id="pv-modal-subtitle">
+                  Review payment proof and verify transaction
+                </p>
               </div>
-              <button class="modal-close" id="pv-modal-close" aria-label="Close modal" onclick="closePvModal()">
+              <button
+                class="modal-close"
+                id="pv-modal-close"
+                aria-label="Close modal"
+                onclick="closePvModal()"
+              >
                 <i data-lucide="x"></i>
               </button>
             </div>
@@ -773,7 +925,9 @@
                 </div>
                 <div class="pv-info-cell">
                   <span class="pv-info-label">Amount</span>
-                  <strong class="pv-info-val pv-amount" id="pv-m-amount">—</strong>
+                  <strong class="pv-info-val pv-amount" id="pv-m-amount"
+                    >—</strong
+                  >
                 </div>
                 <div class="pv-info-cell">
                   <span class="pv-info-label">Method</span>
@@ -792,7 +946,12 @@
                   <span>Payment Proof</span>
                 </div>
                 <div class="pv-proof-body" id="pv-m-proof">
-                  <img src="" alt="Payment Proof" class="pv-proof-img hidden" id="pv-proof-img" />
+                  <img
+                    src=""
+                    alt="Payment Proof"
+                    class="pv-proof-img hidden"
+                    id="pv-proof-img"
+                  />
                   <div class="pv-proof-placeholder" id="pv-proof-placeholder">
                     <i data-lucide="image" aria-hidden="true"></i>
                     <p>No payment proof uploaded</p>
@@ -801,10 +960,18 @@
               </div>
             </div>
             <div class="modal-footer pv-modal-footer">
-              <button class="btn pv-btn-verify" id="pv-verify-btn" onclick="handlePvVerify()">
+              <button
+                class="btn pv-btn-verify"
+                id="pv-verify-btn"
+                onclick="handlePvVerify()"
+              >
                 <i data-lucide="check" aria-hidden="true"></i> Verify Payment
               </button>
-              <button class="btn pv-btn-invalid" id="pv-invalid-btn" onclick="handlePvInvalid()">
+              <button
+                class="btn pv-btn-invalid"
+                id="pv-invalid-btn"
+                onclick="handlePvInvalid()"
+              >
                 <i data-lucide="x" aria-hidden="true"></i> Mark as Invalid
               </button>
             </div>
@@ -835,126 +1002,624 @@
           </div>
 
           <div class="page-body">
-          <!-- Report Filters card (Figma) -->
-          <div class="card sp rpt-filters-card" aria-label="Report Filters">
-            <div class="rpt-filters-header">
-              <i data-lucide="filter" aria-hidden="true" class="rpt-filter-icon"></i>
-              <div>
-                <h2 class="card-title rpt-filters-title">Report Filters</h2>
-                <p class="card-subtitle">Select time period and date range for reports</p>
-              </div>
-            </div>
-            <div class="rpt-filters-row">
-              <div class="rpt-filter-group">
-                <label class="form-label" for="rpt-type-select">Report Type</label>
-                <div class="rpt-select-wrapper">
-                  <select id="rpt-type-select" class="form-input rpt-select" aria-label="Report Type">
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="yearly">Yearly</option>
-                  </select>
-                  <i data-lucide="chevron-down" aria-hidden="true" class="rpt-select-chevron"></i>
+            <!-- Report Filters card (Figma) -->
+            <div class="card sp rpt-filters-card" aria-label="Report Filters">
+              <div class="rpt-filters-header">
+                <i
+                  data-lucide="filter"
+                  aria-hidden="true"
+                  class="rpt-filter-icon"
+                ></i>
+                <div>
+                  <h2 class="card-title rpt-filters-title">Report Filters</h2>
+                  <p class="card-subtitle">
+                    Select time period and date range for reports
+                  </p>
                 </div>
               </div>
-              <div class="rpt-filter-group">
-                <label class="form-label" for="rpt-start-date">Start Date (Optional)</label>
-                <input type="date" id="rpt-start-date" class="form-input" aria-label="Start Date" />
-              </div>
-              <div class="rpt-filter-group">
-                <label class="form-label" for="rpt-end-date">End Date (Optional)</label>
-                <input type="date" id="rpt-end-date" class="form-input" aria-label="End Date" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Summary stat cards: 3 columns matching Figma -->
-          <div class="stats-grid stats-grid--3 sp">
-            <article class="stat-card stat-card--red" aria-label="Total Orders">
-              <div class="stat-card__header">
-                <span>Total Orders</span>
-                <i data-lucide="package" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="rpt-orders">0</p>
-              <p class="stat-card__label">Orders in period</p>
-            </article>
-            <article class="stat-card stat-card--green" aria-label="Total Income">
-              <div class="stat-card__header">
-                <span>Total Income</span>
-                <i data-lucide="dollar-sign" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="rpt-income">₱0.00</p>
-              <p class="stat-card__label">Revenue in period</p>
-            </article>
-            <article class="stat-card stat-card--blue" aria-label="Average Order Value">
-              <div class="stat-card__header">
-                <span>Avg Order Value</span>
-                <i data-lucide="trending-up" aria-hidden="true"></i>
-              </div>
-              <p class="stat-card__value" id="rpt-avg">₱0.00</p>
-              <p class="stat-card__label">Per completed order</p>
-            </article>
-          </div>
-          <!-- Performance Chart -->
-          <div class="card sp">
-            <div class="card-title-group">
-              <i data-lucide="bar-chart-2" aria-hidden="true"></i>
-              <div>
-                <h2 class="card-title">Performance Chart</h2>
-                <p class="card-subtitle" id="rpt-chart-label">Daily Report</p>
-              </div>
-            </div>
-            <div style="position:relative;height:300px;margin-top:1rem;">
-              <canvas id="reports-chart" aria-label="Reports performance chart"></canvas>
-            </div>
-          </div>
-
-          <!-- Transaction History Table -->
-          <div class="card sp mt-6">
-            <div class="reports-records-head">
-              <div>
-                <h2 class="card-title">Transaction History</h2>
-                <p class="card-subtitle">All completed transactions in selected period</p>
-              </div>
-              <div class="reports-records-tools">
-                <div class="record-search">
-                  <i data-lucide="search" aria-hidden="true"></i>
+              <div class="rpt-filters-row">
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="rpt-type-select"
+                    >Report Type</label
+                  >
+                  <div class="rpt-select-wrapper">
+                    <select
+                      id="rpt-type-select"
+                      class="form-input rpt-select"
+                      aria-label="Report Type"
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="semestral">Semestral</option>
+                    </select>
+                    <i
+                      data-lucide="chevron-down"
+                      aria-hidden="true"
+                      class="rpt-select-chevron"
+                    ></i>
+                  </div>
+                </div>
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="rpt-start-date"
+                    >Start Date (Optional)</label
+                  >
                   <input
+                    type="date"
+                    id="rpt-start-date"
                     class="form-input"
-                    id="rpt-record-search"
-                    type="search"
-                    placeholder="Search records"
-                    aria-label="Search report transactions"
+                    aria-label="Start Date"
                   />
                 </div>
-                <span class="reports-records-count" id="rpt-record-count">0 records</span>
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="rpt-end-date"
+                    >End Date (Optional)</label
+                  >
+                  <input
+                    type="date"
+                    id="rpt-end-date"
+                    class="form-input"
+                    aria-label="End Date"
+                  />
+                </div>
               </div>
             </div>
-            <div class="empty-state" id="rpt-empty">
-              <i data-lucide="file-text" aria-hidden="true"></i>
-              <p class="empty-state__title">No transactions found</p>
-              <p class="empty-state__sub">Completed transactions will appear here</p>
+
+            <!-- Summary stat cards: 3 columns matching Figma -->
+            <div class="stats-grid stats-grid--3 sp">
+              <article
+                class="stat-card stat-card--red"
+                aria-label="Total Orders"
+              >
+                <div class="stat-card__header">
+                  <span>Total Orders</span>
+                  <i data-lucide="package" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="rpt-orders">0</p>
+                <p class="stat-card__label">Orders in period</p>
+              </article>
+              <article
+                class="stat-card stat-card--green"
+                aria-label="Total Income"
+              >
+                <div class="stat-card__header">
+                  <span>Total Income</span>
+                  <i data-lucide="dollar-sign" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="rpt-income">₱0.00</p>
+                <p class="stat-card__label">Revenue in period</p>
+              </article>
+              <article
+                class="stat-card stat-card--blue"
+                aria-label="Average Order Value"
+              >
+                <div class="stat-card__header">
+                  <span>Avg Order Value</span>
+                  <i data-lucide="trending-up" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="rpt-avg">₱0.00</p>
+                <p class="stat-card__label">Per completed order</p>
+              </article>
             </div>
-            <div class="table-wrapper hidden" id="rpt-table">
-              <table class="data-table" aria-label="Transaction history">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Student Email</th>
-                    <th>Service</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody id="rpt-table-body"></tbody>
-              </table>
+            <!-- Performance Chart -->
+            <div class="card sp">
+              <div class="card-title-group">
+                <i data-lucide="bar-chart-2" aria-hidden="true"></i>
+                <div>
+                  <h2 class="card-title">Orders Over Time</h2>
+                  <p class="card-subtitle" id="rpt-chart-label">Daily Report</p>
+                </div>
+              </div>
+              <div style="position: relative; height: 300px; margin-top: 1rem">
+                <canvas
+                  id="reports-chart"
+                  aria-label="Orders over time chart"
+                ></canvas>
+              </div>
             </div>
-            <div class="reports-pagination" id="rpt-pagination" aria-label="Report transaction pagination"></div>
-          </div>
+
+            <!-- Transaction History Table -->
+            <div class="card sp mt-6">
+              <div class="reports-records-head">
+                <div>
+                  <h2 class="card-title">Transaction History</h2>
+                  <p class="card-subtitle">
+                    All completed transactions in selected period
+                  </p>
+                </div>
+                <div class="reports-records-tools">
+                  <div class="record-search">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      class="form-input"
+                      id="rpt-record-search"
+                      type="search"
+                      placeholder="Search records"
+                      aria-label="Search report transactions"
+                    />
+                  </div>
+                  <span class="reports-records-count" id="rpt-record-count"
+                    >0 records</span
+                  >
+                </div>
+              </div>
+              <div class="empty-state" id="rpt-empty">
+                <i data-lucide="file-text" aria-hidden="true"></i>
+                <p class="empty-state__title">No transactions found</p>
+                <p class="empty-state__sub">
+                  Completed transactions will appear here
+                </p>
+              </div>
+              <div class="table-wrapper hidden" id="rpt-table">
+                <table class="data-table" aria-label="Transaction history">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Student Email</th>
+                      <th>Service</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rpt-table-body"></tbody>
+                </table>
+              </div>
+              <div
+                class="reports-pagination"
+                id="rpt-pagination"
+                aria-label="Report transaction pagination"
+              ></div>
+            </div>
           </div>
         </section>
         <!-- /page-reports -->
+
+        <!-- ==========================================================
+         PAGE: SALES REPORTS
+         Sales data with paid/unpaid comparisons and revenue tracking
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-sales-reports"
+          aria-labelledby="sales-reports-heading"
+        >
+          <div class="page-header rpt-page-header page-header--row">
+            <div class="page-header__intro">
+              <h1 id="sales-reports-heading">Sales Reports</h1>
+              <p class="page-subtitle">
+                Analyze sales performance and revenue trends
+              </p>
+            </div>
+            <button
+              type="button"
+              class="btn btn--primary rpt-export-btn page-header__action"
+              id="sales-export-btn"
+              aria-label="Export Sales Report"
+            >
+              <i data-lucide="download" aria-hidden="true"></i> Export Report
+            </button>
+          </div>
+
+          <div class="page-body">
+            <!-- Sales Report Filters card -->
+            <div
+              class="card sp rpt-filters-card"
+              aria-label="Sales Report Filters"
+            >
+              <div class="rpt-filters-header">
+                <i
+                  data-lucide="filter"
+                  aria-hidden="true"
+                  class="rpt-filter-icon"
+                ></i>
+                <div>
+                  <h2 class="card-title rpt-filters-title">Sales Filters</h2>
+                  <p class="card-subtitle">
+                    Select time period and payment type for sales analysis
+                  </p>
+                </div>
+              </div>
+              <div class="rpt-filters-row">
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="sales-type-select"
+                    >Report Period</label
+                  >
+                  <div class="rpt-select-wrapper">
+                    <select
+                      id="sales-type-select"
+                      class="form-input rpt-select"
+                      aria-label="Sales Report Period"
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="semestral">Semestral</option>
+                    </select>
+                    <i
+                      data-lucide="chevron-down"
+                      aria-hidden="true"
+                      class="rpt-select-chevron"
+                    ></i>
+                  </div>
+                </div>
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="sales-start-date"
+                    >Start Date (Optional)</label
+                  >
+                  <input
+                    type="date"
+                    id="sales-start-date"
+                    class="form-input"
+                    aria-label="Sales Start Date"
+                  />
+                </div>
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="sales-end-date"
+                    >End Date (Optional)</label
+                  >
+                  <input
+                    type="date"
+                    id="sales-end-date"
+                    class="form-input"
+                    aria-label="Sales End Date"
+                  />
+                </div>
+                <div class="rpt-filter-group">
+                  <label class="form-label" for="sales-payment-type-select"
+                    >Payment Type</label
+                  >
+                  <div class="rpt-select-wrapper">
+                    <select
+                      id="sales-payment-type-select"
+                      class="form-input rpt-select"
+                      aria-label="Sales Payment Type"
+                    >
+                      <option value="all">All Payment Types</option>
+                      <option value="cash">Cash</option>
+                      <option value="gcash">GCash</option>
+                      <option value="credit">Credit</option>
+                    </select>
+                    <i
+                      data-lucide="chevron-down"
+                      aria-hidden="true"
+                      class="rpt-select-chevron"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sales Summary stat cards -->
+            <div class="stats-grid stats-grid--4 sp">
+              <article
+                class="stat-card stat-card--red"
+                aria-label="Total Sales Transactions"
+              >
+                <div class="stat-card__header">
+                  <span>Total Transactions</span>
+                  <i data-lucide="package" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="sales-total-transactions">0</p>
+                <p class="stat-card__label">All transactions in period</p>
+              </article>
+              <article
+                class="stat-card stat-card--green"
+                aria-label="Paid Sales"
+              >
+                <div class="stat-card__header">
+                  <span>Paid Transactions</span>
+                  <i data-lucide="check-circle" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="sales-paid-transactions">0</p>
+                <p class="stat-card__label">Completed payments</p>
+              </article>
+              <article
+                class="stat-card stat-card--orange"
+                aria-label="Unpaid Sales"
+              >
+                <div class="stat-card__header">
+                  <span>Unpaid Transactions</span>
+                  <i data-lucide="clock" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="sales-unpaid-transactions">0</p>
+                <p class="stat-card__label">Pending/credit payments</p>
+              </article>
+              <article
+                class="stat-card stat-card--blue"
+                aria-label="Total Sales Revenue"
+              >
+                <div class="stat-card__header">
+                  <span>Total Revenue</span>
+                  <i data-lucide="dollar-sign" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="sales-total-revenue">₱0.00</p>
+                <p class="stat-card__label">Revenue from paid transactions</p>
+              </article>
+            </div>
+
+            <!-- Sales Performance Chart -->
+            <div class="card sp">
+              <div class="card-title-group">
+                <i data-lucide="trending-up" aria-hidden="true"></i>
+                <div>
+                  <h2 class="card-title">Sales Performance</h2>
+                  <p class="card-subtitle" id="sales-chart-label">
+                    Daily Sales Report
+                  </p>
+                </div>
+              </div>
+              <div style="position: relative; height: 300px; margin-top: 1rem">
+                <canvas
+                  id="sales-chart"
+                  aria-label="Sales performance chart"
+                ></canvas>
+              </div>
+            </div>
+
+            <!-- Sales Transaction History Table -->
+            <div class="card sp mt-6">
+              <div class="reports-records-head">
+                <div>
+                  <h2 class="card-title">Sales Transaction History</h2>
+                  <p class="card-subtitle">
+                    All transactions with payment status in selected period
+                  </p>
+                </div>
+                <div class="reports-records-tools">
+                  <div class="record-search">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      class="form-input"
+                      id="sales-record-search"
+                      type="search"
+                      placeholder="Search sales records"
+                      aria-label="Search sales transactions"
+                    />
+                  </div>
+                  <span class="reports-records-count" id="sales-record-count"
+                    >0 records</span
+                  >
+                </div>
+              </div>
+              <div class="empty-state" id="sales-empty">
+                <i data-lucide="file-text" aria-hidden="true"></i>
+                <p class="empty-state__title">No sales transactions found</p>
+                <p class="empty-state__sub">
+                  Sales transactions will appear here
+                </p>
+              </div>
+              <div class="table-wrapper hidden" id="sales-table">
+                <table
+                  class="data-table"
+                  aria-label="Sales transaction history"
+                >
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Student Email</th>
+                      <th>Service</th>
+                      <th>Payment Method</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sales-table-body"></tbody>
+                </table>
+              </div>
+              <div
+                class="reports-pagination"
+                id="sales-pagination"
+                aria-label="Sales transaction pagination"
+              ></div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-sales-reports -->
+
+        <!-- ==========================================================
+         PAGE: RATINGS
+         Review feedback from completed transactions
+         ========================================================== -->
+        <section
+          class="page-section"
+          id="page-ratings"
+          aria-labelledby="ratings-heading"
+        >
+          <div class="page-header">
+            <h1 id="ratings-heading">Ratings</h1>
+            <p class="page-subtitle">
+              Review feedback from completed transactions.
+            </p>
+          </div>
+
+          <div class="stats-grid stats-grid--4 ratings-summary-grid">
+            <article
+              class="stat-card stat-card--blue"
+              aria-label="Average Rating"
+            >
+              <div class="stat-card__header">
+                <span>Average Rating</span>
+                <i data-lucide="star" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="ratingsAverage">0.0</p>
+              <p class="stat-card__label">Based on all feedback</p>
+            </article>
+            <article
+              class="stat-card stat-card--green"
+              aria-label="Total Reviews"
+            >
+              <div class="stat-card__header">
+                <span>Total Reviews</span>
+                <i data-lucide="message-circle" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="ratingsCount">0</p>
+              <p class="stat-card__label">Feedback entries</p>
+            </article>
+            <article
+              class="stat-card stat-card--yellow"
+              aria-label="With Comments"
+            >
+              <div class="stat-card__header">
+                <span>With Comments</span>
+                <i data-lucide="quote" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="ratingsCommented">0</p>
+              <p class="stat-card__label">Optional feedback included</p>
+            </article>
+            <article
+              class="stat-card stat-card--purple"
+              aria-label="Pending Follow-up"
+            >
+              <div class="stat-card__header">
+                <span>Pending Follow-up</span>
+                <i data-lucide="alert-circle" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="ratingsFlagged">0</p>
+              <p class="stat-card__label">Flagged for review</p>
+            </article>
+          </div>
+
+          <div class="card ratings-filter-card">
+            <div class="ratings-filter-row">
+              <div class="form-group">
+                <label class="form-label" for="ratingsStars">Stars</label>
+                <select class="form-input form-select" id="ratingsStars">
+                  <option value="all">All Ratings</option>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ratingsPaymentType"
+                  >Payment Type</label
+                >
+                <select class="form-input form-select" id="ratingsPaymentType">
+                  <option value="all">All Payment Types</option>
+                  <option value="gcash">GCash</option>
+                  <option value="credit">Credit</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ratingsCollege">College</label>
+                <select class="form-input form-select" id="ratingsCollege">
+                  <option value="all">All Colleges</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ratingsCourse">Course</label>
+                <select class="form-input form-select" id="ratingsCourse">
+                  <option value="all">All Courses</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ratingsYearLevel"
+                  >Year Level</label
+                >
+                <select class="form-input form-select" id="ratingsYearLevel">
+                  <option value="all">All Year Levels</option>
+                </select>
+              </div>
+              <div class="form-group ratings-date-range">
+                <label class="form-label">Date Range</label>
+                <div class="ratings-date-inputs">
+                  <input class="form-input" id="ratingsStartDate" type="date" />
+                  <input class="form-input" id="ratingsEndDate" type="date" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ratings-grid">
+            <div class="card ratings-chart-card">
+              <div class="card-title-group">
+                <div>
+                  <h2 class="card-title">Star Distribution</h2>
+                  <p class="card-subtitle">
+                    Rating breakdown from 1 to 5 stars.
+                  </p>
+                </div>
+              </div>
+              <div class="ratings-chart-wrapper">
+                <canvas
+                  id="ratingsChart"
+                  aria-label="Ratings distribution chart"
+                ></canvas>
+              </div>
+            </div>
+
+            <div class="card ratings-summary-card">
+              <div class="card-title-group">
+                <div>
+                  <h2 class="card-title">Feedback Summary</h2>
+                  <p class="card-subtitle">
+                    Quick insights for the active academic year.
+                  </p>
+                </div>
+              </div>
+              <div class="ratings-breakdown-list">
+                <div class="ratings-breakdown-item">
+                  <span>5 Star</span><strong id="ratingsFiveCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>4 Star</span><strong id="ratingsFourCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>3 Star</span><strong id="ratingsThreeCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>2 Star</span><strong id="ratingsTwoCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>1 Star</span><strong id="ratingsOneCount">0</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ratings-records-card">
+            <div class="card-title-group">
+              <div>
+                <h2 class="card-title">Feedback Records</h2>
+                <p class="card-subtitle">
+                  All ratings linked to completed transactions.
+                </p>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table" aria-label="Rating records">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Service</th>
+                    <th>Rating</th>
+                    <th>Payment</th>
+                    <th>Comment</th>
+                  </tr>
+                </thead>
+                <tbody id="ratingsRecordsBody"></tbody>
+              </table>
+            </div>
+            <div
+              class="empty-state empty-state--mini hidden"
+              id="ratingsEmptyState"
+            >
+              <div class="empty-state__icon" aria-hidden="true">
+                <i data-lucide="star"></i>
+              </div>
+              <div class="empty-state__title">No rating records found</div>
+              <div class="empty-state__sub">
+                Filtered ratings will appear here once available.
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /page-ratings -->
 
         <!-- ==========================================================
          PAGE: QR CODE SCANNER
@@ -1038,7 +1703,7 @@
                 aria-live="polite"
               ></div>
             </div>
-<!-- How-to guide -->
+            <!-- How-to guide -->
             <div class="card info-card mt-4">
               <h3>
                 <i data-lucide="package" aria-hidden="true"></i> How to Use QR
@@ -1206,8 +1871,8 @@
             </div>
           </div>
         </section>
-<!-- /page-yearly-analytics -->
-         <!-- /page-reports -->
+        <!-- /page-yearly-analytics -->
+        <!-- /page-reports -->
 
         <!-- ==========================================================
          PAGE: QR CODE SCANNER
@@ -2018,11 +2683,10 @@
             </div>
           </div>
         </section>
-        </main>
+      </main>
       <!-- /main-content -->
     </div>
     <!-- /app-wrapper -->
-
 
     <!-- Separated JavaScript --><!-- ==========================================================
      MODAL: STUDENT VERIFICATION DETAIL

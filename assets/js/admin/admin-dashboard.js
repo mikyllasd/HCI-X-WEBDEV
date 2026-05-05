@@ -80,14 +80,16 @@ let optionRowCount = 1;
  * @type {Object.<string, {id: string}>}
  */
 const PAGE_MAP = {
-  dashboard:              { id: "page-dashboard" },
+  dashboard: { id: "page-dashboard" },
   "student-verification": { id: "page-student-verification" },
-  orders:                 { id: "page-orders" },
+  orders: { id: "page-orders" },
   "payment-verification": { id: "page-payment-verification" },
-  reports:                { id: "page-reports" },
-  "qr-scanner":           { id: "page-qr-scanner" },
-  "active-accounts":      { id: "page-active-accounts" },
-  "add-service":          { id: "page-add-service" },
+  reports: { id: "page-reports" },
+  "sales-reports": { id: "page-sales-reports" },
+  ratings: { id: "page-ratings" },
+  "qr-scanner": { id: "page-qr-scanner" },
+  "active-accounts": { id: "page-active-accounts" },
+  "add-service": { id: "page-add-service" },
 };
 
 /** Tracks which Chart.js instances have been initialised */
@@ -123,8 +125,10 @@ function navigateTo(pageKey) {
 
   /* Page-specific lazy initialisers */
   if (pageKey === "payment-verification") renderPaymentVerificationTable();
-  if (pageKey === "reports")              initReportsPage();
-  if (pageKey === "dashboard")            renderDashboardOverview();
+  if (pageKey === "reports") initReportsPage();
+  if (pageKey === "sales-reports") initSalesReportsPage();
+  if (pageKey === "ratings") initRatingsPage();
+  if (pageKey === "dashboard") renderDashboardOverview();
 
   /* Scroll main area to top */
   const main = document.getElementById("main-content");
@@ -142,14 +146,18 @@ window.navigateTo = navigateTo;
 function openSidebar() {
   document.getElementById("sidebar").classList.add("open");
   document.getElementById("sidebar-overlay").classList.remove("hidden");
-  document.getElementById("hamburger-btn").setAttribute("aria-expanded", "true");
+  document
+    .getElementById("hamburger-btn")
+    .setAttribute("aria-expanded", "true");
 }
 
 /** Closes the mobile sidebar drawer */
 function closeSidebar() {
   document.getElementById("sidebar").classList.remove("open");
   document.getElementById("sidebar-overlay").classList.add("hidden");
-  document.getElementById("hamburger-btn").setAttribute("aria-expanded", "false");
+  document
+    .getElementById("hamburger-btn")
+    .setAttribute("aria-expanded", "false");
 }
 
 /* ----------------------------------------------------------
@@ -164,15 +172,17 @@ let svFilter = "all";
  * status filter and search query.
  */
 function renderVerificationList() {
-  const query = (document.getElementById("sv-search")?.value || "").toLowerCase();
-  const list  = document.getElementById("sv-list");
+  const query = (
+    document.getElementById("sv-search")?.value || ""
+  ).toLowerCase();
+  const list = document.getElementById("sv-list");
   if (!list) return;
 
   const filtered = VERIFICATION_REQUESTS.filter((req) => {
     const matchStatus = svFilter === "all" || req.status === svFilter;
-    const matchQuery  =
+    const matchQuery =
       !query ||
-      req.name.toLowerCase().includes(query)      ||
+      req.name.toLowerCase().includes(query) ||
       req.studentId.toLowerCase().includes(query) ||
       req.email.toLowerCase().includes(query);
     return matchStatus && matchQuery;
@@ -286,11 +296,17 @@ function setVerificationStatus(id, newStatus) {
 
 /** Recomputes and updates the four summary counter cards */
 function refreshVerificationCounters() {
-  const pending  = VERIFICATION_REQUESTS.filter((r) => r.status === "pending").length;
-  const approved = VERIFICATION_REQUESTS.filter((r) => r.status === "approved").length;
-  const rejected = VERIFICATION_REQUESTS.filter((r) => r.status === "rejected").length;
-  setText("sv-total",    VERIFICATION_REQUESTS.length);
-  setText("sv-pending",  pending);
+  const pending = VERIFICATION_REQUESTS.filter(
+    (r) => r.status === "pending",
+  ).length;
+  const approved = VERIFICATION_REQUESTS.filter(
+    (r) => r.status === "approved",
+  ).length;
+  const rejected = VERIFICATION_REQUESTS.filter(
+    (r) => r.status === "rejected",
+  ).length;
+  setText("sv-total", VERIFICATION_REQUESTS.length);
+  setText("sv-pending", pending);
   setText("sv-approved", approved);
   setText("sv-rejected", rejected);
 }
@@ -309,14 +325,16 @@ let ordersFilter = "all";
 function renderOrdersTable() {
   const tbody = document.getElementById("orders-table-body");
   if (!tbody) return;
-  const query = (document.getElementById("orders-search")?.value || "").toLowerCase();
+  const query = (
+    document.getElementById("orders-search")?.value || ""
+  ).toLowerCase();
 
   const filtered = ORDERS.filter((o) => {
     const matchStatus = ordersFilter === "all" || o.status === ordersFilter;
-    const matchQuery  =
+    const matchQuery =
       !query ||
-      o.id.toLowerCase().includes(query)      ||
-      o.email.toLowerCase().includes(query)   ||
+      o.id.toLowerCase().includes(query) ||
+      o.email.toLowerCase().includes(query) ||
       o.service.toLowerCase().includes(query);
     return matchStatus && matchQuery;
   });
@@ -333,9 +351,12 @@ function renderOrdersTable() {
           <td>
             <div>${escHtml(o.service)}</div>
             <div class="text-muted" style="font-size:12px;opacity:.85">
-              ${String(o.order_type || "individual").toLowerCase() === "organization"
-                ? `Organization${o.order_org ? ": " + escHtml(o.order_org) : ""}`
-                : "Individual"}
+              ${
+                String(o.order_type || "individual").toLowerCase() ===
+                "organization"
+                  ? `Organization${o.order_org ? ": " + escHtml(o.order_org) : ""}`
+                  : "Individual"
+              }
             </div>
           </td>
           <td style="color:var(--clr-primary);font-weight:600">₱${o.amount.toFixed(2)}</td>
@@ -517,10 +538,17 @@ function renderPaymentVerificationCards() {
   }
 
   const paginate = (items, page) => {
-    const totalPages = Math.max(1, Math.ceil(items.length / PV_CARDS_PAGE_SIZE));
+    const totalPages = Math.max(
+      1,
+      Math.ceil(items.length / PV_CARDS_PAGE_SIZE),
+    );
     const safePage = Math.min(Math.max(1, page), totalPages);
     const start = (safePage - 1) * PV_CARDS_PAGE_SIZE;
-    return { totalPages, page: safePage, slice: items.slice(start, start + PV_CARDS_PAGE_SIZE) };
+    return {
+      totalPages,
+      page: safePage,
+      slice: items.slice(start, start + PV_CARDS_PAGE_SIZE),
+    };
   };
 
   const pendingPg = paginate(buckets.pending, pvCardPagePending);
@@ -531,16 +559,22 @@ function renderPaymentVerificationCards() {
 
   const verifiedPg = paginate(buckets.verified, pvCardPageVerified);
   pvCardPageVerified = verifiedPg.page;
-  verifiedGrid.innerHTML = verifiedPg.slice.map(paymentSubmissionCardHTML).join("");
+  verifiedGrid.innerHTML = verifiedPg.slice
+    .map(paymentSubmissionCardHTML)
+    .join("");
 
   const invalidPg = paginate(buckets.invalid, pvCardPageInvalid);
   pvCardPageInvalid = invalidPg.page;
-  invalidGrid.innerHTML = invalidPg.slice.map(paymentSubmissionCardHTML).join("");
+  invalidGrid.innerHTML = invalidPg.slice
+    .map(paymentSubmissionCardHTML)
+    .join("");
 
   function syncPager(prefix, page, totalPages) {
-    document.getElementById(`${prefix}-page`)?.replaceChildren(
-      document.createTextNode(`Page ${page} of ${totalPages}`),
-    );
+    document
+      .getElementById(`${prefix}-page`)
+      ?.replaceChildren(
+        document.createTextNode(`Page ${page} of ${totalPages}`),
+      );
     const prev = document.getElementById(`${prefix}-prev`);
     const next = document.getElementById(`${prefix}-next`);
     if (prev) prev.disabled = page <= 1;
@@ -572,24 +606,29 @@ function renderPaymentVerificationCards() {
 function renderPaymentVerificationTable() {
   if (renderPaymentVerificationCards()) return;
 
-  const query  = (document.getElementById("pv-search")?.value || "").toLowerCase();
-  const empty  = document.getElementById("pv-empty");
-  const table  = document.getElementById("pv-table");
-  const tbody  = document.getElementById("pv-table-body");
+  const query = (
+    document.getElementById("pv-search")?.value || ""
+  ).toLowerCase();
+  const empty = document.getElementById("pv-empty");
+  const table = document.getElementById("pv-table");
+  const tbody = document.getElementById("pv-table-body");
   if (!tbody) return;
 
   const filtered = PAYMENT_SUBMISSIONS.filter((p) => {
     const matchStatus = pvFilter === "all" || p.status === pvFilter;
-    const matchQuery  =
+    const matchQuery =
       !query ||
-      p.orderId.toLowerCase().includes(query)    ||
-      p.email.toLowerCase().includes(query)      ||
+      p.orderId.toLowerCase().includes(query) ||
+      p.email.toLowerCase().includes(query) ||
       p.reference.toLowerCase().includes(query);
     return matchStatus && matchQuery;
   });
 
   /* Update count label */
-  setText("pv-count", `${filtered.length} submission${filtered.length !== 1 ? "s" : ""} found`);
+  setText(
+    "pv-count",
+    `${filtered.length} submission${filtered.length !== 1 ? "s" : ""} found`,
+  );
 
   if (filtered.length === 0) {
     empty?.classList.remove("hidden");
@@ -630,10 +669,14 @@ function renderPaymentVerificationTable() {
 
   /* Attach action button handlers */
   tbody.querySelectorAll(".pv-verify-btn").forEach((btn) => {
-    btn.addEventListener("click", () => setPaymentStatus(btn.dataset.id, "verified"));
+    btn.addEventListener("click", () =>
+      setPaymentStatus(btn.dataset.id, "verified"),
+    );
   });
   tbody.querySelectorAll(".pv-reject-btn").forEach((btn) => {
-    btn.addEventListener("click", () => setPaymentStatus(btn.dataset.id, "rejected"));
+    btn.addEventListener("click", () =>
+      setPaymentStatus(btn.dataset.id, "rejected"),
+    );
   });
   tbody.querySelectorAll(".pv-view-btn").forEach((btn) => {
     btn.addEventListener("click", () => openPaymentModal(btn.dataset.id));
@@ -691,15 +734,19 @@ function openPaymentModal(paymentId) {
 
 /** Recomputes and updates the four payment summary counter cards */
 function refreshPaymentCounters() {
-  const total    = PAYMENT_SUBMISSIONS.length;
-  const pending  = PAYMENT_SUBMISSIONS.filter((p) => p.status === "pending").length;
-  const verified = PAYMENT_SUBMISSIONS.filter((p) => p.status === "verified").length;
+  const total = PAYMENT_SUBMISSIONS.length;
+  const pending = PAYMENT_SUBMISSIONS.filter(
+    (p) => p.status === "pending",
+  ).length;
+  const verified = PAYMENT_SUBMISSIONS.filter(
+    (p) => p.status === "verified",
+  ).length;
   const rejected = PAYMENT_SUBMISSIONS.filter((p) => {
     const status = getPaymentCardStatus(p.status);
     return status === "invalid";
   }).length;
-  setText("pv-total",    total);
-  setText("pv-pending",  pending);
+  setText("pv-total", total);
+  setText("pv-pending", pending);
   setText("pv-verified", verified);
   setText("pv-rejected", rejected);
   setText("pv-invalid", rejected);
@@ -712,7 +759,7 @@ function refreshPaymentCounters() {
  */
 function paymentStatusBadgeHTML(status) {
   const map = {
-    pending:  "yellow",
+    pending: "yellow",
     verified: "green",
     rejected: "red",
   };
@@ -726,8 +773,11 @@ function paymentStatusBadgeHTML(status) {
 
 /** Currently selected report period tab */
 let reportsTab = "daily";
+let salesReportsTab = "daily";
 let rptRecordSearchQuery = "";
+let salesRecordSearchQuery = "";
 let rptRecordPage = 1;
+let salesRecordPage = 1;
 const RPT_RECORDS_PAGE_SIZE = 10;
 
 /**
@@ -737,16 +787,20 @@ const RPT_RECORDS_PAGE_SIZE = 10;
 function initReportsPage() {
   /* Attach tab click handlers only once */
   if (!document.getElementById("page-reports")?._tabsReady) {
-    document.querySelectorAll("#page-reports .tab-btn[data-report]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        reportsTab = btn.dataset.report;
-        document.querySelectorAll("#page-reports .tab-btn[data-report]").forEach((b) => {
-          b.classList.toggle("active", b === btn);
-          b.setAttribute("aria-selected", b === btn ? "true" : "false");
+    document
+      .querySelectorAll("#page-reports .tab-btn[data-report]")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          reportsTab = btn.dataset.report;
+          document
+            .querySelectorAll("#page-reports .tab-btn[data-report]")
+            .forEach((b) => {
+              b.classList.toggle("active", b === btn);
+              b.setAttribute("aria-selected", b === btn ? "true" : "false");
+            });
+          renderReportsData();
         });
-        renderReportsData();
       });
-    });
     if (document.getElementById("page-reports"))
       document.getElementById("page-reports")._tabsReady = true;
   }
@@ -755,11 +809,370 @@ function initReportsPage() {
 }
 
 /**
+ * Initialize the Sales Reports page.
+ * Sets up event listeners for filters and renders initial data.
+ */
+function initSalesReportsPage() {
+  /* Attach tab click handlers only once */
+  if (!document.getElementById("page-sales-reports")?._tabsReady) {
+    document
+      .querySelectorAll("#page-sales-reports .tab-btn[data-report]")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          salesReportsTab = btn.dataset.report;
+          document
+            .querySelectorAll("#page-sales-reports .tab-btn[data-report]")
+            .forEach((b) => {
+              b.classList.toggle("active", b === btn);
+              b.setAttribute("aria-selected", b === btn ? "true" : "false");
+            });
+          renderSalesReportsData();
+        });
+      });
+    if (document.getElementById("page-sales-reports"))
+      document.getElementById("page-sales-reports")._tabsReady = true;
+  }
+
+  renderSalesReportsData();
+}
+
+/**
+ * Initializes the Ratings page: populates filters, attaches event listeners,
+ * and renders the initial data.
+ */
+function initRatingsPage() {
+  /* Populate college/course/year filters from database */
+  const db = getDB();
+  const colleges = new Set();
+  const courses = new Set();
+  const yearLevels = new Set();
+
+  db.users?.forEach((user) => {
+    if (user.college) colleges.add(user.college);
+    if (user.course) courses.add(user.course);
+    if (user.yearLevel) yearLevels.add(user.yearLevel);
+  });
+
+  const collegeSelect = document.getElementById("ratingsCollege");
+  const courseSelect = document.getElementById("ratingsCourse");
+  const yearSelect = document.getElementById("ratingsYearLevel");
+
+  if (collegeSelect) {
+    collegeSelect.innerHTML = '<option value="all">All Colleges</option>';
+    [...colleges].sort().forEach((college) => {
+      const option = document.createElement("option");
+      option.value = college;
+      option.textContent = college;
+      collegeSelect.appendChild(option);
+    });
+  }
+
+  if (courseSelect) {
+    courseSelect.innerHTML = '<option value="all">All Courses</option>';
+    [...courses].sort().forEach((course) => {
+      const option = document.createElement("option");
+      option.value = course;
+      option.textContent = course;
+      courseSelect.appendChild(option);
+    });
+  }
+
+  if (yearSelect) {
+    yearSelect.innerHTML = '<option value="all">All Year Levels</option>';
+    [...yearLevels].sort().forEach((year) => {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = `Year ${year}`;
+      yearSelect.appendChild(option);
+    });
+  }
+
+  renderRatingsData();
+}
+
+/**
+ * Renders the ratings page data: stats, chart, and records table.
+ */
+function renderRatingsData() {
+  const db = getDB();
+  const starsFilter = document.getElementById("ratingsStars")?.value || "all";
+  const paymentFilter =
+    document.getElementById("ratingsPaymentType")?.value || "all";
+  const collegeFilter =
+    document.getElementById("ratingsCollege")?.value || "all";
+  const courseFilter = document.getElementById("ratingsCourse")?.value || "all";
+  const yearLevelFilter =
+    document.getElementById("ratingsYearLevel")?.value || "all";
+  const startDate = parseDate(
+    document.getElementById("ratingsStartDate")?.value,
+  );
+  const endDate = parseDate(document.getElementById("ratingsEndDate")?.value);
+
+  /* Get rated transactions */
+  const ratedTransactions = (db.ratings || []).filter((rating) => {
+    if (!rating.transactionId) return false;
+    const transaction = getTransaction(rating.transactionId);
+    if (!transaction.id) return false;
+    return true;
+  });
+
+  /* Build and filter rating records */
+  const records = ratedTransactions
+    .map((rating) => {
+      const transaction = getTransaction(rating.transactionId);
+      const user = getUser(transaction);
+      return buildRatingRecord(rating, transaction, user);
+    })
+    .filter((record) => {
+      if (!record.status || record.status !== "completed") return false;
+      if (starsFilter !== "all" && record.rating !== Number(starsFilter))
+        return false;
+      if (
+        paymentFilter !== "all" &&
+        record.paymentType.toLowerCase() !== paymentFilter
+      )
+        return false;
+      if (collegeFilter !== "all" && record.college !== collegeFilter)
+        return false;
+      if (courseFilter !== "all" && record.course !== courseFilter)
+        return false;
+      if (yearLevelFilter !== "all" && record.yearLevel !== yearLevelFilter)
+        return false;
+      if (!inDateRange(record.date, startDate, endDate)) return false;
+      return true;
+    });
+
+  /* Update summary stats */
+  updateRatingsSummary(records);
+
+  /* Render chart */
+  renderRatingsChart(records);
+
+  /* Render records table */
+  renderRatingsRecords(records);
+}
+
+/**
+ * Helper function to get transaction by ID
+ */
+function getTransaction(transactionId) {
+  const db = getDB();
+  return (db.transactions || []).find((t) => t.id === transactionId) || {};
+}
+
+/**
+ * Helper function to get user by transaction
+ */
+function getUser(transaction) {
+  const db = getDB();
+  return (
+    (db.users || []).find(
+      (u) => u.id === transaction.userId || u.email === transaction.email,
+    ) || {}
+  );
+}
+
+/**
+ * Helper function to parse date strings
+ */
+function parseDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+/**
+ * Helper function to check if date is in range
+ */
+function inDateRange(date, start, end) {
+  if (!date) return false;
+  if (start && date < start) return false;
+  if (end && date > end) return false;
+  return true;
+}
+
+/**
+ * Builds a rating record object from rating, transaction, and user data
+ */
+function buildRatingRecord(rating, transaction, user) {
+  const date = parseDate(rating.createdAt || transaction.date);
+  const paymentType = getPaymentType(transaction);
+  const studentName =
+    user.fullName || transaction.studentName || transaction.email || "Unknown";
+
+  return {
+    date,
+    studentName,
+    serviceName: transaction.serviceName || transaction.service || "—",
+    rating: Number(rating.rating) || 0,
+    paymentType:
+      paymentType === "gcash"
+        ? "GCash"
+        : paymentType === "credit"
+          ? "Credit"
+          : "Other",
+    comment: String(rating.comment || "").trim(),
+    status: String(transaction.status || "").toLowerCase(),
+    college: String(user.college || "").toLowerCase(),
+    course: String(user.course || "").toLowerCase(),
+    yearLevel: String(user.yearLevel || "").toLowerCase(),
+  };
+}
+
+/**
+ * Gets payment type from transaction
+ */
+function getPaymentType(transaction) {
+  const value = String(
+    transaction.paymentType ||
+      transaction.paymentMethod ||
+      transaction.payment ||
+      transaction.method ||
+      "",
+  ).toLowerCase();
+  if (value.includes("gcash") || value.includes("online")) return "gcash";
+  if (
+    value.includes("credit") ||
+    value.includes("pay onsite") ||
+    value.includes("cash")
+  )
+    return "credit";
+  return "other";
+}
+
+/**
+ * Updates the ratings summary stats cards
+ */
+function updateRatingsSummary(records) {
+  const total = records.length;
+  const average =
+    total > 0
+      ? records.reduce((sum, record) => sum + record.rating, 0) / total
+      : 0;
+  const commented = records.filter((record) => record.comment).length;
+  const flagged = records.filter(
+    (record) =>
+      record.comment.toLowerCase().includes("issue") ||
+      record.comment.toLowerCase().includes("problem") ||
+      record.comment.toLowerCase().includes("unhappy"),
+  ).length;
+
+  setText("ratingsAverage", average.toFixed(1));
+  setText("ratingsCount", total);
+  setText("ratingsCommented", commented);
+  setText("ratingsFlagged", flagged);
+  setText(
+    "ratingsFiveCount",
+    records.filter((record) => record.rating === 5).length,
+  );
+  setText(
+    "ratingsFourCount",
+    records.filter((record) => record.rating === 4).length,
+  );
+  setText(
+    "ratingsThreeCount",
+    records.filter((record) => record.rating === 3).length,
+  );
+  setText(
+    "ratingsTwoCount",
+    records.filter((record) => record.rating === 2).length,
+  );
+  setText(
+    "ratingsOneCount",
+    records.filter((record) => record.rating === 1).length,
+  );
+}
+
+/**
+ * Renders the ratings distribution chart
+ */
+function renderRatingsChart(records) {
+  const distribution = [5, 4, 3, 2, 1].map(
+    (value) => records.filter((record) => record.rating === value).length,
+  );
+
+  makeChart("ratingsChart", {
+    type: "bar",
+    data: {
+      labels: ["5★", "4★", "3★", "2★", "1★"],
+      datasets: [
+        {
+          label: "Review count",
+          data: distribution,
+          backgroundColor: [
+            "#4ade80",
+            "#facc15",
+            "#60a5fa",
+            "#fb7185",
+            "#f43f5e",
+          ],
+          borderRadius: 8,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        x: { grid: { display: false }, ticks: { color: "#475569" } },
+        y: {
+          grid: { color: "rgba(148,163,184,0.16)" },
+          ticks: { color: "#475569", stepSize: 1 },
+        },
+      },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+/**
+ * Renders the ratings records table
+ */
+function renderRatingsRecords(records) {
+  const tbody = document.getElementById("ratingsRecordsBody");
+  const emptyState = document.getElementById("ratingsEmptyState");
+
+  if (!tbody) return;
+
+  if (records.length === 0) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="text-center">No feedback records found.</td></tr>';
+    if (emptyState) emptyState.classList.remove("hidden");
+    return;
+  }
+
+  if (emptyState) emptyState.classList.add("hidden");
+
+  tbody.innerHTML = records
+    .sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0))
+    .map(
+      (record) => `
+      <tr>
+        <td>${record.date ? record.date.toLocaleDateString() : "N/A"}</td>
+        <td>${record.studentName}</td>
+        <td>${record.serviceName}</td>
+        <td><span class="rating-stars">${formatStars(record.rating)}</span></td>
+        <td>${record.paymentType}</td>
+        <td><span class="rating-comment">${record.comment || "No comment"}</span></td>
+      </tr>
+    `,
+    )
+    .join("");
+}
+
+/**
+ * Formats rating as star display
+ */
+function formatStars(value) {
+  const filled = Number(value) || 0;
+  const empty = 5 - filled;
+  return "★".repeat(filled) + "☆".repeat(empty);
+}
+
+/**
  * Renders summary stats, the chart, and the transaction table
  * for the currently selected report period.
  */
 function renderReportsData() {
-  const now   = new Date();
+  const now = new Date();
   const today = now.toDateString();
   const startInput = document.getElementById("rpt-start-date");
   const endInput = document.getElementById("rpt-end-date");
@@ -793,15 +1206,28 @@ function renderReportsData() {
     periodOrders = ORDERS.filter((o) => {
       const d = new Date(o.date);
       return (
-        d.getMonth()    === now.getMonth() &&
-        d.getFullYear() === now.getFullYear()
+        d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
       );
     });
-  } else {
-    /* yearly */
+  } else if (reportsTab === "semestral") {
+    // Semestral: First semester (Aug-Jan), Second semester (Feb-Jul)
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    let semesterStart, semesterEnd;
+
+    if (currentMonth >= 7) {
+      // August (7) to December (11) - First semester
+      semesterStart = new Date(currentYear, 7, 1); // August 1
+      semesterEnd = new Date(currentYear + 1, 0, 31, 23, 59, 59, 999); // January 31
+    } else {
+      // January (0) to July (6) - Second semester
+      semesterStart = new Date(currentYear, 1, 1); // February 1
+      semesterEnd = new Date(currentYear, 6, 31, 23, 59, 59, 999); // July 31
+    }
+
     periodOrders = ORDERS.filter((o) => {
       const d = new Date(o.date);
-      return d.getFullYear() === now.getFullYear();
+      return d >= semesterStart && d <= semesterEnd;
     });
   }
 
@@ -815,16 +1241,22 @@ function renderReportsData() {
     });
   }
 
-  const completed = periodOrders.filter(
+  // Calculate general metrics
+  const totalOrders = periodOrders.length;
+  const completedOrders = periodOrders.filter(
     (o) => o.status === "completed" || o.status === "ready",
   );
-  const totalIncome = completed.reduce((sum, o) => sum + o.amount, 0);
-  const avgValue    = completed.length ? totalIncome / completed.length : 0;
+  const totalIncome = completedOrders.reduce(
+    (sum, o) => sum + (o.amount || 0),
+    0,
+  );
+  const avgOrderValue =
+    completedOrders.length > 0 ? totalIncome / completedOrders.length : 0;
 
-  setText("rpt-orders",    periodOrders.length);
-  setText("rpt-income",   `₱${totalIncome.toFixed(2)}`);
-  setText("rpt-completed", completed.length);
-  setText("rpt-avg",      `₱${avgValue.toFixed(2)}`);
+  // Update stats cards
+  setText("rpt-orders", totalOrders);
+  setText("rpt-income", `₱${totalIncome.toFixed(2)}`);
+  setText("rpt-avg", `₱${avgOrderValue.toFixed(2)}`);
 
   /* ---- Chart ---- */
   renderReportsChart(periodOrders);
@@ -884,6 +1316,167 @@ function renderReportsData() {
   renderRptPagination(tableOrders.length, totalPages);
 }
 
+/**
+ * Renders sales summary stats, the chart, and the transaction table
+ * for the currently selected sales report period.
+ */
+function renderSalesReportsData() {
+  const now = new Date();
+  const today = now.toDateString();
+  const startInput = document.getElementById("sales-start-date");
+  const endInput = document.getElementById("sales-end-date");
+  const paymentTypeSelect = document.getElementById(
+    "sales-payment-type-select",
+  );
+  const selectedPaymentType = paymentTypeSelect?.value || "all";
+  const customStart = startInput?.value ? new Date(startInput.value) : null;
+  const customEnd = endInput?.value ? new Date(endInput.value) : null;
+  if (customStart) customStart.setHours(0, 0, 0, 0);
+  if (customEnd) customEnd.setHours(23, 59, 59, 999);
+
+  /* Filter orders to relevant period */
+  let periodOrders = [];
+
+  if (salesReportsTab === "daily") {
+    periodOrders = ORDERS.filter((o) => {
+      const d = new Date(o.date);
+      return d.toDateString() === today;
+    });
+  } else if (salesReportsTab === "weekly") {
+    const day = now.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - diff);
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+    periodOrders = ORDERS.filter((o) => {
+      const d = new Date(o.date);
+      return d >= weekStart && d <= weekEnd;
+    });
+  } else if (salesReportsTab === "monthly") {
+    periodOrders = ORDERS.filter((o) => {
+      const d = new Date(o.date);
+      return (
+        d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+      );
+    });
+  } else if (salesReportsTab === "semestral") {
+    // Semestral: First semester (Aug-Jan), Second semester (Feb-Jul)
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    let semesterStart, semesterEnd;
+
+    if (currentMonth >= 7) {
+      // August (7) to December (11) - First semester
+      semesterStart = new Date(currentYear, 7, 1); // August 1
+      semesterEnd = new Date(currentYear + 1, 0, 31, 23, 59, 59, 999); // January 31
+    } else {
+      // January (0) to July (6) - Second semester
+      semesterStart = new Date(currentYear, 1, 1); // February 1
+      semesterEnd = new Date(currentYear, 6, 31, 23, 59, 59, 999); // July 31
+    }
+
+    periodOrders = ORDERS.filter((o) => {
+      const d = new Date(o.date);
+      return d >= semesterStart && d <= semesterEnd;
+    });
+  }
+
+  if (customStart || customEnd) {
+    periodOrders = periodOrders.filter((o) => {
+      const d = new Date(o.date);
+      if (Number.isNaN(d.getTime())) return false;
+      if (customStart && d < customStart) return false;
+      if (customEnd && d > customEnd) return false;
+      return true;
+    });
+  }
+
+  // Filter by payment type if not "all"
+  if (selectedPaymentType !== "all") {
+    periodOrders = periodOrders.filter((o) => {
+      const paymentMethod = o.payment?.toLowerCase() || "";
+      return paymentMethod.includes(selectedPaymentType.toLowerCase());
+    });
+  }
+
+  // Calculate sales metrics
+  const totalTransactions = periodOrders.length;
+  const paidTransactions = periodOrders.filter(
+    (o) => o.status === "completed" || o.status === "ready",
+  );
+  const unpaidTransactions = periodOrders.filter(
+    (o) =>
+      o.status === "pending" ||
+      o.status === "processing" ||
+      o.status === "credit",
+  );
+  const totalRevenue = paidTransactions.reduce(
+    (sum, o) => sum + (o.amount || 0),
+    0,
+  );
+
+  // Update stats cards
+  setText("sales-total-transactions", totalTransactions);
+  setText("sales-paid-transactions", paidTransactions.length);
+  setText("sales-unpaid-transactions", unpaidTransactions.length);
+  setText("sales-total-revenue", `₱${totalRevenue.toFixed(2)}`);
+
+  /* ---- Chart ---- */
+  renderSalesReportsChart(periodOrders);
+
+  /* ---- Transaction table ---- */
+  const empty = document.getElementById("sales-empty");
+  const table = document.getElementById("sales-table");
+  const tbody = document.getElementById("sales-table-body");
+
+  if (!tbody) return;
+
+  const query = salesRecordSearchQuery.trim().toLowerCase();
+  const tableOrders = !query
+    ? periodOrders
+    : periodOrders.filter((o) =>
+        [o.id, o.email, o.service, o.payment, o.status, o.amount, o.date]
+          .join(" ")
+          .toLowerCase()
+          .includes(query),
+      );
+  const countEl = document.getElementById("sales-record-count");
+  if (countEl) {
+    countEl.textContent = `${tableOrders.length} record${tableOrders.length === 1 ? "" : "s"}`;
+  }
+
+  if (tableOrders.length === 0) {
+    empty?.classList.remove("hidden");
+    table?.classList.add("hidden");
+  } else {
+    empty?.classList.add("hidden");
+    table?.classList.remove("hidden");
+
+    const totalPages = Math.ceil(tableOrders.length / RECORDS_PER_PAGE);
+    const startIdx = (salesRecordPage - 1) * RECORDS_PER_PAGE;
+    const endIdx = startIdx + RECORDS_PER_PAGE;
+    const pageOrders = tableOrders.slice(startIdx, endIdx);
+
+    tbody.innerHTML = pageOrders
+      .map(
+        (o) => `<tr>
+        <td>${escHtml(o.id)}</td>
+        <td>${escHtml(o.email)}</td>
+        <td>${escHtml(o.service)}</td>
+        <td>${escHtml(o.payment || "N/A")}</td>
+        <td style="color:var(--clr-primary);font-weight:600">₱${o.amount.toFixed(2)}</td>
+        <td>${statusBadgeHTML(o.status)}</td>
+        <td>${escHtml(o.date)}</td>
+      </tr>`,
+      )
+      .join("");
+    renderSalesPagination(tableOrders.length, totalPages);
+  }
+}
+
 function renderRptPagination(totalRecords, totalPages) {
   const container = document.getElementById("rpt-pagination");
   if (!container) return;
@@ -908,42 +1501,56 @@ function renderRptPagination(totalRecords, totalPages) {
   });
 }
 
+function renderSalesPagination(totalRecords, totalPages) {
+  const container = document.getElementById("sales-pagination");
+  if (!container) return;
+  if (totalRecords === 0) {
+    container.innerHTML = "";
+    return;
+  }
+  container.innerHTML = `
+    <span class="reports-pagination__summary">Page ${salesRecordPage} of ${totalPages}</span>
+    <div class="reports-pagination__actions">
+      <button type="button" class="btn btn--outline" id="salesPrevPage" ${salesRecordPage === 1 ? "disabled" : ""}>Previous</button>
+      <button type="button" class="btn btn--outline" id="salesNextPage" ${salesRecordPage === totalPages ? "disabled" : ""}>Next</button>
+    </div>
+  `;
+  document.getElementById("salesPrevPage")?.addEventListener("click", () => {
+    salesRecordPage -= 1;
+    renderSalesReportsData();
+  });
+  document.getElementById("salesNextPage")?.addEventListener("click", () => {
+    salesRecordPage += 1;
+    renderSalesReportsData();
+  });
+}
+
 /**
  * Renders (or re-renders) the Reports bar chart using Chart.js.
  * @param {Array} periodOrders - filtered order array for the current period
  */
 function renderReportsChart(periodOrders) {
-  let labels   = [];
-  let orderCounts  = [];
-  let incomeValues = [];
+  let labels = [];
+  let orderCounts = [];
 
   if (reportsTab === "daily") {
     /* Group by hour (0–23) */
-    const hourOrders  = new Array(24).fill(0);
-    const hourIncome  = new Array(24).fill(0);
+    const hourOrders = new Array(24).fill(0);
     periodOrders.forEach((o) => {
       const h = new Date(o.date).getHours();
       hourOrders[h]++;
-      if (o.status === "completed" || o.status === "ready") hourIncome[h] += o.amount;
     });
     /* Show only 6-hour blocks for readability */
-    labels      = ["12am–6am","6am–12pm","12pm–6pm","6pm–12am"];
+    labels = ["12am–6am", "6am–12pm", "12pm–6pm", "6pm–12am"];
     orderCounts = [
       hourOrders.slice(0, 6).reduce((a, b) => a + b, 0),
       hourOrders.slice(6, 12).reduce((a, b) => a + b, 0),
       hourOrders.slice(12, 18).reduce((a, b) => a + b, 0),
       hourOrders.slice(18, 24).reduce((a, b) => a + b, 0),
     ];
-    incomeValues = [
-      hourIncome.slice(0, 6).reduce((a, b) => a + b, 0),
-      hourIncome.slice(6, 12).reduce((a, b) => a + b, 0),
-      hourIncome.slice(12, 18).reduce((a, b) => a + b, 0),
-      hourIncome.slice(18, 24).reduce((a, b) => a + b, 0),
-    ];
   } else if (reportsTab === "weekly") {
     const labelsByDay = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const dOrders = new Array(7).fill(0);
-    const dIncome = new Array(7).fill(0);
+    const dayOrders = new Array(7).fill(0);
     const now = new Date();
     const day = now.getDay();
     const diff = day === 0 ? 6 : day - 1;
@@ -955,38 +1562,85 @@ function renderReportsChart(periodOrders) {
       if (Number.isNaN(d.getTime())) return;
       const idx = Math.floor((d - weekStart) / 86400000);
       if (idx < 0 || idx > 6) return;
-      dOrders[idx]++;
-      if (o.status === "completed" || o.status === "ready") dIncome[idx] += o.amount;
+      dayOrders[idx]++;
     });
     labels = labelsByDay;
-    orderCounts = dOrders;
-    incomeValues = dIncome;
+    orderCounts = dayOrders;
   } else if (reportsTab === "monthly") {
     /* Group by week of month (W1–W5) */
     const weeks = 5;
-    const wOrders = new Array(weeks).fill(0);
-    const wIncome = new Array(weeks).fill(0);
+    const weekOrders = new Array(weeks).fill(0);
     periodOrders.forEach((o) => {
       const day = new Date(o.date).getDate();
-      const w   = Math.min(Math.floor((day - 1) / 7), weeks - 1);
-      wOrders[w]++;
-      if (o.status === "completed" || o.status === "ready") wIncome[w] += o.amount;
+      const w = Math.min(Math.floor((day - 1) / 7), weeks - 1);
+      weekOrders[w]++;
     });
-    labels      = ["Week 1","Week 2","Week 3","Week 4","Week 5"];
-    orderCounts = wOrders;
-    incomeValues = wIncome;
+    labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+    orderCounts = weekOrders;
+  } else if (reportsTab === "semestral") {
+    /* Group by month within semester */
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    let semesterMonths, semesterLabels;
+
+    if (currentMonth >= 7) {
+      // August (7) to December (11) - First semester
+      semesterMonths = [7, 8, 9, 10, 11, 0]; // Aug, Sep, Oct, Nov, Dec, Jan
+      semesterLabels = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"];
+    } else {
+      // January (0) to July (6) - Second semester
+      semesterMonths = [1, 2, 3, 4, 5, 6]; // Feb, Mar, Apr, May, Jun, Jul
+      semesterLabels = ["Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+    }
+
+    const semesterOrders = new Array(semesterMonths.length).fill(0);
+
+    periodOrders.forEach((o) => {
+      const orderDate = new Date(o.date);
+      const orderMonth = orderDate.getMonth();
+      const orderYear = orderDate.getFullYear();
+
+      // Find the index in semester months
+      let monthIndex = semesterMonths.indexOf(orderMonth);
+      if (monthIndex === -1) return; // Not in current semester
+
+      // Handle year transition for first semester (Dec-Jan)
+      if (
+        currentMonth >= 7 &&
+        orderMonth === 0 &&
+        orderYear === currentYear + 1
+      ) {
+        monthIndex = 5; // January is last month of first semester
+      }
+
+      semesterOrders[monthIndex]++;
+    });
+
+    labels = semesterLabels;
+    orderCounts = semesterOrders;
   } else {
-    /* Group by month (Jan–Dec) */
-    const mOrders = new Array(12).fill(0);
-    const mIncome = new Array(12).fill(0);
+    /* yearly - Group by month (Jan–Dec) */
+    const monthOrders = new Array(12).fill(0);
     periodOrders.forEach((o) => {
       const m = new Date(o.date).getMonth();
-      mOrders[m]++;
-      if (o.status === "completed" || o.status === "ready") mIncome[m] += o.amount;
+      monthOrders[m]++;
     });
-    labels      = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    orderCounts = mOrders;
-    incomeValues = mIncome;
+    labels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    orderCounts = monthOrders;
   }
 
   makeChart("reports-chart", {
@@ -997,14 +1651,258 @@ function renderReportsChart(periodOrders) {
         {
           label: "Orders",
           data: orderCounts,
+          backgroundColor: C_BLUE,
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      ...CHART_DEFAULTS,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Number of Orders",
+            font: { family: "Inter" },
+          },
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Renders (or re-renders) the Sales Reports bar chart using Chart.js.
+ * @param {Array} periodOrders - filtered order array for the current period
+ */
+function renderSalesReportsChart(periodOrders) {
+  let labels = [];
+  let paidOrderCounts = [];
+  let unpaidOrderCounts = [];
+  let paidIncomeValues = [];
+  let unpaidIncomeValues = [];
+
+  if (salesReportsTab === "daily") {
+    /* Group by hour (0–23) */
+    const paidHourOrders = new Array(24).fill(0);
+    const unpaidHourOrders = new Array(24).fill(0);
+    const paidHourIncome = new Array(24).fill(0);
+    const unpaidHourIncome = new Array(24).fill(0);
+    periodOrders.forEach((o) => {
+      const h = new Date(o.date).getHours();
+      const isPaid = o.status === "completed" || o.status === "ready";
+      if (isPaid) {
+        paidHourOrders[h]++;
+        paidHourIncome[h] += o.amount;
+      } else {
+        unpaidHourOrders[h]++;
+        unpaidHourIncome[h] += o.amount;
+      }
+    });
+    /* Show only 6-hour blocks for readability */
+    labels = ["12am–6am", "6am–12pm", "12pm–6pm", "6pm–12am"];
+    paidOrderCounts = [
+      paidHourOrders.slice(0, 6).reduce((a, b) => a + b, 0),
+      paidHourOrders.slice(6, 12).reduce((a, b) => a + b, 0),
+      paidHourOrders.slice(12, 18).reduce((a, b) => a + b, 0),
+      paidHourOrders.slice(18, 24).reduce((a, b) => a + b, 0),
+    ];
+    unpaidOrderCounts = [
+      unpaidHourOrders.slice(0, 6).reduce((a, b) => a + b, 0),
+      unpaidHourOrders.slice(6, 12).reduce((a, b) => a + b, 0),
+      unpaidHourOrders.slice(12, 18).reduce((a, b) => a + b, 0),
+      unpaidHourOrders.slice(18, 24).reduce((a, b) => a + b, 0),
+    ];
+    paidIncomeValues = [
+      paidHourIncome.slice(0, 6).reduce((a, b) => a + b, 0),
+      paidHourIncome.slice(6, 12).reduce((a, b) => a + b, 0),
+      paidHourIncome.slice(12, 18).reduce((a, b) => a + b, 0),
+      paidHourIncome.slice(18, 24).reduce((a, b) => a + b, 0),
+    ];
+    unpaidIncomeValues = [
+      unpaidHourIncome.slice(0, 6).reduce((a, b) => a + b, 0),
+      unpaidHourIncome.slice(6, 12).reduce((a, b) => a + b, 0),
+      unpaidHourIncome.slice(12, 18).reduce((a, b) => a + b, 0),
+      unpaidHourIncome.slice(18, 24).reduce((a, b) => a + b, 0),
+    ];
+  } else if (salesReportsTab === "weekly") {
+    const labelsByDay = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const paidDOrders = new Array(7).fill(0);
+    const unpaidDOrders = new Array(7).fill(0);
+    const paidDIncome = new Array(7).fill(0);
+    const unpaidDIncome = new Array(7).fill(0);
+    const now = new Date();
+    const day = now.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - diff);
+    weekStart.setHours(0, 0, 0, 0);
+    periodOrders.forEach((o) => {
+      const d = new Date(o.date);
+      if (Number.isNaN(d.getTime())) return;
+      const idx = Math.floor((d - weekStart) / 86400000);
+      if (idx < 0 || idx > 6) return;
+      const isPaid = o.status === "completed" || o.status === "ready";
+      if (isPaid) {
+        paidDOrders[idx]++;
+        paidDIncome[idx] += o.amount;
+      } else {
+        unpaidDOrders[idx]++;
+        unpaidDIncome[idx] += o.amount;
+      }
+    });
+    labels = labelsByDay;
+    paidOrderCounts = paidDOrders;
+    unpaidOrderCounts = unpaidDOrders;
+    paidIncomeValues = paidDIncome;
+    unpaidIncomeValues = unpaidDIncome;
+  } else if (salesReportsTab === "monthly") {
+    /* Group by week of month (W1–W5) */
+    const weeks = 5;
+    const paidWOrders = new Array(weeks).fill(0);
+    const unpaidWOrders = new Array(weeks).fill(0);
+    const paidWIncome = new Array(weeks).fill(0);
+    const unpaidWIncome = new Array(weeks).fill(0);
+    periodOrders.forEach((o) => {
+      const day = new Date(o.date).getDate();
+      const w = Math.min(Math.floor((day - 1) / 7), weeks - 1);
+      const isPaid = o.status === "completed" || o.status === "ready";
+      if (isPaid) {
+        paidWOrders[w]++;
+        paidWIncome[w] += o.amount;
+      } else {
+        unpaidWOrders[w]++;
+        unpaidWIncome[w] += o.amount;
+      }
+    });
+    labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+    paidOrderCounts = paidWOrders;
+    unpaidOrderCounts = unpaidWOrders;
+    paidIncomeValues = paidWIncome;
+    unpaidIncomeValues = unpaidWIncome;
+  } else if (salesReportsTab === "semestral") {
+    /* Group by month within semester */
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    let semesterMonths, semesterLabels;
+
+    if (currentMonth >= 7) {
+      // August (7) to December (11) - First semester
+      semesterMonths = [7, 8, 9, 10, 11, 0]; // Aug, Sep, Oct, Nov, Dec, Jan
+      semesterLabels = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"];
+    } else {
+      // January (0) to July (6) - Second semester
+      semesterMonths = [1, 2, 3, 4, 5, 6]; // Feb, Mar, Apr, May, Jun, Jul
+      semesterLabels = ["Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+    }
+
+    const paidSOrders = new Array(semesterMonths.length).fill(0);
+    const unpaidSOrders = new Array(semesterMonths.length).fill(0);
+    const paidSIncome = new Array(semesterMonths.length).fill(0);
+    const unpaidSIncome = new Array(semesterMonths.length).fill(0);
+
+    periodOrders.forEach((o) => {
+      const orderDate = new Date(o.date);
+      const orderMonth = orderDate.getMonth();
+      const orderYear = orderDate.getFullYear();
+
+      // Find the index in semester months
+      let monthIndex = semesterMonths.indexOf(orderMonth);
+      if (monthIndex === -1) return; // Not in current semester
+
+      // Handle year transition for first semester (Dec-Jan)
+      if (
+        currentMonth >= 7 &&
+        orderMonth === 0 &&
+        orderYear === currentYear + 1
+      ) {
+        monthIndex = 5; // January is last month of first semester
+      }
+
+      const isPaid = o.status === "completed" || o.status === "ready";
+      if (isPaid) {
+        paidSOrders[monthIndex]++;
+        paidSIncome[monthIndex] += o.amount;
+      } else {
+        unpaidSOrders[monthIndex]++;
+        unpaidSIncome[monthIndex] += o.amount;
+      }
+    });
+
+    labels = semesterLabels;
+    paidOrderCounts = paidSOrders;
+    unpaidOrderCounts = unpaidSOrders;
+    paidIncomeValues = paidSIncome;
+    unpaidIncomeValues = unpaidSIncome;
+  } else {
+    /* yearly - Group by month (Jan–Dec) */
+    const paidMOrders = new Array(12).fill(0);
+    const unpaidMOrders = new Array(12).fill(0);
+    const paidMIncome = new Array(12).fill(0);
+    const unpaidMIncome = new Array(12).fill(0);
+    periodOrders.forEach((o) => {
+      const m = new Date(o.date).getMonth();
+      const isPaid = o.status === "completed" || o.status === "ready";
+      if (isPaid) {
+        paidMOrders[m]++;
+        paidMIncome[m] += o.amount;
+      } else {
+        unpaidMOrders[m]++;
+        unpaidMIncome[m] += o.amount;
+      }
+    });
+    labels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    paidOrderCounts = paidMOrders;
+    unpaidOrderCounts = unpaidMOrders;
+    paidIncomeValues = paidMIncome;
+    unpaidIncomeValues = unpaidMIncome;
+  }
+
+  makeChart("sales-chart", {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Paid Transactions",
+          data: paidOrderCounts,
+          backgroundColor: C_GREEN,
+          borderRadius: 4,
+          yAxisID: "y",
+        },
+        {
+          label: "Unpaid Transactions",
+          data: unpaidOrderCounts,
           backgroundColor: C_RED,
           borderRadius: 4,
           yAxisID: "y",
         },
         {
-          label: "Income (₱)",
-          data: incomeValues,
-          backgroundColor: C_GREEN,
+          label: "Paid Revenue (₱)",
+          data: paidIncomeValues,
+          backgroundColor: C_GREEN_LIGHT,
+          borderRadius: 4,
+          yAxisID: "y1",
+        },
+        {
+          label: "Unpaid Revenue (₱)",
+          data: unpaidIncomeValues,
+          backgroundColor: C_RED_LIGHT,
           borderRadius: 4,
           yAxisID: "y1",
         },
@@ -1015,12 +1913,20 @@ function renderReportsChart(periodOrders) {
       scales: {
         y: {
           beginAtZero: true,
-          title: { display: true, text: "Orders", font: { family: "Inter" } },
+          title: {
+            display: true,
+            text: "Transactions",
+            font: { family: "Inter" },
+          },
         },
         y1: {
           beginAtZero: true,
           position: "right",
-          title: { display: true, text: "Income (₱)", font: { family: "Inter" } },
+          title: {
+            display: true,
+            text: "Revenue (₱)",
+            font: { family: "Inter" },
+          },
           grid: { drawOnChartArea: false },
         },
       },
@@ -1057,7 +1963,7 @@ function daysUntilExpiry(lastCOR) {
  * @returns {'active'|'expiring'|'expired'}
  */
 function accountStatus(days) {
-  if (days < 0)   return "expired";
+  if (days < 0) return "expired";
   if (days <= 30) return "expiring";
   return "active";
 }
@@ -1070,8 +1976,7 @@ function accountStatus(days) {
 function expirationText(days) {
   if (days < 0)
     return `<span class="exp-expired">Expired ${Math.abs(days)} days ago</span>`;
-  if (days <= 30)
-    return `<span class="exp-expiring">${days} days</span>`;
+  if (days <= 30) return `<span class="exp-expiring">${days} days</span>`;
   return `<span class="exp-active">${days} days</span>`;
 }
 
@@ -1079,13 +1984,15 @@ function expirationText(days) {
 function renderAccountsTable() {
   const tbody = document.getElementById("aa-table-body");
   if (!tbody) return;
-  const query = (document.getElementById("aa-search")?.value || "").toLowerCase();
+  const query = (
+    document.getElementById("aa-search")?.value || ""
+  ).toLowerCase();
 
   const filtered = ACCOUNTS.filter((acc) => {
-    const days   = daysUntilExpiry(acc.lastCOR);
+    const days = daysUntilExpiry(acc.lastCOR);
     const status = accountStatus(days);
     const matchFilter = aaFilter === "all" || status === aaFilter;
-    const matchQuery  =
+    const matchQuery =
       !query ||
       acc.name.toLowerCase().includes(query) ||
       acc.email.toLowerCase().includes(query);
@@ -1097,7 +2004,7 @@ function renderAccountsTable() {
       ? `<tr><td colspan="6" class="text-center text-muted" style="padding:32px">No accounts found</td></tr>`
       : filtered
           .map((acc) => {
-            const days   = daysUntilExpiry(acc.lastCOR);
+            const days = daysUntilExpiry(acc.lastCOR);
             const status = accountStatus(days);
             const regFmt = formatDate(acc.registrationDate);
             const corFmt = formatDate(acc.lastCOR);
@@ -1128,17 +2035,19 @@ function renderAccountsTable() {
 
 /** Recomputes and updates the four account summary cards */
 function refreshAccountCounters() {
-  let active = 0, expiring = 0, expired = 0;
+  let active = 0,
+    expiring = 0,
+    expired = 0;
   ACCOUNTS.forEach((acc) => {
     const s = accountStatus(daysUntilExpiry(acc.lastCOR));
-    if (s === "active")   active++;
+    if (s === "active") active++;
     if (s === "expiring") expiring++;
-    if (s === "expired")  expired++;
+    if (s === "expired") expired++;
   });
-  setText("aa-total",    ACCOUNTS.length);
-  setText("aa-active",   active);
+  setText("aa-total", ACCOUNTS.length);
+  setText("aa-active", active);
   setText("aa-expiring", expiring);
-  setText("aa-expired",  expired);
+  setText("aa-expired", expired);
 }
 
 /* ----------------------------------------------------------
@@ -1151,8 +2060,8 @@ function addServiceOption() {
   if (!container) return;
 
   const index = optionRowCount++;
-  const row   = document.createElement("div");
-  row.className    = "option-row";
+  const row = document.createElement("div");
+  row.className = "option-row";
   row.dataset.index = index;
   row.innerHTML = `
     <input type="text"   class="form-input option-name"  placeholder="Option name (e.g., Size: Small)" aria-label="Option name"/>
@@ -1185,9 +2094,9 @@ function updateOptionRemoveButtons() {
 
 /** Validates and submits the Add Service form */
 function handleCreateService() {
-  const name     = document.getElementById("svc-name")?.value.trim();
+  const name = document.getElementById("svc-name")?.value.trim();
   const category = document.getElementById("svc-category")?.value;
-  const price    = document.getElementById("svc-price")?.value;
+  const price = document.getElementById("svc-price")?.value;
 
   if (!name) {
     alert("Please enter a Service Name.");
@@ -1207,7 +2116,7 @@ function handleCreateService() {
 
   const options = [];
   document.querySelectorAll("#options-container .option-row").forEach((row) => {
-    const oName  = row.querySelector(".option-name")?.value.trim();
+    const oName = row.querySelector(".option-name")?.value.trim();
     const oPrice = row.querySelector(".option-price")?.value;
     if (oName) options.push({ name: oName, price: parseFloat(oPrice) || 0 });
   });
@@ -1215,16 +2124,16 @@ function handleCreateService() {
   CREATED_SERVICES.push({
     name,
     category,
-    desc:  document.getElementById("svc-description")?.value.trim(),
+    desc: document.getElementById("svc-description")?.value.trim(),
     price: parseFloat(price),
     options,
   });
 
   /* Reset form */
-  document.getElementById("svc-name").value        = "";
-  document.getElementById("svc-category").value    = "";
+  document.getElementById("svc-name").value = "";
+  document.getElementById("svc-category").value = "";
   document.getElementById("svc-description").value = "";
-  document.getElementById("svc-price").value        = "";
+  document.getElementById("svc-price").value = "";
 
   const container = document.getElementById("options-container");
   container.innerHTML = `
@@ -1260,9 +2169,11 @@ const CHART_DEFAULTS = {
   },
 };
 
-const C_RED   = "#8B0000";
+const C_RED = "#8B0000";
 const C_GREEN = "#10B981";
-const C_BLUE  = "#2563EB";
+const C_BLUE = "#2563EB";
+const C_RED_LIGHT = "#DC2626";
+const C_GREEN_LIGHT = "#34D399";
 
 /**
  * Creates (or re-creates) a Chart.js chart on a given canvas.
@@ -1312,8 +2223,20 @@ function initDailyChart() {
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "Inter" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Orders", font: { family: "Inter" } },
+        },
+        y1: {
+          beginAtZero: true,
+          position: "right",
+          title: {
+            display: true,
+            text: "Income (₱)",
+            font: { family: "Inter" },
+          },
+          grid: { drawOnChartArea: false },
+        },
       },
     },
   });
@@ -1324,17 +2247,53 @@ function initMonthlyChart() {
   makeChart("monthly-chart", {
     type: "bar",
     data: {
-      labels: ["May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr"],
+      labels: [
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+      ],
       datasets: [
-        { label: "Orders",      data: [0,0,0,0,0,0,0,0,0,5,0,4],       backgroundColor: C_RED,   borderRadius: 4 },
-        { label: "Income (₱)", data: [0,0,0,0,0,0,0,0,0,750,0,1000], backgroundColor: C_GREEN, borderRadius: 4, yAxisID: "y1" },
+        {
+          label: "Orders",
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 4],
+          backgroundColor: C_RED,
+          borderRadius: 4,
+        },
+        {
+          label: "Income (₱)",
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 750, 0, 1000],
+          backgroundColor: C_GREEN,
+          borderRadius: 4,
+          yAxisID: "y1",
+        },
       ],
     },
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "Inter" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Orders", font: { family: "Inter" } },
+        },
+        y1: {
+          beginAtZero: true,
+          position: "right",
+          title: {
+            display: true,
+            text: "Income (₱)",
+            font: { family: "Inter" },
+          },
+          grid: { drawOnChartArea: false },
+        },
       },
     },
   });
@@ -1345,17 +2304,40 @@ function initYearlyChart() {
   makeChart("yearly-chart", {
     type: "bar",
     data: {
-      labels: ["2022","2023","2024","2025","2026"],
+      labels: ["2022", "2023", "2024", "2025", "2026"],
       datasets: [
-        { label: "Orders",      data: [0,0,0,0,9],    backgroundColor: C_RED,   borderRadius: 4 },
-        { label: "Income (₱)", data: [0,0,0,0,1750], backgroundColor: C_GREEN, borderRadius: 4, yAxisID: "y1" },
+        {
+          label: "Orders",
+          data: [0, 0, 0, 0, 9],
+          backgroundColor: C_RED,
+          borderRadius: 4,
+        },
+        {
+          label: "Income (₱)",
+          data: [0, 0, 0, 0, 1750],
+          backgroundColor: C_GREEN,
+          borderRadius: 4,
+          yAxisID: "y1",
+        },
       ],
     },
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Orders",     font: { family: "Inter" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Income (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Orders", font: { family: "Inter" } },
+        },
+        y1: {
+          beginAtZero: true,
+          position: "right",
+          title: {
+            display: true,
+            text: "Income (₱)",
+            font: { family: "Inter" },
+          },
+          grid: { drawOnChartArea: false },
+        },
       },
     },
   });
@@ -1368,15 +2350,46 @@ function initAnnualCharts() {
     data: {
       labels: ["2026"],
       datasets: [
-        { label: "Transactions", data: [9],    borderColor: C_RED,   pointBackgroundColor: C_RED,   backgroundColor: "transparent", pointRadius: 6 },
-        { label: "Revenue (₱)", data: [1750], borderColor: C_GREEN, pointBackgroundColor: C_GREEN, backgroundColor: "transparent", pointRadius: 6, yAxisID: "y1" },
+        {
+          label: "Transactions",
+          data: [9],
+          borderColor: C_RED,
+          pointBackgroundColor: C_RED,
+          backgroundColor: "transparent",
+          pointRadius: 6,
+        },
+        {
+          label: "Revenue (₱)",
+          data: [1750],
+          borderColor: C_GREEN,
+          pointBackgroundColor: C_GREEN,
+          backgroundColor: "transparent",
+          pointRadius: 6,
+          yAxisID: "y1",
+        },
       ],
     },
     options: {
       ...CHART_DEFAULTS,
       scales: {
-        y:  { beginAtZero: true, title: { display: true, text: "Transactions", font: { family: "Inter" } } },
-        y1: { beginAtZero: true, position: "right", title: { display: true, text: "Revenue (₱)", font: { family: "Inter" } }, grid: { drawOnChartArea: false } },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Transactions",
+            font: { family: "Inter" },
+          },
+        },
+        y1: {
+          beginAtZero: true,
+          position: "right",
+          title: {
+            display: true,
+            text: "Revenue (₱)",
+            font: { family: "Inter" },
+          },
+          grid: { drawOnChartArea: false },
+        },
       },
     },
   });
@@ -1385,18 +2398,40 @@ function initAnnualCharts() {
     type: "bar",
     data: {
       labels: ["2026"],
-      datasets: [{ label: "Transactions", data: [9], backgroundColor: C_RED, borderRadius: 4 }],
+      datasets: [
+        {
+          label: "Transactions",
+          data: [9],
+          backgroundColor: C_RED,
+          borderRadius: 4,
+        },
+      ],
     },
-    options: { ...CHART_DEFAULTS, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } },
+    options: {
+      ...CHART_DEFAULTS,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } },
+    },
   });
 
   makeChart("annual-users-chart", {
     type: "bar",
     data: {
-      labels: ["2024","2025","2026"],
-      datasets: [{ label: "New Users", data: [15, 25, 8], backgroundColor: C_BLUE, borderRadius: 4 }],
+      labels: ["2024", "2025", "2026"],
+      datasets: [
+        {
+          label: "New Users",
+          data: [15, 25, 8],
+          backgroundColor: C_BLUE,
+          borderRadius: 4,
+        },
+      ],
     },
-    options: { ...CHART_DEFAULTS, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } },
+    options: {
+      ...CHART_DEFAULTS,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } },
+    },
   });
 }
 
@@ -1408,9 +2443,9 @@ let cameraStream = null;
 
 /** Requests camera access and pipes the stream to the <video> element */
 async function activateCamera() {
-  const video       = document.getElementById("qr-video");
+  const video = document.getElementById("qr-video");
   const placeholder = document.querySelector(".qr-placeholder");
-  const btn         = document.getElementById("activate-camera-btn");
+  const btn = document.getElementById("activate-camera-btn");
 
   if (!navigator.mediaDevices?.getUserMedia) {
     alert("Camera access is not supported in this browser.");
@@ -1418,7 +2453,9 @@ async function activateCamera() {
   }
 
   try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+    });
     video.srcObject = cameraStream;
     video.classList.remove("hidden");
     placeholder.classList.add("hidden");
@@ -1446,9 +2483,9 @@ function deactivateCamera() {
 
 /** Searches for an order by the ID typed in the QR manual input */
 function searchOrderById() {
-  const input  = document.getElementById("qr-order-input");
+  const input = document.getElementById("qr-order-input");
   const result = document.getElementById("qr-result");
-  const query  = input?.value.trim().toUpperCase();
+  const query = input?.value.trim().toUpperCase();
 
   if (!query) {
     result.className = "qr-result hidden";
@@ -1467,9 +2504,11 @@ function searchOrderById() {
       <strong>Amount:</strong> ₱${order.amount.toFixed(2)}<br>
       <strong>Status:</strong> ${statusBadgeHTML(order.status)}<br>
       <strong>Payment:</strong> ${escHtml(order.payment)}<br>
-      ${order.status === "ready"
-        ? `<button class="btn btn--success btn--sm mt-3" onclick="releaseOrder('${order.id}')">Release Order</button>`
-        : ""}`;
+      ${
+        order.status === "ready"
+          ? `<button class="btn btn--success btn--sm mt-3" onclick="releaseOrder('${order.id}')">Release Order</button>`
+          : ""
+      }`;
   } else {
     result.className = "qr-result not-found";
     result.innerHTML = `
@@ -1505,9 +2544,9 @@ function setDashboardDate() {
   const now = new Date();
   el.textContent = `Today's Overview – ${now.toLocaleDateString("en-US", {
     weekday: "long",
-    year:    "numeric",
-    month:   "long",
-    day:     "numeric",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   })}`;
 }
 
@@ -1537,7 +2576,9 @@ function renderDashboardOverview() {
     .reduce((sum, o) => sum + Number(o.amount || 0), 0);
 
   const countPending = ORDERS.filter((o) => o.status === "pending").length;
-  const countProcessing = ORDERS.filter((o) => o.status === "processing").length;
+  const countProcessing = ORDERS.filter(
+    (o) => o.status === "processing",
+  ).length;
   const countReady = ORDERS.filter((o) => o.status === "ready").length;
   const countCompleted = ORDERS.filter((o) => {
     const s = String(o.status || "").toLowerCase();
@@ -1592,9 +2633,9 @@ function setDailyDate() {
   if (!el) return;
   el.textContent = new Date().toLocaleDateString("en-US", {
     weekday: "long",
-    year:    "numeric",
-    month:   "long",
-    day:     "numeric",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 
@@ -1610,7 +2651,7 @@ let toastTimer = null;
  */
 function showToast(message) {
   const toast = document.getElementById("toast");
-  const span  = document.getElementById("toast-message");
+  const span = document.getElementById("toast-message");
   if (!toast || !span) return;
 
   span.textContent = message;
@@ -1644,9 +2685,9 @@ function capitalise(s) {
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-US", {
-    year:  "numeric",
+    year: "numeric",
     month: "short",
-    day:   "numeric",
+    day: "numeric",
   });
 }
 
@@ -1661,7 +2702,7 @@ function accountBadgeHTML(status) {
 
 function statusIconSVG(status) {
   const icons = {
-    pending:  `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    pending: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
     approved: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
     rejected: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
   };
@@ -1717,11 +2758,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---- Mobile hamburger + overlay ---- */
-  document.getElementById("hamburger-btn")?.addEventListener("click", openSidebar);
-  document.getElementById("sidebar-overlay")?.addEventListener("click", closeSidebar);
+  document
+    .getElementById("hamburger-btn")
+    ?.addEventListener("click", openSidebar);
+  document
+    .getElementById("sidebar-overlay")
+    ?.addEventListener("click", closeSidebar);
 
   /* ---- Student Verification search ---- */
-  document.getElementById("sv-search")?.addEventListener("input", renderVerificationList);
+  document
+    .getElementById("sv-search")
+    ?.addEventListener("input", renderVerificationList);
 
   /* ---- Student Verification filter tabs ---- */
   document.querySelectorAll(".filter-tab[data-filter]").forEach((tab) => {
@@ -1736,10 +2783,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---- Verification modal close ---- */
-  document.getElementById("sv-modal-close")?.addEventListener("click", closeVerificationModal);
-  document.getElementById("sv-modal-overlay")?.addEventListener("click", (e) => {
-    if (e.target === e.currentTarget) closeVerificationModal();
-  });
+  document
+    .getElementById("sv-modal-close")
+    ?.addEventListener("click", closeVerificationModal);
+  document
+    .getElementById("sv-modal-overlay")
+    ?.addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeVerificationModal();
+    });
 
   /* ---- Orders filter tabs ---- */
   document.querySelectorAll(".tab-btn[data-status]").forEach((btn) => {
@@ -1754,16 +2805,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---- Orders search ---- */
-  document.getElementById("orders-search")?.addEventListener("input", renderOrdersTable);
+  document
+    .getElementById("orders-search")
+    ?.addEventListener("input", renderOrdersTable);
 
   /* ---- Order modal close (shared with payment detail modal) ---- */
-  document.getElementById("order-modal-close")?.addEventListener("click", closeOrderModal);
-  document.getElementById("order-modal-overlay")?.addEventListener("click", (e) => {
-    if (e.target === e.currentTarget) closeOrderModal();
-  });
+  document
+    .getElementById("order-modal-close")
+    ?.addEventListener("click", closeOrderModal);
+  document
+    .getElementById("order-modal-overlay")
+    ?.addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeOrderModal();
+    });
 
   /* ---- Payment Verification search ---- */
-  document.getElementById("pv-search")?.addEventListener("input", renderPaymentVerificationTable);
+  document
+    .getElementById("pv-search")
+    ?.addEventListener("input", renderPaymentVerificationTable);
   document.getElementById("pv-card-search")?.addEventListener("input", (e) => {
     pvCardSearchQuery = e.target.value || "";
     pvCardPagePending = 1;
@@ -1798,16 +2857,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---- Payment Verification filter tabs ---- */
-  document.querySelectorAll("#page-payment-verification .filter-tab[data-filter]").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      pvFilter = tab.dataset.filter;
-      document.querySelectorAll("#page-payment-verification .filter-tab[data-filter]").forEach((t) => {
-        t.classList.toggle("active", t === tab);
-        t.setAttribute("aria-selected", t === tab ? "true" : "false");
+  document
+    .querySelectorAll("#page-payment-verification .filter-tab[data-filter]")
+    .forEach((tab) => {
+      tab.addEventListener("click", () => {
+        pvFilter = tab.dataset.filter;
+        document
+          .querySelectorAll(
+            "#page-payment-verification .filter-tab[data-filter]",
+          )
+          .forEach((t) => {
+            t.classList.toggle("active", t === tab);
+            t.setAttribute("aria-selected", t === tab ? "true" : "false");
+          });
+        renderPaymentVerificationTable();
       });
-      renderPaymentVerificationTable();
     });
-  });
 
   /* ---- Active Accounts filter tabs ---- */
   document.querySelectorAll(".filter-tab[data-aa-filter]").forEach((tab) => {
@@ -1822,7 +2887,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---- Active Accounts search ---- */
-  document.getElementById("aa-search")?.addEventListener("input", renderAccountsTable);
+  document
+    .getElementById("aa-search")
+    ?.addEventListener("input", renderAccountsTable);
 
   /* ---- Reports date range filters ---- */
   document.getElementById("rpt-start-date")?.addEventListener("change", () => {
@@ -1833,33 +2900,97 @@ document.addEventListener("DOMContentLoaded", () => {
     rptRecordPage = 1;
     renderReportsData();
   });
-  document.getElementById("rpt-record-search")?.addEventListener("input", (event) => {
-    rptRecordSearchQuery = event.target.value;
-    rptRecordPage = 1;
-    renderReportsData();
+  document
+    .getElementById("rpt-record-search")
+    ?.addEventListener("input", (event) => {
+      rptRecordSearchQuery = event.target.value;
+      rptRecordPage = 1;
+      renderReportsData();
+    });
+
+  /* ---- Sales Reports filters ---- */
+  document
+    .getElementById("sales-start-date")
+    ?.addEventListener("change", () => {
+      salesRecordPage = 1;
+      renderSalesReportsData();
+    });
+  document.getElementById("sales-end-date")?.addEventListener("change", () => {
+    salesRecordPage = 1;
+    renderSalesReportsData();
   });
+  document
+    .getElementById("sales-payment-type-select")
+    ?.addEventListener("change", () => {
+      salesRecordPage = 1;
+      renderSalesReportsData();
+    });
+  document
+    .getElementById("sales-record-search")
+    ?.addEventListener("input", (event) => {
+      salesRecordSearchQuery = event.target.value;
+      salesRecordPage = 1;
+      renderSalesReportsData();
+    });
+
+  /* ---- Ratings filters ---- */
+  document
+    .getElementById("ratingsStars")
+    ?.addEventListener("change", renderRatingsData);
+  document
+    .getElementById("ratingsPaymentType")
+    ?.addEventListener("change", renderRatingsData);
+  document
+    .getElementById("ratingsCollege")
+    ?.addEventListener("change", renderRatingsData);
+  document
+    .getElementById("ratingsCourse")
+    ?.addEventListener("change", renderRatingsData);
+  document
+    .getElementById("ratingsYearLevel")
+    ?.addEventListener("change", renderRatingsData);
+  document
+    .getElementById("ratingsStartDate")
+    ?.addEventListener("change", renderRatingsData);
+  document
+    .getElementById("ratingsEndDate")
+    ?.addEventListener("change", renderRatingsData);
 
   /* ---- Add Service: Add Option button ---- */
-  document.getElementById("add-option-btn")?.addEventListener("click", addServiceOption);
+  document
+    .getElementById("add-option-btn")
+    ?.addEventListener("click", addServiceOption);
 
   /* ---- Add Service: remove button on the first (static) option row ---- */
-  document.querySelector("#options-container .option-remove")?.addEventListener("click", function () {
-    this.closest(".option-row")?.remove();
-    updateOptionRemoveButtons();
-  });
+  document
+    .querySelector("#options-container .option-remove")
+    ?.addEventListener("click", function () {
+      this.closest(".option-row")?.remove();
+      updateOptionRemoveButtons();
+    });
 
   /* ---- Add Service: Create Service button ---- */
-  document.getElementById("svc-create-btn")?.addEventListener("click", handleCreateService);
+  document
+    .getElementById("svc-create-btn")
+    ?.addEventListener("click", handleCreateService);
 
   /* ---- Add Service: Cancel button ---- */
-  document.getElementById("svc-cancel-btn")?.addEventListener("click", () => navigateTo("dashboard"));
+  document
+    .getElementById("svc-cancel-btn")
+    ?.addEventListener("click", () => navigateTo("dashboard"));
 
   /* ---- QR Scanner ---- */
-  document.getElementById("activate-camera-btn")?.addEventListener("click", activateCamera);
-  document.getElementById("qr-search-btn")?.addEventListener("click", searchOrderById);
-  document.getElementById("qr-order-input")?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") searchOrderById();
-  });
+  document
+    .getElementById("activate-camera-btn")
+    ?.addEventListener("click", activateCamera);
+  document
+    .getElementById("qr-search-btn")
+    ?.addEventListener("click", searchOrderById);
+  document
+    .getElementById("qr-order-input")
+    ?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") searchOrderById();
+    });
 
   /* ---- Global Escape key: close any open modal or sidebar ---- */
   document.addEventListener("keydown", (e) => {
@@ -1882,230 +3013,248 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---- Start on the Dashboard ---- */
   navigateTo("dashboard");
 });
-      // Wire up the Report Type select to update the chart label and
-      // trigger whatever the external JS expects from tab-btn clicks.
-      (function () {
-        const select = document.getElementById('rpt-type-select');
-        if (!select) return;
+// Wire up the Report Type select to update the chart label and
+// trigger whatever the external JS expects from tab-btn clicks.
+(function () {
+  const select = document.getElementById("rpt-type-select");
+  if (!select) return;
 
-        const labelMap = {
-          daily: 'Daily Report',
-          weekly: 'Weekly Report',
-          monthly: 'Monthly Report',
-          yearly: 'Yearly Report'
-        };
+  const labelMap = {
+    daily: "Daily Report",
+    weekly: "Weekly Report",
+    monthly: "Monthly Report",
+    yearly: "Yearly Report",
+  };
 
-        select.addEventListener('change', function () {
-          const val = this.value;
-          // Update chart sub-label
-          const lbl = document.getElementById('rpt-chart-label');
-          if (lbl) lbl.textContent = labelMap[val] || '';
-          reportsTab = val;
-          rptRecordPage = 1;
-          renderReportsData();
+  select.addEventListener("change", function () {
+    const val = this.value;
+    // Update chart sub-label
+    const lbl = document.getElementById("rpt-chart-label");
+    if (lbl) lbl.textContent = labelMap[val] || "";
+    reportsTab = val;
+    rptRecordPage = 1;
+    renderReportsData();
 
-          // If external JS exposes a function to reload the report section, call it
-          if (typeof window.loadReportData === 'function') {
-            window.loadReportData(val);
-          }
-          // Fallback: simulate a click on any hidden tab-btn the external JS may still listen to
-          const fakeTab = document.querySelector(`.tab-btn[data-report="${val}"]`);
-          if (fakeTab) fakeTab.click();
-        });
-      })();
+    // If external JS exposes a function to reload the report section, call it
+    if (typeof window.loadReportData === "function") {
+      window.loadReportData(val);
+    }
+    // Fallback: simulate a click on any hidden tab-btn the external JS may still listen to
+    const fakeTab = document.querySelector(`.tab-btn[data-report="${val}"]`);
+    if (fakeTab) fakeTab.click();
+  });
+})();
 
-      // ── Reports Performance Chart (Figma-matching style) ──────────────
-      (function () {
-        // Wait for the external JS to finish (it may init its own charts first),
-        // then build / rebuild the reports chart with the correct Figma styling.
-        function buildReportsChart(type) {
-          const canvas = document.getElementById('reports-chart');
-          if (!canvas) return;
-          reportsTab = type || 'daily';
-          renderReportsData();
-          return;
+// ── Reports Performance Chart (Figma-matching style) ──────────────
+(function () {
+  // Wait for the external JS to finish (it may init its own charts first),
+  // then build / rebuild the reports chart with the correct Figma styling.
+  function buildReportsChart(type) {
+    const canvas = document.getElementById("reports-chart");
+    if (!canvas) return;
+    reportsTab = type || "daily";
+    renderReportsData();
+    return;
 
-          // Destroy any existing Chart.js instance on this canvas
-          const existing = Chart.getChart(canvas);
-          if (existing) existing.destroy();
+    // Destroy any existing Chart.js instance on this canvas
+    const existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
 
-          // ── Data sets per report type ───────────────────────────────────
-          const configs = {
-            daily: {
-              labels: ['Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
-              orders:  [0, 0, 0, 0, 0, 0, 0],
-              income:  [0, 0, 0, 0, 0, 0, 0],
-              yLabel: 'Orders',
-              y2Label: 'Income (₱)',
+    // ── Data sets per report type ───────────────────────────────────
+    const configs = {
+      daily: {
+        labels: ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"],
+        orders: [0, 0, 0, 0, 0, 0, 0],
+        income: [0, 0, 0, 0, 0, 0, 0],
+        yLabel: "Orders",
+        y2Label: "Income (₱)",
+      },
+      monthly: {
+        labels: [
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+        ],
+        orders: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+        income: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000],
+        yLabel: "Orders",
+        y2Label: "Income (₱)",
+      },
+      yearly: {
+        labels: ["2022", "2023", "2024", "2025", "2026"],
+        orders: [0, 0, 0, 0, 9],
+        income: [0, 0, 0, 0, 1750],
+        yLabel: "Orders",
+        y2Label: "Income (₱)",
+      },
+    };
+
+    const cfg = configs[type] || configs.daily;
+
+    // ── Chart.js config matching Figma ──────────────────────────────
+    new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: cfg.labels,
+        datasets: [
+          {
+            label: "Orders",
+            data: cfg.orders,
+            borderColor: "#1a1a1a",
+            backgroundColor: "transparent",
+            pointBackgroundColor: "#ffffff",
+            pointBorderColor: "#1a1a1a",
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            borderWidth: 2,
+            tension: 0,
+            yAxisID: "yLeft",
+          },
+          {
+            label: "Income (₱)",
+            data: cfg.income,
+            borderColor: "#10B981",
+            backgroundColor: "transparent",
+            pointBackgroundColor: "#ffffff",
+            pointBorderColor: "#10B981",
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            borderWidth: 2,
+            tension: 0,
+            yAxisID: "yRight",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: {
+            display: true,
+            position: "bottom",
+            align: "center",
+            labels: {
+              usePointStyle: true,
+              pointStyle: "circle",
+              padding: 20,
+              font: { family: "'Inter', sans-serif", size: 13 },
+              color: "#374151",
             },
-            monthly: {
-              labels: ['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'],
-              orders:  [0,0,0,0,0,0,0,0,0,0,0,4],
-              income:  [0,0,0,0,0,0,0,0,0,0,0,1000],
-              yLabel: 'Orders',
-              y2Label: 'Income (₱)',
-            },
-            yearly: {
-              labels: ['2022','2023','2024','2025','2026'],
-              orders:  [0, 0, 0, 0, 9],
-              income:  [0, 0, 0, 0, 1750],
-              yLabel: 'Orders',
-              y2Label: 'Income (₱)',
-            }
-          };
-
-          const cfg = configs[type] || configs.daily;
-
-          // ── Chart.js config matching Figma ──────────────────────────────
-          new Chart(canvas, {
-            type: 'line',
-            data: {
-              labels: cfg.labels,
-              datasets: [
-                {
-                  label: 'Orders',
-                  data: cfg.orders,
-                  borderColor: '#1a1a1a',
-                  backgroundColor: 'transparent',
-                  pointBackgroundColor: '#ffffff',
-                  pointBorderColor: '#1a1a1a',
-                  pointBorderWidth: 2,
-                  pointRadius: 5,
-                  pointHoverRadius: 7,
-                  borderWidth: 2,
-                  tension: 0,
-                  yAxisID: 'yLeft',
-                },
-                {
-                  label: 'Income (₱)',
-                  data: cfg.income,
-                  borderColor: '#10B981',
-                  backgroundColor: 'transparent',
-                  pointBackgroundColor: '#ffffff',
-                  pointBorderColor: '#10B981',
-                  pointBorderWidth: 2,
-                  pointRadius: 5,
-                  pointHoverRadius: 7,
-                  borderWidth: 2,
-                  tension: 0,
-                  yAxisID: 'yRight',
+          },
+          tooltip: {
+            backgroundColor: "#fff",
+            borderColor: "#e5e7eb",
+            borderWidth: 1,
+            titleColor: "#111827",
+            bodyColor: "#6B7280",
+            padding: 10,
+            callbacks: {
+              label: function (ctx) {
+                if (ctx.dataset.label === "Income (₱)") {
+                  return " Income: ₱" + ctx.parsed.y.toFixed(2);
                 }
-              ]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              interaction: { mode: 'index', intersect: false },
-              plugins: {
-                legend: {
-                  display: true,
-                  position: 'bottom',
-                  align: 'center',
-                  labels: {
-                    usePointStyle: true,
-                    pointStyle: 'circle',
-                    padding: 20,
-                    font: { family: "'Inter', sans-serif", size: 13 },
-                    color: '#374151',
-                  }
-                },
-                tooltip: {
-                  backgroundColor: '#fff',
-                  borderColor: '#e5e7eb',
-                  borderWidth: 1,
-                  titleColor: '#111827',
-                  bodyColor: '#6B7280',
-                  padding: 10,
-                  callbacks: {
-                    label: function(ctx) {
-                      if (ctx.dataset.label === 'Income (₱)') {
-                        return ' Income: ₱' + ctx.parsed.y.toFixed(2);
-                      }
-                      return ' Orders: ' + ctx.parsed.y;
-                    }
-                  }
-                }
+                return " Orders: " + ctx.parsed.y;
               },
-              scales: {
-                x: {
-                  grid: {
-                    color: '#e5e7eb',
-                    lineWidth: 1,
-                    drawTicks: false,
-                  },
-                  border: { dash: [4, 4] },
-                  ticks: {
-                    font: { family: "'Inter', sans-serif", size: 12 },
-                    color: '#6B7280',
-                    padding: 8,
-                  }
-                },
-                yLeft: {
-                  type: 'linear',
-                  position: 'left',
-                  beginAtZero: true,
-                  grid: {
-                    color: '#e5e7eb',
-                    lineWidth: 1,
-                    drawTicks: false,
-                  },
-                  border: { dash: [4, 4] },
-                  ticks: {
-                    font: { family: "'Inter', sans-serif", size: 12 },
-                    color: '#6B7280',
-                    padding: 8,
-                    stepSize: 1,
-                    precision: 0,
-                  },
-                  title: { display: false }
-                },
-                yRight: {
-                  type: 'linear',
-                  position: 'right',
-                  beginAtZero: true,
-                  grid: { drawOnChartArea: false },
-                  ticks: {
-                    font: { family: "'Inter', sans-serif", size: 12 },
-                    color: '#10B981',
-                    padding: 8,
-                    callback: function(val) {
-                      // Show as plain number (matching Figma right axis 0–4 scale)
-                      return val;
-                    }
-                  },
-                  title: { display: false }
-                }
-              }
-            }
-          });
-        }
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              color: "#e5e7eb",
+              lineWidth: 1,
+              drawTicks: false,
+            },
+            border: { dash: [4, 4] },
+            ticks: {
+              font: { family: "'Inter', sans-serif", size: 12 },
+              color: "#6B7280",
+              padding: 8,
+            },
+          },
+          yLeft: {
+            type: "linear",
+            position: "left",
+            beginAtZero: true,
+            grid: {
+              color: "#e5e7eb",
+              lineWidth: 1,
+              drawTicks: false,
+            },
+            border: { dash: [4, 4] },
+            ticks: {
+              font: { family: "'Inter', sans-serif", size: 12 },
+              color: "#6B7280",
+              padding: 8,
+              stepSize: 1,
+              precision: 0,
+            },
+            title: { display: false },
+          },
+          yRight: {
+            type: "linear",
+            position: "right",
+            beginAtZero: true,
+            grid: { drawOnChartArea: false },
+            ticks: {
+              font: { family: "'Inter', sans-serif", size: 12 },
+              color: "#10B981",
+              padding: 8,
+              callback: function (val) {
+                // Show as plain number (matching Figma right axis 0–4 scale)
+                return val;
+              },
+            },
+            title: { display: false },
+          },
+        },
+      },
+    });
+  }
 
-        // Build with default "daily" on load (after external JS runs)
-        window.addEventListener('load', function () {
-          buildReportsChart('daily');
-        });
+  // Build with default "daily" on load (after external JS runs)
+  window.addEventListener("load", function () {
+    buildReportsChart("daily");
+  });
 
-        // Rebuild when the report type select changes
-        const select = document.getElementById('rpt-type-select');
-        if (select) {
-          select.addEventListener('change', function () {
-            buildReportsChart(this.value);
-            const labelMap = { daily: 'Daily Report', weekly: 'Weekly Report', monthly: 'Monthly Report', yearly: 'Yearly Report' };
-            const lbl = document.getElementById('rpt-chart-label');
-            if (lbl) lbl.textContent = labelMap[this.value] || '';
-          });
-        }
+  // Rebuild when the report type select changes
+  const select = document.getElementById("rpt-type-select");
+  if (select) {
+    select.addEventListener("change", function () {
+      buildReportsChart(this.value);
+      const labelMap = {
+        daily: "Daily Report",
+        weekly: "Weekly Report",
+        monthly: "Monthly Report",
+        yearly: "Yearly Report",
+      };
+      const lbl = document.getElementById("rpt-chart-label");
+      if (lbl) lbl.textContent = labelMap[this.value] || "";
+    });
+  }
 
-        // Also expose so external JS can call it
-        window.buildReportsChart = buildReportsChart;
-      })();
-      /* =============================================================
+  // Also expose so external JS can call it
+  window.buildReportsChart = buildReportsChart;
+})();
+/* =============================================================
    PAYMENT VERIFICATION MODAL — pv-modal.js
    openPvModal / closePvModal / handlePvVerify / handlePvInvalid
    Reads data-pv-* attributes from the clicked .pv-card element.
 ============================================================= */
 
-"use strict";
+("use strict");
 
 /** Holds reference to the card currently being reviewed */
 let _pvCurrentCard = null;
@@ -2120,48 +3269,50 @@ function openPvModal(card) {
   _pvCurrentCard = card;
 
   /* Populate fields */
-  document.getElementById('pv-m-id').textContent     = card.dataset.pvId     || '—';
-  document.getElementById('pv-m-name').textContent   = card.dataset.pvName   || '—';
-  document.getElementById('pv-m-amount').textContent = card.dataset.pvAmount || '—';
-  document.getElementById('pv-m-method').textContent = card.dataset.pvMethod || '—';
-  document.getElementById('pv-m-ref').textContent    = card.dataset.pvRef    || '—';
+  document.getElementById("pv-m-id").textContent = card.dataset.pvId || "—";
+  document.getElementById("pv-m-name").textContent = card.dataset.pvName || "—";
+  document.getElementById("pv-m-amount").textContent =
+    card.dataset.pvAmount || "—";
+  document.getElementById("pv-m-method").textContent =
+    card.dataset.pvMethod || "—";
+  document.getElementById("pv-m-ref").textContent = card.dataset.pvRef || "—";
 
   /* Payment proof image (if a URL was attached via data-pv-proof) */
-  const proofUrl    = card.dataset.pvProof || '';
-  const img         = document.getElementById('pv-proof-img');
-  const placeholder = document.getElementById('pv-proof-placeholder');
+  const proofUrl = card.dataset.pvProof || "";
+  const img = document.getElementById("pv-proof-img");
+  const placeholder = document.getElementById("pv-proof-placeholder");
   if (proofUrl) {
     img.src = proofUrl;
-    img.classList.remove('hidden');
-    placeholder.classList.add('hidden');
+    img.classList.remove("hidden");
+    placeholder.classList.add("hidden");
   } else {
-    img.src = '';
-    img.classList.add('hidden');
-    placeholder.classList.remove('hidden');
+    img.src = "";
+    img.classList.add("hidden");
+    placeholder.classList.remove("hidden");
   }
 
   /* Show / hide action buttons based on current card status */
-  const status     = card.dataset.pvStatus || 'pending';
-  const verifyBtn  = document.getElementById('pv-verify-btn');
-  const invalidBtn = document.getElementById('pv-invalid-btn');
-  const footer     = document.querySelector('.pv-modal-footer');
-  if (status === 'pending') {
-    verifyBtn.classList.remove('hidden');
-    invalidBtn.classList.remove('hidden');
-    if (footer) footer.classList.remove('hidden');
+  const status = card.dataset.pvStatus || "pending";
+  const verifyBtn = document.getElementById("pv-verify-btn");
+  const invalidBtn = document.getElementById("pv-invalid-btn");
+  const footer = document.querySelector(".pv-modal-footer");
+  if (status === "pending") {
+    verifyBtn.classList.remove("hidden");
+    invalidBtn.classList.remove("hidden");
+    if (footer) footer.classList.remove("hidden");
   } else {
-    verifyBtn.classList.add('hidden');
-    invalidBtn.classList.add('hidden');
+    verifyBtn.classList.add("hidden");
+    invalidBtn.classList.add("hidden");
   }
 
   /* Open overlay */
-  document.getElementById('pv-modal-overlay').classList.remove('hidden');
-  if (typeof lucide !== 'undefined') lucide.createIcons();
+  document.getElementById("pv-modal-overlay").classList.remove("hidden");
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 /** Closes the Payment Verification modal */
 function closePvModal() {
-  document.getElementById('pv-modal-overlay').classList.add('hidden');
+  document.getElementById("pv-modal-overlay").classList.add("hidden");
   _pvCurrentCard = null;
 }
 
@@ -2173,13 +3324,13 @@ function handlePvVerify() {
   if (!_pvCurrentCard) return;
   const paymentId = _pvCurrentCard.dataset.paymentId;
   if (paymentId) {
-    setPaymentStatus(paymentId, 'verified');
+    setPaymentStatus(paymentId, "verified");
   } else {
-    _pvCurrentCard.dataset.pvStatus = 'verified';
-    _movePvCard(_pvCurrentCard, 'verified');
+    _pvCurrentCard.dataset.pvStatus = "verified";
+    _movePvCard(_pvCurrentCard, "verified");
     _updatePvCounters();
-    if (typeof showToast === 'function')
-      showToast('Payment verified successfully.');
+    if (typeof showToast === "function")
+      showToast("Payment verified successfully.");
   }
   closePvModal();
 }
@@ -2192,13 +3343,13 @@ function handlePvInvalid() {
   if (!_pvCurrentCard) return;
   const paymentId = _pvCurrentCard.dataset.paymentId;
   if (paymentId) {
-    setPaymentStatus(paymentId, 'rejected');
+    setPaymentStatus(paymentId, "rejected");
   } else {
-    _pvCurrentCard.dataset.pvStatus = 'invalid';
-    _movePvCard(_pvCurrentCard, 'invalid');
+    _pvCurrentCard.dataset.pvStatus = "invalid";
+    _movePvCard(_pvCurrentCard, "invalid");
     _updatePvCounters();
-    if (typeof showToast === 'function')
-      showToast('Payment marked as invalid.');
+    if (typeof showToast === "function")
+      showToast("Payment marked as invalid.");
   }
   closePvModal();
 }
@@ -2211,31 +3362,31 @@ function handlePvInvalid() {
  */
 function _movePvCard(card, dest) {
   /* Update badge */
-  const badge = card.querySelector('.pv-badge');
+  const badge = card.querySelector(".pv-badge");
   if (badge) {
-    badge.className   = `pv-badge pv-badge--${dest}`;
-    badge.textContent = dest === 'verified' ? 'Verified' : 'Invalid';
+    badge.className = `pv-badge pv-badge--${dest}`;
+    badge.textContent = dest === "verified" ? "Verified" : "Invalid";
   }
 
   /* Remove the Review button */
-  card.querySelector('.pv-review-btn')?.remove();
+  card.querySelector(".pv-review-btn")?.remove();
 
   /* Move card to destination grid and reveal its section */
-  const destGrid    = document.getElementById(`pv-${dest}-grid`);
+  const destGrid = document.getElementById(`pv-${dest}-grid`);
   const destSection = document.getElementById(`pv-${dest}-section`);
   if (destGrid) {
     destGrid.appendChild(card);
-    destSection?.classList.remove('hidden');
+    destSection?.classList.remove("hidden");
   }
 
   /* If pending grid is now empty, show a placeholder message */
-  const pendingGrid = document.getElementById('pv-pending-grid');
+  const pendingGrid = document.getElementById("pv-pending-grid");
   if (pendingGrid && pendingGrid.children.length === 0) {
-    const h2 = pendingGrid.closest('.sp')?.querySelector('h2');
-    if (h2 && !h2.nextElementSibling?.classList.contains('pv-empty-msg')) {
+    const h2 = pendingGrid.closest(".sp")?.querySelector("h2");
+    if (h2 && !h2.nextElementSibling?.classList.contains("pv-empty-msg")) {
       h2.insertAdjacentHTML(
-        'afterend',
-        '<p class="pv-empty-msg text-muted" style="margin-top:.5rem;">No pending submissions.</p>'
+        "afterend",
+        '<p class="pv-empty-msg text-muted" style="margin-top:.5rem;">No pending submissions.</p>',
       );
     }
   }
@@ -2243,23 +3394,25 @@ function _movePvCard(card, dest) {
 
 /** Recomputes and updates the Pending / Verified / Invalid counter cards */
 function _updatePvCounters() {
-  const pending  = document.querySelectorAll('#pv-pending-grid .pv-card').length;
-  const verified = document.querySelectorAll('#pv-verified-grid .pv-card').length;
-  const invalid  = document.querySelectorAll('#pv-invalid-grid .pv-card').length;
+  const pending = document.querySelectorAll("#pv-pending-grid .pv-card").length;
+  const verified = document.querySelectorAll(
+    "#pv-verified-grid .pv-card",
+  ).length;
+  const invalid = document.querySelectorAll("#pv-invalid-grid .pv-card").length;
 
-  const elPending  = document.getElementById('pv-pending');
-  const elVerified = document.getElementById('pv-verified');
-  const elInvalid  = document.getElementById('pv-invalid');
-  if (elPending)  elPending.textContent  = pending;
+  const elPending = document.getElementById("pv-pending");
+  const elVerified = document.getElementById("pv-verified");
+  const elInvalid = document.getElementById("pv-invalid");
+  if (elPending) elPending.textContent = pending;
   if (elVerified) elVerified.textContent = verified;
-  if (elInvalid)  elInvalid.textContent  = invalid;
+  if (elInvalid) elInvalid.textContent = invalid;
 }
 
 /* Close modal when clicking the backdrop */
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('pv-modal-overlay')
-    ?.addEventListener('click', function (e) {
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("pv-modal-overlay")
+    ?.addEventListener("click", function (e) {
       if (e.target === this) closePvModal();
     });
 });
-      

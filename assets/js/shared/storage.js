@@ -3,7 +3,6 @@ const STORAGE_KEY = "upressease_db";
 const defaultDB = {
   academicYear: "",
   users: [],
-  facultyStudentAccounts: [],
   services: [],
   transactions: [],
   ratings: [],
@@ -37,10 +36,7 @@ function getDB() {
       const db = JSON.parse(raw);
       const merged = mergeWithDefaults(db);
       // If database is empty, load demo data
-      if (
-        merged.users.length === 0 &&
-        merged.facultyStudentAccounts.length === 0
-      ) {
+      if (merged.users.length === 0) {
         return loadDemoData();
       }
       return merged;
@@ -73,9 +69,6 @@ function mergeWithDefaults(db) {
   return {
     academicYear: db.academicYear || "",
     users: Array.isArray(db.users) ? db.users : [],
-    facultyStudentAccounts: Array.isArray(db.facultyStudentAccounts)
-      ? db.facultyStudentAccounts
-      : [],
     services: Array.isArray(db.services) ? db.services : [],
     transactions: Array.isArray(db.transactions) ? db.transactions : [],
     ratings: Array.isArray(db.ratings) ? db.ratings : [],
@@ -108,7 +101,6 @@ function archiveCurrentYear() {
   db.archives = db.archives || {};
   db.archives[db.academicYear] = {
     users: [...db.users],
-    facultyStudentAccounts: [...db.facultyStudentAccounts],
     transactions: [...db.transactions],
     ratings: [...db.ratings],
     services: [...db.services], // Archive services too for historical reference
@@ -134,7 +126,6 @@ function setAcademicYear(year) {
 
     // Reset working data for new year
     freshDB.users = [];
-    freshDB.facultyStudentAccounts = [];
     freshDB.transactions = [];
     freshDB.ratings = [];
     // Services persist - they can be reused from previous year
@@ -161,7 +152,6 @@ function archiveCurrentYear() {
   // Store current year's data in archives (read-only)
   db.archives[db.academicYear] = {
     users: db.users.map((u) => ({ ...u })), // Deep copy
-    facultyStudentAccounts: db.facultyStudentAccounts.map((a) => ({ ...a })), // Deep copy
     transactions: db.transactions.map((t) => ({ ...t })), // Deep copy
     ratings: db.ratings.map((r) => ({ ...r })), // Deep copy
     services: db.services.map((s) => ({ ...s })), // Deep copy

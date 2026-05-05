@@ -1,68 +1,80 @@
 (function () {
-  const db = getDB();
-  const pageContainer = document.getElementById("pageContainer");
-
-  function ensureSettingsDefaults() {
-    if (!db.systemSettings || typeof db.systemSettings !== "object") {
-      db.systemSettings = {};
+  // Wait for storage.js to load
+  function init() {
+    if (typeof getDB === "undefined") {
+      setTimeout(init, 10);
+      return;
     }
-    if (typeof db.systemSettings.maintenanceMode !== "boolean") {
-      db.systemSettings.maintenanceMode = false;
-    }
-    if (!Array.isArray(db.systemSettings.customRoles)) {
-      db.systemSettings.customRoles = [];
-    }
-    if (!db.systemSettings.features || typeof db.systemSettings.features !== "object") {
-      db.systemSettings.features = {};
-    }
-    const f = db.systemSettings.features;
-    if (typeof f.requireStudentVerification !== "boolean") f.requireStudentVerification = true;
-    if (typeof f.allowWalkInSales !== "boolean") f.allowWalkInSales = true;
-    if (typeof f.allowOnlinePayments !== "boolean") f.allowOnlinePayments = true;
-    if (typeof f.enableRatings !== "boolean") f.enableRatings = true;
-  }
 
-  /** Consecutive school years "YYYY-(YYYY+1)", e.g. 2025-2026 */
-  function schoolYearOptions(selected) {
-    const y = new Date().getFullYear();
-    const back = 12;
-    const ahead = 6;
-    const labels = [];
-    for (let start = y - back; start <= y + ahead; start++) {
-      labels.push(`${start}-${start + 1}`);
+    const db = getDB();
+    const pageContainer = document.getElementById("pageContainer");
+
+    function ensureSettingsDefaults() {
+      if (!db.systemSettings || typeof db.systemSettings !== "object") {
+        db.systemSettings = {};
+      }
+      if (typeof db.systemSettings.maintenanceMode !== "boolean") {
+        db.systemSettings.maintenanceMode = false;
+      }
+      if (!Array.isArray(db.systemSettings.customRoles)) {
+        db.systemSettings.customRoles = [];
+      }
+      if (
+        !db.systemSettings.features ||
+        typeof db.systemSettings.features !== "object"
+      ) {
+        db.systemSettings.features = {};
+      }
+      const f = db.systemSettings.features;
+      if (typeof f.requireStudentVerification !== "boolean")
+        f.requireStudentVerification = true;
+      if (typeof f.allowWalkInSales !== "boolean") f.allowWalkInSales = true;
+      if (typeof f.allowOnlinePayments !== "boolean")
+        f.allowOnlinePayments = true;
+      if (typeof f.enableRatings !== "boolean") f.enableRatings = true;
     }
-    if (selected && !labels.includes(selected)) {
-      labels.unshift(selected);
+
+    /** Consecutive school years "YYYY-(YYYY+1)", e.g. 2025-2026 */
+    function schoolYearOptions(selected) {
+      const y = new Date().getFullYear();
+      const back = 12;
+      const ahead = 6;
+      const labels = [];
+      for (let start = y - back; start <= y + ahead; start++) {
+        labels.push(`${start}-${start + 1}`);
+      }
+      if (selected && !labels.includes(selected)) {
+        labels.unshift(selected);
+      }
+      return labels
+        .map((label) => {
+          const sel = label === selected ? " selected" : "";
+          return `<option value="${label}"${sel}>${label}</option>`;
+        })
+        .join("");
     }
-    return labels
-      .map((label) => {
-        const sel = label === selected ? " selected" : "";
-        return `<option value="${label}"${sel}>${label}</option>`;
-      })
-      .join("");
-  }
 
-  function escHtml(s) {
-    return String(s || "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+    function escHtml(s) {
+      return String(s || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-  function slugRoleKey(label) {
-    return String(label || "")
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "_")
-      .replace(/^_+|_+$/g, "")
-      .slice(0, 32);
-  }
+    function slugRoleKey(label) {
+      return String(label || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 32);
+    }
 
-  ensureSettingsDefaults();
+    ensureSettingsDefaults();
 
-  pageContainer.innerHTML = `
+    pageContainer.innerHTML = `
     <div class="page-header">
       <h1 class="page-title">System Settings</h1>
       <p class="page-sub">Configure system-wide settings</p>
@@ -203,19 +215,19 @@
     </div>
   `;
 
-  function renderRoleList() {
-    const list = document.getElementById("roleList");
-    if (!list) return;
-    const roles = db.systemSettings.customRoles || [];
-    if (roles.length === 0) {
-      list.innerHTML = `<div class="role-empty">No custom roles yet.</div>`;
-      return;
-    }
-    list.innerHTML = roles
-      .slice()
-      .sort((a, b) => String(a.label).localeCompare(String(b.label)))
-      .map(
-        (r) => `
+    function renderRoleList() {
+      const list = document.getElementById("roleList");
+      if (!list) return;
+      const roles = db.systemSettings.customRoles || [];
+      if (roles.length === 0) {
+        list.innerHTML = `<div class="role-empty">No custom roles yet.</div>`;
+        return;
+      }
+      list.innerHTML = roles
+        .slice()
+        .sort((a, b) => String(a.label).localeCompare(String(b.label)))
+        .map(
+          (r) => `
         <div class="role-item">
           <div class="role-main">
             <div class="role-label">${escHtml(r.label)}</div>
@@ -227,151 +239,153 @@
           <button type="button" class="btn btn-ghost btn-sm role-remove" data-key="${escHtml(r.key)}">Remove</button>
         </div>
       `,
-      )
-      .join("");
+        )
+        .join("");
 
-    list.querySelectorAll(".role-remove").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const key = btn.getAttribute("data-key");
-        db.systemSettings.customRoles = (db.systemSettings.customRoles || []).filter(
-          (r) => r.key !== key,
-        );
-        saveDB(db);
-        renderRoleList();
-        showToast("Role removed.");
+      list.querySelectorAll(".role-remove").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-key");
+          db.systemSettings.customRoles = (
+            db.systemSettings.customRoles || []
+          ).filter((r) => r.key !== key);
+          saveDB(db);
+          renderRoleList();
+          showToast("Role removed.");
+        });
       });
+    }
+
+    function clearRoleForm() {
+      document.getElementById("roleLabel").value = "";
+      document.getElementById("roleKey").value = "";
+      document.getElementById("roleDesc").value = "";
+    }
+
+    document
+      .getElementById("roleClearBtn")
+      ?.addEventListener("click", clearRoleForm);
+    document.getElementById("roleLabel")?.addEventListener("input", (e) => {
+      const label = e.target.value;
+      const keyEl = document.getElementById("roleKey");
+      if (!keyEl.value.trim()) {
+        keyEl.value = slugRoleKey(label);
+      }
     });
-  }
-
-  function clearRoleForm() {
-    document.getElementById("roleLabel").value = "";
-    document.getElementById("roleKey").value = "";
-    document.getElementById("roleDesc").value = "";
-  }
-
-  document.getElementById("roleClearBtn")?.addEventListener("click", clearRoleForm);
-  document.getElementById("roleLabel")?.addEventListener("input", (e) => {
-    const label = e.target.value;
-    const keyEl = document.getElementById("roleKey");
-    if (!keyEl.value.trim()) {
-      keyEl.value = slugRoleKey(label);
-    }
-  });
-  document.getElementById("roleAddBtn")?.addEventListener("click", () => {
-    const label = document.getElementById("roleLabel").value.trim();
-    const keyRaw = document.getElementById("roleKey").value.trim();
-    const description = document.getElementById("roleDesc").value.trim();
-    if (!label) {
-      showToast("Role name is required.");
-      return;
-    }
-    const key = keyRaw ? slugRoleKey(keyRaw) : slugRoleKey(label);
-    if (!key) {
-      showToast("Role key is invalid.");
-      return;
-    }
-    const existing = (db.systemSettings.customRoles || []).some(
-      (r) => String(r.key).toLowerCase() === String(key).toLowerCase(),
-    );
-    if (existing) {
-      showToast("That role key already exists.");
-      return;
-    }
-    db.systemSettings.customRoles.push({
-      key,
-      label,
-      description,
-      createdAt: new Date().toISOString(),
-    });
-    saveDB(db);
-    renderRoleList();
-    clearRoleForm();
-    showToast("Role added!");
-  });
-
-  document
-    .getElementById("maintenanceToggleBtn")
-    .addEventListener("click", () => {
-      db.systemSettings.maintenanceMode = !db.systemSettings.maintenanceMode;
-      saveDB(db);
-      updateMaintenanceUI();
-      showToast(
-        db.systemSettings.maintenanceMode
-          ? "Maintenance mode enabled"
-          : "Maintenance mode disabled",
+    document.getElementById("roleAddBtn")?.addEventListener("click", () => {
+      const label = document.getElementById("roleLabel").value.trim();
+      const keyRaw = document.getElementById("roleKey").value.trim();
+      const description = document.getElementById("roleDesc").value.trim();
+      if (!label) {
+        showToast("Role name is required.");
+        return;
+      }
+      const key = keyRaw ? slugRoleKey(keyRaw) : slugRoleKey(label);
+      if (!key) {
+        showToast("Role key is invalid.");
+        return;
+      }
+      const existing = (db.systemSettings.customRoles || []).some(
+        (r) => String(r.key).toLowerCase() === String(key).toLowerCase(),
       );
+      if (existing) {
+        showToast("That role key already exists.");
+        return;
+      }
+      db.systemSettings.customRoles.push({
+        key,
+        label,
+        description,
+        createdAt: new Date().toISOString(),
+      });
+      saveDB(db);
+      renderRoleList();
+      clearRoleForm();
+      showToast("Role added!");
     });
 
-  document.getElementById("saveSettings").addEventListener("click", () => {
-    const academicYear = document.getElementById("academicYear").value.trim();
-    if (!academicYear) {
-      showToast("Please select an academic year.");
-      return;
-    }
-    if (!/^\d{4}-\d{4}$/.test(academicYear)) {
-      showToast("Invalid academic year format.");
-      return;
-    }
-    const parts = academicYear.split("-").map(Number);
-    if (parts.length !== 2 || parts[1] !== parts[0] + 1) {
-      showToast("School year must be consecutive years (e.g. 2025-2026).");
-      return;
-    }
+    document
+      .getElementById("maintenanceToggleBtn")
+      .addEventListener("click", () => {
+        db.systemSettings.maintenanceMode = !db.systemSettings.maintenanceMode;
+        saveDB(db);
+        updateMaintenanceUI();
+        showToast(
+          db.systemSettings.maintenanceMode
+            ? "Maintenance mode enabled"
+            : "Maintenance mode disabled",
+        );
+      });
 
-    if (db.academicYear !== academicYear) {
-      setAcademicYear(academicYear);
-    } else {
+    document.getElementById("saveSettings").addEventListener("click", () => {
+      const academicYear = document.getElementById("academicYear").value.trim();
+      if (!academicYear) {
+        showToast("Please select an academic year.");
+        return;
+      }
+      if (!/^\d{4}-\d{4}$/.test(academicYear)) {
+        showToast("Invalid academic year format.");
+        return;
+      }
+      const parts = academicYear.split("-").map(Number);
+      if (parts.length !== 2 || parts[1] !== parts[0] + 1) {
+        showToast("School year must be consecutive years (e.g. 2025-2026).");
+        return;
+      }
+
+      if (db.academicYear !== academicYear) {
+        setAcademicYear(academicYear);
+      } else {
+        saveDB(db);
+      }
+
+      db.systemSettings.features.requireStudentVerification =
+        !!document.getElementById("cfgRequireVerification")?.checked;
+      db.systemSettings.features.allowOnlinePayments =
+        !!document.getElementById("cfgAllowOnlinePayments")?.checked;
+      db.systemSettings.features.allowWalkInSales = !!document.getElementById(
+        "cfgAllowWalkInSales",
+      )?.checked;
+      db.systemSettings.features.enableRatings =
+        !!document.getElementById("cfgEnableRatings")?.checked;
+
       saveDB(db);
+
+      showToast("System settings saved!");
+    });
+
+    function updateMaintenanceUI() {
+      const alert = document.getElementById("maintenanceAlert");
+      const statusEl = document.getElementById("maintenanceStatus");
+      const subStatusEl = document.getElementById("maintenanceSubStatus");
+      const btn = document.getElementById("maintenanceToggleBtn");
+
+      if (db.systemSettings.maintenanceMode) {
+        alert.className = "maintenance-alert active";
+        statusEl.textContent = "Maintenance mode active";
+        subStatusEl.textContent = "Students cannot access the system";
+        btn.className = "btn btn-sm btn-danger";
+        btn.textContent = "Disable";
+      } else {
+        alert.className = "maintenance-alert normal";
+        statusEl.textContent = "System operating normally";
+        subStatusEl.textContent = "System is available to all users";
+        btn.className = "btn btn-sm btn-ghost";
+        btn.textContent = "Enable";
+      }
     }
 
-    db.systemSettings.features.requireStudentVerification = !!document.getElementById(
-      "cfgRequireVerification",
-    )?.checked;
-    db.systemSettings.features.allowOnlinePayments = !!document.getElementById(
-      "cfgAllowOnlinePayments",
-    )?.checked;
-    db.systemSettings.features.allowWalkInSales = !!document.getElementById(
-      "cfgAllowWalkInSales",
-    )?.checked;
-    db.systemSettings.features.enableRatings = !!document.getElementById(
-      "cfgEnableRatings",
-    )?.checked;
-
-    saveDB(db);
-
-    showToast("System settings saved!");
-  });
-
-  function updateMaintenanceUI() {
-    const alert = document.getElementById("maintenanceAlert");
-    const statusEl = document.getElementById("maintenanceStatus");
-    const subStatusEl = document.getElementById("maintenanceSubStatus");
-    const btn = document.getElementById("maintenanceToggleBtn");
-
-    if (db.systemSettings.maintenanceMode) {
-      alert.className = "maintenance-alert active";
-      statusEl.textContent = "Maintenance mode active";
-      subStatusEl.textContent = "Students cannot access the system";
-      btn.className = "btn btn-sm btn-danger";
-      btn.textContent = "Disable";
-    } else {
-      alert.className = "maintenance-alert normal";
-      statusEl.textContent = "System operating normally";
-      subStatusEl.textContent = "System is available to all users";
-      btn.className = "btn btn-sm btn-ghost";
-      btn.textContent = "Enable";
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      toastMsg.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
     }
+
+    renderRoleList();
   }
 
-  function showToast(message) {
-    const toast = document.getElementById("toast");
-    const toastMsg = document.getElementById("toastMsg");
-    toastMsg.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3000);
-  }
-
-  renderRoleList();
+  init();
 })();

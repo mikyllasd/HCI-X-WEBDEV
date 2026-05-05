@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Manage Services</title>
+    <title>UPRESSease – Faculty & Student Accounts</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="../../css/upress-super-content.css" />
     <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
-    <link rel="stylesheet" href="services.css" />
+    <link rel="stylesheet" href="accounts.css" />
   </head>
-  <body class="staff-dashboard-body" data-page="services">
+  <body class="staff-dashboard-body" data-page="accounts">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="app-wrapper staff-layout sd-layout">
       <aside
@@ -68,17 +68,17 @@
               >
             </li>
             <li>
-              <a href="accounts.html" class="nav-link" data-page="accounts">
+              <a
+                href="accounts.html"
+                class="nav-link active"
+                data-page="accounts"
+              >
                 <i data-lucide="user-check" aria-hidden="true"></i
                 ><span>Faculty & Students</span></a
               >
             </li>
             <li>
-              <a
-                href="services.html"
-                class="nav-link active"
-                data-page="services"
-              >
+              <a href="services.html" class="nav-link" data-page="services">
                 <i data-lucide="settings" aria-hidden="true"></i
                 ><span>Services</span></a
               >
@@ -134,18 +134,20 @@
           <span></span><span></span><span></span>
         </button>
         <div class="page-container" id="pageContainer">
-          <!-- Services content will be loaded here -->
+          <!-- Accounts content will be loaded here -->
         </div>
       </main>
     </div>
 
-    <!-- Add/Edit Service Modal -->
-    <div class="modal-backdrop" id="serviceModal">
-      <div class="modal">
+    <!-- Account Review Modal -->
+    <div class="modal-backdrop" id="accountModal">
+      <div class="modal modal--lg">
         <div class="modal-header">
           <div>
-            <h2 class="modal-title" id="modalTitle">Add Service</h2>
-            <p class="modal-sub" id="modalSub">Create a new service</p>
+            <h2 class="modal-title" id="modalTitle">Review Account</h2>
+            <p class="modal-sub" id="modalSub">
+              Review account details and take action
+            </p>
           </div>
           <button
             class="modal-close"
@@ -157,73 +159,23 @@
           </button>
         </div>
         <div class="modal-body">
-          <form id="serviceForm">
-            <div class="form-group">
-              <label class="form-label"
-                >Service Name <span class="required">*</span></label
-              >
-              <input type="text" class="form-input" id="formName" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Description</label>
-              <textarea
-                class="form-input"
-                id="formDescription"
-                rows="3"
-                style="resize: vertical"
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Pricing</label>
-              <div class="form-hint" style="margin-top: 6px">
-                Pricing is managed per service type below (e.g., Printing sizes,
-                Binding types, Lanyards variants).
-              </div>
-            </div>
-            <div class="form-group" style="margin-bottom: 0">
-              <label class="form-label"
-                >Category <span class="required">*</span></label
-              >
-              <select class="form-input" id="formCategory" required>
-                <option value="">Select a category</option>
-                <option value="printing">Printing</option>
-                <option value="merchandise">Merchandise</option>
-                <option value="special">Special Services</option>
-              </select>
-            </div>
-            <div id="servicePricingFields"></div>
-          </form>
+          <div id="accountDetails"></div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-ghost" id="modalCancelBtn" type="button">
             Cancel
           </button>
-          <button class="btn btn-primary" id="modalSaveBtn" type="button">
-            Save Service
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Service History Modal -->
-    <div class="modal-backdrop" id="historyModal">
-      <div class="modal" style="max-width: 600px">
-        <div class="modal-header">
-          <div>
-            <h2 class="modal-title">Service History</h2>
-            <p class="modal-sub">Changes to this service</p>
+          <div class="modal-actions">
+            <button class="btn btn-danger" id="modalRejectBtn" type="button">
+              Reject Account
+            </button>
+            <button class="btn btn-warning" id="modalFlagBtn" type="button">
+              Flag as Suspicious
+            </button>
+            <button class="btn btn-success" id="modalApproveBtn" type="button">
+              Approve Account
+            </button>
           </div>
-          <button
-            class="modal-close"
-            id="historyCloseBtn"
-            type="button"
-            aria-label="Close modal"
-          >
-            <i data-lucide="x" aria-hidden="true"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div id="historyList"></div>
         </div>
       </div>
     </div>
@@ -245,7 +197,6 @@
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
-    <script src="../../js/site-pricing.js"></script>
-    <script src="services.js"></script>
+    <script src="accounts.js"></script>
   </body>
 </html>

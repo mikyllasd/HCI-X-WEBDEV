@@ -536,6 +536,77 @@
     },
   ];
 
+  const DEMO_FACULTY_STUDENT_ACCOUNTS = [
+    {
+      id: "account_demo_maria_santos",
+      fullName: "Dr. Maria Santos",
+      email: "maria.santos@wmsu.edu.ph",
+      employeeId: "EMP-2024-001",
+      role: "faculty",
+      college: "College of Computing Studies",
+      department: "Computer Science",
+      phone: "09123456789",
+      status: "approved",
+      suspicious: false,
+      createdAt: "2024-01-15T10:00:00Z",
+    },
+    {
+      id: "account_demo_juan_delacruz",
+      fullName: "Juan Dela Cruz",
+      email: "juan.delacruz@wmsu.edu.ph",
+      studentId: "2024-00123",
+      role: "student",
+      college: "College of Computing Studies",
+      course: "Bachelor of Science in Computer Science",
+      yearLevel: "3rd Year",
+      phone: "09987654321",
+      status: "pending",
+      suspicious: false,
+      createdAt: "2024-02-01T14:30:00Z",
+    },
+    {
+      id: "account_demo_ana_reyes",
+      fullName: "Ana Reyes",
+      email: "ana.reyes@wmsu.edu.ph",
+      studentId: "2024-00124",
+      role: "student",
+      college: "College of Business Administration",
+      course: "Bachelor of Science in Business Administration",
+      yearLevel: "4th Year",
+      phone: "09112233445",
+      status: "approved",
+      suspicious: false,
+      createdAt: "2024-01-20T09:15:00Z",
+    },
+    {
+      id: "account_demo_carlos_mendoza",
+      fullName: "Prof. Carlos Mendoza",
+      email: "carlos.mendoza@wmsu.edu.ph",
+      employeeId: "EMP-2023-045",
+      role: "faculty",
+      college: "College of Engineering",
+      department: "Electrical Engineering",
+      phone: "09223344556",
+      status: "disabled",
+      suspicious: true,
+      createdAt: "2023-08-10T11:45:00Z",
+    },
+    {
+      id: "account_demo_pedro_garcia",
+      fullName: "Pedro Garcia",
+      email: "pedro.garcia@wmsu.edu.ph",
+      studentId: "2024-00125",
+      role: "student",
+      college: "College of Engineering",
+      course: "Bachelor of Science in Civil Engineering",
+      yearLevel: "2nd Year",
+      phone: "09334455667",
+      status: "rejected",
+      suspicious: false,
+      createdAt: "2024-03-05T16:20:00Z",
+    },
+  ];
+
   function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
   }
@@ -544,6 +615,7 @@
     return {
       academicYear: DEMO_ACADEMIC_YEAR,
       users: clone(DEMO_USERS),
+      facultyStudentAccounts: clone(DEMO_FACULTY_STUDENT_ACCOUNTS),
       services: clone(DEMO_SERVICES),
       transactions: buildDemoTransactions(),
       ratings: clone(DEMO_RATINGS),
@@ -585,7 +657,9 @@
 
   function staffOrderFromDemoOrder(o) {
     const pay = DEMO_PAYMENT_SUBMISSIONS.find((p) => p.orderId === o.id);
-    const isOnline = String(o.payment || "").toLowerCase().includes("online");
+    const isOnline = String(o.payment || "")
+      .toLowerCase()
+      .includes("online");
     const verified = pay && pay.status === "verified";
     const pendingPay = pay && pay.status === "pending";
     return {
@@ -602,7 +676,9 @@
       dateOrdered: o.date,
       refNumber: pay ? pay.reference : "—",
       desc: `${o.service} (demo)`,
-      paymentVerified: verified || (!isOnline && (o.status === "completed" || o.status === "paid")),
+      paymentVerified:
+        verified ||
+        (!isOnline && (o.status === "completed" || o.status === "paid")),
       paymentStatus: pay ? pay.status : "",
     };
   }

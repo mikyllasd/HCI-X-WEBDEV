@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic page setup -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | My Cart</title>
+
+    <!-- Styles for student layout and cart page -->
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/cart.css" />
 </head>
 <body>
+
+<!-- Top navigation bar with back button and title -->
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
@@ -16,75 +21,133 @@
     </div>
 </header>
 
+<!-- Main cart page content -->
 <main class="page">
     <div class="cart-page-wrapper">
+
+        <!-- Left side: list of cart items -->
         <div class="cart-items-col">
             <div class="card">
+
+                <!-- Header showing title and select-all option -->
                 <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
                     <div>
-                        <div class="card-title"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart Items</div>
+                        <div class="card-title">
+                            <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart Items
+                        </div>
                         <div class="card-subtitle" id="cart-item-count">0 item(s)</div>
                     </div>
-                    <!-- Select All Toolbar -->
+
+                    <!-- Checkbox to select/deselect all cart items -->
                     <label class="cart-select-all-label" id="cart-select-all-wrap" style="display:none;">
                         <input type="checkbox" id="cart-select-all" onchange="cartSelectAll(this.checked)" />
                         <span>Select All</span>
                     </label>
                 </div>
-                <div id="cart-items-list">dsd</div>
+
+                <!-- Dynamic container where JS will render cart items -->
+                <div id="cart-items-list"></div>
+
+                <!-- Empty state when no items are in cart -->
                 <div id="cart-empty-state" style="display:none;text-align:center;padding:2rem;">
-                    <div class="cart-empty-icon"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span></div>
+                    <div class="cart-empty-icon">
+                        <span class="upress-icon upress-icon--cart" aria-hidden="true"></span>
+                    </div>
                     <h3 style="color:#777;margin-bottom:0.5rem;">Your cart is empty</h3>
-                    <p style="color:#aaa;margin-bottom:1.5rem;">Add items from our services to get started</p>
-                    <button class="btn-red" onclick="window.location.href='dashboard.html'" style="width:auto;padding:0.75rem 2rem;">Browse Services</button>
+                    <p style="color:#aaa;margin-bottom:1.5rem;">
+                        Add items from our services to get started
+                    </p>
+
+                    <!-- Redirects user back to services page -->
+                    <button class="btn-red" onclick="window.location.href='dashboard.html'" style="width:auto;padding:0.75rem 2rem;">
+                        Browse Services
+                    </button>
                 </div>
             </div>
         </div>
 
+        <!-- Right side: order summary and actions -->
         <div class="cart-summary-col">
             <div class="card card-sticky">
-                <div class="card-head"><div class="card-title">Order Summary</div></div>
+
+                <!-- Summary title -->
+                <div class="card-head">
+                    <div class="card-title">Order Summary</div>
+                </div>
+
+                <!-- Summary details -->
                 <div class="summary">
+
+                    <!-- Number of selected items -->
                     <div class="summary-row">
                         <span class="summary-label">Selected Items</span>
                         <span class="summary-value" id="cart-sum-count">0</span>
                     </div>
+
+                    <!-- Subtotal price -->
                     <div class="summary-row">
                         <span class="summary-label">Subtotal</span>
                         <span class="summary-value" id="cart-sum-subtotal">₱0.00</span>
                     </div>
+
                     <hr class="divider" />
+
+                    <!-- Total price -->
                     <div class="summary-row">
                         <span class="summary-label summary-total-label">Total</span>
                         <span class="summary-money" id="cart-sum-total">₱0.00</span>
                     </div>
-                    <button type="button" class="btn-order" id="cart-checkout-btn" onclick="cartProceedCheckout()"><span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Proceed to Checkout</button>
-                    <button type="button" class="btn-cart" onclick="cartClearAll()"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart</button>
+
+                    <!-- Button to proceed to checkout -->
+                    <button type="button" class="btn-order" id="cart-checkout-btn" onclick="cartProceedCheckout()">
+                        <span class="upress-icon upress-icon--bag" aria-hidden="true"></span>
+                        Proceed to Checkout
+                    </button>
+
+                    <!-- Button to clear all cart items -->
+                    <button type="button" class="btn-cart" onclick="cartClearAll()">
+                        <span class="upress-icon upress-icon--trash" aria-hidden="true"></span>
+                        Clear Cart
+                    </button>
                 </div>
             </div>
         </div>
+
     </div>
 </main>
 
-<!-- Edit Quantity Modal -->
+<!-- Modal for editing item quantity -->
 <div class="modal-overlay" id="edit-qty-modal" style="display:none;">
     <div class="modal-box">
+
+        <!-- Modal header with title and close button -->
         <div class="modal-header">
             <span class="modal-title">Edit Quantity</span>
-            <button type="button" class="modal-close" onclick="closeEditModal()" aria-label="Close"><span class="upress-icon upress-icon--x" aria-hidden="true"></span></button>
+            <button type="button" class="modal-close" onclick="closeEditModal()" aria-label="Close">
+                <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
+            </button>
         </div>
+
+        <!-- Modal body for quantity adjustment -->
         <div class="modal-body">
             <p class="modal-item-name" id="edit-modal-item-name"></p>
+
+            <!-- Quantity stepper controls -->
             <div class="qty-stepper">
                 <button class="qty-step-btn" onclick="changeModalQty(-1)">−</button>
                 <input type="number" class="qty-step-input" id="edit-modal-qty" min="1" max="999" value="1" />
                 <button class="qty-step-btn" onclick="changeModalQty(1)">+</button>
             </div>
+
+            <!-- Preview of price changes -->
             <div class="modal-price-preview">
                 Unit price: <strong id="edit-modal-unit-price">₱0.00</strong>
-                &nbsp;→&nbsp; New total: <strong id="edit-modal-new-total">₱0.00</strong>
+                &nbsp;→&nbsp;
+                New total: <strong id="edit-modal-new-total">₱0.00</strong>
             </div>
         </div>
+
+        <!-- Modal action buttons -->
         <div class="modal-footer">
             <button class="modal-cancel-btn" onclick="closeEditModal()">Cancel</button>
             <button class="modal-save-btn" onclick="saveEditQty()">Save Changes</button>
@@ -92,7 +155,9 @@
     </div>
 </div>
 
+<!-- Scripts that handle student features and cart logic -->
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/cart.js"></script>
+
 </body>
 </html>

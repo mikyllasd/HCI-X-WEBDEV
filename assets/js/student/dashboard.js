@@ -510,6 +510,18 @@ function updateProfileSection(user) {
         profileIdEl.textContent = `ID: ${user.campusId || '0000-0000'}`;
     }
 
+    // Update profile email
+    const profileEmailEl = document.getElementById('profile-email');
+    if (profileEmailEl) {
+        profileEmailEl.textContent = user.email || 'Email not set';
+    }
+
+    // Update profile organization/affiliation
+    const profileOrgEl = document.getElementById('profile-organization');
+    if (profileOrgEl) {
+        profileOrgEl.textContent = user.organization || 'No organization selected';
+    }
+
     // Update profile status
     const profileStatusEl = document.getElementById('profile-status');
     if (profileStatusEl) {

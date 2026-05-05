@@ -1,20 +1,24 @@
 // orders.js
 (function () {
+
+    /* Get current logged-in user; redirect if none */
     const u = User.get();
     if (!u) { window.location.href = '../auth/portal.html'; return; }
 
     let currentFilter = 'all';
 
-    // Pull orders from the shared Orders store
+    /* Pull all orders from shared Orders storage */
     function getOrders() {
         return Orders.getAll();
     }
 
+    /* Count orders based on status */
     function countByStatus(orders, status) {
         if (status === 'all') return orders.length;
         return orders.filter(o => o.status === status).length;
     }
 
+    /* Update numbers shown on filter tabs */
     function updateTabCounts() {
         const orders = getOrders();
         document.querySelectorAll('.tab-count').forEach(el => {
@@ -30,10 +34,12 @@
 
         updateTabCounts();
 
+        /* Filter orders based on selected tab */
         const filtered = currentFilter === 'all'
             ? orders
             : orders.filter(o => o.status === currentFilter);
 
+        /* Show empty state if no orders */
         if (filtered.length === 0) {
             listEl.innerHTML = `
                 <div class="orders-empty">
@@ -46,21 +52,26 @@
             return;
         }
 
+        /* Get user info once (optimization fix) */
+        const user = User.get() || {};
+        const fullName = user.name || '—';
+        const studentId = user.campusId || '—';
+        const course = user.course || '—';
+        const department = user.college || '—';
+        const mobile = user.phone || '—';
+        const email = user.email || '—';
+
+        /* Render each order card */
         listEl.innerHTML = filtered.map(o => {
             const items = Array.isArray(o.items) ? o.items : [o];
+
+            /* Build description preview */
             const descParts = items.map(i =>
                 `${escHtml(i.service || '')}${i.desc ? ' — ' + escHtml((i.desc || '').substring(0, 60)) + ((i.desc || '').length > 60 ? '…' : '') : ''}`
             );
-            const totalAmt = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
 
-            // Get customer info from user
-            const user = User.get() || {};
-            const fullName = user.name || '—';
-            const studentId = user.campusId || '—';
-            const course = user.course || '—';
-            const department = user.college || '—';
-            const mobile = user.phone || '—';
-            const email = user.email || '—';
+            /* Compute total amount */
+            const totalAmt = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
 
             return `
             <div class="order-card">
@@ -77,7 +88,10 @@
                         ${escHtml(o.status || 'Pending')}
                     </span>
                 </div>
+
                 <div class="order-desc">${descParts.join('<br>')}</div>
+
+                <!-- Customer information display -->
                 <div class="order-customer-info">
                     <div class="customer-info-row">
                         <span class="info-label">Full Name:</span>
@@ -104,15 +118,20 @@
                         <span class="info-value">${escHtml(email)}</span>
                     </div>
                 </div>
+
+                <!-- Bottom section with date and total -->
                 <div class="order-card-bottom">
-                    <span class="order-date"><span class="upress-icon upress-icon--cal" aria-hidden="true"></span> ${escHtml(o.dateOrdered || '')}</span>
+                    <span class="order-date">
+                        <span class="upress-icon upress-icon--cal" aria-hidden="true"></span>
+                        ${escHtml(o.dateOrdered || '')}
+                    </span>
                     <span class="order-total">₱${totalAmt.toFixed(2)}</span>
                 </div>
             </div>`;
         }).join('');
     }
 
-    // Tab switching
+    /* Handle tab switching for filtering orders */
     document.querySelectorAll('.manage-tab').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.manage-tab').forEach(t => t.classList.remove('active'));
@@ -122,5 +141,7 @@
         });
     });
 
+    /* Initial render */
     renderOrders();
+
 })();

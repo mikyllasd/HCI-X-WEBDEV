@@ -27,6 +27,29 @@
             </div>
         </div>
         <div class="col-right">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title"><span class="upress-icon upress-icon--phone" aria-hidden="true"></span> Contact & OTP</div>
+                    <div class="card-subtitle">Confirm your phone number before payment</div>
+                </div>
+                <div class="payment-contact-body">
+                    <div id="payment-saved-phone" class="payment-saved-phone"></div>
+                    <div id="payment-saved-phone-actions" class="payment-saved-phone-actions" style="margin-top:0.75rem;display:flex;gap:0.75rem;flex-wrap:wrap;"></div>
+                    <div id="payment-phone-input-wrap" style="display:none;margin-top:1rem;">
+                        <label class="slabel" for="payment-phone">Mobile number *</label>
+                        <input class="sinput" id="payment-phone" type="tel" inputmode="numeric" maxlength="11" placeholder="09XXXXXXXXX" />
+                        <button type="button" class="btn btn-secondary" id="payment-send-otp" style="margin-top:0.75rem;">Send OTP</button>
+                    </div>
+                    <div id="payment-otp-wrap" style="display:none;margin-top:1rem;">
+                        <p id="payment-otp-message" class="payment-otp-message"></p>
+                        <div class="payment-otp-row" style="display:flex;gap:0.75rem;align-items:flex-end;">
+                            <input class="sinput" id="payment-otp" type="text" maxlength="6" placeholder="Your OTP" style="flex:1;" />
+                            <button type="button" class="btn btn-proceed" id="payment-verify-otp">Verify OTP</button>
+                        </div>
+                        <p id="payment-otp-info" class="payment-otp-info" style="margin-top:0.75rem;color:#555;"></p>
+                    </div>
+                </div>
+            </div>
             <div class="card card-sticky">
                 <div class="card-head">
                     <div class="card-title">Order Total</div>
@@ -37,11 +60,20 @@
                     <span class="checkout-summary-value" id="checkout-subtotal">₱0.00</span>
                 </div>
                 <hr class="divider" />
-                <div class="checkout-summary-row checkout-summary-row--total">
-                    <span class="checkout-summary-label">Total Amount Due</span>
+                <div class="checkout-summary-row" id="checkout-downpayment-row" style="display:none;">
+                    <span class="checkout-summary-label">Downpayment Due</span>
+                    <span class="checkout-summary-value" id="checkout-downpayment">₱0.00</span>
+                </div>
+                <div class="checkout-summary-row checkout-summary-row--total" id="checkout-total-row">
+                    <span class="checkout-summary-label" id="checkout-total-label">Total Amount Due</span>
                     <span class="checkout-summary-value checkout-summary-value--total" id="checkout-total">₱0.00</span>
                 </div>
-                <div class="checkout-actions">
+                <div class="checkout-summary-row" id="checkout-full-total-row" style="display:none;">
+                    <span class="checkout-summary-label">Full Order Total</span>
+                    <span class="checkout-summary-value" id="checkout-full-total">₱0.00</span>
+                </div>
+                <div class="checkout-note" id="checkout-downpayment-note" style="display:none;color:#a32020;font-size:0.95rem;margin-top:0.75rem;">A 20% downpayment is required for orders above ₱500.</div>
+                <div class="checkout-actions" style="margin-top:1rem;">
                     <button class="btn-secondary" onclick="goBackToCart()">← Back</button>
                     <button class="btn-proceed" onclick="proceedToConfirmation()">Confirm Order</button>
                 </div>

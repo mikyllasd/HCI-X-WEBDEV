@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic page setup -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UPRESSease | Order Confirmed</title>
+
+    <!-- Main stylesheet for student pages -->
     <link rel="stylesheet" href="../../css/student/student.css" />
 </head>
 <body>
+
+<!-- Top navigation bar with back button and page title -->
 <header class="appbar">
     <button class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
     <div class="appbar-titles">
@@ -15,29 +20,56 @@
     </div>
 </header>
 
+<!-- Main content area -->
 <main class="page">
     <div class="confirm-wrapper">
         <div class="confirm-card">
-            <div class="confirm-icon"><span class="upress-icon upress-icon--check upress-icon--xl" aria-hidden="true"></span></div>
-            <h2>Order Submitted!</h2>
-            <p>Your order has been received and is now pending processing. We'll notify you when it's ready for pickup.</p>
-            <div class="confirm-details" id="confirm-details-list"></div>
-            <div class="confirm-actions">
-                <button type="button" class="btn-red" onclick="window.location.href='orders.html'">View My Orders</button>
-                <button type="button" class="btn-red btn-red--secondary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+
+            <!-- Success icon and confirmation message -->
+            <div class="confirm-icon">
+                <span class="upress-icon upress-icon--check upress-icon--xl" aria-hidden="true"></span>
             </div>
+            <h2>Order Submitted!</h2>
+            <p>
+                Your order has been received and is now pending processing.
+                We'll notify you when it's ready for pickup.
+            </p>
+
+            <!-- Container where order details will be inserted dynamically -->
+            <div class="confirm-details" id="confirm-details-list"></div>
+
+            <!-- Action buttons for navigation -->
+            <div class="confirm-actions">
+                <button type="button" class="btn-red" onclick="window.location.href='orders.html'">
+                    View My Orders
+                </button>
+                <button type="button" class="btn-red btn-red--secondary" onclick="window.location.href='dashboard.html'">
+                    Back to Dashboard
+                </button>
+            </div>
+
         </div>
     </div>
 </main>
 
+<!-- Script containing Orders data and helper functions like escHtml -->
 <script src="../../js/student/student.js"></script>
+
 <script>
+/* Ensures script runs only after the page and external JS are fully loaded */
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* Get all orders and select the most recent one */
     const all    = Orders.getAll();
     const latest = all[0];
 
+    /* Target container for displaying order details */
     const detailsEl = document.getElementById('confirm-details-list');
+
     if (latest && detailsEl) {
         const c = latest.customer || {};
+
+        /* Prepare order details as label-value pairs */
         const rows = [
             ['Order ID',     latest.orderId       || '—'],
             ['Service',      latest.service       || '—'],
@@ -50,12 +82,18 @@
             ['Date Ordered', latest.dateOrdered   || '—'],
             ['Status',       latest.status        || 'Pending']
         ];
+
+        /* Render the order details safely into the page */
         detailsEl.innerHTML = rows.map(([label, val]) => `
             <div class="confirm-row">
                 <span>${escHtml(label)}</span>
                 <span>${escHtml(String(val))}</span>
-            </div>`).join('');
+            </div>
+        `).join('');
     }
+
+});
 </script>
+
 </body>
 </html>

@@ -297,6 +297,11 @@
         return false;
       }
     }
+    const organization = getSelectedOrganization();
+    if (!organization) {
+      showInlineAlert("Please select your organization or affiliation.");
+      return false;
+    }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       showInlineAlert("Please enter a valid email address.");
       return false;
@@ -314,6 +319,38 @@
       return false;
     }
     return true;
+  }
+
+  function getSelectedOrganization() {
+    const select = document.getElementById("signup-organization");
+    const other = document.getElementById("signup-organization-other");
+    if (!select) return "";
+    const value = select.value || "";
+    if (value === "Others" && other) {
+      return other.value.trim();
+    }
+    return value.trim();
+  }
+
+  function persistUserToDB(user) {
+    if (!user || !user.email) return;
+    try {
+      const db = getDB();
+      db.users = Array.isArray(db.users) ? db.users : [];
+      const existingIndex = db.users.findIndex(
+        (item) =>
+          String(item.email || "").toLowerCase() ===
+          String(user.email || "").toLowerCase(),
+      );
+      if (existingIndex !== -1) {
+        db.users[existingIndex] = { ...db.users[existingIndex], ...user };
+      } else {
+        db.users.unshift(user);
+      }
+      saveDB(db);
+    } catch (err) {
+      console.error("Error saving signup to admin DB:", err);
+    }
   }
 
   function issueEmailOtp() {
@@ -607,6 +644,22 @@
         if (otpCode !== null) resetEmailOtpState();
       });
 
+    document
+      .getElementById("signup-organization")
+      ?.addEventListener("change", function () {
+        const other = document.getElementById("signup-organization-other");
+        if (!other) return;
+        if (this.value === "Others") {
+          other.classList.remove("signup-hidden");
+          other.setAttribute("required", "required");
+          other.focus();
+        } else {
+          other.classList.add("signup-hidden");
+          other.removeAttribute("required");
+          other.value = "";
+        }
+      });
+
     document.querySelectorAll("[data-toggle-pass]").forEach((btn) => {
       btn.addEventListener("click", function () {
         const id = btn.getAttribute("data-toggle-pass");
@@ -732,9 +785,55 @@
           return;
         }
 
+        const first = document.getElementById("signup-first")?.value.trim();
+        const last = document.getElementById("signup-last")?.value.trim();
+        const campusId = document.getElementById("signup-campus-id")?.value.trim();
+        const college = document.getElementById("signup-college")?.value;
+        const course = document.getElementById("signup-course")?.value;
+        const yearLevel = document.getElementById("signup-year")?.value;
+        const email = document.getElementById("signup-email")?.value.trim();
+        const phone = document.getElementById("signup-phone")?.value.trim();
+        const organization = getSelectedOrganization();
+        const type = getAccountType();
+        const fullName = `${first} ${last}`.trim();
+
+        const user = {
+          id: `UPRESS_USER_${Date.now()}`,
+          accountType: type,
+          role: type,
+          firstName: first,
+          lastName: last,
+          name: fullName,
+          fullName: fullName,
+          email: email,
+          phone: phone,
+          campusId: campusId,
+          college: college || "",
+          course: course || "",
+          yearLevel: yearLevel || "",
+          organization: organization || "",
+          status: "pending",
+          accountStatus: "pending",
+          flagged: false,
+          disabled: false,
+          signupPath: email.toLowerCase().endsWith("@wmsu.edu.ph") ? "A" : "B",
+          createdAt: new Date().toISOString(),
+        };
+
+        try {
+          localStorage.setItem("upressUser", JSON.stringify(user));
+        } catch (err) {
+          console.error("Error saving current user:", err);
+        }
+
+        persistUserToDB(user);
+
         showAlert(
           "Registration complete!",
-          "Your account has been created in demo mode.",
+          "Your account has been created. You are now signed in.",
+          () => {
+            window.location.href = "dashboard.html";
+          },
         );
 
         document.getElementById("signup-form")?.reset();

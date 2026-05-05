@@ -3,6 +3,7 @@
     let otpCode = null;
     let otpVerified = false;
     let capturedIdDataUrl = null;  // Store captured ID as data URL
+    let capturedCorDataUrl = null;  // Store captured COR as data URL
     let faceMatchComplete = false;
 
     // ============================================================
@@ -10,6 +11,7 @@
     // ============================================================
     const CameraCapture = {
         idVideoStream: null,
+        corVideoStream: null,
         faceVideoStream: null,
 
         async initIdCamera() {
@@ -26,6 +28,24 @@
             } catch (err) {
                 console.error('Camera error:', err);
                 showAlert('Camera access denied', 'Please allow camera access to capture your ID.');
+                return false;
+            }
+        },
+
+        async initCorCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                const video = document.getElementById('cor-camera-video');
+                if (video) {
+                    video.srcObject = stream;
+                    this.corVideoStream = stream;
+                }
+                return true;
+            } catch (err) {
+                console.error('COR camera error:', err);
+                showAlert('Camera access denied', 'Please allow camera access to capture your COR.');
                 return false;
             }
         },
@@ -59,10 +79,28 @@
             return capturedIdDataUrl;
         },
 
+        captureCorSnapshot() {
+            const video = document.getElementById('cor-camera-video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            capturedCorDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            return capturedCorDataUrl;
+        },
+
         stopIdCamera() {
             if (this.idVideoStream) {
                 this.idVideoStream.getTracks().forEach(track => track.stop());
                 this.idVideoStream = null;
+            }
+        },
+
+        stopCorCamera() {
+            if (this.corVideoStream) {
+                this.corVideoStream.getTracks().forEach(track => track.stop());
+                this.corVideoStream = null;
             }
         },
 
@@ -185,6 +223,27 @@
         if (!statusEl) return;
 
         try {
+            // Demo mode: Auto-verify after 1 second of scanning for demo purposes
+            statusEl.textContent = 'Scanning...';
+            statusEl.classList.add('scanning');
+
+            setTimeout(() => {
+                statusEl.textContent = 'Face matched';
+                statusEl.classList.remove('scanning');
+                statusEl.classList.add('matched');
+                CameraCapture.stopFaceCamera();
+                faceMatchComplete = true;
+
+                // Auto-move to form display after a short delay
+                setTimeout(() => {
+                    goToFormDisplay();
+                }, 1500);
+            }, 1000);
+
+            return;
+
+            // Original face-api.js implementation (commented out for demo)
+            /*
             // Load face-api.js
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js';
@@ -277,8 +336,9 @@
                 }
             };
             document.head.appendChild(script);
+            */
         } catch (err) {
-            console.error('Face API init error:', err);
+            console.error('Face match error:', err);
             faceMatchComplete = true;
             goToFormDisplay();
         }
@@ -288,10 +348,20 @@
         const step1 = document.getElementById('camera-step-1');
         const step2 = document.getElementById('camera-step-2');
         const step3 = document.getElementById('camera-step-3');
+        const step4 = document.getElementById('camera-step-4');
+        const step5 = document.getElementById('camera-step-5');
         if (step1) step1.classList.add('signup-hidden');
         if (step2) step2.classList.add('signup-hidden');
         if (step3) step3.classList.add('signup-hidden');
-        goToStep(2);
+        if (step4) step4.classList.add('signup-hidden');
+        if (step5) step5.classList.add('signup-hidden');
+
+        const captureSection = document.getElementById('camera-capture-section');
+        if (captureSection) captureSection.classList.add('signup-hidden');
+
+        document.querySelectorAll('.signup-terms-row, .signup-step-actions').forEach(function (el) {
+            el.classList.remove('signup-hidden');
+        });
     }
 
     // ============================================================
@@ -658,15 +728,23 @@
 
         document.getElementById("signup-btn-step3-back")?.addEventListener("click", function () {
             CameraCapture.stopIdCamera();
+            CameraCapture.stopCorCamera();
             CameraCapture.stopFaceCamera();
             faceMatchComplete = false;
             capturedIdDataUrl = null;
+            capturedCorDataUrl = null;
+
             const step1 = document.getElementById('camera-step-1');
             const step2 = document.getElementById('camera-step-2');
             const step3 = document.getElementById('camera-step-3');
+            const step4 = document.getElementById('camera-step-4');
+            const step5 = document.getElementById('camera-step-5');
             if (step1) step1.classList.remove('signup-hidden');
             if (step2) step2.classList.add('signup-hidden');
             if (step3) step3.classList.add('signup-hidden');
+            if (step4) step4.classList.add('signup-hidden');
+            if (step5) step5.classList.add('signup-hidden');
+
             goToStep(2);
         });
 
@@ -699,6 +777,7 @@
         document.getElementById('capture-id-btn')?.addEventListener('click', async function () {
             const snapshot = CameraCapture.captureIdSnapshot();
             if (snapshot) {
+                capturedIdDataUrl = snapshot;
                 const preview = document.getElementById('id-preview-img');
                 if (preview) preview.src = snapshot;
 
@@ -717,34 +796,89 @@
             const step2 = document.getElementById('camera-step-2');
             if (step1) step1.classList.remove('signup-hidden');
             if (step2) step2.classList.add('signup-hidden');
-            
+
+            capturedIdDataUrl = null;
+            const preview = document.getElementById('id-preview-img');
+            if (preview) preview.src = '';
             const resultsEl = document.getElementById('ocr-results');
             if (resultsEl) resultsEl.classList.add('signup-hidden');
-            
+
             await CameraCapture.initIdCamera();
         });
 
-        document.getElementById('continue-after-id-btn')?.addEventListener('click', async function () {
+        document.getElementById('next-after-id-btn')?.addEventListener('click', async function () {
             const step2 = document.getElementById('camera-step-2');
-            const step3 = document.getElementById('camera-step-3');
+            const step4 = document.getElementById('camera-step-4');
             if (step2) step2.classList.add('signup-hidden');
+            if (step4) step4.classList.remove('signup-hidden');
+
+            await CameraCapture.initCorCamera();
+        });
+
+        document.getElementById('capture-cor-btn')?.addEventListener('click', async function () {
+            const snapshot = CameraCapture.captureCorSnapshot();
+            if (snapshot) {
+                capturedCorDataUrl = snapshot;
+                const preview = document.getElementById('cor-preview-img');
+                if (preview) preview.src = snapshot;
+
+                const step4 = document.getElementById('camera-step-4');
+                const step5 = document.getElementById('camera-step-5');
+                if (step4) step4.classList.add('signup-hidden');
+                if (step5) step5.classList.remove('signup-hidden');
+
+                CameraCapture.stopCorCamera();
+            }
+        });
+
+        document.getElementById('retake-cor-btn')?.addEventListener('click', async function () {
+            const step4 = document.getElementById('camera-step-4');
+            const step5 = document.getElementById('camera-step-5');
+            if (step4) step4.classList.remove('signup-hidden');
+            if (step5) step5.classList.add('signup-hidden');
+
+            capturedCorDataUrl = null;
+            const preview = document.getElementById('cor-preview-img');
+            if (preview) preview.src = '';
+
+            await CameraCapture.initCorCamera();
+        });
+
+        document.getElementById('continue-to-face-btn')?.addEventListener('click', async function () {
+            const step5 = document.getElementById('camera-step-5');
+            const step3 = document.getElementById('camera-step-3');
+            if (step5) step5.classList.add('signup-hidden');
             if (step3) step3.classList.remove('signup-hidden');
 
             await CameraCapture.initFaceCamera();
             startFaceMatching();
         });
 
-        // Init file upload zones for COR (keep existing COR upload, remove ID)
-        initFileUploadZone("signup-cor-upload", "signup-cor", "signup-cor-preview");
-
         // Initialize camera for ID capture when showing step 3
         const origGoToStep = goToStep;
         goToStep = function (step) {
             origGoToStep(step);
             if (step === 3) {
-                // Show camera capture UI
+                document.querySelectorAll('.signup-terms-row, .signup-step-actions').forEach(function (el) {
+                    el.classList.add('signup-hidden');
+                });
                 const section = document.getElementById('camera-capture-section');
-                if (section) section.style.display = 'flex';
+                if (section) {
+                    section.classList.remove('signup-hidden');
+                    section.style.display = 'flex';
+                }
+                const step1 = document.getElementById('camera-step-1');
+                const step2 = document.getElementById('camera-step-2');
+                const step3 = document.getElementById('camera-step-3');
+                const step4 = document.getElementById('camera-step-4');
+                const step5 = document.getElementById('camera-step-5');
+                if (step1) step1.classList.remove('signup-hidden');
+                if (step2) step2.classList.add('signup-hidden');
+                if (step3) step3.classList.add('signup-hidden');
+                if (step4) step4.classList.add('signup-hidden');
+                if (step5) step5.classList.add('signup-hidden');
+                capturedIdDataUrl = null;
+                capturedCorDataUrl = null;
                 CameraCapture.initIdCamera();
             }
         };
@@ -764,15 +898,9 @@
                 return;
             }
 
-            // Check for COR file
-            const corFile = document.getElementById("signup-cor")?.files?.[0];
-            if (!corFile) {
-                showInlineAlert("Please upload your First semester COR.");
-                return;
-            }
-            const maxMb = 5;
-            if (corFile.size > maxMb * 1024 * 1024) {
-                showInlineAlert("COR file must be 5MB or smaller.");
+            // Check for captured COR
+            if (!capturedCorDataUrl) {
+                showInlineAlert("Please capture your First semester COR.");
                 return;
             }
 

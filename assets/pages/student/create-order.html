@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease | Create Order</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+    <link rel="stylesheet" href="../../css/student/create-order.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="co-navbar">
+    <a href="dashboard.html" class="co-back-btn" aria-label="Back to dashboard">←</a>
+    <div class="co-nav-center">
+        <div class="co-nav-logo"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></div>
+        <div class="co-nav-text">
+            <h1>Create Order</h1>
+            <p>Western Mindanao State University</p>
+        </div>
+    </div>
+    <div class="co-nav-right"><!-- spacer --></div>
+</header>
+
+<!-- Step Indicator -->
+<div class="co-steps-bar">
+    <div class="co-step active" id="step-ind-1">
+        <div class="co-step-dot">1</div>
+        <span>Order Type</span>
+    </div>
+    <div class="co-step-line"></div>
+    <div class="co-step" id="step-ind-2">
+        <div class="co-step-dot">2</div>
+        <span>Select Service</span>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="co-container">
+
+    <!-- STEP 1: Order Type -->
+    <div class="co-step-panel active" id="step-panel-1">
+        <div class="co-section-head">
+            <h2>Who is this order for?</h2>
+            <p>Choose whether this is a personal or organization order.</p>
+        </div>
+
+        <div class="co-type-grid">
+            <button type="button" class="co-type-card" id="btn-individual" onclick="selectOrderType('individual')">
+                <div class="co-type-icon-wrap">
+                    <span class="co-type-emoji">👤</span>
+                </div>
+                <div class="co-type-info">
+                    <div class="co-type-name">Individual Order</div>
+                    <div class="co-type-sub">For personal use</div>
+                </div>
+                <span class="co-type-check" id="check-individual">✔</span>
+            </button>
+
+            <button type="button" class="co-type-card" id="btn-organization" onclick="selectOrderType('organization')">
+                <div class="co-type-icon-wrap">
+                    <span class="co-type-emoji">🏫</span>
+                </div>
+                <div class="co-type-info">
+                    <div class="co-type-name">Organization Order</div>
+                    <div class="co-type-sub">For your student organization</div>
+                </div>
+                <span class="co-type-check" id="check-organization">✔</span>
+            </button>
+        </div>
+
+        <!-- Organization dropdown (shown only if org selected) -->
+        <div class="co-org-section" id="co-org-section" style="display:none;">
+            <label class="co-label" for="co-org-select">Select Organization <span class="co-required">*</span></label>
+            <select id="co-org-select" class="co-select" onchange="onOrgChange(this.value)">
+                <option value="">-- Choose Organization --</option>
+                <option value="Computer Science Club">Computer Science Club</option>
+                <option value="Engineering Society">Engineering Society</option>
+                <option value="Business Club">Business Club</option>
+                <option value="Arts and Culture Guild">Arts and Culture Guild</option>
+                <option value="Sports Association">Sports Association</option>
+                <option value="Science Club">Science Club</option>
+                <option value="Others">Others</option>
+            </select>
+            <div class="co-others-wrap" id="co-others-wrap" style="display:none;">
+                <input type="text" id="co-others-input" class="co-others-input"
+                    placeholder="Please specify your organization" />
+            </div>
+        </div>
+
+        <div class="co-step-actions">
+            <a href="dashboard.html" class="co-btn co-btn-secondary">Cancel</a>
+            <button type="button" class="co-btn co-btn-primary" id="btn-next-step" onclick="goToStep2()" disabled>
+                Next: Select Service →
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 2: Select Service -->
+    <div class="co-step-panel" id="step-panel-2">
+        <div class="co-section-head">
+            <h2>Select a Service</h2>
+            <p>Pick the service you need to proceed with your order.</p>
+        </div>
+
+        <div class="co-order-summary-bar" id="co-order-summary-bar">
+            <!-- Filled dynamically -->
+        </div>
+
+        <div class="co-services-grid">
+            <button type="button" class="co-service-card" onclick="serviceHref('printing.html')">
+                <div class="co-service-icon"><span class="upress-icon upress-icon--print" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">Printing</div>
+                    <div class="co-service-desc">Document printing services</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>
+
+            <button type="button" class="co-service-card" onclick="serviceHref('binding.html')">
+                <div class="co-service-icon"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">Binding</div>
+                    <div class="co-service-desc">Professional binding services</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>
+
+            <button type="button" class="co-service-card" onclick="serviceHref('lanyard.html')">
+                <div class="co-service-icon"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">Lanyards</div>
+                    <div class="co-service-desc">Custom lanyards</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>
+
+            <button type="button" class="co-service-card" onclick="serviceHref('mug.html')">
+                <div class="co-service-icon"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">Mug Printing</div>
+                    <div class="co-service-desc">Customized mug printing services</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>
+
+            <button type="button" class="co-service-card" onclick="serviceHref('id-printing.html')">
+                <div class="co-service-icon"><span class="upress-icon upress-icon--id" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">ID Printing</div>
+                    <div class="co-service-desc">New, lost, damaged, or renewal</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>
+        </div>
+
+        <div class="co-step-actions">
+            <button type="button" class="co-btn co-btn-secondary" onclick="goToStep1()">← Back</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../js/student/student.js"></script>
+<script src="../../js/student/create-order.js"></script>
+</body>
+</html>

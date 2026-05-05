@@ -5,7 +5,6 @@
   let capturedIdDataUrl = null;
   let capturedCorDataUrl = null;
   let faceMatchComplete = false;
-  let pass = null;
 
   const CameraCapture = {
     idVideoStream: null,

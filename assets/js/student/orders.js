@@ -1,4 +1,3 @@
-// orders.js
 (function () {
 
     /* Get current logged-in user; redirect if none */
@@ -7,18 +6,45 @@
 
     let currentFilter = 'all';
 
-    /* Pull all orders from shared Orders storage */
+    /* ── Rating state ── */
+    let ratingTargetOrderId = null;
+    const ratings = {}; // { system: 0, staff: 0, admin: 0 }
+
+    /* ── Helpers ── */
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function getRatingsStore() {
+        try {
+            return JSON.parse(localStorage.getItem('upress_ratings') || '{}');
+        } catch { return {}; }
+    }
+
+    function saveRating(orderId, data) {
+        const store = getRatingsStore();
+        store[orderId] = data;
+        localStorage.setItem('upress_ratings', JSON.stringify(store));
+    }
+
+    function hasRated(orderId) {
+        return !!getRatingsStore()[orderId];
+    }
+
+    /* ── Orders ── */
     function getOrders() {
         return Orders.getAll();
     }
 
-    /* Count orders based on status */
     function countByStatus(orders, status) {
         if (status === 'all') return orders.length;
         return orders.filter(o => o.status === status).length;
     }
 
-    /* Update numbers shown on filter tabs */
     function updateTabCounts() {
         const orders = getOrders();
         document.querySelectorAll('.tab-count').forEach(el => {
@@ -34,12 +60,10 @@
 
         updateTabCounts();
 
-        /* Filter orders based on selected tab */
         const filtered = currentFilter === 'all'
             ? orders
             : orders.filter(o => o.status === currentFilter);
 
-        /* Show empty state if no orders */
         if (filtered.length === 0) {
             listEl.innerHTML = `
                 <div class="orders-empty">
@@ -52,26 +76,34 @@
             return;
         }
 
-        /* Get user info once (optimization fix) */
         const user = User.get() || {};
-        const fullName = user.name || '—';
-        const studentId = user.campusId || '—';
-        const course = user.course || '—';
-        const department = user.college || '—';
-        const mobile = user.phone || '—';
-        const email = user.email || '—';
+        const fullName   = user.name     || '—';
+        const studentId  = user.campusId || '—';
+        const course     = user.course   || '—';
+        const department = user.college  || '—';
+        const mobile     = user.phone    || '—';
+        const email      = user.email    || '—';
 
-        /* Render each order card */
         listEl.innerHTML = filtered.map(o => {
             const items = Array.isArray(o.items) ? o.items : [o];
 
-            /* Build description preview */
             const descParts = items.map(i =>
                 `${escHtml(i.service || '')}${i.desc ? ' — ' + escHtml((i.desc || '').substring(0, 60)) + ((i.desc || '').length > 60 ? '…' : '') : ''}`
             );
 
-            /* Compute total amount */
             const totalAmt = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
+
+            const isCompleted = o.status === 'Completed';
+            const alreadyRated = hasRated(o.orderId);
+
+            /* Rate / Rated row — only for completed orders */
+            const rateRow = isCompleted ? `
+                <div class="order-rate-row">
+                    ${alreadyRated
+                        ? `<span class="rated-badge">✔ Rated</span>`
+                        : `<button class="rate-btn" data-orderid="${escHtml(o.orderId)}">⭐ Rate Order</button>`
+                    }
+                </div>` : '';
 
             return `
             <div class="order-card">
@@ -91,7 +123,6 @@
 
                 <div class="order-desc">${descParts.join('<br>')}</div>
 
-                <!-- Customer information display -->
                 <div class="order-customer-info">
                     <div class="customer-info-row">
                         <span class="info-label">Full Name:</span>
@@ -119,7 +150,6 @@
                     </div>
                 </div>
 
-                <!-- Bottom section with date and total -->
                 <div class="order-card-bottom">
                     <span class="order-date">
                         <span class="upress-icon upress-icon--cal" aria-hidden="true"></span>
@@ -127,11 +157,101 @@
                     </span>
                     <span class="order-total">₱${totalAmt.toFixed(2)}</span>
                 </div>
+
+                ${rateRow}
             </div>`;
         }).join('');
+
+        /* Attach rate button listeners after render */
+        listEl.querySelectorAll('.rate-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                openRatingModal(this.dataset.orderid);
+            });
+        });
     }
 
-    /* Handle tab switching for filtering orders */
+    /* ── Modal logic ── */
+    function openRatingModal(orderId) {
+        ratingTargetOrderId = orderId;
+
+        /* Reset stars */
+        ratings.system = 0;
+        ratings.staff  = 0;
+        ratings.admin  = 0;
+        document.getElementById('rating-message').value = '';
+        document.querySelectorAll('.star').forEach(s => s.classList.remove('selected', 'hovered'));
+        updateSubmitBtn();
+
+        document.getElementById('rating-order-label').textContent = 'Order ID: ' + orderId;
+        document.getElementById('rating-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeRatingModal() {
+        document.getElementById('rating-modal').style.display = 'none';
+        document.body.style.overflow = '';
+        ratingTargetOrderId = null;
+    }
+
+    function updateSubmitBtn() {
+        const allSet = ratings.system > 0 && ratings.staff > 0 && ratings.admin > 0;
+        document.getElementById('rating-submit-btn').disabled = !allSet;
+    }
+
+    /* Star interaction per group */
+    document.querySelectorAll('.star-group').forEach(group => {
+        const category = group.dataset.category;
+        const stars = group.querySelectorAll('.star');
+
+        stars.forEach(star => {
+            const val = parseInt(star.dataset.value);
+
+            star.addEventListener('mouseenter', () => {
+                stars.forEach(s => {
+                    s.classList.toggle('hovered', parseInt(s.dataset.value) <= val);
+                });
+            });
+
+            star.addEventListener('mouseleave', () => {
+                stars.forEach(s => s.classList.remove('hovered'));
+            });
+
+            star.addEventListener('click', () => {
+                ratings[category] = val;
+                stars.forEach(s => {
+                    s.classList.toggle('selected', parseInt(s.dataset.value) <= val);
+                });
+                updateSubmitBtn();
+            });
+        });
+    });
+
+    /* Close button */
+    document.getElementById('rating-close-btn').addEventListener('click', closeRatingModal);
+
+    /* Click outside modal to close */
+    document.getElementById('rating-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeRatingModal();
+    });
+
+    /* Submit */
+    document.getElementById('rating-submit-btn').addEventListener('click', function () {
+        if (!ratingTargetOrderId) return;
+        if (!ratings.system || !ratings.staff || !ratings.admin) return;
+
+        saveRating(ratingTargetOrderId, {
+            system:  ratings.system,
+            staff:   ratings.staff,
+            admin:   ratings.admin,
+            message: document.getElementById('rating-message').value.trim(),
+            date:    new Date().toISOString()
+        });
+
+        closeRatingModal();
+        renderOrders(); /* Re-render so Rate btn becomes Rated badge */
+    });
+
+    /* Tab switching */
     document.querySelectorAll('.manage-tab').forEach(btn => {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.manage-tab').forEach(t => t.classList.remove('active'));

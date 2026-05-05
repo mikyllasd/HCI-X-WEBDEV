@@ -20,7 +20,9 @@
             <span class="sidebar-title">UPRESSease</span>
             <span class="sidebar-sub">WMSU</span>
         </div>
-        <button type="button" class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close menu"><span class="upress-icon upress-icon--x" aria-hidden="true"></span></button>
+        <button type="button" class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close menu">
+            <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
+        </button>
     </div>
 
     <!-- Profile Section -->
@@ -47,9 +49,15 @@
 
     <!-- Sidebar Tabs -->
     <div class="sidebar-tabs">
-        <button type="button" class="sidebar-tab active" onclick="switchSidebarTab('orders', this)"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span> My Orders</button>
-        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('cart', this)"><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart</button>
-        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('history', this)"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span> History</button>
+        <button type="button" class="sidebar-tab active" onclick="switchSidebarTab('orders', this)">
+            <span class="upress-icon upress-icon--pkg" aria-hidden="true"></span> My Orders
+        </button>
+        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('cart', this)">
+            <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart
+        </button>
+        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('history', this)">
+            <span class="upress-icon upress-icon--clock" aria-hidden="true"></span> History
+        </button>
     </div>
 
     <!-- My Orders Panel -->
@@ -57,9 +65,7 @@
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
                 <p class="sidebar-section-label">Active Orders</p>
-                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">
-                    ⤢ Full View
-                </button>
+                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">⤢ Full View</button>
             </div>
             <div id="sidebar-orders-list" class="sidebar-empty-state">
                 <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
@@ -85,8 +91,12 @@
                     <span class="sidebar-cart-total-label">Selected Total</span>
                     <span class="sidebar-cart-total-amount" id="sidebar-cart-total">₱0.00</span>
                 </div>
-                <button type="button" class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()"><span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Checkout Selected</button>
-                <button type="button" class="sidebar-clear-btn" onclick="sidebarClearCart()"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart</button>
+                <button type="button" class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()">
+                    <span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Checkout Selected
+                </button>
+                <button type="button" class="sidebar-clear-btn" onclick="sidebarClearCart()">
+                    <span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart
+                </button>
             </div>
         </div>
     </div>
@@ -96,9 +106,7 @@
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
                 <p class="sidebar-section-label">Order History</p>
-                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">
-                    ⤢ Full View
-                </button>
+                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">⤢ Full View</button>
             </div>
             <div id="sidebar-history-list" class="sidebar-empty-state">
                 <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span></div>
@@ -107,9 +115,9 @@
         </div>
     </div>
 
-    <!-- Logout Button -->
+    <!-- Logout -->
     <div class="sidebar-footer">
-        <button type="button" class="sidebar-logout-btn" onclick="logout()" title="Logout">
+        <button type="button" class="sidebar-logout-btn" onclick="logout()">
             <span class="upress-icon upress-icon--x" aria-hidden="true"></span> Logout
         </button>
     </div>
@@ -131,11 +139,11 @@
         </div>
     </div>
     <div class="nav-right">
-        <button type="button" class="nav-icon-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications" aria-label="Notifications">
+        <button type="button" class="nav-icon-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
             <span class="upress-icon upress-icon--bell" aria-hidden="true"></span>
             <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
         </button>
-        <button type="button" class="nav-icon-btn nav-logout-btn" onclick="logout()" title="Logout" aria-label="Logout">
+        <button type="button" class="nav-icon-btn nav-logout-btn" onclick="logout()" title="Logout">
             <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
             <span class="nav-logout-label">Logout</span>
         </button>
@@ -145,59 +153,14 @@
 <!-- Notification Dropdown -->
 <div class="notif-panel" id="notif-panel" style="display:none;">
     <div class="notif-panel-header">
-        <span class="notif-panel-title"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span> Notifications</span>
+        <span class="notif-panel-title">
+            <span class="upress-icon upress-icon--bell" aria-hidden="true"></span> Notifications
+        </span>
         <button type="button" class="notif-clear-btn" onclick="clearNotifications()">Clear all</button>
     </div>
     <div id="notif-list" class="notif-empty">
         <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span></div>
         <p>No notifications yet.</p>
-    </div>
-</div>
-
-<!-- ===================== CREATE ORDER DEDICATED MODAL ===================== -->
-<div class="co-overlay" id="co-overlay" style="display:none;">
-    <div class="co-modal" id="co-modal">
-        <h3 class="co-title">Who is this order for?</h3>
-        <p class="co-desc">Select the type of order you want to create.</p>
-
-        <div class="co-type-btns">
-            <button type="button" class="co-type-btn" id="co-individual">
-                <span class="co-type-icon">👤</span>
-                <div>
-                    <div class="co-type-name">Individual Order</div>
-                    <div class="co-type-sub">For personal use</div>
-                </div>
-            </button>
-            <button type="button" class="co-type-btn" id="co-organization">
-                <span class="co-type-icon">🏫</span>
-                <div>
-                    <div class="co-type-name">Organization Order</div>
-                    <div class="co-type-sub">For your student organization</div>
-                </div>
-            </button>
-        </div>
-
-        <div class="co-org-wrap" id="co-org-wrap" style="display:none;">
-            <label class="co-label">Select Organization *</label>
-            <select id="co-org-dropdown" class="co-select">
-                <option value="">-- Choose Organization --</option>
-                <option value="Computer Science Club">Computer Science Club</option>
-                <option value="Engineering Society">Engineering Society</option>
-                <option value="Business Club">Business Club</option>
-                <option value="Arts and Culture Guild">Arts and Culture Guild</option>
-                <option value="Sports Association">Sports Association</option>
-                <option value="Science Club">Science Club</option>
-                <option value="Others">Others</option>
-            </select>
-            <div class="co-others-wrap" id="co-others-wrap" style="display:none;">
-                <input type="text" id="co-others-input" class="co-others-input" placeholder="Please specify your organization" />
-            </div>
-        </div>
-
-        <div class="co-actions">
-            <button type="button" class="co-btn-cancel" id="co-cancel">Cancel</button>
-            <button type="button" class="co-btn-confirm" id="co-confirm">Confirm</button>
-        </div>
     </div>
 </div>
 
@@ -236,48 +199,9 @@
         <h2 class="services-title">Create Your Order</h2>
         <p class="page-section-lead">Select what you need and we'll walk you through the ordering process.</p>
     </div>
-    <div style="text-align:center;padding:2rem 0;">
-        <button type="button" class="btn-red" onclick="showCreateOrderModal()" style="padding:1rem 3rem;font-size:1.125rem;">+ Create Order</button>
-    </div>
 
-    <div id="services-section" style="display:none;">
-        <div class="page-section-head">
-            <span class="page-section-badge">Services</span>
-            <h2 class="services-title">Our Services</h2>
-            <p class="page-section-lead">Pick a service to begin an order. Track progress anytime from the menu.</p>
-        </div>
-        <div class="services-grid-dash">
-            <div class="service-card-dash">
-                <div class="service-icon-dash"><span class="upress-icon upress-icon--print" aria-hidden="true"></span></div>
-                <h3>Printing</h3>
-                <p>Document printing services</p>
-                <button type="button" class="btn-red" onclick="serviceHref('printing.html')">Order Now</button>
-            </div>
-            <div class="service-card-dash">
-                <div class="service-icon-dash"><span class="upress-icon upress-icon--book" aria-hidden="true"></span></div>
-                <h3>Binding</h3>
-                <p>Professional binding services</p>
-                <button type="button" class="btn-red" onclick="serviceHref('binding.html')">Order Now</button>
-            </div>
-            <div class="service-card-dash">
-                <div class="service-icon-dash"><span class="upress-icon upress-icon--ticket" aria-hidden="true"></span></div>
-                <h3>Lanyards</h3>
-                <p>Custom lanyards</p>
-                <button type="button" class="btn-red" onclick="serviceHref('lanyard.html')">Order Now</button>
-            </div>
-            <div class="service-card-dash">
-                <div class="service-icon-dash"><span class="upress-icon upress-icon--mug" aria-hidden="true"></span></div>
-                <h3>Mug Printing</h3>
-                <p>Customized mug printing services</p>
-                <button type="button" class="btn-red" onclick="serviceHref('mug.html')">Order Now</button>
-            </div>
-            <div class="service-card-dash">
-                <div class="service-icon-dash"><span class="upress-icon upress-icon--id" aria-hidden="true"></span></div>
-                <h3>ID printing</h3>
-                <p>New, lost, damaged, or renewal</p>
-                <button type="button" class="btn-red" onclick="serviceHref('id-printing.html')">Start request</button>
-            </div>
-        </div>
+    <div style="text-align:center; padding: 2rem 0;">
+        <a href="create-order.html" class="btn-create-order">+ Create Order</a>
     </div>
 </div>
 

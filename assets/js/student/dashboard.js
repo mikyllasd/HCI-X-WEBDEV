@@ -1,19 +1,16 @@
-// dashboard.js
 const u = User.get();
 if (!u) { window.location.href = '../auth/portal.html'; }
 
-/* Legacy sessions: pending-approval gate was removed — treat as verified for ordering. */
+/* Legacy sessions: treat pending as verified */
 if (u.accountStatus === 'pending') {
     User.update({ accountStatus: 'verified' });
 }
 
 setText('welcome-name',  u?.name  || 'Student');
 setText('welcome-email', u?.email || 'student@wmsu.edu.ph');
-
-// Update profile section in sidebar
 updateProfileSection(u);
 
-// Smart phone verification when switching accounts
+/* Phone check on login switch */
 if (localStorage.getItem('upress_verify_phone_on_load') === 'true') {
     localStorage.removeItem('upress_verify_phone_on_load');
     const storedPhone = u?.phone || '';
@@ -21,32 +18,19 @@ if (localStorage.getItem('upress_verify_phone_on_load') === 'true') {
         showConfirm(
             'Confirm Phone Number',
             `Are you still using ${storedPhone}?`,
+            () => {},
             () => {
-                // User confirmed same phone — proceed
-            },
-            () => {
-                // User said no — show phone update prompt
-                showPrompt(
-                    'Update Phone Number',
-                    'Please enter your new phone number (09XXXXXXXXX)',
-                    '09123456789',
-                    (newPhone) => {
-                        if (!/^09[0-9]{9}$/.test(newPhone.replace(/\s/g, ''))) {
-                            showAlert('Invalid Phone', 'Please enter a valid PH mobile number.');
-                            return;
-                        }
-                        User.update({ phone: newPhone });
-                        // In a real system, would trigger OTP here
-                        showAlert('Phone Updated', 'Your phone number has been updated.');
+                showPrompt('Update Phone Number', 'Please enter your new phone number (09XXXXXXXXX)', '09123456789', (newPhone) => {
+                    if (!/^09[0-9]{9}$/.test(newPhone.replace(/\s/g, ''))) {
+                        showAlert('Invalid Phone', 'Please enter a valid PH mobile number.');
+                        return;
                     }
-                );
+                    User.update({ phone: newPhone });
+                    showAlert('Phone Updated', 'Your phone number has been updated.');
+                });
             }
         );
     }
-}
-
-function serviceHref(page) {
-    window.location.href = page;
 }
 
 /* ===================== SIDEBAR ===================== */
@@ -54,7 +38,7 @@ function openSidebar() {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('sidebarOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
-    renderSidebarOrders(); // always refresh orders on open
+    renderSidebarOrders();
     renderSidebarCart();
 }
 
@@ -82,7 +66,6 @@ function switchSidebarTab(tab, el) {
     if (tab === 'history') renderSidebarHistory();
 }
 
-// Navigate to full orders page
 function goToFullOrders() {
     closeSidebar();
     window.location.href = 'orders.html';
@@ -92,11 +75,8 @@ function goToFullOrders() {
 function renderSidebarOrders() {
     const listEl = document.getElementById('sidebar-orders-list');
     if (!listEl) return;
-
-    // Active = not Completed, not Cancelled
     const allOrders = Orders.getAll();
     const active = allOrders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled');
-
     if (active.length === 0) {
         listEl.innerHTML = `
             <div class="sidebar-empty-state">
@@ -106,8 +86,6 @@ function renderSidebarOrders() {
             </div>`;
         return;
     }
-
-    // Show up to 5 in sidebar; link to full page for more
     const shown = active.slice(0, 5);
     listEl.innerHTML = shown.map(o => {
         const items = Array.isArray(o.items) ? o.items : [o];
@@ -125,7 +103,6 @@ function renderSidebarOrders() {
             <div class="sidebar-order-price">₱${total.toFixed(2)}</div>
         </div>`;
     }).join('');
-
     if (active.length > 5) {
         listEl.innerHTML += `
         <div style="text-align:center;padding:0.5rem 0;">
@@ -140,10 +117,8 @@ function renderSidebarOrders() {
 function renderSidebarHistory() {
     const listEl = document.getElementById('sidebar-history-list');
     if (!listEl) return;
-
     const allOrders = Orders.getAll();
     const history = allOrders.filter(o => o.status === 'Completed' || o.status === 'Cancelled');
-
     if (history.length === 0) {
         listEl.innerHTML = `
             <div class="sidebar-empty-state">
@@ -152,24 +127,21 @@ function renderSidebarHistory() {
             </div>`;
         return;
     }
-
     const shown = history.slice(0, 5);
     listEl.innerHTML = shown.map(o => {
         const items = Array.isArray(o.items) ? o.items : [o];
         const total = items.reduce((s, i) => s + parseFloat(i.total || 0), 0);
         const name  = items[0]?.service || 'Order';
-        const iconHtml = o.status === 'Completed'
-            ? '<span class="upress-icon upress-icon--check" style="width:0.85rem;height:0.85rem;color:#27ae60" aria-hidden="true"></span>'
-            : '<span class="upress-icon upress-icon--x" style="width:0.85rem;height:0.85rem;color:#c0392b" aria-hidden="true"></span>';
         const color = o.status === 'Completed' ? '#27ae60' : '#c0392b';
         return `
         <div class="sidebar-order-item">
             <div class="sidebar-order-name">${escHtml(name)}</div>
-            <div class="sidebar-order-meta" style="color:${color};display:flex;align-items:center;gap:0.25rem;">${iconHtml}<span>${escHtml(o.status)} · ${escHtml(o.dateOrdered || '')}</span></div>
+            <div class="sidebar-order-meta" style="color:${color};">
+                ${escHtml(o.status)} · ${escHtml(o.dateOrdered || '')}
+            </div>
             <div class="sidebar-order-price">₱${total.toFixed(2)}</div>
         </div>`;
     }).join('');
-
     if (history.length > 5) {
         listEl.innerHTML += `
         <div style="text-align:center;padding:0.5rem 0;">
@@ -187,9 +159,7 @@ function renderSidebarCart() {
     const cart = Cart.get();
     const listEl = document.getElementById('sidebar-cart-list');
     if (!listEl) return;
-
     sidebarSelected = new Set([...sidebarSelected].filter(id => cart.find(i => i.cartId === id)));
-
     if (cart.length === 0) {
         listEl.innerHTML = `
             <div class="sidebar-empty-state">
@@ -201,7 +171,6 @@ function renderSidebarCart() {
         updateSidebarSelectAll();
         return;
     }
-
     listEl.innerHTML = cart.map(item => {
         const checked = sidebarSelected.has(item.cartId);
         const unitPrice = item.unitPrice
@@ -226,11 +195,12 @@ function renderSidebarCart() {
             </div>
             <div class="sc-right">
                 <div class="sc-price">₱${parseFloat(item.total).toFixed(2)}</div>
-                <button type="button" class="sc-remove-btn" onclick="sidebarRemoveItem('${item.cartId}')" aria-label="Remove from cart"><span class="upress-icon upress-icon--trash" aria-hidden="true"></span></button>
+                <button type="button" class="sc-remove-btn" onclick="sidebarRemoveItem('${item.cartId}')">
+                    <span class="upress-icon upress-icon--trash" aria-hidden="true"></span>
+                </button>
             </div>
         </div>`;
     }).join('');
-
     updateSidebarCartFooter();
     updateSidebarSelectAll();
     updateNavBadges();
@@ -258,7 +228,7 @@ function updateSidebarSelectAll() {
     if (cart.length === 0) {
         allCheckEl.checked = false; allCheckEl.indeterminate = false;
     } else if (sidebarSelected.size === cart.length) {
-        allCheckEl.checked = true;  allCheckEl.indeterminate = false;
+        allCheckEl.checked = true; allCheckEl.indeterminate = false;
     } else if (sidebarSelected.size === 0) {
         allCheckEl.checked = false; allCheckEl.indeterminate = false;
     } else {
@@ -364,13 +334,14 @@ function renderDashCartPreview() {
     if (!preview) return;
     if (cart.length === 0) { preview.style.display = 'none'; updateNavBadges(); return; }
     preview.style.display = 'block';
-    const MAX = 3;
+    const MAX   = 3;
     const shown = cart.slice(0, MAX);
     const container = document.getElementById('dash-cart-preview-items');
     if (container) {
         container.innerHTML = shown.map(item => `
             <div class="dash-cart-preview-item">
-                <span><span class="upress-icon upress-icon--cart" aria-hidden="true"></span> ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '…' : '') : ''}</span>
+                <span><span class="upress-icon upress-icon--cart" aria-hidden="true"></span>
+                ${escHtml(item.service)} — ${item.desc ? escHtml(item.desc.substring(0, 40)) + (item.desc.length > 40 ? '…' : '') : ''}</span>
                 <span style="font-weight:700;color:#a32020;">₱${item.total}</span>
             </div>`).join('');
         if (cart.length > MAX) {
@@ -384,226 +355,32 @@ function renderDashCartPreview() {
 
 renderDashCartPreview();
 
-// ===================== CREATE ORDER FLOW =====================
-function showCreateOrderModal() {
-    initModals();
-    const overlay = document.getElementById('upress-modal-overlay');
-    document.getElementById('upress-modal-title').textContent = 'Who is this order for?';
-    document.getElementById('upress-modal-msg').textContent = 'Select the type of order you want to create.';
-    document.getElementById('upress-modal-cancel').style.display = 'none';
-    document.getElementById('upress-modal-confirm').textContent = 'Confirm';
-    document.getElementById('upress-modal-input-wrap').style.display = 'none';
-    
-    // Create custom order type selection UI
-    const modalBox = document.getElementById('upress-modal-box');
-    const originalContent = `
-        <h3 id="upress-modal-title" style="margin:0 0 0.75rem;font-size:1.125rem;color:#333;"></h3>
-        <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;line-height:1.5;white-space:pre-line;"></p>
-        <div id="upress-modal-input-wrap" style="display:none;margin-bottom:1rem;">
-            <input id="upress-modal-input" type="text" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);outline:none;">
-        </div>`;
-    
-    const customOptions = `
-        <h3 id="upress-modal-title" style="margin:0 0 1rem;font-size:1.125rem;color:#333;">Who is this order for?</h3>
-        <p id="upress-modal-msg" style="margin:0 0 1.5rem;font-size:0.9375rem;color:#555;">Select the type of order you want to create.</p>
-        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
-            <button type="button" id="order-individual" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
-                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">👤 Individual Order</div>
-                <div style="font-size:0.8125rem;color:#888;">For personal use</div>
-            </button>
-            <button type="button" id="order-organization" style="padding:1rem;border:2px solid #e0e0e0;border-radius:0.5rem;background:white;text-align:left;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);">
-                <div style="font-weight:600;color:#333;margin-bottom:0.25rem;">🏫 Organization Order</div>
-                <div style="font-size:0.8125rem;color:#888;">For your student organization</div>
-            </button>
-        </div>
-        <div id="org-selector" style="display:none;margin-bottom:1.5rem;">
-            <label class="label" style="font-size:0.875rem;margin-bottom:0.5rem;">Select Organization *</label>
-            <select id="org-dropdown" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);">
-                <option value="">-- Choose Organization --</option>
-            </select>
-            <div id="org-other-input" style="display:none;margin-top:0.75rem;">
-                <label class="label" style="font-size:0.875rem;margin-bottom:0.5rem;">Please Specify *</label>
-                <input type="text" id="org-other-name" placeholder="Enter organization name" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);outline:none;" />
-            </div>
-        </div>
-        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-            <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
-            <button id="upress-modal-confirm" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:none;background:var(--color-cta);color:white;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Confirm</button>
-        </div>`;
-    
-    modalBox.innerHTML = customOptions;
-    overlay.style.display = 'flex';
-    
-    // Hide cancel button initially
-    document.getElementById('upress-modal-cancel').style.display = 'none';
-    
-    // Add event listeners
-    const individualBtn = document.getElementById('order-individual');
-    const organizationBtn = document.getElementById('order-organization');
-    const orgSelector = document.getElementById('org-selector');
-    const orgDropdown = document.getElementById('org-dropdown');
-    
-    let selectedOrderType = null;
-    let selectedOrg = null;
-    
-    function updateStyle(btn, selected) {
-        if (selected) {
-            btn.style.borderColor = '#a32020';
-            btn.style.background = '#fff9f9';
-        } else {
-            btn.style.borderColor = '#e0e0e0';
-            btn.style.background = 'white';
-        }
-    }
-    
-    individualBtn.addEventListener('click', () => {
-        selectedOrderType = 'individual';
-        selectedOrg = null;
-        updateStyle(individualBtn, true);
-        updateStyle(organizationBtn, false);
-        orgSelector.style.display = 'none';
-    });
-    
-    organizationBtn.addEventListener('click', () => {
-        selectedOrderType = 'organization';
-        updateStyle(individualBtn, false);
-        updateStyle(organizationBtn, true);
-        orgSelector.style.display = 'block';
-        loadOrganizations();
-    });
-    
-    function loadOrganizations() {
-        // Placeholder organizations - in a real app, this would come from a backend
-        const orgs = [
-            'Computer Science Club',
-            'Engineering Society',
-            'Business Club',
-            'Arts and Culture Guild',
-            'Sports Association',
-            'Science Club',
-            'Others'
-        ];
-        orgDropdown.innerHTML = '<option value="">-- Choose Organization --</option>' + 
-            orgs.map(org => `<option value="${org}">${org}</option>`).join('');
-    }
-    
-    orgDropdown.addEventListener('change', (e) => {
-        const value = e.target.value;
-        const otherInputDiv = document.getElementById('org-other-input');
-        const otherNameInput = document.getElementById('org-other-name');
-        
-        if (value === 'Others') {
-            otherInputDiv.style.display = 'block';
-            otherNameInput.focus();
-            selectedOrg = null; // Clear until they specify
-        } else {
-            otherInputDiv.style.display = 'none';
-            otherNameInput.value = '';
-            selectedOrg = value;
-        }
-    });
-    
-    // Handle the "Please Specify" input for Others
-    const otherNameInput = document.getElementById('org-other-name');
-    otherNameInput.addEventListener('input', (e) => {
-        if (orgDropdown.value === 'Others' && e.target.value.trim()) {
-            selectedOrg = 'Others: ' + e.target.value.trim();
-        }
-    });
-    
-    // Confirm button
-    document.getElementById('upress-modal-confirm').onclick = () => {
-        if (!selectedOrderType) {
-            showAlert('Selection Required', 'Please select order type.');
-            return;
-        }
-        if (selectedOrderType === 'organization' && !selectedOrg) {
-            const orgValue = orgDropdown.value;
-            if (orgValue === 'Others') {
-                showAlert('Specification Required', 'Please specify the organization name.');
-            } else {
-                showAlert('Selection Required', 'Please select an organization.');
-            }
-            return;
-        }
-        
-        overlay.style.display = 'none';
-        
-        // Store order type and proceed to show services
-        localStorage.setItem('upress_order_type', selectedOrderType);
-        if (selectedOrg) localStorage.setItem('upress_order_org', selectedOrg);
-        
-        // Show services section instead of service selection modal
-        showServicesSection();
-    };
-    
-    overlay.onclick = null; // Disable backdrop click
-}
-
-
-
-function showServicesSection() {
-    const servicesSection = document.getElementById('services-section');
-    if (servicesSection) {
-        servicesSection.style.display = 'block';
-        servicesSection.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function hideServicesSection() {
-    const servicesSection = document.getElementById('services-section');
-    if (servicesSection) {
-        servicesSection.style.display = 'none';
-    }
-}
-
+/* ===================== PROFILE ===================== */
 function updateProfileSection(user) {
     if (!user) return;
-
-    // Update profile name
-    const profileNameEl = document.getElementById('profile-name');
-    if (profileNameEl) {
-        profileNameEl.textContent = user.name || 'Student Name';
-    }
-
-    // Update profile ID
-    const profileIdEl = document.getElementById('profile-id');
-    if (profileIdEl) {
-        profileIdEl.textContent = `ID: ${user.campusId || '0000-0000'}`;
-    }
-
-    // Update profile email
-    const profileEmailEl = document.getElementById('profile-email');
-    if (profileEmailEl) {
-        profileEmailEl.textContent = user.email || 'Email not set';
-    }
-
-    // Update profile status
-    const profileStatusEl = document.getElementById('profile-status');
-    if (profileStatusEl) {
+    const pName  = document.getElementById('profile-name');
+    const pId    = document.getElementById('profile-id');
+    const pEmail = document.getElementById('profile-email');
+    const pStatus = document.getElementById('profile-status');
+    if (pName)  pName.textContent  = user.name     || 'Student Name';
+    if (pId)    pId.textContent    = `ID: ${user.campusId || '0000-0000'}`;
+    if (pEmail) pEmail.textContent = user.email     || 'Email not set';
+    if (pStatus) {
         const status = user.accountStatus || 'pending';
-        let statusClass = 'status-pending';
-        let statusText = 'Pending';
-
+        let cls = 'status-pending', txt = 'Pending';
         if (status === 'verified' || status === 'active') {
-            statusClass = 'status-verified';
-            statusText = status === 'verified' ? 'Verified' : 'Active';
+            cls = 'status-verified'; txt = status === 'verified' ? 'Verified' : 'Active';
         } else if (status === 'suspended') {
-            statusClass = 'status-suspended';
-            statusText = 'Suspended';
+            cls = 'status-suspended'; txt = 'Suspended';
         } else {
-            statusClass = 'status-other';
-            statusText = status.charAt(0).toUpperCase() + status.slice(1);
+            cls = 'status-other'; txt = status.charAt(0).toUpperCase() + status.slice(1);
         }
-
-        profileStatusEl.innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+        pStatus.innerHTML = `<span class="status-badge ${cls}">${txt}</span>`;
     }
-
-    // Hide update email button for Path A students (WMSU email)
-    const updateEmailBtn = document.getElementById('update-email-btn');
-    if (updateEmailBtn) {
+    const updateBtn = document.getElementById('update-email-btn');
+    if (updateBtn) {
         const isPathA = user.signupPath === 'A' || (user.email && user.email.endsWith('@wmsu.edu.ph'));
-        updateEmailBtn.style.display = isPathA ? 'none' : 'flex';
+        updateBtn.style.display = isPathA ? 'none' : 'flex';
     }
 }
 
@@ -618,65 +395,24 @@ function logout() {
 function showUpdateEmailModal() {
     const user = User.get();
     if (!user) return;
-
-    // Step 1: Password verification
-    showPrompt(
-        'Verify Identity',
-        'Enter your current password to continue:',
-        'Current password',
-        (password) => {
-            // In a real app, this would verify against a backend
-            // For demo purposes, we'll accept any non-empty password
-            if (!password.trim()) {
-                showAlert('Error', 'Password is required.');
-                return;
-            }
-
-            // Step 2: New email input
-            showPrompt(
-                'Update Email',
-                'Enter your new email address:',
-                'newemail@example.com',
-                (newEmail) => {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(newEmail)) {
-                        showAlert('Error', 'Please enter a valid email address.');
-                        return;
-                    }
-
-                    if (newEmail === user.email) {
-                        showAlert('Error', 'New email must be different from current email.');
-                        return;
-                    }
-
-                    // Step 3: Send verification (simulated)
-                    showAlert('Verification Sent', 'A verification link has been sent to your new email. Please check your inbox and click the link to complete the update.', () => {
-                        // In a real app, this would send an email with a verification link
-                        // For demo, we'll simulate the verification process
-                        simulateEmailVerification(newEmail);
-                    });
-                },
-                () => {} // Cancel
-            );
-        },
-        () => {} // Cancel
-    );
+    showPrompt('Verify Identity', 'Enter your current password to continue:', 'Current password', (password) => {
+        if (!password.trim()) { showAlert('Error', 'Password is required.'); return; }
+        showPrompt('Update Email', 'Enter your new email address:', 'newemail@example.com', (newEmail) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newEmail)) { showAlert('Error', 'Please enter a valid email address.'); return; }
+            if (newEmail === user.email) { showAlert('Error', 'New email must be different from current email.'); return; }
+            showAlert('Verification Sent', 'A verification link has been sent to your new email.', () => {
+                simulateEmailVerification(newEmail);
+            });
+        }, () => {});
+    }, () => {});
 }
 
 function simulateEmailVerification(newEmail) {
-    // Simulate clicking the verification link
-    // In a real app, this would be handled by a backend endpoint
     const user = User.get();
     if (user) {
-        // Update the email
         User.update({ email: newEmail });
-
-        // Update the profile section
         updateProfileSection(User.get());
-
-        // Show success message
         showAlert('Email Updated', 'Your email has been successfully updated.');
-
-        // In a real app, would also send notification to old email
     }
 }

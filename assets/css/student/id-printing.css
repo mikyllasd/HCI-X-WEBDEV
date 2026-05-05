@@ -1,0 +1,170 @@
+/* ============================================================
+   UPRESSease — id-printing.css
+   ============================================================ */
+
+/* ---- Reason option grid ------------------------------------ */
+.id-reason-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.id-reason-option {
+    border: 2px solid #e0e0e0;
+    border-radius: 0.9375rem;
+    padding: 1rem 0.875rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+    background: #fff;
+}
+
+.id-reason-option:hover {
+    border-color: var(--color-cta);
+    background: #fff9f9;
+}
+
+.id-reason-option.active {
+    border-color: var(--color-cta);
+    background: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(163, 32, 32, 0.08);
+}
+
+.id-reason-emoji {
+    font-size: 1.75rem;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+}
+
+.id-reason-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.id-reason-desc {
+    font-size: 0.75rem;
+    color: #777;
+    line-height: 1.4;
+}
+
+.id-reason-badge {
+    margin-top: 0.3rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.18rem 0.65rem;
+}
+
+.id-reason-badge--free {
+    background: #e8f8f0;
+    color: #1a7a4a;
+    border: 1px solid #a8dfc0;
+}
+
+.id-reason-badge--paid {
+    background: #fff0f0;
+    color: #8b0000;
+    border: 1px solid #f5c0c0;
+}
+
+/* ---- Notice box ------------------------------------------- */
+.id-notice-box {
+    background: #fff5f5;
+    border: 1px dashed #f5c0c0;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.8125rem;
+    color: #444;
+    line-height: 1.55;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.id-notice-box p {
+    margin: 0;
+}
+
+.id-notice-what {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #f0d0d0;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #8b0000;
+    line-height: 1.4;
+}
+
+/* ---- Info box (affidavit warning) -------------------------- */
+.id-info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    background: #eef4ff;
+    border: 1px solid #d0e2ff;
+    border-radius: 10px;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.8rem;
+    color: #2a4a8a;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+}
+
+/* ---- Field error ------------------------------------------ */
+.id-field-error {
+    color: #c0392b;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    margin-top: 0.3rem;
+    display: none;
+}
+
+.id-field-error.visible {
+    display: block;
+}
+
+/* ---- Flow footnote ---------------------------------------- */
+.id-flow-footnote {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* ---- Responsive ------------------------------------------- */
+@media (max-width: 560px) {
+    .id-reason-options {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .id-reason-option {
+        padding: 0.75rem 0.5rem;
+    }
+
+    .id-reason-emoji {
+        font-size: 1.4rem;
+    }
+
+    .id-reason-name {
+        font-size: 0.8125rem;
+    }
+
+    .id-reason-desc {
+        font-size: 0.6875rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .id-reason-options {
+        grid-template-columns: 1fr;
+    }
+}

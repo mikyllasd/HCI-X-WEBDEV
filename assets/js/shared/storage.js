@@ -3,6 +3,7 @@ const STORAGE_KEY = "upressease_db";
 const defaultDB = {
   academicYear: "",
   users: [],
+  facultyStudentAccounts: [],
   services: [],
   transactions: [],
   ratings: [],
@@ -14,6 +15,18 @@ const defaultDB = {
 };
 
 /**
+ * Load demo data if available
+ */
+function loadDemoData() {
+  if (typeof UpressDemoSeed !== "undefined" && UpressDemoSeed.getDemoDatabase) {
+    const demoDB = UpressDemoSeed.getDemoDatabase();
+    saveDB(demoDB);
+    return demoDB;
+  }
+  return { ...defaultDB };
+}
+
+/**
  * Get the current database
  * @returns {Object} Current database object
  */
@@ -22,12 +35,21 @@ function getDB() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const db = JSON.parse(raw);
-      return mergeWithDefaults(db);
+      const merged = mergeWithDefaults(db);
+      // If database is empty, load demo data
+      if (
+        merged.users.length === 0 &&
+        merged.facultyStudentAccounts.length === 0
+      ) {
+        return loadDemoData();
+      }
+      return merged;
     }
   } catch (error) {
     console.error("Error loading DB:", error);
   }
-  return { ...defaultDB };
+  // No data found, load demo data
+  return loadDemoData();
 }
 
 /**
@@ -51,6 +73,9 @@ function mergeWithDefaults(db) {
   return {
     academicYear: db.academicYear || "",
     users: Array.isArray(db.users) ? db.users : [],
+    facultyStudentAccounts: Array.isArray(db.facultyStudentAccounts)
+      ? db.facultyStudentAccounts
+      : [],
     services: Array.isArray(db.services) ? db.services : [],
     transactions: Array.isArray(db.transactions) ? db.transactions : [],
     ratings: Array.isArray(db.ratings) ? db.ratings : [],
@@ -72,6 +97,28 @@ function generateStorageId(prefix) {
 }
 
 /**
+ * Archive current year data before switching to new year
+ */
+function archiveCurrentYear() {
+  const db = getDB();
+
+  if (!db.academicYear) return;
+
+  // Create archive entry for current year
+  db.archives = db.archives || {};
+  db.archives[db.academicYear] = {
+    users: [...db.users],
+    facultyStudentAccounts: [...db.facultyStudentAccounts],
+    transactions: [...db.transactions],
+    ratings: [...db.ratings],
+    services: [...db.services], // Archive services too for historical reference
+    archivedAt: new Date().toISOString(),
+  };
+
+  saveDB(db);
+}
+
+/**
  * Set academic year and handle data archiving
  * If switching years, archives current data and creates fresh dataset
  * @param {string} year - Academic year in format "YYYY-YYYY"
@@ -87,6 +134,7 @@ function setAcademicYear(year) {
 
     // Reset working data for new year
     freshDB.users = [];
+    freshDB.facultyStudentAccounts = [];
     freshDB.transactions = [];
     freshDB.ratings = [];
     // Services persist - they can be reused from previous year
@@ -113,9 +161,10 @@ function archiveCurrentYear() {
   // Store current year's data in archives (read-only)
   db.archives[db.academicYear] = {
     users: db.users.map((u) => ({ ...u })), // Deep copy
-    services: db.services.map((s) => ({ ...s })),
-    transactions: db.transactions.map((t) => ({ ...t })),
-    ratings: db.ratings.map((r) => ({ ...r })),
+    facultyStudentAccounts: db.facultyStudentAccounts.map((a) => ({ ...a })), // Deep copy
+    transactions: db.transactions.map((t) => ({ ...t })), // Deep copy
+    ratings: db.ratings.map((r) => ({ ...r })), // Deep copy
+    services: db.services.map((s) => ({ ...s })), // Deep copy
     archivedAt: new Date().toISOString(),
   };
 

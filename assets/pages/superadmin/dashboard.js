@@ -1,26 +1,33 @@
 (function () {
-  const db = getDB();
-  const pageContainer = document.getElementById("pageContainer");
+  // Wait for storage.js to load
+  function init() {
+    if (typeof getDB === "undefined") {
+      setTimeout(init, 10);
+      return;
+    }
 
-  function formatDate(date) {
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }
+    const db = getDB();
+    const pageContainer = document.getElementById("pageContainer");
 
-  function sameDay(dateString, compareDate) {
-    const date = new Date(dateString);
-    return (
-      date.getFullYear() === compareDate.getFullYear() &&
-      date.getMonth() === compareDate.getMonth() &&
-      date.getDate() === compareDate.getDate()
-    );
-  }
+    function formatDate(date) {
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
 
-  function statCard(label, value, sublabel, accent, icon) {
-    return `
+    function sameDay(dateString, compareDate) {
+      const date = new Date(dateString);
+      return (
+        date.getFullYear() === compareDate.getFullYear() &&
+        date.getMonth() === compareDate.getMonth() &&
+        date.getDate() === compareDate.getDate()
+      );
+    }
+
+    function statCard(label, value, sublabel, accent, icon) {
+      return `
       <div class="stat-card accent-${accent}">
         <div class="stat-card__icon">
           ${icon}
@@ -30,30 +37,30 @@
         <div style="font-size: 12px; color: var(--color-text-secondary); margin-top: 4px;">${sublabel}</div>
       </div>
     `;
-  }
+    }
 
-  function iconBox() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>`;
-  }
+    function iconBox() {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>`;
+    }
 
-  function iconDollar() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 0 1 0 4H8"/><path d="M12 18V6"/></svg>`;
-  }
+    function iconDollar() {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 0 1 0 4H8"/><path d="M12 18V6"/></svg>`;
+    }
 
-  function iconClock() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
-  }
+    function iconClock() {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    }
 
-  function iconCheck() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
-  }
+    function iconCheck() {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`;
+    }
 
-  function iconStatus() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>`;
-  }
+    function iconStatus() {
+      return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>`;
+    }
 
-  function renderEmptyState() {
-    pageContainer.innerHTML = `
+    function renderEmptyState() {
+      pageContainer.innerHTML = `
       <div class="page-header">
         <div>
           <h1 class="page-title">Dashboard</h1>
@@ -71,38 +78,38 @@
         <a href="settings.html" class="sd-hero__cta" style="margin-top: 16px; display: inline-block;">Go to Settings</a>
       </div>
     `;
-  }
-
-  function renderDashboard() {
-    if (!db.academicYear) {
-      renderEmptyState();
-      return;
     }
 
-    const today = new Date();
-    const todayTransactions = (db.transactions || []).filter((txn) =>
-      sameDay(txn.date, today),
-    );
-    const completedTransactions = (db.transactions || []).filter(
-      (txn) => txn.status === "completed",
-    );
-    const pendingTransactions = (db.transactions || []).filter(
-      (txn) => txn.status === "pending",
-    );
-    const processingTransactions = (db.transactions || []).filter(
-      (txn) => txn.status === "processing",
-    );
-    const readyTransactions = (db.transactions || []).filter((txn) => {
-      const status = (txn.status || "").toLowerCase();
-      return ["ready", "for pickup", "ready for pickup"].includes(status);
-    });
+    function renderDashboard() {
+      if (!db.academicYear) {
+        renderEmptyState();
+        return;
+      }
 
-    const todayIncome = todayTransactions.reduce(
-      (sum, txn) => sum + (parseFloat(txn.amount) || 0),
-      0,
-    );
+      const today = new Date();
+      const todayTransactions = (db.transactions || []).filter((txn) =>
+        sameDay(txn.date, today),
+      );
+      const completedTransactions = (db.transactions || []).filter(
+        (txn) => txn.status === "completed",
+      );
+      const pendingTransactions = (db.transactions || []).filter(
+        (txn) => txn.status === "pending",
+      );
+      const processingTransactions = (db.transactions || []).filter(
+        (txn) => txn.status === "processing",
+      );
+      const readyTransactions = (db.transactions || []).filter((txn) => {
+        const status = (txn.status || "").toLowerCase();
+        return ["ready", "for pickup", "ready for pickup"].includes(status);
+      });
 
-    pageContainer.innerHTML = `
+      const todayIncome = todayTransactions.reduce(
+        (sum, txn) => sum + (parseFloat(txn.amount) || 0),
+        0,
+      );
+
+      pageContainer.innerHTML = `
       <header class="sd-header">
         <h1 class="sd-title">Dashboard</h1>
         <div class="sd-subtitle">Academic Year ${db.academicYear} – ${formatDate(today)}</div>
@@ -176,7 +183,10 @@
         <a href="reports.html" class="sd-hero__cta">View Reports</a>
       </section>
     `;
+    }
+
+    renderDashboard();
   }
 
-  renderDashboard();
+  init();
 })();

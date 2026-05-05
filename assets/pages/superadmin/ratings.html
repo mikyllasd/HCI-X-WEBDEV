@@ -72,6 +72,12 @@
               >
             </li>
             <li>
+              <a href="accounts.html" class="nav-link" data-page="accounts">
+                <i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Faculty & Students</span></a
+              >
+            </li>
+            <li>
               <a href="services.html" class="nav-link" data-page="services">
                 <i data-lucide="settings" aria-hidden="true"></i
                 ><span>Services</span></a
@@ -141,7 +147,9 @@
         >
           <div class="page-header">
             <h1 id="ratings-heading">Ratings</h1>
-            <p class="page-subtitle">Review feedback from completed transactions.</p>
+            <p class="page-subtitle">
+              Review feedback from completed transactions.
+            </p>
           </div>
 
           <div class="stats-grid stats-grid--4 ratings-summary-grid">
@@ -193,7 +201,9 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label" for="ratingsPaymentType">Payment Type</label>
+                <label class="form-label" for="ratingsPaymentType"
+                  >Payment Type</label
+                >
                 <select class="form-input form-select" id="ratingsPaymentType">
                   <option value="all">All Payment Types</option>
                   <option value="gcash">GCash</option>
@@ -213,7 +223,9 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label" for="ratingsYearLevel">Year Level</label>
+                <label class="form-label" for="ratingsYearLevel"
+                  >Year Level</label
+                >
                 <select class="form-input form-select" id="ratingsYearLevel">
                   <option value="all">All Year Levels</option>
                 </select>
@@ -233,11 +245,16 @@
               <div class="card-title-group">
                 <div>
                   <h2 class="card-title">Star Distribution</h2>
-                  <p class="card-subtitle">Rating breakdown from 1 to 5 stars.</p>
+                  <p class="card-subtitle">
+                    Rating breakdown from 1 to 5 stars.
+                  </p>
                 </div>
               </div>
               <div class="ratings-chart-wrapper">
-                <canvas id="ratingsChart" aria-label="Ratings distribution chart"></canvas>
+                <canvas
+                  id="ratingsChart"
+                  aria-label="Ratings distribution chart"
+                ></canvas>
               </div>
             </div>
 
@@ -245,15 +262,27 @@
               <div class="card-title-group">
                 <div>
                   <h2 class="card-title">Feedback Summary</h2>
-                  <p class="card-subtitle">Quick insights for the active academic year.</p>
+                  <p class="card-subtitle">
+                    Quick insights for the active academic year.
+                  </p>
                 </div>
               </div>
               <div class="ratings-breakdown-list">
-                <div class="ratings-breakdown-item"><span>5 Star</span><strong id="ratingsFiveCount">0</strong></div>
-                <div class="ratings-breakdown-item"><span>4 Star</span><strong id="ratingsFourCount">0</strong></div>
-                <div class="ratings-breakdown-item"><span>3 Star</span><strong id="ratingsThreeCount">0</strong></div>
-                <div class="ratings-breakdown-item"><span>2 Star</span><strong id="ratingsTwoCount">0</strong></div>
-                <div class="ratings-breakdown-item"><span>1 Star</span><strong id="ratingsOneCount">0</strong></div>
+                <div class="ratings-breakdown-item">
+                  <span>5 Star</span><strong id="ratingsFiveCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>4 Star</span><strong id="ratingsFourCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>3 Star</span><strong id="ratingsThreeCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>2 Star</span><strong id="ratingsTwoCount">0</strong>
+                </div>
+                <div class="ratings-breakdown-item">
+                  <span>1 Star</span><strong id="ratingsOneCount">0</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -262,7 +291,9 @@
             <div class="card-title-group">
               <div>
                 <h2 class="card-title">Feedback Records</h2>
-                <p class="card-subtitle">All ratings linked to completed transactions.</p>
+                <p class="card-subtitle">
+                  All ratings linked to completed transactions.
+                </p>
               </div>
             </div>
             <div class="table-wrapper">
@@ -280,12 +311,17 @@
                 <tbody id="ratingsRecordsBody"></tbody>
               </table>
             </div>
-            <div class="empty-state empty-state--mini hidden" id="ratingsEmptyState">
+            <div
+              class="empty-state empty-state--mini hidden"
+              id="ratingsEmptyState"
+            >
               <div class="empty-state__icon" aria-hidden="true">
                 <i data-lucide="star"></i>
               </div>
               <div class="empty-state__title">No rating records found</div>
-              <div class="empty-state__sub">Filtered ratings will appear here once available.</div>
+              <div class="empty-state__sub">
+                Filtered ratings will appear here once available.
+              </div>
             </div>
           </div>
         </section>
@@ -298,4 +334,3 @@
     <script src="../../js/admin/ratings.js"></script>
   </body>
 </html>
-

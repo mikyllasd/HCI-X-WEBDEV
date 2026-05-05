@@ -1,74 +1,82 @@
 (function () {
-  const db = getDB();
-  const pageContainer = document.getElementById("pageContainer");
-  const serviceModal = document.getElementById("serviceModal");
-  const historyModal = document.getElementById("historyModal");
-  const serviceForm = document.getElementById("serviceForm");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalSub = document.getElementById("modalSub");
-  const modalSaveBtn = document.getElementById("modalSaveBtn");
-  const modalCloseBtn = document.getElementById("modalCloseBtn");
-  const modalCancelBtn = document.getElementById("modalCancelBtn");
-  const historyCloseBtn = document.getElementById("historyCloseBtn");
-
-  let editingServiceId = null;
-  let serviceSearchQuery = "";
-  let servicePage = 1;
-  const SERVICES_PAGE_SIZE = 6;
-  let pricingState =
-    window.UPressPricing && typeof UPressPricing.readPricingFromSession === "function"
-      ? UPressPricing.readPricingFromSession()
-      : null;
-
-  function generateServiceId() {
-    return "service_" + Math.random().toString(36).substr(2, 9);
-  }
-
-  function formatDate(date) {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-
-  function addServiceHistory(serviceId, action, details = "") {
-    if (!db.archives) {
-      db.archives = {};
-    }
-    if (!db.archives.serviceHistory) {
-      db.archives.serviceHistory = [];
+  // Wait for storage.js to load
+  function init() {
+    if (typeof getDB === "undefined") {
+      setTimeout(init, 10);
+      return;
     }
 
-    db.archives.serviceHistory.push({
-      serviceId,
-      action,
-      details,
-      timestamp: new Date().toISOString(),
-    });
-  }
+    const db = getDB();
+    const pageContainer = document.getElementById("pageContainer");
+    const serviceModal = document.getElementById("serviceModal");
+    const historyModal = document.getElementById("historyModal");
+    const serviceForm = document.getElementById("serviceForm");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalSub = document.getElementById("modalSub");
+    const modalSaveBtn = document.getElementById("modalSaveBtn");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const modalCancelBtn = document.getElementById("modalCancelBtn");
+    const historyCloseBtn = document.getElementById("historyCloseBtn");
 
-  function syncAddServiceButton() {
-    const btn = document.getElementById("addServiceBtn");
-    if (!btn) return;
-    const ok = !!db.academicYear;
-    btn.disabled = !ok;
-    btn.setAttribute("aria-disabled", ok ? "false" : "true");
-    btn.title = ok
-      ? ""
-      : "Set the academic year in System Settings before adding services.";
-  }
+    let editingServiceId = null;
+    let serviceSearchQuery = "";
+    let servicePage = 1;
+    const SERVICES_PAGE_SIZE = 6;
+    let pricingState =
+      window.UPressPricing &&
+      typeof UPressPricing.readPricingFromSession === "function"
+        ? UPressPricing.readPricingFromSession()
+        : null;
 
-  function renderServices() {
-    const servicesSection = document.getElementById("servicesSection");
-    if (!servicesSection) return;
+    function generateServiceId() {
+      return "service_" + Math.random().toString(36).substr(2, 9);
+    }
 
-    syncAddServiceButton();
+    function formatDate(date) {
+      return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
 
-    if (!db.academicYear) {
-      servicesSection.innerHTML = `
+    function addServiceHistory(serviceId, action, details = "") {
+      if (!db.archives) {
+        db.archives = {};
+      }
+      if (!db.archives.serviceHistory) {
+        db.archives.serviceHistory = [];
+      }
+
+      db.archives.serviceHistory.push({
+        serviceId,
+        action,
+        details,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    function syncAddServiceButton() {
+      const btn = document.getElementById("addServiceBtn");
+      if (!btn) return;
+      const ok = !!db.academicYear;
+      btn.disabled = !ok;
+      btn.setAttribute("aria-disabled", ok ? "false" : "true");
+      btn.title = ok
+        ? ""
+        : "Set the academic year in System Settings before adding services.";
+    }
+
+    function renderServices() {
+      const servicesSection = document.getElementById("servicesSection");
+      if (!servicesSection) return;
+
+      syncAddServiceButton();
+
+      if (!db.academicYear) {
+        servicesSection.innerHTML = `
         <div class="empty-state">
           <div class="empty-state__icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -80,41 +88,41 @@
           <a href="settings.html" class="sd-hero__cta" style="margin-top: 16px; display: inline-block;">Go to Settings</a>
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    const filteredServices = db.services.filter((service) => {
-      const query = serviceSearchQuery.trim().toLowerCase();
-      if (!query) return true;
-      return [
-        service.name,
-        service.description,
-        service.category,
-        service.price,
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(query);
-    });
+      const filteredServices = db.services.filter((service) => {
+        const query = serviceSearchQuery.trim().toLowerCase();
+        if (!query) return true;
+        return [
+          service.name,
+          service.description,
+          service.category,
+          service.price,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(query);
+      });
 
-    const totalPages = Math.max(
-      1,
-      Math.ceil(filteredServices.length / SERVICES_PAGE_SIZE),
-    );
-    servicePage = Math.min(Math.max(servicePage, 1), totalPages);
-    const start = (servicePage - 1) * SERVICES_PAGE_SIZE;
-    const visibleServices = filteredServices.slice(
-      start,
-      start + SERVICES_PAGE_SIZE,
-    );
+      const totalPages = Math.max(
+        1,
+        Math.ceil(filteredServices.length / SERVICES_PAGE_SIZE),
+      );
+      servicePage = Math.min(Math.max(servicePage, 1), totalPages);
+      const start = (servicePage - 1) * SERVICES_PAGE_SIZE;
+      const visibleServices = filteredServices.slice(
+        start,
+        start + SERVICES_PAGE_SIZE,
+      );
 
-    const countEl = document.getElementById("servicesResultCount");
-    if (countEl) {
-      countEl.textContent = `${filteredServices.length} of ${db.services.length} services`;
-    }
+      const countEl = document.getElementById("servicesResultCount");
+      if (countEl) {
+        countEl.textContent = `${filteredServices.length} of ${db.services.length} services`;
+      }
 
-    if (db.services.length === 0) {
-      servicesSection.innerHTML = `
+      if (db.services.length === 0) {
+        servicesSection.innerHTML = `
         <div class="empty-state">
           <div class="empty-state__icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -126,57 +134,57 @@
           <div class="empty-state__sub">Add a service to get started</div>
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    if (filteredServices.length === 0) {
-      servicesSection.innerHTML = `
+      if (filteredServices.length === 0) {
+        servicesSection.innerHTML = `
         <div class="empty-state">
           <div class="empty-state__title">No services found</div>
           <div class="empty-state__sub">Try a different service name, category, description, or price.</div>
         </div>
       `;
-      return;
-    }
-
-    const categories = {
-      printing: [],
-      merchandise: [],
-      special: [],
-    };
-
-    visibleServices.forEach((service) => {
-      if (categories[service.category]) {
-        categories[service.category].push(service);
+        return;
       }
-    });
 
-    let html = "";
+      const categories = {
+        printing: [],
+        merchandise: [],
+        special: [],
+      };
 
-    function getServicePriceLabel(service) {
-      const key = getServicePricingKey(service?.name);
-      if (
-        key === "printing" ||
-        key === "binding" ||
-        key === "lanyards" ||
-        key === "idAccessories" ||
-        key === "mugs"
-      ) {
-        return `<span class="service-price service-price--detail">Detailed pricing</span>`;
+      visibleServices.forEach((service) => {
+        if (categories[service.category]) {
+          categories[service.category].push(service);
+        }
+      });
+
+      let html = "";
+
+      function getServicePriceLabel(service) {
+        const key = getServicePricingKey(service?.name);
+        if (
+          key === "printing" ||
+          key === "binding" ||
+          key === "lanyards" ||
+          key === "idAccessories" ||
+          key === "mugs"
+        ) {
+          return `<span class="service-price service-price--detail">Detailed pricing</span>`;
+        }
+        const n = Number(service?.price || 0);
+        return `<span class="service-price">₱${n.toFixed(2)}</span>`;
       }
-      const n = Number(service?.price || 0);
-      return `<span class="service-price">₱${n.toFixed(2)}</span>`;
-    }
 
-    Object.entries(categories).forEach(([category, services]) => {
-      if (services.length > 0) {
-        const categoryLabels = {
-          printing: "Printing Services",
-          merchandise: "Merchandise",
-          special: "Special Services",
-        };
+      Object.entries(categories).forEach(([category, services]) => {
+        if (services.length > 0) {
+          const categoryLabels = {
+            printing: "Printing Services",
+            merchandise: "Merchandise",
+            special: "Special Services",
+          };
 
-        html += `
+          html += `
           <div class="services-section">
             <h3 class="services-section-title">
               <span class="services-section-title-icon">
@@ -255,10 +263,10 @@
             </div>
           </div>
         `;
-      }
-    });
+        }
+      });
 
-    servicesSection.innerHTML = `
+      servicesSection.innerHTML = `
       ${html}
       <div class="list-pagination" aria-label="Services pagination">
         <span class="list-pagination__summary">Page ${servicePage} of ${totalPages}</span>
@@ -269,166 +277,176 @@
       </div>
     `;
 
-    document.querySelectorAll(".edit-btn").forEach((btn) => {
-      btn.addEventListener("click", () => openEditModal(btn.dataset.id));
-    });
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", () => openEditModal(btn.dataset.id));
+      });
 
-    document.querySelectorAll(".history").forEach((btn) => {
-      btn.addEventListener("click", () => showServiceHistory(btn.dataset.id));
-    });
+      document.querySelectorAll(".history").forEach((btn) => {
+        btn.addEventListener("click", () => showServiceHistory(btn.dataset.id));
+      });
 
-    document.querySelectorAll(".delete-btn").forEach((btn) => {
-      btn.addEventListener("click", () => deleteService(btn.dataset.id));
-    });
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", () => deleteService(btn.dataset.id));
+      });
 
-    document.getElementById("servicesPrevPage")?.addEventListener("click", () => {
-      servicePage -= 1;
-      renderServices();
-    });
+      document
+        .getElementById("servicesPrevPage")
+        ?.addEventListener("click", () => {
+          servicePage -= 1;
+          renderServices();
+        });
 
-    document.getElementById("servicesNextPage")?.addEventListener("click", () => {
-      servicePage += 1;
-      renderServices();
-    });
-  }
-
-  function getServiceRating(serviceId) {
-    if (!db.ratings || !Array.isArray(db.ratings)) {
-      return { average: 0, count: 0 };
+      document
+        .getElementById("servicesNextPage")
+        ?.addEventListener("click", () => {
+          servicePage += 1;
+          renderServices();
+        });
     }
 
-    const serviceRatings = db.ratings.filter((r) => r.serviceId === serviceId);
-    if (serviceRatings.length === 0) {
-      return { average: 0, count: 0 };
-    }
+    function getServiceRating(serviceId) {
+      if (!db.ratings || !Array.isArray(db.ratings)) {
+        return { average: 0, count: 0 };
+      }
 
-    const average =
-      serviceRatings.reduce((sum, r) => sum + r.rating, 0) /
-      serviceRatings.length;
-    return { average, count: serviceRatings.length };
-  }
-
-  function openAddModal() {
-    if (!db.academicYear) {
-      showToast("Set the academic year in System Settings before adding services.");
-      return;
-    }
-    editingServiceId = null;
-    modalTitle.textContent = "Add Service";
-    modalSub.textContent = "Create a new service";
-    modalSaveBtn.textContent = "Save Service";
-    serviceForm.reset();
-    renderServicePricingFields("");
-    serviceModal.classList.add("open");
-  }
-
-  function openEditModal(serviceId) {
-    const service = db.services.find((s) => s.id === serviceId);
-    if (!service) return;
-
-    editingServiceId = serviceId;
-    modalTitle.textContent = "Edit Service";
-    modalSub.textContent = "Update service information";
-    modalSaveBtn.textContent = "Update Service";
-
-    document.getElementById("formName").value = service.name;
-    document.getElementById("formDescription").value =
-      service.description || "";
-    document.getElementById("formCategory").value = service.category;
-
-    renderServicePricingFields(service.name);
-    serviceModal.classList.add("open");
-  }
-
-  function closeModal() {
-    serviceModal.classList.remove("open");
-    editingServiceId = null;
-    serviceForm.reset();
-    const pricingFields = document.getElementById("servicePricingFields");
-    if (pricingFields) pricingFields.innerHTML = "";
-  }
-
-  function saveService() {
-    const name = document.getElementById("formName").value.trim();
-    const description = document.getElementById("formDescription").value.trim();
-    const category = document.getElementById("formCategory").value;
-
-    if (!name || !category) {
-      showToast("Please fill in all required fields");
-      return;
-    }
-
-    if (editingServiceId) {
-      applyPricingEditsFromModal();
-      const serviceIndex = db.services.findIndex(
-        (s) => s.id === editingServiceId,
+      const serviceRatings = db.ratings.filter(
+        (r) => r.serviceId === serviceId,
       );
-      if (serviceIndex !== -1) {
-        const oldService = db.services[serviceIndex];
-        db.services[serviceIndex] = {
-          ...oldService,
+      if (serviceRatings.length === 0) {
+        return { average: 0, count: 0 };
+      }
+
+      const average =
+        serviceRatings.reduce((sum, r) => sum + r.rating, 0) /
+        serviceRatings.length;
+      return { average, count: serviceRatings.length };
+    }
+
+    function openAddModal() {
+      if (!db.academicYear) {
+        showToast(
+          "Set the academic year in System Settings before adding services.",
+        );
+        return;
+      }
+      editingServiceId = null;
+      modalTitle.textContent = "Add Service";
+      modalSub.textContent = "Create a new service";
+      modalSaveBtn.textContent = "Save Service";
+      serviceForm.reset();
+      renderServicePricingFields("");
+      serviceModal.classList.add("open");
+    }
+
+    function openEditModal(serviceId) {
+      const service = db.services.find((s) => s.id === serviceId);
+      if (!service) return;
+
+      editingServiceId = serviceId;
+      modalTitle.textContent = "Edit Service";
+      modalSub.textContent = "Update service information";
+      modalSaveBtn.textContent = "Update Service";
+
+      document.getElementById("formName").value = service.name;
+      document.getElementById("formDescription").value =
+        service.description || "";
+      document.getElementById("formCategory").value = service.category;
+
+      renderServicePricingFields(service.name);
+      serviceModal.classList.add("open");
+    }
+
+    function closeModal() {
+      serviceModal.classList.remove("open");
+      editingServiceId = null;
+      serviceForm.reset();
+      const pricingFields = document.getElementById("servicePricingFields");
+      if (pricingFields) pricingFields.innerHTML = "";
+    }
+
+    function saveService() {
+      const name = document.getElementById("formName").value.trim();
+      const description = document
+        .getElementById("formDescription")
+        .value.trim();
+      const category = document.getElementById("formCategory").value;
+
+      if (!name || !category) {
+        showToast("Please fill in all required fields");
+        return;
+      }
+
+      if (editingServiceId) {
+        applyPricingEditsFromModal();
+        const serviceIndex = db.services.findIndex(
+          (s) => s.id === editingServiceId,
+        );
+        if (serviceIndex !== -1) {
+          const oldService = db.services[serviceIndex];
+          db.services[serviceIndex] = {
+            ...oldService,
+            name,
+            description,
+            price: Number(oldService.price || 0),
+            category,
+            updatedAt: new Date().toISOString(),
+          };
+          addServiceHistory(editingServiceId, "edited", `Changed: ${name}`);
+        }
+        showToast("Service updated successfully");
+      } else {
+        const newService = {
+          id: generateServiceId(),
           name,
           description,
-          price: Number(oldService.price || 0),
+          price: 0,
           category,
+          createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        addServiceHistory(editingServiceId, "edited", `Changed: ${name}`);
+        db.services.push(newService);
+        addServiceHistory(newService.id, "added", `Created: ${name}`);
+        showToast("Service added successfully");
       }
-      showToast("Service updated successfully");
-    } else {
-      const newService = {
-        id: generateServiceId(),
-        name,
-        description,
-        price: 0,
-        category,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      db.services.push(newService);
-      addServiceHistory(newService.id, "added", `Created: ${name}`);
-      showToast("Service added successfully");
-    }
 
-    saveDB(db);
-    closeModal();
-    renderServices();
-  }
-
-  function deleteService(serviceId) {
-    const service = db.services.find((s) => s.id === serviceId);
-    if (!service) return;
-
-    if (confirm(`Delete "${service.name}"? This action cannot be undone.`)) {
-      db.services = db.services.filter((s) => s.id !== serviceId);
-      addServiceHistory(serviceId, "deleted", `Removed: ${service.name}`);
       saveDB(db);
-      showToast("Service deleted successfully");
+      closeModal();
       renderServices();
     }
-  }
 
-  function showServiceHistory(serviceId) {
-    const service = db.services.find((s) => s.id === serviceId);
-    const historyList = document.getElementById("historyList");
+    function deleteService(serviceId) {
+      const service = db.services.find((s) => s.id === serviceId);
+      if (!service) return;
 
-    if (!db.archives || !db.archives.serviceHistory) {
-      historyList.innerHTML =
-        '<div class="empty-history">No history recorded for this service</div>';
-      historyModal.classList.add("open");
-      return;
+      if (confirm(`Delete "${service.name}"? This action cannot be undone.`)) {
+        db.services = db.services.filter((s) => s.id !== serviceId);
+        addServiceHistory(serviceId, "deleted", `Removed: ${service.name}`);
+        saveDB(db);
+        showToast("Service deleted successfully");
+        renderServices();
+      }
     }
 
-    const serviceHistory = db.archives.serviceHistory.filter(
-      (h) => h.serviceId === serviceId,
-    );
+    function showServiceHistory(serviceId) {
+      const service = db.services.find((s) => s.id === serviceId);
+      const historyList = document.getElementById("historyList");
 
-    if (serviceHistory.length === 0) {
-      historyList.innerHTML =
-        '<div class="empty-history">No history recorded for this service</div>';
-    } else {
-      historyList.innerHTML = `
+      if (!db.archives || !db.archives.serviceHistory) {
+        historyList.innerHTML =
+          '<div class="empty-history">No history recorded for this service</div>';
+        historyModal.classList.add("open");
+        return;
+      }
+
+      const serviceHistory = db.archives.serviceHistory.filter(
+        (h) => h.serviceId === serviceId,
+      );
+
+      if (serviceHistory.length === 0) {
+        historyList.innerHTML =
+          '<div class="empty-history">No history recorded for this service</div>';
+      } else {
+        historyList.innerHTML = `
         <div class="history-list">
           ${serviceHistory
             .map(
@@ -443,78 +461,116 @@
             .join("")}
         </div>
       `;
+      }
+
+      historyModal.classList.add("open");
     }
 
-    historyModal.classList.add("open");
-  }
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      toastMsg.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
 
-  function showToast(message) {
-    const toast = document.getElementById("toast");
-    const toastMsg = document.getElementById("toastMsg");
-    toastMsg.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3000);
-  }
+    function persistPricing() {
+      if (!window.UPressPricing || !pricingState) return;
+      UPressPricing.mirrorPublicPricing(pricingState);
+    }
 
-  function persistPricing() {
-    if (!window.UPressPricing || !pricingState) return;
-    UPressPricing.mirrorPublicPricing(pricingState);
-  }
+    function getServicePricingKey(serviceName) {
+      const name = String(serviceName || "")
+        .trim()
+        .toLowerCase();
+      if (name === "printing") return "printing";
+      if (name === "binding") return "binding";
+      if (name === "lanyards" || name === "lanyard") return "lanyards";
+      if (name.startsWith("mug printing")) return "mugs";
+      if (name.startsWith("id printing")) return "idAccessories";
+      return null;
+    }
 
-  function getServicePricingKey(serviceName) {
-    const name = String(serviceName || "").trim().toLowerCase();
-    if (name === "printing") return "printing";
-    if (name === "binding") return "binding";
-    if (name === "lanyards" || name === "lanyard") return "lanyards";
-    if (name.startsWith("mug printing")) return "mugs";
-    if (name.startsWith("id printing")) return "idAccessories";
-    return null;
-  }
+    function collectPricingFromMiniForm(root) {
+      if (!window.UPressPricing || !root) return null;
+      const out = UPressPricing.getDefaultPricing();
+      root.querySelectorAll("[data-pricing-path]").forEach((inp) => {
+        const pathStr = inp.getAttribute("data-pricing-path");
+        if (!pathStr) return;
+        const parts = pathStr.split(".");
+        let cur = out;
+        for (let i = 0; i < parts.length - 1; i++) {
+          const k = parts[i];
+          if (cur[k] == null || typeof cur[k] !== "object") cur[k] = {};
+          cur = cur[k];
+        }
+        cur[parts[parts.length - 1]] = parseFloat(inp.value) || 0;
+      });
+      return out;
+    }
 
-  function collectPricingFromMiniForm(root) {
-    if (!window.UPressPricing || !root) return null;
-    const out = UPressPricing.getDefaultPricing();
-    root.querySelectorAll("[data-pricing-path]").forEach((inp) => {
-      const pathStr = inp.getAttribute("data-pricing-path");
-      if (!pathStr) return;
-      const parts = pathStr.split(".");
-      let cur = out;
-      for (let i = 0; i < parts.length - 1; i++) {
-        const k = parts[i];
-        if (cur[k] == null || typeof cur[k] !== "object") cur[k] = {};
-        cur = cur[k];
-      }
-      cur[parts[parts.length - 1]] = parseFloat(inp.value) || 0;
-    });
-    return out;
-  }
+    function renderServicePricingFields(serviceName) {
+      const container = document.getElementById("servicePricingFields");
+      if (!container) return;
+      container.innerHTML = "";
 
-  function renderServicePricingFields(serviceName) {
-    const container = document.getElementById("servicePricingFields");
-    if (!container) return;
-    container.innerHTML = "";
+      if (!window.UPressPricing) return;
+      pricingState = UPressPricing.normalizePricing(pricingState);
+      const key = getServicePricingKey(serviceName);
+      if (!key) return;
 
-    if (!window.UPressPricing) return;
-    pricingState = UPressPricing.normalizePricing(pricingState);
-    const key = getServicePricingKey(serviceName);
-    if (!key) return;
+      const p = pricingState;
+      const get = (path) => UPressPricing.getByPath(p, path);
 
-    const p = pricingState;
-    const get = (path) => UPressPricing.getByPath(p, path);
+      if (key === "printing") {
+        const rows = [
+          [
+            "Short",
+            "printing.shortBw",
+            "printing.shortColor",
+            ["printing", "shortBw"],
+            ["printing", "shortColor"],
+          ],
+          [
+            "A4",
+            "printing.a4Bw",
+            "printing.a4Color",
+            ["printing", "a4Bw"],
+            ["printing", "a4Color"],
+          ],
+          [
+            "A3",
+            "printing.a3Bw",
+            "printing.a3Color",
+            ["printing", "a3Bw"],
+            ["printing", "a3Color"],
+          ],
+          [
+            "Long",
+            "printing.longBw",
+            "printing.longColor",
+            ["printing", "longBw"],
+            ["printing", "longColor"],
+          ],
+          [
+            "Legal",
+            "printing.legalBw",
+            "printing.legalColor",
+            ["printing", "legalBw"],
+            ["printing", "legalColor"],
+          ],
+          [
+            "Custom",
+            "printing.customBw",
+            "printing.customColor",
+            ["printing", "customBw"],
+            ["printing", "customColor"],
+          ],
+        ];
 
-    if (key === "printing") {
-      const rows = [
-        ["Short", "printing.shortBw", "printing.shortColor", ["printing", "shortBw"], ["printing", "shortColor"]],
-        ["A4", "printing.a4Bw", "printing.a4Color", ["printing", "a4Bw"], ["printing", "a4Color"]],
-        ["A3", "printing.a3Bw", "printing.a3Color", ["printing", "a3Bw"], ["printing", "a3Color"]],
-        ["Long", "printing.longBw", "printing.longColor", ["printing", "longBw"], ["printing", "longColor"]],
-        ["Legal", "printing.legalBw", "printing.legalColor", ["printing", "legalBw"], ["printing", "legalColor"]],
-        ["Custom", "printing.customBw", "printing.customColor", ["printing", "customBw"], ["printing", "customColor"]],
-      ];
-
-      container.innerHTML = `
+        container.innerHTML = `
         <div class="service-pricing-block">
           <div class="service-pricing-title">Printing details</div>
           <div class="service-pricing-sub">Per-page BW/Color prices and image surcharge.</div>
@@ -540,83 +596,83 @@
           </div>
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    if (key === "binding") {
-      container.innerHTML = `
+      if (key === "binding") {
+        container.innerHTML = `
         <div class="service-pricing-block">
           <div class="service-pricing-title">Binding details</div>
           <div class="service-pricing-sub">Flat fee per binding type.</div>
           <div class="pricing-mini-grid">
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Soft</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.softBind" value="${Number(get(["binding","softBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Hard</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.hardBind" value="${Number(get(["binding","hardBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Ring</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.ringBind" value="${Number(get(["binding","ringBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Spiral</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.spiralBind" value="${Number(get(["binding","spiralBind"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Soft</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.softBind" value="${Number(get(["binding", "softBind"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Hard</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.hardBind" value="${Number(get(["binding", "hardBind"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Ring</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.ringBind" value="${Number(get(["binding", "ringBind"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Spiral</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="binding.spiralBind" value="${Number(get(["binding", "spiralBind"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
           </div>
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    if (key === "lanyards") {
-      container.innerHTML = `
+      if (key === "lanyards") {
+        container.innerHTML = `
         <div class="service-pricing-block">
           <div class="service-pricing-title">Lanyard details</div>
           <div class="service-pricing-sub">Per-piece pricing.</div>
           <div class="pricing-mini-grid pricing-mini-grid--3">
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Official</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.official" value="${Number(get(["lanyards","official"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Department</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.department" value="${Number(get(["lanyards","department"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Custom</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.custom" value="${Number(get(["lanyards","custom"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Official</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.official" value="${Number(get(["lanyards", "official"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Department</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.department" value="${Number(get(["lanyards", "department"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Custom</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="lanyards.custom" value="${Number(get(["lanyards", "custom"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
           </div>
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    if (key === "idAccessories") {
-      container.innerHTML = `
+      if (key === "idAccessories") {
+        container.innerHTML = `
         <div class="service-pricing-block">
           <div class="service-pricing-title">ID printing details</div>
           <div class="service-pricing-sub">Per-request pricing (New, Lost, Damaged, Renewal).</div>
           <div class="pricing-mini-grid pricing-mini-grid--2">
-            <div class="pricing-mini-field"><span class="pricing-mini-label">New</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.newId" value="${Number(get(["idAccessories","newId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Lost</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.lostId" value="${Number(get(["idAccessories","lostId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Damaged</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.damagedId" value="${Number(get(["idAccessories","damagedId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Renewal</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.renewalId" value="${Number(get(["idAccessories","renewalId"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">New</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.newId" value="${Number(get(["idAccessories", "newId"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Lost</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.lostId" value="${Number(get(["idAccessories", "lostId"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Damaged</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.damagedId" value="${Number(get(["idAccessories", "damagedId"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Renewal</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="idAccessories.renewalId" value="${Number(get(["idAccessories", "renewalId"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
           </div>
         </div>
       `;
-      return;
-    }
+        return;
+      }
 
-    if (key === "mugs") {
-      container.innerHTML = `
+      if (key === "mugs") {
+        container.innerHTML = `
         <div class="service-pricing-block">
           <div class="service-pricing-title">Mug printing details</div>
           <div class="service-pricing-sub">WMSU standard and customization options.</div>
           <div class="pricing-mini-grid">
-            <div class="pricing-mini-field"><span class="pricing-mini-label">WMSU standard</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.wmsuLogo" value="${Number(get(["mugs","wmsuLogo"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Department</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.department" value="${Number(get(["mugs","department"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">Customization</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.photo" value="${Number(get(["mugs","photo"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
-            <div class="pricing-mini-field"><span class="pricing-mini-label">15oz add-on</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.largeSizeAddon" value="${Number(get(["mugs","largeSizeAddon"])||0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">WMSU standard</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.wmsuLogo" value="${Number(get(["mugs", "wmsuLogo"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Department</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.department" value="${Number(get(["mugs", "department"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">Customization</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.photo" value="${Number(get(["mugs", "photo"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
+            <div class="pricing-mini-field"><span class="pricing-mini-label">15oz add-on</span><div class="price-input-wrap pricing-inp-compact"><span class="price-currency">₱</span><input type="number" class="form-input" data-pricing-path="mugs.largeSizeAddon" value="${Number(get(["mugs", "largeSizeAddon"]) || 0).toFixed(2)}" step="0.5" min="0" /></div></div>
           </div>
         </div>
       `;
-      return;
+        return;
+      }
     }
-  }
 
-  function applyPricingEditsFromModal() {
-    const root = document.getElementById("servicePricingFields");
-    if (!root || !window.UPressPricing) return;
-    const patch = collectPricingFromMiniForm(root);
-    if (!patch) return;
-    pricingState = UPressPricing.normalizePricing(patch);
-    persistPricing();
-  }
+    function applyPricingEditsFromModal() {
+      const root = document.getElementById("servicePricingFields");
+      if (!root || !window.UPressPricing) return;
+      const patch = collectPricingFromMiniForm(root);
+      if (!patch) return;
+      pricingState = UPressPricing.normalizePricing(patch);
+      persistPricing();
+    }
 
-  pageContainer.innerHTML = `
+    pageContainer.innerHTML = `
     <div class="page-header">
       <div>
         <h1 class="page-title">Services Management</h1>
@@ -641,36 +697,41 @@
     <div id="servicesSection"></div>
   `;
 
-  document
-    .getElementById("addServiceBtn")
-    .addEventListener("click", openAddModal);
-  document.getElementById("servicesSearchInput").addEventListener("input", (event) => {
-    serviceSearchQuery = event.target.value;
-    servicePage = 1;
-    renderServices();
-  });
-  modalCloseBtn.addEventListener("click", closeModal);
-  modalCancelBtn.addEventListener("click", closeModal);
-  modalSaveBtn.addEventListener("click", saveService);
-  historyCloseBtn.addEventListener("click", () => {
-    historyModal.classList.remove("open");
-  });
-  serviceForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    saveService();
-  });
-
-  serviceModal.addEventListener("click", (e) => {
-    if (e.target === serviceModal) {
-      closeModal();
-    }
-  });
-
-  historyModal.addEventListener("click", (e) => {
-    if (e.target === historyModal) {
+    document
+      .getElementById("addServiceBtn")
+      .addEventListener("click", openAddModal);
+    document
+      .getElementById("servicesSearchInput")
+      .addEventListener("input", (event) => {
+        serviceSearchQuery = event.target.value;
+        servicePage = 1;
+        renderServices();
+      });
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalCancelBtn.addEventListener("click", closeModal);
+    modalSaveBtn.addEventListener("click", saveService);
+    historyCloseBtn.addEventListener("click", () => {
       historyModal.classList.remove("open");
-    }
-  });
+    });
+    serviceForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      saveService();
+    });
 
-  renderServices();
+    serviceModal.addEventListener("click", (e) => {
+      if (e.target === serviceModal) {
+        closeModal();
+      }
+    });
+
+    historyModal.addEventListener("click", (e) => {
+      if (e.target === historyModal) {
+        historyModal.classList.remove("open");
+      }
+    });
+
+    renderServices();
+  }
+
+  init();
 })();

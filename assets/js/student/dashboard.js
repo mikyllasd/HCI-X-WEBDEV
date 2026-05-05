@@ -421,6 +421,10 @@ function showCreateOrderModal() {
             <select id="org-dropdown" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);">
                 <option value="">-- Choose Organization --</option>
             </select>
+            <div id="org-other-input" style="display:none;margin-top:0.75rem;">
+                <label class="label" style="font-size:0.875rem;margin-bottom:0.5rem;">Please Specify *</label>
+                <input type="text" id="org-other-name" placeholder="Enter organization name" style="width:100%;padding:0.75rem;border:1px solid #e0e0e0;border-radius:0.5rem;font-size:0.875rem;font-family:var(--font-sans);outline:none;" />
+            </div>
         </div>
         <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
             <button id="upress-modal-cancel" style="padding:0.625rem 1.25rem;border-radius:0.5rem;border:1.5px solid #e0e0e0;background:white;color:#555;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:var(--font-sans);">Cancel</button>
@@ -476,14 +480,35 @@ function showCreateOrderModal() {
             'Business Club',
             'Arts and Culture Guild',
             'Sports Association',
-            'Science Club'
+            'Science Club',
+            'Others'
         ];
         orgDropdown.innerHTML = '<option value="">-- Choose Organization --</option>' + 
             orgs.map(org => `<option value="${org}">${org}</option>`).join('');
     }
     
     orgDropdown.addEventListener('change', (e) => {
-        selectedOrg = e.target.value;
+        const value = e.target.value;
+        const otherInputDiv = document.getElementById('org-other-input');
+        const otherNameInput = document.getElementById('org-other-name');
+        
+        if (value === 'Others') {
+            otherInputDiv.style.display = 'block';
+            otherNameInput.focus();
+            selectedOrg = null; // Clear until they specify
+        } else {
+            otherInputDiv.style.display = 'none';
+            otherNameInput.value = '';
+            selectedOrg = value;
+        }
+    });
+    
+    // Handle the "Please Specify" input for Others
+    const otherNameInput = document.getElementById('org-other-name');
+    otherNameInput.addEventListener('input', (e) => {
+        if (orgDropdown.value === 'Others' && e.target.value.trim()) {
+            selectedOrg = 'Others: ' + e.target.value.trim();
+        }
     });
     
     // Confirm button
@@ -493,7 +518,12 @@ function showCreateOrderModal() {
             return;
         }
         if (selectedOrderType === 'organization' && !selectedOrg) {
-            showAlert('Selection Required', 'Please select an organization.');
+            const orgValue = orgDropdown.value;
+            if (orgValue === 'Others') {
+                showAlert('Specification Required', 'Please specify the organization name.');
+            } else {
+                showAlert('Selection Required', 'Please select an organization.');
+            }
             return;
         }
         

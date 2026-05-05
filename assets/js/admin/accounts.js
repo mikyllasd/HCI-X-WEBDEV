@@ -7,6 +7,8 @@
   const recordsBody = document.getElementById("accountsRecordsBody");
   const emptyState = document.getElementById("accountsEmptyState");
 
+  const roleSelect = document.getElementById("accountsRole");
+  const organizationSelect = document.getElementById("accountsOrganization");
   const collegeSelect = document.getElementById("accountsCollege");
   const courseSelect = document.getElementById("accountsCourse");
   const yearLevelSelect = document.getElementById("accountsYearLevel");
@@ -21,9 +23,16 @@
     const role = String(
       user.role || user.accountType || "student",
     ).toLowerCase();
-    return role.includes("faculty") || role.includes("staff")
-      ? "faculty"
-      : "student";
+    if (role.includes("faculty") || role.includes("staff")) return "faculty";
+    if (role.includes("organization") || role.includes("org"))
+      return "organization";
+    return "student";
+  }
+
+  function normalizeOrganization(user) {
+    return String(
+      user.organization || user.organizationName || user.org || "",
+    ).trim();
   }
 
   function isDisabled(user) {
@@ -53,6 +62,7 @@
       active: isActive(user),
       flagged: isFlagged(user),
       college: formatValue(user.college),
+      organization: formatValue(normalizeOrganization(user)),
       course: formatValue(user.course),
       yearLevel: formatValue(user.yearLevel),
     }));
@@ -83,6 +93,12 @@
 
   function updateFilters() {
     const users = getUsers();
+    renderOptions(roleSelect, ["Student", "Faculty", "Organization"], "Roles");
+    renderOptions(
+      organizationSelect,
+      getUniqueValues(users, "organization"),
+      "Organizations",
+    );
     renderOptions(collegeSelect, getUniqueValues(users, "college"), "Colleges");
     renderOptions(courseSelect, getUniqueValues(users, "course"), "Programs");
     renderOptions(
@@ -93,10 +109,18 @@
   }
 
   function filterUsers(users) {
+    const role = roleSelect?.value || "all";
+    const organization = organizationSelect?.value || "all";
     const college = collegeSelect?.value || "all";
     const course = courseSelect?.value || "all";
     const year = yearLevelSelect?.value || "all";
     return users.filter((user) => {
+      if (role !== "all" && user.role !== role) return false;
+      if (
+        organization !== "all" &&
+        user.organization.toLowerCase() !== organization
+      )
+        return false;
       if (college !== "all" && user.college.toLowerCase() !== college)
         return false;
       if (course !== "all" && user.course.toLowerCase() !== course)
@@ -122,7 +146,7 @@
     if (!recordsBody) return;
     if (users.length === 0) {
       recordsBody.innerHTML =
-        '<tr><td colspan="8" class="text-center">No accounts found.</td></tr>';
+        '<tr><td colspan="9" class="text-center">No accounts found.</td></tr>';
       emptyState?.classList.remove("hidden");
       return;
     }
@@ -137,6 +161,7 @@
         <tr data-user-id="${user.id}">
           <td>${formatValue(user.fullName || user.email)}</td>
           <td>${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
+          <td>${formatValue(user.organization)}</td>
           <td>${formatValue(user.college)}</td>
           <td>${formatValue(user.course)}</td>
           <td>${formatValue(user.yearLevel)}</td>
@@ -192,6 +217,9 @@
   function init() {
     updateFilters();
     refresh();
+    if (roleSelect) roleSelect.addEventListener("change", refresh);
+    if (organizationSelect)
+      organizationSelect.addEventListener("change", refresh);
     if (collegeSelect) collegeSelect.addEventListener("change", refresh);
     if (courseSelect) courseSelect.addEventListener("change", refresh);
     if (yearLevelSelect) yearLevelSelect.addEventListener("change", refresh);

@@ -17,6 +17,7 @@
   const starsSelect = document.getElementById("ratingsStars");
   const paymentSelect = document.getElementById("ratingsPaymentType");
   const collegeSelect = document.getElementById("ratingsCollege");
+  const organizationSelect = document.getElementById("ratingsOrganization");
   const courseSelect = document.getElementById("ratingsCourse");
   const yearLevelSelect = document.getElementById("ratingsYearLevel");
   const startDateInput = document.getElementById("ratingsStartDate");
@@ -112,6 +113,12 @@
             : "Other",
       comment: String(rating.comment || "").trim(),
       status: String(transaction.status || "").toLowerCase(),
+      organization: String(
+        user.organization ||
+          transaction.order_org ||
+          transaction.organization ||
+          "",
+      ).toLowerCase(),
       college: String(user.college || "").toLowerCase(),
       course: String(user.course || "").toLowerCase(),
       yearLevel: String(user.yearLevel || "").toLowerCase(),
@@ -122,6 +129,7 @@
     const starsFilter = starsSelect?.value || "all";
     const paymentFilter = paymentSelect?.value || "all";
     const collegeFilter = collegeSelect?.value || "all";
+    const organizationFilter = organizationSelect?.value || "all";
     const courseFilter = courseSelect?.value || "all";
     const yearLevelFilter = yearLevelSelect?.value || "all";
     const startDate = parseDate(startDateInput?.value);
@@ -142,6 +150,11 @@
           record.paymentType.toLowerCase() !== paymentFilter
         )
           return false;
+        if (
+          organizationFilter !== "all" &&
+          record.organization !== organizationFilter
+        )
+          return false;
         if (collegeFilter !== "all" && record.college !== collegeFilter)
           return false;
         if (courseFilter !== "all" && record.course !== courseFilter)
@@ -158,6 +171,16 @@
     const colleges = Array.from(
       new Set(
         users.map((user) => String(user.college || "").trim()).filter(Boolean),
+      ),
+    ).sort();
+    const organizations = Array.from(
+      new Set(
+        [
+          ...users.map((user) => String(user.organization || "").trim()),
+          ...(db.transactions || []).map((txn) =>
+            String(txn.order_org || txn.organization || "").trim(),
+          ),
+        ].filter(Boolean),
       ),
     ).sort();
     const courses = Array.from(
@@ -189,6 +212,7 @@
       }
     }
 
+    renderOptions(organizationSelect, organizations, "Organizations");
     renderOptions(collegeSelect, colleges, "Colleges");
     renderOptions(courseSelect, courses, "Courses");
     renderOptions(yearLevelSelect, yearLevels, "Years");
@@ -326,6 +350,7 @@
     [
       starsSelect,
       paymentSelect,
+      organizationSelect,
       collegeSelect,
       courseSelect,
       yearLevelSelect,

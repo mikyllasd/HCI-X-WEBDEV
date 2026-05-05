@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Student Verification</title>
+    <title>UPRESSease – Faculty Verification</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -62,17 +62,17 @@
               </a>
             </li>
             <li>
-              <a
-                href="verification.html"
-                class="nav-link active"
-                aria-current="page"
-              >
+              <a href="verification.html" class="nav-link">
                 <i data-lucide="user-check" aria-hidden="true"></i
                 ><span>Student Verification</span>
               </a>
             </li>
             <li>
-              <a href="faculty-verification.html" class="nav-link">
+              <a
+                href="faculty-verification.html"
+                class="nav-link active"
+                aria-current="page"
+              >
                 <i data-lucide="user-check" aria-hidden="true"></i
                 ><span>Faculty Verification</span>
               </a>
@@ -139,9 +139,9 @@
           aria-labelledby="verification-heading"
         >
           <div class="page-header">
-            <h1 id="verification-heading">Student Verification</h1>
+            <h1 id="verification-heading">Faculty Verification</h1>
             <p class="page-subtitle">
-              Review submitted student records, compare documents, and approve
+              Review submitted faculty records, compare documents, and approve
               or reject registrations.
             </p>
           </div>
@@ -153,7 +153,7 @@
                 <i data-lucide="users" aria-hidden="true"></i>
               </div>
               <p class="stat-card__value" id="verificationTotal">0</p>
-              <p class="stat-card__text">All student verification records</p>
+              <p class="stat-card__text">All faculty verification records</p>
             </article>
             <article class="stat-card stat-card--yellow">
               <div class="stat-card__header">
@@ -191,7 +191,7 @@
                   class="form-input"
                   id="verificationSearch"
                   type="search"
-                  placeholder="Search by name, email, or student ID"
+                  placeholder="Search by name, email, or faculty ID"
                 />
               </div>
               <div class="form-group">
@@ -242,7 +242,7 @@
             </div>
             <div class="empty-state__title">No verification requests found</div>
             <div class="empty-state__sub">
-              Verified student records will appear here once they are submitted.
+              Verified faculty records will appear here once they are submitted.
             </div>
           </div>
         </section>
@@ -252,6 +252,6 @@
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
-    <script src="../../js/admin/verification.js"></script>
+    <script src="../../js/admin/faculty-verification.js"></script>
   </body>
 </html>

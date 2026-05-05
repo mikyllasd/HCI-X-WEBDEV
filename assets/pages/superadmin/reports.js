@@ -12,6 +12,8 @@
     let currentFilters = {
       service: "",
       category: "",
+      organization: "",
+      college: "",
       academicYear: db.academicYear,
       semester: "",
       period: "daily",
@@ -75,6 +77,19 @@
       return "Other";
     }
 
+    function getTransactionOrganization(txn) {
+      return String(
+        txn.order_org || txn.organization || txn.orderOrg || "",
+      ).trim();
+    }
+
+    function getTransactionCollege(txn) {
+      const user = (db.users || []).find(
+        (u) => u.id === txn.userId || u.email === txn.email,
+      );
+      return String(user?.college || txn.college || "").trim();
+    }
+
     function getPeriodRange(period) {
       const now = new Date();
       const start = new Date(now);
@@ -131,6 +146,8 @@
       const headers = [
         "Service",
         "Category",
+        "Organization",
+        "College",
         "Amount (PHP)",
         "Status",
         "Semester",
@@ -148,6 +165,8 @@
           [
             escapeCsvCell(txn.serviceName),
             escapeCsvCell(txn.category),
+            escapeCsvCell(getTransactionOrganization(txn)),
+            escapeCsvCell(getTransactionCollege(txn)),
             escapeCsvCell(Number(txn.amount || 0).toFixed(2)),
             escapeCsvCell(txn.status),
             escapeCsvCell(txn.semester || ""),
@@ -204,6 +223,20 @@
           return false;
         }
         if (
+          currentFilters.organization &&
+          getTransactionOrganization(txn).toLowerCase() !==
+            currentFilters.organization.toLowerCase()
+        ) {
+          return false;
+        }
+        if (
+          currentFilters.college &&
+          getTransactionCollege(txn).toLowerCase() !==
+            currentFilters.college.toLowerCase()
+        ) {
+          return false;
+        }
+        if (
           currentFilters.semester &&
           txn.semester !== currentFilters.semester
         ) {
@@ -227,6 +260,8 @@
           txn.email,
           paymentTypeLabel(txn),
           txn.date,
+          getTransactionOrganization(txn),
+          getTransactionCollege(txn),
         ]
           .join(" ")
           .toLowerCase()
@@ -632,6 +667,27 @@
       const serviceOptions = services
         .map((s) => `<option value="${s.id}">${s.name}</option>`)
         .join("");
+      const organizationOptions = Array.from(
+        new Set(
+          (db.transactions || [])
+            .map(getTransactionOrganization)
+            .filter(Boolean),
+        ),
+      )
+        .sort()
+        .map((org) => `<option value="${org.toLowerCase()}">${org}</option>`)
+        .join("");
+      const collegeOptions = Array.from(
+        new Set(
+          (db.transactions || []).map(getTransactionCollege).filter(Boolean),
+        ),
+      )
+        .sort()
+        .map(
+          (college) =>
+            `<option value="${college.toLowerCase()}">${college}</option>`,
+        )
+        .join("");
 
       pageContainer.innerHTML = `
       <section class="page-section active" id="page-reports" aria-labelledby="reports-heading">
@@ -683,6 +739,20 @@
                 <option value="">All Semesters</option>
                 <option value="1st">1st Semester</option>
                 <option value="2nd">2nd Semester</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="filterOrganization">Organization</label>
+              <select class="form-input form-select" id="filterOrganization">
+                <option value="">All Organizations</option>
+                ${organizationOptions}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="filterCollege">College</label>
+              <select class="form-input form-select" id="filterCollege">
+                <option value="">All Colleges</option>
+                ${collegeOptions}
               </select>
             </div>
           </div>
@@ -801,6 +871,9 @@
         currentFilters.service = document.getElementById("filterService").value;
         currentFilters.category =
           document.getElementById("filterCategory").value;
+        currentFilters.organization =
+          document.getElementById("filterOrganization").value;
+        currentFilters.college = document.getElementById("filterCollege").value;
         currentFilters.semester =
           document.getElementById("filterSemester").value;
         performancePeriod = currentFilters.period;
@@ -812,6 +885,8 @@
         "filterPeriod",
         "filterService",
         "filterCategory",
+        "filterOrganization",
+        "filterCollege",
         "filterSemester",
       ].forEach((id) =>
         document
@@ -825,12 +900,16 @@
           currentFilters = {
             service: "",
             category: "",
+            organization: "",
+            college: "",
             semester: "",
             period: "daily",
           };
           document.getElementById("filterPeriod").value = "daily";
           document.getElementById("filterService").value = "";
           document.getElementById("filterCategory").value = "";
+          document.getElementById("filterOrganization").value = "";
+          document.getElementById("filterCollege").value = "";
           document.getElementById("filterSemester").value = "";
           performancePeriod = "daily";
           transactionSearchQuery = "";

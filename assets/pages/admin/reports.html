@@ -70,6 +70,12 @@
               </a>
             </li>
             <li>
+              <a href="faculty-verification.html" class="nav-link">
+                <i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Faculty Verification</span>
+              </a>
+            </li>
+            <li>
               <a
                 href="reports.html"
                 class="nav-link active"
@@ -179,7 +185,9 @@
           <div class="card reports-filter-card">
             <div class="reports-filter-row">
               <div class="form-group">
-                <label class="form-label" for="reportsPeriod">Report Period</label>
+                <label class="form-label" for="reportsPeriod"
+                  >Report Period</label
+                >
                 <select class="form-input form-select" id="reportsPeriod">
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -205,6 +213,15 @@
                   <option value="all">All User Types</option>
                   <option value="student">Student</option>
                   <option value="faculty">Faculty</option>
+                  <option value="organization">Organization</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reportsOrganization"
+                  >Organization</label
+                >
+                <select class="form-input form-select" id="reportsOrganization">
+                  <option value="all">All organizations</option>
                 </select>
               </div>
               <div class="form-group">
@@ -307,7 +324,9 @@
                     aria-label="Search transaction records"
                   />
                 </div>
-                <span class="reports-records-count" id="reportsRecordsCount">0 records</span>
+                <span class="reports-records-count" id="reportsRecordsCount"
+                  >0 records</span
+                >
               </div>
             </div>
             <div class="table-wrapper">
@@ -328,7 +347,11 @@
                 <tbody id="reportsRecordsBody"></tbody>
               </table>
             </div>
-            <div class="reports-pagination" id="reportsRecordsPagination" aria-label="Transaction records pagination"></div>
+            <div
+              class="reports-pagination"
+              id="reportsRecordsPagination"
+              aria-label="Transaction records pagination"
+            ></div>
             <div
               class="empty-state empty-state--mini hidden"
               id="reportsEmptyState"

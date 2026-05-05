@@ -4,9 +4,21 @@
  */
 (function () {
   const STAFF = {
-    superadmin: { password: "super123", role: "Super Admin", path: "../superadmin/dashboard.html" },
-    admin: { password: "admin123", role: "Admin", path: "../admin/admin-dashboard.html" },
-    staff: { password: "staff123", role: "Staff & POS", path: "../staff/staff.html" },
+    superadmin: {
+      password: "super123",
+      role: "Super Admin",
+      path: "../superadmin/dashboard.html",
+    },
+    admin: {
+      password: "admin123",
+      role: "Admin",
+      path: "../admin/dashboard.html",
+    },
+    staff: {
+      password: "staff123",
+      role: "Staff & POS",
+      path: "../staff/staff.html",
+    },
   };
 
   const alertEl = document.getElementById("portal-alert");
@@ -32,7 +44,12 @@
 
   function readFails(key) {
     try {
-      return parseInt(sessionStorage.getItem("upress_login_fails_" + key) || "0", 10) || 0;
+      return (
+        parseInt(
+          sessionStorage.getItem("upress_login_fails_" + key) || "0",
+          10,
+        ) || 0
+      );
     } catch {
       return 0;
     }
@@ -48,11 +65,16 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
   }
 
-  document.getElementById("portal-toggle-pw").addEventListener("click", function () {
-    const hidden = pwInput.type === "password";
-    pwInput.type = hidden ? "text" : "password";
-    this.setAttribute("aria-label", hidden ? "Hide password" : "Show password");
-  });
+  document
+    .getElementById("portal-toggle-pw")
+    .addEventListener("click", function () {
+      const hidden = pwInput.type === "password";
+      pwInput.type = hidden ? "text" : "password";
+      this.setAttribute(
+        "aria-label",
+        hidden ? "Hide password" : "Show password",
+      );
+    });
 
   rememberCb.addEventListener("change", function () {
     if (this.checked) {
@@ -65,10 +87,12 @@
     }
   });
 
-  document.getElementById("remember-yes").addEventListener("click", function () {
-    localStorage.setItem("upressRememberChoice", "personal");
-    rememberPrompt.classList.remove("show");
-  });
+  document
+    .getElementById("remember-yes")
+    .addEventListener("click", function () {
+      localStorage.setItem("upressRememberChoice", "personal");
+      rememberPrompt.classList.remove("show");
+    });
 
   document.getElementById("remember-no").addEventListener("click", function () {
     localStorage.setItem("upressRememberChoice", "shared");
@@ -103,7 +127,10 @@
     failKey = rawId.toLowerCase();
     const fails = readFails(failKey);
     if (fails >= 5) {
-      showAlert("Too many failed attempts. Please wait about 15 minutes or use Forgot password.", "error");
+      showAlert(
+        "Too many failed attempts. Please wait about 15 minutes or use Forgot password.",
+        "error",
+      );
       return;
     }
 
@@ -140,59 +167,62 @@
       }
 
       /* ——— Student (email) ——— */
-      var stored = null;
-      try {
-        stored = JSON.parse(localStorage.getItem("upressUser") || "null");
-      } catch (_) {
-        stored = null;
-      }
-
-      if (stored && stored.email && stored.email.toLowerCase() === rawId.toLowerCase()) {
-        if (stored.password && stored.password !== password) {
-          writeFails(failKey, fails + 1);
-          showAlert("Incorrect email or password.", "error");
+      const authenticatedUser = authenticateUser(rawId, password);
+      if (authenticatedUser) {
+        if (authenticatedUser.accountStatus === "pending") {
+          showAlert(
+            "Your account is pending verification. Please wait for admin approval.",
+            "error",
+          );
           return;
         }
-        if (stored.accountStatus === "suspended") {
-          showAlert("Your account has been suspended. Please contact the UPress office for assistance.", "error");
+        if (authenticatedUser.accountStatus === "rejected") {
+          showAlert(
+            "Your account registration was rejected. Please contact the UPress office for assistance.",
+            "error",
+          );
           return;
         }
-        if (stored.accountStatus === "deactivated") {
-          showAlert("Your account has been deactivated. Please contact the UPress office to reactivate your account.", "error");
+        if (authenticatedUser.accountStatus === "suspended") {
+          showAlert(
+            "Your account has been suspended. Please contact the UPress office for assistance.",
+            "error",
+          );
+          return;
+        }
+        if (authenticatedUser.accountStatus === "deactivated") {
+          showAlert(
+            "Your account has been deactivated. Please contact the UPress office to reactivate your account.",
+            "error",
+          );
           return;
         }
         writeFails(failKey, 0);
-        showAlert("Welcome back. Redirecting…", "success");
+        // Store current user session
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify({
+            id: authenticatedUser.id,
+            name: authenticatedUser.fullName,
+            email: authenticatedUser.email,
+            role: "student",
+            accountType: authenticatedUser.accountType,
+            accountStatus: authenticatedUser.accountStatus,
+          }),
+        );
+        showAlert(
+          "Welcome back, " + authenticatedUser.fullName + ". Redirecting…",
+          "success",
+        );
         window.setTimeout(function () {
           window.location.href = "../student/dashboard.html";
         }, 450);
         return;
       }
 
-      /* Demo: allow first-time student login with any password to create a minimal session */
-      var inferredName = rawId.split("@")[0].replace(/[._]/g, " ");
-      var pathTag = /@wmsu\.edu\.ph$/i.test(rawId) ? "A" : "B";
-      localStorage.setItem(
-        "upressUser",
-        JSON.stringify({
-          name: inferredName,
-          email: rawId,
-          password: password,
-          phone: "",
-          college: "",
-          course: "",
-          year: "",
-          accountType: "student",
-          campusId: "",
-          accountStatus: "verified",
-          signupPath: pathTag,
-        }),
-      );
-      writeFails(failKey, 0);
-      showAlert("Signed in. Redirecting to your dashboard…", "success");
-      window.setTimeout(function () {
-        window.location.href = "../student/dashboard.html";
-      }, 450);
+      // User not found or invalid credentials
+      writeFails(failKey, fails + 1);
+      showAlert("Incorrect email or password.", "error");
     }, 450);
   });
 })();

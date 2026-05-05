@@ -15,6 +15,8 @@
     const modalSaveBtn = document.getElementById("modalSaveBtn");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
     const modalCancelBtn = document.getElementById("modalCancelBtn");
+    const formCollege = document.getElementById("formCollege");
+    const formOrganization = document.getElementById("formOrganization");
 
     let editingUserId = null;
     let userSearchQuery = "";
@@ -101,6 +103,8 @@
           user.email,
           user.username,
           user.role,
+          user.college,
+          user.organization,
           user.suspended ? "suspended" : "active",
           user.deleted ? "deleted" : "",
         ]
@@ -162,6 +166,8 @@
             </div>
             <h3 class="user-name">${user.fullName}</h3>
             <p class="user-role">${user.role}</p>
+            ${user.college ? `<p class="user-meta">College: ${user.college}</p>` : ""}
+            ${user.organization ? `<p class="user-meta">Organization: ${user.organization}</p>` : ""}
             <p class="user-email">${user.email}</p>
             <p class="user-username">@${user.username}</p>
             <div class="user-card-actions">
@@ -269,6 +275,9 @@
       document.getElementById("formEmail").value = user.email;
       document.getElementById("formUsername").value = user.username;
       document.getElementById("formRole").value = user.role;
+      document.getElementById("formCollege").value = user.college || "";
+      document.getElementById("formOrganization").value =
+        user.organization || "";
 
       userModal.classList.add("open");
     }
@@ -284,6 +293,10 @@
       const email = document.getElementById("formEmail").value.trim();
       const username = document.getElementById("formUsername").value.trim();
       const role = document.getElementById("formRole").value;
+      const college = document.getElementById("formCollege").value.trim();
+      const organization = document
+        .getElementById("formOrganization")
+        .value.trim();
 
       if (!fullName || !email || !username || !role) {
         showToast("Please fill in all fields");
@@ -299,6 +312,8 @@
             email,
             username,
             role,
+            college,
+            organization,
           };
         }
         showToast("User updated successfully");
@@ -309,6 +324,8 @@
           email,
           username,
           role,
+          college,
+          organization,
           suspended: false,
           createdAt: new Date().toISOString(),
         };
@@ -395,7 +412,7 @@
     <div class="list-toolbar">
       <label class="list-search" for="usersSearchInput">
         <span>Search users</span>
-        <input type="search" id="usersSearchInput" class="list-search__input" placeholder="Search name, email, username, role, or status" />
+        <input type="search" id="usersSearchInput" class="list-search__input" placeholder="Search name, email, username, role, college, organization, or status" />
       </label>
       <div class="list-toolbar__count" id="usersResultCount">0 users</div>
     </div>

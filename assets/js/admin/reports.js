@@ -18,6 +18,7 @@
   const periodSelect = document.getElementById("reportsPeriod");
   const paymentTypeSelect = document.getElementById("reportsPaymentType");
   const userTypeSelect = document.getElementById("reportsUserType");
+  const organizationSelect = document.getElementById("reportsOrganization");
   const collegeSelect = document.getElementById("reportsCollege");
   const courseSelect = document.getElementById("reportsCourse");
   const yearLevelSelect = document.getElementById("reportsYearLevel");
@@ -48,7 +49,22 @@
       user.type || user.accountType || user.role || "student",
     ).toLowerCase();
     if (value.includes("faculty")) return "faculty";
+    if (value.includes("organization") || value.includes("org"))
+      return "organization";
     return "student";
+  }
+
+  function getUserOrganization(user, transaction) {
+    return String(
+      user?.organization ||
+        user?.organizationName ||
+        user?.org ||
+        transaction.order_org ||
+        transaction.organization ||
+        transaction.orderOrg ||
+        transaction.org ||
+        "",
+    ).trim();
   }
 
   function getPaymentType(transaction) {
@@ -95,7 +111,15 @@
     if (period === "monthly") {
       return {
         start: new Date(now.getFullYear(), now.getMonth(), 1),
-        end: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999),
+        end: new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0,
+          23,
+          59,
+          59,
+          999,
+        ),
       };
     }
 
@@ -127,6 +151,7 @@
     );
     const paymentType = paymentTypeSelect?.value || "all";
     const userType = userTypeSelect?.value || "all";
+    const organization = organizationSelect?.value || "all";
     const college = collegeSelect?.value || "all";
     const course = courseSelect?.value || "all";
     const yearLevel = yearLevelSelect?.value || "all";
@@ -149,6 +174,13 @@
         ) || {};
       const typeFilter = getUserType(user);
       if (userType !== "all" && typeFilter !== userType) return false;
+
+      const organizationValue = getUserOrganization(
+        user,
+        transaction,
+      ).toLowerCase();
+      if (organization !== "all" && organizationValue !== organization)
+        return false;
 
       const collegeValue = String(user.college || "").toLowerCase();
       if (college !== "all" && collegeValue !== college) return false;
@@ -252,6 +284,32 @@
 
   function renderUsersFilters() {
     const users = db.users || [];
+    function getTransactionOrganization(transaction) {
+      const user = (db.users || []).find(
+        (item) =>
+          item.email === transaction.email || item.id === transaction.userId,
+      );
+      return String(
+        user?.organization ||
+          user?.organizationName ||
+          user?.org ||
+          transaction.order_org ||
+          transaction.organization ||
+          transaction.orderOrg ||
+          transaction.org ||
+          "",
+      ).trim();
+    }
+
+    const organizations = Array.from(
+      new Set(
+        [
+          ...users.map((user) => String(user.organization || "").trim()),
+          ...(db.transactions || []).map(getTransactionOrganization),
+        ].filter(Boolean),
+      ),
+    ).sort();
+
     const colleges = Array.from(
       new Set(
         users.map((user) => String(user.college || "").trim()).filter(Boolean),
@@ -284,6 +342,7 @@
       if (values.includes(currentValue)) select.value = currentValue;
     }
 
+    renderOptions(organizationSelect, organizations);
     renderOptions(collegeSelect, colleges);
     renderOptions(courseSelect, courses);
     renderOptions(yearLevelSelect, yearLevels);
@@ -358,7 +417,10 @@
       recordsCountEl.textContent = `${searched.length} record${searched.length === 1 ? "" : "s"}`;
     }
 
-    const totalPages = Math.max(1, Math.ceil(searched.length / RECORDS_PAGE_SIZE));
+    const totalPages = Math.max(
+      1,
+      Math.ceil(searched.length / RECORDS_PAGE_SIZE),
+    );
     recordsPage = Math.min(Math.max(recordsPage, 1), totalPages);
     const start = (recordsPage - 1) * RECORDS_PAGE_SIZE;
     const visibleRows = searched.slice(start, start + RECORDS_PAGE_SIZE);
@@ -407,14 +469,18 @@
         <button type="button" class="btn btn--outline" id="reportsRecordsNext" ${recordsPage === totalPages ? "disabled" : ""}>Next</button>
       </div>
     `;
-    document.getElementById("reportsRecordsPrev")?.addEventListener("click", () => {
-      recordsPage -= 1;
-      applyFilters();
-    });
-    document.getElementById("reportsRecordsNext")?.addEventListener("click", () => {
-      recordsPage += 1;
-      applyFilters();
-    });
+    document
+      .getElementById("reportsRecordsPrev")
+      ?.addEventListener("click", () => {
+        recordsPage -= 1;
+        applyFilters();
+      });
+    document
+      .getElementById("reportsRecordsNext")
+      ?.addEventListener("click", () => {
+        recordsPage += 1;
+        applyFilters();
+      });
   }
 
   function applyFilters() {
@@ -430,6 +496,7 @@
       paymentTypeSelect,
       periodSelect,
       userTypeSelect,
+      organizationSelect,
       collegeSelect,
       courseSelect,
       yearLevelSelect,
@@ -451,6 +518,7 @@
   }
 
   function init() {
+    if (organizationSelect) organizationSelect.dataset.label = "Organizations";
     if (collegeSelect) collegeSelect.dataset.label = "Colleges";
     if (courseSelect) courseSelect.dataset.label = "Courses";
     if (yearLevelSelect) yearLevelSelect.dataset.label = "Year Levels";

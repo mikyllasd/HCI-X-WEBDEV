@@ -70,6 +70,12 @@
               >
             </li>
             <li>
+              <a href="faculty-verification.html" class="nav-link"
+                ><i data-lucide="user-check" aria-hidden="true"></i
+                ><span>Faculty Verification</span></a
+              >
+            </li>
+            <li>
               <a href="reports.html" class="nav-link"
                 ><i data-lucide="bar-chart-2" aria-hidden="true"></i
                 ><span>Reports</span></a
@@ -183,6 +189,14 @@
                   <option value="all">All roles</option>
                   <option value="student">Student</option>
                   <option value="faculty">Faculty</option>
+                  <option value="organization">Organization</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="infoOrganization"
+                  >Organization</label
+                ><select id="infoOrganization" class="form-input form-select">
+                  <option value="all">All organizations</option>
                 </select>
               </div>
               <div class="form-group">
@@ -249,6 +263,7 @@
                   <tr>
                     <th>Name</th>
                     <th>Role</th>
+                    <th>Organization</th>
                     <th>College</th>
                     <th>Program</th>
                     <th>Year</th>

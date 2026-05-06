@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Affiliation Requests</title>
+    <title>UPRESSease – Organizations</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -74,17 +74,17 @@
               </a>
             </li>
             <li>
-              <a href="organizations.html" class="nav-link">
+              <a
+                href="organizations.html"
+                class="nav-link active"
+                aria-current="page"
+              >
                 <i data-lucide="building" aria-hidden="true"></i
                 ><span>Organizations</span>
               </a>
             </li>
             <li>
-              <a
-                href="affiliation-verification.html"
-                class="nav-link active"
-                aria-current="page"
-              >
+              <a href="affiliation-verification.html" class="nav-link">
                 <i data-lucide="users" aria-hidden="true"></i
                 ><span>Affiliation Requests</span>
               </a>
@@ -137,9 +137,11 @@
       <main class="main-content staff-main">
         <header class="page-header">
           <div class="page-header-content">
-            <h1 class="page-title">Affiliation Requests</h1>
+            <h1 class="page-title">Organizations</h1>
             <p class="page-subtitle">
-              Review and approve organization affiliation requests
+              Approved WMSU organizations grouped by college. Search by name or
+              college, and review affiliation requests for unlisted
+              organizations.
             </p>
           </div>
         </header>
@@ -148,38 +150,20 @@
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-icon">
-                <i data-lucide="file-text" aria-hidden="true"></i>
+                <i data-lucide="building" aria-hidden="true"></i>
               </div>
               <div class="stat-content">
-                <div class="stat-number" id="affiliationTotal">0</div>
-                <div class="stat-label">Total Requests</div>
+                <div class="stat-number" id="organizationTotal">0</div>
+                <div class="stat-label">Total Organizations</div>
               </div>
             </div>
             <div class="stat-card">
               <div class="stat-icon">
-                <i data-lucide="clock" aria-hidden="true"></i>
+                <i data-lucide="layers" aria-hidden="true"></i>
               </div>
               <div class="stat-content">
-                <div class="stat-number" id="affiliationPending">0</div>
-                <div class="stat-label">Pending</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i data-lucide="check-circle" aria-hidden="true"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-number" id="affiliationApproved">0</div>
-                <div class="stat-label">Approved</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i data-lucide="x-circle" aria-hidden="true"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-number" id="affiliationRejected">0</div>
-                <div class="stat-label">Rejected</div>
+                <div class="stat-number" id="organizationCollegeCount">0</div>
+                <div class="stat-label">Colleges Represented</div>
               </div>
             </div>
           </div>
@@ -187,103 +171,82 @@
           <div class="filters-section">
             <div class="filters-row">
               <div class="filter-group">
-                <label for="affiliationSearch" class="filter-label">
+                <label for="organizationSearch" class="filter-label">
                   <i data-lucide="search" aria-hidden="true"></i>
-                  Search Requests
+                  Search Organizations
                 </label>
                 <input
                   type="text"
-                  id="affiliationSearch"
+                  id="organizationSearch"
                   class="filter-input"
-                  placeholder="Search by name, email, organization..."
+                  placeholder="Search by name or college..."
                 />
               </div>
               <div class="filter-group">
-                <label for="affiliationStatus" class="filter-label">
-                  <i data-lucide="filter" aria-hidden="true"></i>
-                  Status
+                <label for="organizationCollegeFilter" class="filter-label">
+                  <i data-lucide="building-2" aria-hidden="true"></i>
+                  Filter by College
                 </label>
-                <select id="affiliationStatus" class="filter-select">
-                  <option value="all">All Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="approved">Approved</option>
-                  <option value="rejected">Rejected</option>
+                <select id="organizationCollegeFilter" class="filter-select">
+                  <option value="all">All Colleges</option>
                 </select>
               </div>
               <div class="filter-group">
-                <label for="affiliationType" class="filter-label">
-                  <i data-lucide="tag" aria-hidden="true"></i>
-                  Organization Type
-                </label>
-                <select id="affiliationType" class="filter-select">
-                  <option value="all">All Types</option>
-                  <option value="known">Known Organization</option>
-                  <option value="other">Other Organization</option>
-                </select>
+                <div class="filter-actions">
+                  <button
+                    type="button"
+                    id="clearFilters"
+                    class="btn btn-secondary"
+                  >
+                    <i data-lucide="x" aria-hidden="true"></i>
+                    Clear Filters
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="content-section">
-            <div id="affiliationList" class="verification-list">
-              <!-- Requests will be populated here -->
-            </div>
-            <div id="affiliationEmpty" class="empty-state">
+            <div id="organizationList" class="verification-list"></div>
+            <div id="organizationEmpty" class="empty-state">
               <div class="empty-icon">
-                <i data-lucide="users" aria-hidden="true"></i>
+                <i data-lucide="building" aria-hidden="true"></i>
               </div>
-              <h3>No affiliation requests</h3>
-              <p>All requests have been processed.</p>
+              <h3>No organizations added yet</h3>
+              <p>
+                Approved organizations will appear here after affiliation
+                verification.
+              </p>
             </div>
           </div>
         </div>
       </main>
     </div>
 
-    <!-- Modal for viewing request details -->
-    <div id="affiliationModal" class="modal-overlay" style="display: none">
+    <div id="organizationModal" class="modal-overlay" style="display: none">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title">Affiliation Request Details</h2>
+          <h2 class="modal-title">Organization Details</h2>
           <button
             class="modal-close"
-            onclick="closeAffiliationModal()"
+            onclick="closeOrganizationModal()"
             aria-label="Close modal"
           >
             <i data-lucide="x" aria-hidden="true"></i>
           </button>
         </div>
-        <div class="modal-body" id="affiliationModalBody">
-          <!-- Request details will be populated here -->
-        </div>
+        <div class="modal-body" id="organizationModalBody"></div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="closeAffiliationModal()">
+          <button class="btn btn-secondary" onclick="closeOrganizationModal()">
             Close
           </button>
-          <div class="modal-actions">
-            <button
-              class="btn btn-danger"
-              id="rejectBtn"
-              onclick="rejectAffiliation()"
-            >
-              Reject
-            </button>
-            <button
-              class="btn btn-success"
-              id="approveBtn"
-              onclick="approveAffiliation()"
-            >
-              Approve
-            </button>
-          </div>
         </div>
       </div>
     </div>
 
     <script src="../../js/shared/storage.js"></script>
-    <script src="../../js/admin/affiliation-verification.js"></script>
+    <script src="../../js/admin/organizations.js"></script>
     <script>
-      // Initialize Lucide icons
       lucide.createIcons();
     </script>
   </body>

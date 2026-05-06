@@ -25,7 +25,9 @@
 
   function normalizeStatus(request) {
     const status = String(request.status || "").toLowerCase();
-    return ["approved", "rejected", "pending"].includes(status) ? status : "pending";
+    return ["approved", "rejected", "pending"].includes(status)
+      ? status
+      : "pending";
   }
 
   function getFilteredRequests() {
@@ -35,12 +37,21 @@
       const status = normalizeStatus(request);
       const matchesSearch =
         !filterState.search ||
-        request.userName?.toLowerCase().includes(filterState.search.toLowerCase()) ||
-        request.userEmail?.toLowerCase().includes(filterState.search.toLowerCase()) ||
-        request.organizationName?.toLowerCase().includes(filterState.search.toLowerCase());
+        request.userName
+          ?.toLowerCase()
+          .includes(filterState.search.toLowerCase()) ||
+        request.userEmail
+          ?.toLowerCase()
+          .includes(filterState.search.toLowerCase()) ||
+        request.organizationName
+          ?.toLowerCase()
+          .includes(filterState.search.toLowerCase());
 
-      const matchesStatus = filterState.status === "all" || status === filterState.status;
-      const matchesType = filterState.type === "all" || request.organizationType === filterState.type;
+      const matchesStatus =
+        filterState.status === "all" || status === filterState.status;
+      const matchesType =
+        filterState.type === "all" ||
+        request.organizationType === filterState.type;
 
       return matchesSearch && matchesStatus && matchesType;
     });
@@ -54,13 +65,56 @@
         acc[status]++;
         return acc;
       },
-      { total: 0, pending: 0, approved: 0, rejected: 0 }
+      { total: 0, pending: 0, approved: 0, rejected: 0 },
     );
 
     if (totalEl) totalEl.textContent = stats.total;
     if (pendingEl) pendingEl.textContent = stats.pending;
     if (approvedEl) approvedEl.textContent = stats.approved;
     if (rejectedEl) rejectedEl.textContent = stats.rejected;
+  }
+
+  function addOrUpdateOrganizationDirectory(request) {
+    const db = getDB();
+    db.organizations = Array.isArray(db.organizations) ? db.organizations : [];
+
+    const orgName = String(request.organizationName || "").trim();
+    const college = String(
+      request.college || request.organizationTypeDisplay || "",
+    ).trim();
+    if (!orgName) return;
+
+    const exists = db.organizations.some((org) => {
+      return (
+        String(org.name || "")
+          .trim()
+          .toLowerCase() === orgName.toLowerCase() &&
+        String(org.college || "")
+          .trim()
+          .toLowerCase() === college.toLowerCase()
+      );
+    });
+
+    if (!exists) {
+      db.organizations.push({
+        id: `ORG_${Date.now()}`,
+        name: orgName,
+        college: college || "Unknown College",
+        type:
+          request.organizationType === "known"
+            ? "Known Organization"
+            : "Other Organization",
+        description:
+          request.description ||
+          `Verified organization recognized by WMSU ${college}`,
+        proofImage: request.proofImage || "",
+        approvedBy: "Admin",
+        approvedAt: new Date().toISOString(),
+        recognizedAt: new Date().toISOString(),
+      });
+    }
+
+    saveDB(db);
   }
 
   function buildStatusBadge(status) {
@@ -80,7 +134,9 @@
 
   function renderRequestCard(request) {
     const status = normalizeStatus(request);
-    const submittedDate = request.submittedAt ? new Date(request.submittedAt).toLocaleDateString() : "—";
+    const submittedDate = request.submittedAt
+      ? new Date(request.submittedAt).toLocaleDateString()
+      : "—";
 
     let details = "";
     if (request.organizationType === "known") {
@@ -147,10 +203,14 @@
 
         <div class="request-card__actions">
           <button class="btn btn--outline btn--sm" type="button" data-action="view" data-request="${request.id}">View Details</button>
-          ${status === "pending" ? `
+          ${
+            status === "pending"
+              ? `
             <button class="btn btn--success btn--sm" type="button" data-action="approve" data-request="${request.id}">Approve</button>
             <button class="btn btn--danger btn--sm" type="button" data-action="reject" data-request="${request.id}">Reject</button>
-          ` : ""}
+          `
+              : ""
+          }
         </div>
       </article>
     `;
@@ -192,7 +252,7 @@
 
   function viewRequest(requestId) {
     const requests = getAffiliationRequests();
-    const request = requests.find(r => r.id === requestId);
+    const request = requests.find((r) => r.id === requestId);
     if (!request) return;
 
     currentRequest = request;
@@ -201,7 +261,7 @@
 
   function approveRequest(requestId) {
     const requests = getAffiliationRequests();
-    const requestIndex = requests.findIndex(r => r.id === requestId);
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
     if (requestIndex === -1) return;
 
     requests[requestIndex].status = "approved";
@@ -209,7 +269,9 @@
 
     // Add to user's affiliations
     const db = getDB();
-    const userIndex = db.users.findIndex(u => u.id === requests[requestIndex].userId);
+    const userIndex = db.users.findIndex(
+      (u) => u.id === requests[requestIndex].userId,
+    );
     if (userIndex !== -1) {
       if (!db.users[userIndex].affiliations) {
         db.users[userIndex].affiliations = [];
@@ -221,18 +283,18 @@
         contactNumber: requests[requestIndex].contactNumber,
         organizationType: requests[requestIndex].organizationType,
         verifiedAt: new Date().toISOString(),
-        status: "verified"
+        status: "verified",
       });
     }
 
-    saveDB(db);
+    addOrUpdateOrganizationDirectory(requests[requestIndex]);
     renderRequests();
     closeAffiliationModal();
   }
 
   function rejectRequest(requestId) {
     const requests = getAffiliationRequests();
-    const requestIndex = requests.findIndex(r => r.id === requestId);
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
     if (requestIndex === -1) return;
 
     requests[requestIndex].status = "rejected";

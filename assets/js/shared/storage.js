@@ -9,6 +9,7 @@ const defaultDB = {
   ratings: [],
   archives: {},
   affiliationRequests: [],
+  organizations: [],
   systemSettings: {
     maintenanceMode: false,
     policies: {},
@@ -76,7 +77,10 @@ function mergeWithDefaults(db) {
     transactions: Array.isArray(db.transactions) ? db.transactions : [],
     ratings: Array.isArray(db.ratings) ? db.ratings : [],
     archives: typeof db.archives === "object" ? db.archives : {},
-    affiliationRequests: Array.isArray(db.affiliationRequests) ? db.affiliationRequests : [],
+    affiliationRequests: Array.isArray(db.affiliationRequests)
+      ? db.affiliationRequests
+      : [],
+    organizations: Array.isArray(db.organizations) ? db.organizations : [],
     systemSettings: {
       maintenanceMode: db.systemSettings?.maintenanceMode || false,
       policies: db.systemSettings?.policies || {},
@@ -240,8 +244,7 @@ function authenticateUser(email, password) {
 
   if (!user) {
     user = (db.users || []).find(
-      (item) =>
-        String(item.email || "").toLowerCase() === normalizedEmail,
+      (item) => String(item.email || "").toLowerCase() === normalizedEmail,
     );
 
     if (user) {
@@ -250,7 +253,8 @@ function authenticateUser(email, password) {
         email: user.email,
         password: user.password || "",
         fullName:
-          user.fullName || `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+          user.fullName ||
+          `${user.firstName || ""} ${user.lastName || ""}`.trim(),
         phone: user.phone || "",
         accountType: user.accountType || "student",
         accountStatus: user.accountStatus || user.status || "pending",

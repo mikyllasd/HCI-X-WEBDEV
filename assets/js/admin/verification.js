@@ -244,8 +244,7 @@
     db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
     let authUser = db.authUsers.find(
       (item) =>
-        item.email &&
-        item.email.toLowerCase() === user.email.toLowerCase(),
+        item.email && item.email.toLowerCase() === user.email.toLowerCase(),
     );
 
     if (authUser) {
@@ -258,7 +257,9 @@
         id: user.id || `auth_${Date.now()}`,
         email: user.email,
         password: user.password || "",
-        fullName: user.fullName || `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+        fullName:
+          user.fullName ||
+          `${user.firstName || ""} ${user.lastName || ""}`.trim(),
         phone: user.phone || "",
         accountType: user.accountType || "student",
         accountStatus: updatedStatus,

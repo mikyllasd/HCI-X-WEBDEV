@@ -218,11 +218,12 @@
         // Store current user session for both auth and student pages
         // Fetch full user record from db to get all fields (campusId, college, etc)
         const db = getDB();
-        const fullUserRecord = (db.users || []).find(
-          (item) =>
-            String(item.email || "").toLowerCase() ===
-            String(rawId || "").toLowerCase(),
-        ) || {};
+        const fullUserRecord =
+          (db.users || []).find(
+            (item) =>
+              String(item.email || "").toLowerCase() ===
+              String(rawId || "").toLowerCase(),
+          ) || {};
 
         const loggedInStudent = {
           id: authenticatedUser.id,
@@ -241,11 +242,14 @@
         };
 
         // Check if switching accounts — if so, clear cart and orders
-        const previousUser = JSON.parse(localStorage.getItem("upressUser") || "null");
+        const previousUser = JSON.parse(
+          localStorage.getItem("upressUser") || "null",
+        );
         if (
           previousUser &&
           previousUser.email &&
-          previousUser.email.toLowerCase() !== loggedInStudent.email.toLowerCase()
+          previousUser.email.toLowerCase() !==
+            loggedInStudent.email.toLowerCase()
         ) {
           // Different account — clear cart and mark for phone verification
           localStorage.removeItem("upressCart");

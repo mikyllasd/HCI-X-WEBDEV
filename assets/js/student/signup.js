@@ -154,14 +154,18 @@
     const normalizedEmail = String(email || "").toLowerCase();
     const normalizedId = String(campusId || "").trim();
 
-    const foundByEmail = (db.users || []).find(
-      (user) => String(user.email || "").toLowerCase() === normalizedEmail,
-    ) || (db.authUsers || []).find(
-      (user) => String(user.email || "").toLowerCase() === normalizedEmail,
-    );
+    const foundByEmail =
+      (db.users || []).find(
+        (user) => String(user.email || "").toLowerCase() === normalizedEmail,
+      ) ||
+      (db.authUsers || []).find(
+        (user) => String(user.email || "").toLowerCase() === normalizedEmail,
+      );
 
     const foundById = (db.users || []).find((user) => {
-      const idValue = String(user.campusId || user.studentId || user.facultyId || "").trim();
+      const idValue = String(
+        user.campusId || user.studentId || user.facultyId || "",
+      ).trim();
       return idValue === normalizedId;
     });
 
@@ -345,7 +349,7 @@
     if (!user || !user.email) return;
     try {
       const db = getDB();
-      
+
       // Save to users array (for admin dashboard)
       db.users = Array.isArray(db.users) ? db.users : [];
       const userExistingIndex = db.users.findIndex(
@@ -354,11 +358,14 @@
           String(user.email || "").toLowerCase(),
       );
       if (userExistingIndex !== -1) {
-        db.users[userExistingIndex] = { ...db.users[userExistingIndex], ...user };
+        db.users[userExistingIndex] = {
+          ...db.users[userExistingIndex],
+          ...user,
+        };
       } else {
         db.users.unshift(user);
       }
-      
+
       // Save to authUsers array (for login authentication)
       db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
       const authExistingIndex = db.authUsers.findIndex(
@@ -367,11 +374,14 @@
           String(user.email || "").toLowerCase(),
       );
       if (authExistingIndex !== -1) {
-        db.authUsers[authExistingIndex] = { ...db.authUsers[authExistingIndex], ...user };
+        db.authUsers[authExistingIndex] = {
+          ...db.authUsers[authExistingIndex],
+          ...user,
+        };
       } else {
         db.authUsers.unshift(user);
       }
-      
+
       saveDB(db);
     } catch (err) {
       console.error("Error saving signup to admin DB:", err);
@@ -796,7 +806,9 @@
 
         const first = document.getElementById("signup-first")?.value.trim();
         const last = document.getElementById("signup-last")?.value.trim();
-        const campusId = document.getElementById("signup-campus-id")?.value.trim();
+        const campusId = document
+          .getElementById("signup-campus-id")
+          ?.value.trim();
         const college = document.getElementById("signup-college")?.value;
         const course = document.getElementById("signup-course")?.value;
         const yearLevel = document.getElementById("signup-year")?.value;
@@ -806,12 +818,13 @@
         const type = getAccountType();
         const fullName = `${first} ${last}`.trim();
 
-        const { existingUser, existingCampusIdUser } = getSignupUserByEmailOrCampusId(
-          email,
-          campusId,
-        );
+        const { existingUser, existingCampusIdUser } =
+          getSignupUserByEmailOrCampusId(email, campusId);
 
-        if (existingCampusIdUser && (!existingUser || existingCampusIdUser.email !== email)) {
+        if (
+          existingCampusIdUser &&
+          (!existingUser || existingCampusIdUser.email !== email)
+        ) {
           showInlineAlert(
             type === "faculty"
               ? "An account with this employee ID already exists."

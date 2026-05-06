@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease — Reset local test data</title>
+    <link rel="stylesheet" href="../../css/upress-pattern-ui.css" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 36rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+        color: #1a1a1a;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1.25rem 0;
+      }
+      button {
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+      button.primary {
+        background: #0d6e4d;
+        color: #fff;
+        border-color: #0d6e4d;
+      }
+      button.secondary {
+        background: #f3f4f6;
+      }
+      #status {
+        font-size: 0.9rem;
+        color: #374151;
+        min-height: 2.5rem;
+      }
+      .note {
+        font-size: 0.85rem;
+        color: #6b7280;
+      }
+      code {
+        font-size: 0.85em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Reset local test data</h1>
+    <p>
+      Use this before end-to-end testing. It clears the shared <code>upressease_db</code> bucket,
+      sign-in sessions, cart, orders cache, and related keys. Your theme choice
+      (<code>upress-theme</code>) is kept.
+    </p>
+    <p class="note">
+      After a reset, the app will <strong>not</strong> auto-load demo users or transactions until
+      you click “Restore demo dataset” or remove the key <code>upressease_skip_demo</code> from
+      DevTools.
+    </p>
+    <div class="actions">
+      <button type="button" class="primary" id="btn-empty">Reset to empty (test from 0)</button>
+      <button type="button" class="secondary" id="btn-demo">Restore demo dataset</button>
+    </div>
+    <p id="status" role="status"></p>
+    <p class="note">
+      You can also run in the console on any page that loads <code>storage.js</code>:
+      <code>resetUpresseaseLocalStorage()</code> · <code>restoreUpresseaseDemoDatabase()</code>
+    </p>
+    <p><a href="../auth/portal.html">→ Sign-in portal</a></p>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
+    <script>
+      (function () {
+        var statusEl = document.getElementById("status");
+        function setStatus(msg) {
+          statusEl.textContent = msg || "";
+        }
+        document.getElementById("btn-empty").addEventListener("click", function () {
+          if (
+            typeof resetUpresseaseLocalStorage !== "function" ||
+            !confirm(
+              "Clear all local app data in this browser and start with an empty database?",
+            )
+          ) {
+            return;
+          }
+          resetUpresseaseLocalStorage();
+          setStatus("Done. Empty database saved. Reload or open the portal to continue.");
+        });
+        document.getElementById("btn-demo").addEventListener("click", function () {
+          if (typeof restoreUpresseaseDemoDatabase !== "function") return;
+          if (!confirm("Replace local data with the full demo seed?")) return;
+          restoreUpresseaseDemoDatabase();
+          setStatus("Demo dataset restored. Reload a dashboard to refresh.");
+        });
+      })();
+    </script>
+  </body>
+</html>

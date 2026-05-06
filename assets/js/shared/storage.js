@@ -1,4 +1,6 @@
 const STORAGE_KEY = "upressease_db";
+/** When set (e.g. after reset), empty DB is kept; demo seed is not auto-loaded. */
+const SKIP_DEMO_KEY = "upressease_skip_demo";
 
 const defaultDB = {
   academicYear: "",
@@ -44,8 +46,8 @@ function getDB() {
     if (raw) {
       const db = JSON.parse(raw);
       const merged = mergeWithDefaults(db);
-      // If database is empty, load demo data
-      if (merged.users.length === 0) {
+      const skipDemo = localStorage.getItem(SKIP_DEMO_KEY) === "1";
+      if (merged.users.length === 0 && !skipDemo) {
         return loadDemoData();
       }
       return merged;
@@ -53,7 +55,11 @@ function getDB() {
   } catch (error) {
     console.error("Error loading DB:", error);
   }
-  // No data found, load demo data
+  if (localStorage.getItem(SKIP_DEMO_KEY) === "1") {
+    const empty = mergeWithDefaults({});
+    saveDB(empty);
+    return empty;
+  }
   return loadDemoData();
 }
 
@@ -67,6 +73,68 @@ function saveDB(db) {
   } catch (error) {
     console.error("Error saving DB:", error);
   }
+}
+
+/**
+ * Clear app localStorage (sessions, cart, legacy keys) and reset `upressease_db`
+ * to an empty schema. Sets {@link SKIP_DEMO_KEY} so demo data is not re-injected.
+ * Preserves `upress-theme` (UI preference).
+ */
+function resetUpresseaseLocalStorage() {
+  const empty = mergeWithDefaults({});
+  try {
+    localStorage.setItem(SKIP_DEMO_KEY, "1");
+    saveDB(empty);
+
+    const removeKeys = [
+      "upressDB",
+      "upressUser",
+      "currentUser",
+      "upressCart",
+      "upressOrders",
+      "upressCheckout",
+      "upress_checkout_selected",
+      "upress_order_type",
+      "upress_order_org",
+      "upress_verify_phone_on_load",
+      "upress_ratings",
+      "upressWalkInSales",
+      "upressease_public_pricing",
+      "adminUser",
+      "adminRole",
+      "upressRememberChoice",
+    ];
+    removeKeys.forEach((k) => {
+      try {
+        localStorage.removeItem(k);
+      } catch (_) {}
+    });
+
+    try {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("upress_login_fails_")) localStorage.removeItem(k);
+      }
+    } catch (_) {}
+
+    try {
+      for (let i = sessionStorage.length - 1; i >= 0; i--) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith("upress_login_fails_")) sessionStorage.removeItem(k);
+      }
+    } catch (_) {}
+  } catch (e) {
+    console.error("resetUpresseaseLocalStorage:", e);
+  }
+  return empty;
+}
+
+/** Remove skip-demo flag and load full demo dataset (same as first-time install with seed). */
+function restoreUpresseaseDemoDatabase() {
+  try {
+    localStorage.removeItem(SKIP_DEMO_KEY);
+  } catch (_) {}
+  return loadDemoData();
 }
 
 /**
@@ -534,8 +602,14 @@ function getArchivedServices(fromYear) {
     return;
   }
   try {
+    const skipDemo = localStorage.getItem(SKIP_DEMO_KEY) === "1";
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
+      if (skipDemo) {
+        const empty = mergeWithDefaults({});
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(empty));
+        return;
+      }
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(window.UpressDemoSeed.getDemoDatabase()),
@@ -584,6 +658,10 @@ function getArchivedServices(fromYear) {
       return;
     }
 
+    if (skipDemo) {
+      return;
+    }
+
     const year = db.academicYear || demo.academicYear;
     db.academicYear = year;
     db.users = JSON.parse(JSON.stringify(demo.users));
@@ -604,6 +682,7 @@ function getArchivedServices(fromYear) {
 // Staff-specific demo seeds (safe no-ops if already populated)
 (function ensureStaffDemoSeeds() {
   if (typeof window === "undefined" || !window.UpressDemoSeed) return;
+  if (localStorage.getItem(SKIP_DEMO_KEY) === "1") return;
   try {
     if (typeof window.UpressDemoSeed.seedStaffWalkInSalesIfEmpty === "function") {
       window.UpressDemoSeed.seedStaffWalkInSalesIfEmpty();
@@ -748,3 +827,8 @@ function getArchivedServices(fromYear) {
     if (changed) window.saveDB(db);
   } catch {}
 })();
+
+if (typeof window !== "undefined") {
+  window.resetUpresseaseLocalStorage = resetUpresseaseLocalStorage;
+  window.restoreUpresseaseDemoDatabase = restoreUpresseaseDemoDatabase;
+}

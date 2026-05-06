@@ -111,6 +111,23 @@
   const params = new URLSearchParams(window.location.search);
   if (params.get("user")) idInput.value = params.get("user");
   if (params.get("pass")) pwInput.value = params.get("pass");
+  if (params.get("email")) idInput.value = params.get("email");
+
+  if (params.get("signupPending") === "1") {
+    showAlert(
+      "Request received",
+      "Your request is still being processed. You will receive an email if your account has been verified.",
+      "success",
+    );
+  }
+
+  if (params.get("accountExists") === "1") {
+    showAlert(
+      "Account exists",
+      "An account with this email already exists. Please sign in instead.",
+      "error",
+    );
+  }
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -201,11 +218,12 @@
         // Store current user session for both auth and student pages
         // Fetch full user record from db to get all fields (campusId, college, etc)
         const db = getDB();
-        const fullUserRecord = (db.users || []).find(
-          (item) =>
-            String(item.email || "").toLowerCase() ===
-            String(rawId || "").toLowerCase(),
-        ) || {};
+        const fullUserRecord =
+          (db.users || []).find(
+            (item) =>
+              String(item.email || "").toLowerCase() ===
+              String(rawId || "").toLowerCase(),
+          ) || {};
 
         const loggedInStudent = {
           id: authenticatedUser.id,
@@ -224,11 +242,14 @@
         };
 
         // Check if switching accounts — if so, clear cart and orders
-        const previousUser = JSON.parse(localStorage.getItem("upressUser") || "null");
+        const previousUser = JSON.parse(
+          localStorage.getItem("upressUser") || "null",
+        );
         if (
           previousUser &&
           previousUser.email &&
-          previousUser.email.toLowerCase() !== loggedInStudent.email.toLowerCase()
+          previousUser.email.toLowerCase() !==
+            loggedInStudent.email.toLowerCase()
         ) {
           // Different account — clear cart and mark for phone verification
           localStorage.removeItem("upressCart");

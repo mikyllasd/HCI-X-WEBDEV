@@ -184,12 +184,17 @@
       <article class="request-card" data-user-id="${user.id}">
         <div class="request-card__header">
           <div>
+<<<<<<< HEAD
             <h3 class="card-title">${displayName}</h3>
             <p class="card-subtitle">
               ${displayId}
               &nbsp;·&nbsp; Faculty
               &nbsp;·&nbsp; ${formatField(user.college)}
             </p>
+=======
+            <h3 class="card-title">${formatField(user.fullName)}</h3>
+            <p class="card-subtitle">${formatField(user.facultyId || user.studentId || user.campusId)} · ${formatField(user.college)} · ${formatField(user.course)}</p>
+>>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
           </div>
           ${buildStatusBadge(status)}
         </div>
@@ -200,8 +205,17 @@
             <span class="request-card__value">${formatField(user.email)}</span>
           </div>
           <div class="request-card__item">
+<<<<<<< HEAD
             <span class="request-card__label">Mobile</span>
             <span class="request-card__value">${formatField(user.phone)}</span>
+=======
+            <span class="request-card__label">Phone</span>
+            <span class="request-card__value">${formatField(user.phone)}</span>
+          </div>
+          <div class="request-card__item">
+            <span class="request-card__label">Year Level</span>
+            <span class="request-card__value">${formatField(user.yearLevel)}</span>
+>>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
           </div>
           <div class="request-card__item">
             <span class="request-card__label">Department</span>
@@ -231,8 +245,20 @@
           </div>` : ""}
         </div>
 
+<<<<<<< HEAD
         <div class="request-card__image">
           ${buildDocImages(user)}
+=======
+        <div class="request-card__documents">
+          <div class="request-card__document">
+            <span class="request-card__label">ID / Proof</span>
+            ${user.idDocument ? `<img src="${user.idDocument}" alt="Faculty ID document" />` : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`}
+          </div>
+          <div class="request-card__document">
+            <span class="request-card__label">Additional Proof</span>
+            ${user.corDocument ? `<img src="${user.corDocument}" alt="Faculty proof document" />` : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`}
+          </div>
+>>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
         </div>
 
         <div class="request-card__actions">

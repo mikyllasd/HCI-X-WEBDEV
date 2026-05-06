@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Walk-in POS</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/staff/staff-pos.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+  </head>
+  <body class="staff-dashboard-body" data-page="walk-in-pos">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Staff sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Staff &amp; walk-in POS</span>
+          </div>
+          <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close menu"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button class="user-pill" aria-label="Logged in as Staff" type="button">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Staff</span>
+          </button>
+          <p class="user-handle">@staff</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Staff navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="walk-in-pos.html" class="nav-link" data-page="walk-in-pos">
+                <i data-lucide="store" aria-hidden="true"></i
+                ><span>Walk-in POS</span></a
+              >
+            </li>
+            <li class="nav-section-label" aria-hidden="true">Staff</li>
+            <li>
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="analytics.html" class="nav-link" data-page="analytics">
+                <i data-lucide="bar-chart-3" aria-hidden="true"></i
+                ><span>Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="organizations.html" class="nav-link" data-page="organizations">
+                <i data-lucide="building-2" aria-hidden="true"></i
+                ><span>Organizations</span></a
+              >
+            </li>
+            <li>
+              <a href="sales-report.html" class="nav-link" data-page="sales-report">
+                <i data-lucide="receipt" aria-hidden="true"></i
+                ><span>Sales Report</span></a
+              >
+            </li>
+            <li>
+              <a href="order-queue.html" class="nav-link" data-page="order-queue">
+                <i data-lucide="package" aria-hidden="true"></i
+                ><span>Orders Queue</span></a
+              >
+            </li>
+            <li>
+              <a href="ready-release.html" class="nav-link" data-page="ready-release">
+                <i data-lucide="check-circle" aria-hidden="true"></i
+                ><span>Release</span></a
+              >
+            </li>
+            <li>
+              <a href="order-lookup.html" class="nav-link" data-page="order-lookup">
+                <i data-lucide="search" aria-hidden="true"></i
+                ><span>Order Lookup</span></a
+              >
+            </li>
+            <li>
+              <a href="qr-scanner.html" class="nav-link" data-page="qr-scanner">
+                <i data-lucide="scan-qr-code" aria-hidden="true"></i
+                ><span>QR Scanner</span></a
+              >
+            </li>
+            <li>
+              <a href="completed.html" class="nav-link" data-page="completed">
+                <i data-lucide="check-check" aria-hidden="true"></i
+                ><span>Completed</span></a
+              >
+            </li>
+          </ul>
+
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="../auth/portal.html"
+                class="nav-link nav-link--logout"
+                id="logout-btn"
+                aria-label="Logout"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <section id="page-walk-in-pos" aria-labelledby="staff-pos-heading">
+          <header class="staff-header page-header">
+            <div>
+              <h1 id="staff-pos-heading">Walk-in POS</h1>
+              <p>
+                Counter sales for customers who walk into UPress (no student account). Add line
+                items, take cash or record GCash, then print or save the receipt.
+              </p>
+            </div>
+          </header>
+
+          <div class="pos-grid">
+            <div class="pos-panel pos-panel--ticket">
+              <h3 class="pos-panel__title">Customer</h3>
+              <label class="pos-label">Name (optional)</label>
+              <input type="text" id="posCustomerName" class="pos-input" placeholder="Walk-in customer" />
+
+              <label class="pos-label">Phone (optional)</label>
+              <input type="tel" id="posCustomerPhone" class="pos-input" placeholder="09xxxxxxxxx" />
+
+              <label class="pos-label">Patron type</label>
+              <select id="posPatronType" class="pos-input">
+                <option value="walk-in">Walk-in (public / visitor)</option>
+                <option value="student">Student (no login — quick sale)</option>
+                <option value="faculty">Faculty / staff</option>
+                <option value="organization">Organization / office</option>
+              </select>
+
+              <h3 class="pos-panel__title" style="margin-top: 1.25rem">Add service line</h3>
+              <label class="pos-label">Service</label>
+              <select id="posLineService" class="pos-input">
+                <option value="Printing">Printing</option>
+                <option value="Binding">Binding</option>
+                <option value="Lanyards">Lanyards</option>
+                <option value="Mug printing">Mug printing</option>
+                <option value="ID / laminating">ID / laminating</option>
+                <option value="Photocopy">Photocopy</option>
+                <option value="Other">Other (describe in notes)</option>
+              </select>
+
+              <div class="pos-row2">
+                <div>
+                  <label class="pos-label">Qty</label>
+                  <input type="number" id="posLineQty" class="pos-input" min="1" value="1" />
+                </div>
+                <div>
+                  <label class="pos-label">Unit price (₱)</label>
+                  <input type="number" id="posLineUnit" class="pos-input" min="0" step="0.25" value="5" />
+                </div>
+              </div>
+
+              <label class="pos-label">Notes (optional)</label>
+              <input type="text" id="posLineNotes" class="pos-input" placeholder="e.g. A4 color, rush" />
+
+              <div class="pos-actions">
+                <button type="button" class="pos-btn pos-btn--primary" id="posAddLineBtn">Add to ticket</button>
+                <button type="button" class="pos-btn pos-btn--ghost" id="posClearTicketBtn">Clear ticket</button>
+              </div>
+            </div>
+
+            <div class="pos-panel pos-panel--summary">
+              <h3 class="pos-panel__title">Current ticket</h3>
+              <div id="posTicketLines" class="pos-ticket-lines pos-empty">No lines yet. Add services above.</div>
+
+              <div class="pos-totals">
+                <div class="pos-total-row">
+                  <span>Subtotal</span><strong id="posSubtotal">₱0.00</strong>
+                </div>
+              </div>
+
+              <label class="pos-label">Payment</label>
+              <select id="posPaymentMethod" class="pos-input">
+                <option value="Cash">Cash (received now)</option>
+                <option value="GCash">GCash (walk-in — reference below)</option>
+                <option value="Pay later">Pay later / org billing (demo)</option>
+              </select>
+
+              <label class="pos-label">GCash reference (if GCash)</label>
+              <input type="text" id="posGcashRef" class="pos-input" placeholder="Reference number" />
+
+              <div class="pos-actions" style="margin-top: 1rem">
+                <button type="button" class="pos-btn pos-btn--accent" id="posCompleteSaleBtn">
+                  Complete sale &amp; record
+                </button>
+              </div>
+
+              <p class="pos-hint">
+                Each sale appears below and on <strong>Completed orders</strong>. Use <strong>Print</strong> next to
+                that sale only (not here).
+              </p>
+            </div>
+
+            <div class="pos-panel pos-panel--history">
+              <h3 class="pos-panel__title">Today's walk-in sales</h3>
+              <div class="pos-kpi">
+                <span>Walk-in total today</span>
+                <strong id="posWalkInTodayTotal">₱0.00</strong>
+              </div>
+              <div id="posWalkInHistory" class="pos-history-list"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/staff/staff-data.js"></script>
+    <script src="../../js/staff/staff-shell.js"></script>
+    <script src="../../js/staff/staff-pos.js"></script>
+  </body>
+</html>
+

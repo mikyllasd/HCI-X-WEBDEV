@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Sales Report</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/staff/staff-pos.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+  </head>
+  <body class="staff-dashboard-body" data-page="sales-report">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside class="sidebar staff-sidebar" id="sidebar" role="navigation" aria-label="Staff sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true"><i data-lucide="shield"></i></div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Staff &amp; walk-in POS</span>
+          </div>
+          <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close menu">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="sidebar-user">
+          <button class="user-pill" aria-label="Logged in as Staff" type="button">
+            <i data-lucide="user" aria-hidden="true"></i><span>Staff</span>
+          </button>
+          <p class="user-handle">@staff</p>
+        </div>
+        <nav class="sidebar-nav" aria-label="Staff navigation">
+          <ul class="nav-list" role="list">
+            <li><a href="walk-in-pos.html" class="nav-link" data-page="walk-in-pos"><i data-lucide="store" aria-hidden="true"></i><span>Walk-in POS</span></a></li>
+            <li class="nav-section-label" aria-hidden="true">Staff</li>
+            <li><a href="dashboard.html" class="nav-link" data-page="dashboard"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></a></li>
+            <li><a href="analytics.html" class="nav-link" data-page="analytics"><i data-lucide="bar-chart-3" aria-hidden="true"></i><span>Analytics</span></a></li>
+            <li><a href="organizations.html" class="nav-link" data-page="organizations"><i data-lucide="building-2" aria-hidden="true"></i><span>Organizations</span></a></li>
+            <li><a href="sales-report.html" class="nav-link" data-page="sales-report"><i data-lucide="receipt" aria-hidden="true"></i><span>Sales Report</span></a></li>
+            <li><a href="order-queue.html" class="nav-link" data-page="order-queue"><i data-lucide="package" aria-hidden="true"></i><span>Orders Queue</span></a></li>
+            <li><a href="ready-release.html" class="nav-link" data-page="ready-release"><i data-lucide="check-circle" aria-hidden="true"></i><span>Release</span></a></li>
+            <li><a href="order-lookup.html" class="nav-link" data-page="order-lookup"><i data-lucide="search" aria-hidden="true"></i><span>Order Lookup</span></a></li>
+            <li><a href="qr-scanner.html" class="nav-link" data-page="qr-scanner"><i data-lucide="scan-qr-code" aria-hidden="true"></i><span>QR Scanner</span></a></li>
+            <li><a href="completed.html" class="nav-link" data-page="completed"><i data-lucide="check-check" aria-hidden="true"></i><span>Completed</span></a></li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a href="../auth/portal.html" class="nav-link nav-link--logout" id="logout-btn" aria-label="Logout">
+                <i data-lucide="log-out" aria-hidden="true"></i><span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button class="hamburger main-hamburger" id="hamburger" type="button" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+
+        <header class="staff-header page-header">
+          <div>
+            <h1>Sales Report</h1>
+            <p>Total Revenue, Credit Sales (utang), and Physical Cash by date range.</p>
+          </div>
+        </header>
+
+        <section class="sd-panel" aria-label="Sales report filters">
+          <div class="sd-panel__head">
+            <div>
+              <div class="sd-panel__title">
+                <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+                <span>Filters</span>
+              </div>
+              <div class="sd-panel__sub">Choose a reporting window.</div>
+            </div>
+          </div>
+
+          <div class="rpt-filters-row">
+            <div class="rpt-filter-group">
+              <label for="srMode" class="filter-label">Mode</label>
+              <div class="rpt-select-wrapper">
+                <select id="srMode" class="filter-input rpt-select">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="semester">Semester</option>
+                  <option value="custom">Custom</option>
+                </select>
+                <i data-lucide="chevron-down" class="rpt-select-chevron" aria-hidden="true"></i>
+              </div>
+            </div>
+
+            <div class="rpt-filter-group">
+              <label for="srFrom" class="filter-label">From</label>
+              <input id="srFrom" class="filter-input" type="date" />
+            </div>
+
+            <div class="rpt-filter-group">
+              <label for="srTo" class="filter-label">To</label>
+              <input id="srTo" class="filter-input" type="date" />
+            </div>
+
+            <div class="rpt-filter-group rpt-filter-actions">
+              <button class="sd-panel__cta" id="srApplyBtn" type="button">Apply</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="staff-card-grid" style="margin-bottom: 18px">
+          <div class="staff-card">
+            <h3>Total Revenue</h3>
+            <span class="staff-number" id="srTotalRevenue">₱0.00</span>
+            <span>All payments received</span>
+          </div>
+          <div class="staff-card">
+            <h3>Credit Sales (Utang)</h3>
+            <span class="staff-number" id="srCreditSales">₱0.00</span>
+            <span>Outstanding balances</span>
+          </div>
+          <div class="staff-card">
+            <h3>Physical Cash</h3>
+            <span class="staff-number" id="srPhysicalCash">₱0.00</span>
+            <span>Cash received</span>
+          </div>
+          <div class="staff-card">
+            <h3>Transactions</h3>
+            <span class="staff-number" id="srTxCount">0</span>
+            <span>Payments counted</span>
+          </div>
+        </div>
+
+        <div class="staff-panel-full card sp">
+          <h3>Breakdown</h3>
+          <div class="list-toolbar">
+            <label class="list-search" for="srSearchInput">
+              <span>Search records</span>
+              <input
+                type="search"
+                id="srSearchInput"
+                class="list-search__input"
+                placeholder="Search channel, org, ref, method…"
+              />
+            </label>
+            <div class="list-toolbar__count" id="srResultCount">0 records</div>
+          </div>
+          <div class="staff-table-wrap">
+            <table class="data-table" id="srTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Channel</th>
+                  <th>Organization</th>
+                  <th>Order/Ledger</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="list-pagination" id="srPagination" aria-label="Sales report pagination"></div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/staff/staff-shell.js"></script>
+    <script src="../../js/staff/staff-data.js"></script>
+    <script src="../../js/staff/org-ledger.js"></script>
+    <script src="../../js/staff/staff-list-tools.js"></script>
+    <script src="../../js/staff/staff-sales-report.js"></script>
+  </body>
+</html>
+

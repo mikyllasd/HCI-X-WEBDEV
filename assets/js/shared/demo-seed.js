@@ -704,10 +704,235 @@
     }
   }
 
+  function seedStaffWalkInSalesIfEmpty() {
+    const LS_WALKIN = "upressWalkInSales";
+    let existing = [];
+    try {
+      existing = JSON.parse(localStorage.getItem(LS_WALKIN) || "[]");
+    } catch {
+      existing = [];
+    }
+    const hasAny = Array.isArray(existing) && existing.length > 0;
+
+    const mk = (d, saleId, total, method, extra = {}) => ({
+      saleId,
+      ts: d,
+      date: d,
+      customerName: extra.customerName || "Walk-in",
+      customerPhone: extra.customerPhone || "",
+      patronType: extra.patronType || "Student",
+      paymentMethod: method,
+      gcashRef: method.toLowerCase() === "gcash" ? `GCASH-${Math.floor(100000 + Math.random() * 900000)}` : "",
+      items: extra.items || [{ service: "Printing", qty: 10, price: 3 }],
+      grandTotal: total,
+    });
+
+    const rows = [
+      mk("2026-01-05T09:18:00", "SALE-1001", 120, "Cash", {
+        customerName: "Walk-in Customer",
+        items: [{ service: "Printing", qty: 40, price: 3 }],
+      }),
+      mk("2026-01-05T12:02:00", "SALE-1002", 80, "GCash", {
+        customerName: "Walk-in Customer",
+        items: [{ service: "Binding", qty: 2, price: 40 }],
+      }),
+      mk("2026-01-06T15:25:00", "SALE-1003", 200, "Cash", {
+        customerName: "Walk-in Customer",
+        items: [{ service: "ID Printing", qty: 4, price: 50 }],
+      }),
+      mk("2026-02-02T10:10:00", "SALE-1004", 150, "Cash", {
+        customerName: "Walk-in Customer",
+        items: [{ service: "Printing", qty: 50, price: 3 }],
+      }),
+    ];
+
+    try {
+      const merged = hasAny ? existing : [];
+      const seen = new Set(merged.map((r) => String(r?.saleId || "")));
+      for (const r of rows) {
+        if (!seen.has(String(r.saleId))) merged.push(r);
+      }
+      localStorage.setItem(LS_WALKIN, JSON.stringify(merged));
+    } catch (e) {
+      console.warn("Staff walk-in demo sales seed skipped:", e);
+    }
+
+    // Also mirror as completed transactions so admin/superadmin reports match.
+    if (typeof window !== "undefined" && typeof window.getDB === "function" && typeof window.saveDB === "function") {
+      try {
+        const db = window.getDB();
+        db.transactions = Array.isArray(db.transactions) ? db.transactions : [];
+        const existingIds = new Set(db.transactions.map((t) => String(t?.id || "")));
+        const ay = db.academicYear || DEMO_ACADEMIC_YEAR;
+        for (const s of rows) {
+          const id = `txn_pos_${s.saleId}`;
+          if (existingIds.has(id)) continue;
+          const method = String(s.paymentMethod || "");
+          const m = method.toLowerCase();
+          const paymentType = m.includes("gcash") || m.includes("online") ? "gcash" : "credit";
+          db.transactions.push({
+            id,
+            serviceId: "svc_walkin",
+            serviceName: "Walk-in POS",
+            amount: Number(s.grandTotal) || 0,
+            category: "Walk-in",
+            status: "completed",
+            semester: "2nd",
+            date: new Date(s.ts || s.date || Date.now()).toISOString(),
+            academicYear: ay,
+            paymentType,
+            paymentMethod: method || "Cash",
+            email: "walkin@local.demo",
+          });
+        }
+        window.saveDB(db);
+      } catch (e) {
+        console.warn("Staff walk-in demo tx mirror skipped:", e);
+      }
+    }
+  }
+
+  function seedOrgLedgersIfEmpty() {
+    // Requires storage.js to be loaded (getDB/saveDB available).
+    if (typeof window === "undefined") return;
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+
+    const db = window.getDB();
+    db.orgLedgers = Array.isArray(db.orgLedgers) ? db.orgLedgers : [];
+    db.orgLedgerArchive = Array.isArray(db.orgLedgerArchive) ? db.orgLedgerArchive : [];
+
+    const allLedgers = [...db.orgLedgers, ...db.orgLedgerArchive];
+    const hasOrg = (name) =>
+      allLedgers.some((l) => String(l?.orgName || "").trim().toLowerCase() === String(name).trim().toLowerCase());
+
+    const base = (id, orgName, total, availedAt, orderId, payments = [], archivedAt = "") => {
+      const paid = payments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+      const remaining = Math.max(0, +(Number(total || 0) - paid).toFixed(2));
+      const status = remaining <= 0 ? "fully_paid" : "open";
+      return {
+        id,
+        orgName,
+        orgId: "",
+        orderId,
+        availedAt,
+        totalAmount: +Number(total || 0).toFixed(2),
+        payments,
+        remainingBalance: remaining,
+        status,
+        createdAt: availedAt,
+        updatedAt: archivedAt || availedAt,
+        archivedAt: archivedAt || "",
+      };
+    };
+
+    const pay = (date, amount, method = "cash", note = "") => ({
+      id: `org_pay_${Math.floor(100000 + Math.random() * 900000)}`,
+      date,
+      amount: +Number(amount || 0).toFixed(2),
+      method,
+      note,
+      createdAt: date,
+    });
+
+    const openAdds = [];
+    const archiveAdds = [];
+
+    if (!hasOrg("Venom Publication")) {
+      openAdds.push(
+        base(
+          "org_ledger_demo_venom_001",
+          "Venom Publication",
+          1500,
+          "2026-01-18T09:00:00",
+          "ORD-2025-131",
+          [pay("2026-01-18T10:30:00", 600, "cash", "Initial payment")],
+        ),
+      );
+    }
+
+    if (!hasOrg("Google Developers Group On Campus")) {
+      archiveAdds.push(
+        base(
+          "org_ledger_demo_gdg_001",
+          "Google Developers Group On Campus",
+          1200,
+          "2025-12-02T09:00:00",
+          "ORD-2025-099",
+          [
+            pay("2025-12-02T11:00:00", 400, "gcash", "Installment 1"),
+            pay("2025-12-10T14:45:00", 400, "gcash", "Installment 2"),
+            pay("2025-12-18T16:15:00", 400, "gcash", "Final payment"),
+          ],
+          "2025-12-18T16:15:00",
+        ),
+      );
+    }
+
+    // Keep other demo ledgers if they exist; otherwise add a couple extra for variety.
+    if (db.orgLedgers.length === 0 && db.orgLedgerArchive.length === 0) {
+      openAdds.push(
+        base(
+          "org_ledger_demo_001",
+          "Computer Science Club",
+          1200,
+          "2026-01-05T08:30:00",
+          "ORD-2025-103",
+          [
+            pay("2026-01-05T10:00:00", 500, "cash", "Downpayment"),
+            pay("2026-01-10T14:10:00", 200, "cash", "Installment"),
+          ],
+        ),
+      );
+    }
+
+    db.orgLedgers = [...openAdds, ...db.orgLedgers];
+    db.orgLedgerArchive = [...archiveAdds, ...db.orgLedgerArchive];
+    window.saveDB(db);
+
+    // Mirror org payments into transactions for admin/superadmin reports consistency.
+    try {
+      const txDb = window.getDB();
+      txDb.transactions = Array.isArray(txDb.transactions) ? txDb.transactions : [];
+      const existingIds = new Set(txDb.transactions.map((t) => String(t?.id || "")));
+      const ay = txDb.academicYear || DEMO_ACADEMIC_YEAR;
+      const ledgersForTx = [...openAdds, ...archiveAdds];
+      for (const l of ledgersForTx) {
+        for (const p of Array.isArray(l.payments) ? l.payments : []) {
+          const id = `txn_orgpay_${l.id}_${p.id}`;
+          if (existingIds.has(id)) continue;
+          const method = String(p.method || "");
+          const m = method.toLowerCase();
+          const paymentType = m.includes("gcash") || m.includes("online") ? "gcash" : "credit";
+          txDb.transactions.push({
+            id,
+            serviceId: "svc_org_payment",
+            serviceName: "Organization Payment",
+            amount: Number(p.amount) || 0,
+            category: "Organizations",
+            status: "completed",
+            semester: "2nd",
+            date: new Date(p.date || Date.now()).toISOString(),
+            academicYear: ay,
+            paymentType,
+            paymentMethod: method || "Cash",
+            email: "org@local.demo",
+            orgName: l.orgName,
+            orderId: l.orderId || "",
+          });
+        }
+      }
+      window.saveDB(txDb);
+    } catch (e) {
+      console.warn("Org ledger demo tx mirror skipped:", e);
+    }
+  }
+
   global.UpressDemoSeed = {
     DEMO_ACADEMIC_YEAR,
     getDemoDatabase,
     getAdminPortalSampleData,
     seedStaffWebOrdersIfEmpty,
+    seedStaffWalkInSalesIfEmpty,
+    seedOrgLedgersIfEmpty,
   };
 })(typeof window !== "undefined" ? window : globalThis);

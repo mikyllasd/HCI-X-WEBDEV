@@ -1,281 +1,10 @@
-const orders = [
-  {
-    id: "ORD-001",
-    student: "Juan Dela Cruz",
-    service: "Printing",
-    total: 120,
-    payment: "GCash",
-    reference: "100123456789",
-    status: "Pending"
-  },
-  {
-    id: "ORD-002",
-    student: "Maria Santos",
-    service: "Mug Printing",
-    total: 250,
-    payment: "Cash",
-    reference: "N/A",
-    status: "Processing"
-  },
-  {
-    id: "ORD-003",
-    student: "Carlo Reyes",
-    service: "Binding",
-    total: 150,
-    payment: "GCash",
-    reference: "100987654321",
-    status: "Ready"
-  },
-  {
-    id: "ORD-004",
-    student: "Ana Cruz",
-    service: "Lanyard",
-    total: 230,
-    payment: "GCash",
-    reference: "100555888999",
-    status: "Completed"
-  }
-];
-
-const accounts = [
-  {
-    name: "Juan Dela Cruz",
-    email: "juan@wmsu.edu.ph",
-    college: "College of Engineering",
-    status: "Verified"
-  },
-  {
-    name: "Maria Santos",
-    email: "maria@wmsu.edu.ph",
-    college: "College of Education",
-    status: "Verified"
-  },
-  {
-    name: "Carlo Reyes",
-    email: "carlo@wmsu.edu.ph",
-    college: "College of Arts and Sciences",
-    status: "Pending"
-  }
-];
-
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  if (email === "" || password === "") {
-    alert("Please enter email and password.");
-    return;
-  }
-
-  document.getElementById("login-page").style.display = "none";
-  document.getElementById("admin-page").style.display = "flex";
-
-  updateDashboard();
-  renderOrders();
-  renderPayments();
-  renderAccounts();
-  renderReports();
-}
-
-function logout() {
-  document.getElementById("login-page").style.display = "flex";
-  document.getElementById("admin-page").style.display = "none";
-}
-
-function showPage(pageId) {
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.remove("active");
-  });
-
-  document.getElementById(pageId).classList.add("active");
-
-  document.querySelectorAll(".sidebar button").forEach(button => {
-    button.classList.remove("active");
-  });
-
-  event.target.classList.add("active");
-}
-
-function updateDashboard() {
-  const completedOrders = orders.filter(order => order.status === "Completed");
-  const totalIncome = completedOrders.reduce((sum, order) => sum + order.total, 0);
-
-  document.getElementById("total-orders").textContent = orders.length;
-  document.getElementById("total-income").textContent = `₱${totalIncome.toFixed(2)}`;
-  document.getElementById("today-orders").textContent = orders.length;
-  document.getElementById("today-income").textContent = `₱${totalIncome.toFixed(2)}`;
-
-  document.getElementById("pending-count").textContent =
-    orders.filter(order => order.status === "Pending").length;
-
-  document.getElementById("processing-count").textContent =
-    orders.filter(order => order.status === "Processing").length;
-
-  document.getElementById("ready-count").textContent =
-    orders.filter(order => order.status === "Ready").length;
-
-  document.getElementById("completed-count").textContent =
-    orders.filter(order => order.status === "Completed").length;
-}
-
-function renderOrders() {
-  const table = document.getElementById("orders-table");
-
-  table.innerHTML = orders.map(order => `
-    <tr>
-      <td>${order.id}</td>
-      <td>${order.student}</td>
-      <td>${order.service}</td>
-      <td>₱${order.total.toFixed(2)}</td>
-      <td>${order.payment}</td>
-      <td><span class="status ${order.status}">${order.status}</span></td>
-      <td>
-        <select onchange="changeStatus('${order.id}', this.value)">
-          <option ${order.status === "Pending" ? "selected" : ""}>Pending</option>
-          <option ${order.status === "Processing" ? "selected" : ""}>Processing</option>
-          <option ${order.status === "Ready" ? "selected" : ""}>Ready</option>
-          <option ${order.status === "Completed" ? "selected" : ""}>Completed</option>
-        </select>
-      </td>
-    </tr>
-  `).join("");
-}
-
-function changeStatus(orderId, newStatus) {
-  const order = orders.find(item => item.id === orderId);
-
-  if (order) {
-    order.status = newStatus;
-    updateDashboard();
-    renderOrders();
-    renderPayments();
-    renderReports();
-  }
-}
-
-function renderPayments() {
-  const table = document.getElementById("payments-table");
-
-  table.innerHTML = orders.map(order => `
-    <tr>
-      <td>${order.id}</td>
-      <td>${order.student}</td>
-      <td>₱${order.total.toFixed(2)}</td>
-      <td>${order.reference}</td>
-      <td><span class="status ${order.status}">${order.status}</span></td>
-    </tr>
-  `).join("");
-}
-
-function renderAccounts() {
-  const table = document.getElementById("accounts-table");
-
-  table.innerHTML = accounts.map(account => `
-    <tr>
-      <td>${account.name}</td>
-      <td>${account.email}</td>
-      <td>${account.college}</td>
-      <td>${account.status}</td>
-    </tr>
-  `).join("");
-}
-
-function renderReports() {
-  const completedOrders = orders.filter(order => order.status === "Completed");
-  const totalIncome = completedOrders.reduce((sum, order) => sum + order.total, 0);
-
-  document.getElementById("report-income").textContent = `₱${totalIncome.toFixed(2)}`;
-  document.getElementById("report-completed").textContent = completedOrders.length;
-}
-
-
-
-
-const loginForm = document.getElementById("loginForm");
-if (loginForm) {
-  loginForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const username = document.getElementById("staff-username").value.trim();
-    const password = document.getElementById("staff-password").value;
-
-    if (!username || !password) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    if (username === "staff" && password === "staff123") {
-      alert("Login successful!");
-      window.location.href = "staff-dashboard.html";
-    } else {
-      alert("Invalid credentials.");
-    }
-  });
-}
-
-(function staffAuthGuard() {
-  let u = null;
-  try {
-    u = JSON.parse(localStorage.getItem('currentUser') || 'null');
-  } catch (_) {
-    u = null;
-  }
-  const role = u && String(u.role || u.username || '').toLowerCase();
-  if (!u || role !== 'staff') {
-    window.location.href = '../auth/portal.html';
-  }
-})();
-
-const navLinks = document.querySelectorAll('.nav-link[data-page]');
-const pages = document.querySelectorAll('.staff-page');
-const staffSidebar = document.getElementById('sidebar');
-const staffSidebarOverlay = document.getElementById('sidebarOverlay');
-const staffHamburger = document.getElementById('hamburger');
-const staffSidebarClose = document.getElementById('sidebarClose');
-
-function closeStaffSidebar() {
-  if (staffSidebar) staffSidebar.classList.remove('open');
-  if (staffSidebarOverlay) staffSidebarOverlay.classList.remove('open');
-}
-
-function toggleStaffSidebar() {
-  if (!staffSidebar) return;
-  const open = staffSidebar.classList.toggle('open');
-  if (staffSidebarOverlay) staffSidebarOverlay.classList.toggle('open', open);
-}
-
-if (staffHamburger && staffSidebar) {
-  staffHamburger.addEventListener('click', toggleStaffSidebar);
-}
-if (staffSidebarClose) {
-  staffSidebarClose.addEventListener('click', closeStaffSidebar);
-}
-if (staffSidebarOverlay) {
-  staffSidebarOverlay.addEventListener('click', closeStaffSidebar);
-}
-
-navLinks.forEach((link) => {
-  link.addEventListener('click', function (e) {
-    const target = this.dataset.page;
-    if (target === 'logout') {
-      e.preventDefault();
-      try {
-        localStorage.removeItem('currentUser');
-      } catch (_) {}
-      window.location.href = this.getAttribute('href') || '../auth/portal.html';
-      return;
-    }
-    e.preventDefault();
-
-    navLinks.forEach((l) => l.classList.remove('active'));
-    this.classList.add('active');
-
-    pages.forEach((page) => {
-      page.classList.toggle('active', page.id === 'page-' + target);
-    });
-    closeStaffSidebar();
-  });
-});
+/**
+ * Staff page logic (shared library).
+ *
+ * NOTE: This file intentionally does NOT manage navigation or auth.
+ * Those responsibilities are handled by `assets/js/staff/staff-shell.js`.
+ * Each staff page calls `window.UpressStaffPages.initX()` as needed.
+ */
 
 function escapeHtml(str) {
   return String(str ?? '')
@@ -329,20 +58,9 @@ function closeStaffModal() {
 }
 
 function activateStaffPage(pageKey) {
-  const targetId = 'page-' + pageKey;
-
-  document.querySelectorAll('.staff-page').forEach(page => {
-    page.classList.toggle('active', page.id === targetId);
-  });
-
-  const link = document.querySelector(`.nav-link[data-page="${pageKey}"]`);
-  if (link) {
-    document.querySelectorAll('.nav-link[data-page]').forEach(l => l.classList.remove('active'));
-    link.classList.add('active');
-  }
-
-  const page = document.getElementById(targetId);
-  if (page) page.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const key = String(pageKey || "").trim();
+  if (!key) return;
+  window.location.href = `${key}.html`;
 }
 
 function getOrderFromRow(tr) {
@@ -366,6 +84,10 @@ function getOrderFromRow(tr) {
         size: parsed.size || '',
         rush: parsed.rush || '',
         notes: parsed.notes || '',
+        paymentVerified: !!parsed.paymentVerified,
+        staffReviewStatus: parsed.staffReviewStatus || 'pending_review',
+        staffReviewNotes: parsed.staffReviewNotes || '',
+        staffReviewedAt: parsed.staffReviewedAt || '',
       };
     } catch (_) {}
   }
@@ -510,8 +232,60 @@ function renderOrderModal(order, mode) {
     return 'Individual';
   })();
 
+  const isOrgOrder =
+    String(order.orderType || '').toLowerCase() === 'organization' ||
+    String(order.orderType || '').toLowerCase() === 'org';
+  const reviewStatus = String(order.staffReviewStatus || 'pending_review');
+  const reviewBadge = (function () {
+    if (reviewStatus === 'approved') return '<span class="badge badge-complete">Approved</span>';
+    if (reviewStatus === 'rejected') return '<span class="badge badge-pending">Rejected</span>';
+    return '<span class="badge badge-process">Needs review</span>';
+  })();
+
   const body = `
     ${flowHtml}
+    ${
+      isOrgOrder
+        ? `
+      <div class="sd-panel" style="margin-bottom:12px">
+        <div class="sd-panel__head">
+          <div>
+            <div class="sd-panel__title">
+              <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+              <span>Organization Review</span>
+            </div>
+            <div class="sd-panel__sub">
+              Staff must review and approve organization orders before moving to <b>Processing</b>.
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">${reviewBadge}</div>
+        </div>
+        <div style="padding:14px 16px; display:grid; gap:10px">
+          <label style="display:grid;gap:6px">
+            <span style="font-weight:700;font-size:12px;color:#667085">Review notes</span>
+            <input id="orgReviewNotes" class="sd-lookup__input" type="text" value="${escapeHtml(
+              order.staffReviewNotes || '',
+            )}" placeholder="e.g. Can fulfill by Friday; need 50 copies; payment verified" />
+          </label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="sd-panel__cta btn-org-approve" data-order-id="${escapeHtml(
+              order.orderId,
+            )}">Approve</button>
+            <button type="button" class="sd-panel__cta btn-org-reject" data-order-id="${escapeHtml(
+              order.orderId,
+            )}" style="background:transparent;color:#b42318;border:1.5px solid rgba(180,35,24,0.35)">Reject</button>
+            <a class="sd-panel__cta" href="organizations-ledger.html?org=${encodeURIComponent(
+              order.orderOrg || '',
+            )}">Open ledger</a>
+          </div>
+          <div class="sd-muted" style="font-size:12px">
+            Payment verified: <b>${order.paymentVerified ? 'Yes' : 'No'}</b>
+          </div>
+        </div>
+      </div>
+    `
+        : ''
+    }
     <div class="sd-modal__grid">
       <div class="sd-modal__field">
         <div class="sd-modal__label">Order ID</div>
@@ -727,6 +501,26 @@ document.addEventListener('click', (e) => {
 
     const targetRow = getRowByOrderId('orderQueueTable', orderId);
     if (!targetRow) return;
+
+    // Gate: organization orders require staff approval + payment verification
+    try {
+      const ord = getOrderFromRow(targetRow);
+      const isOrg =
+        String(ord.orderType || '').toLowerCase() === 'organization' ||
+        String(ord.orderType || '').toLowerCase() === 'org';
+      if (isOrg && nextStatusKey === 'processing') {
+        const approved = String(ord.staffReviewStatus || '') === 'approved';
+        if (!approved) {
+          alert('This organization order must be APPROVED by staff before moving to Processing.');
+          return;
+        }
+        if (!ord.paymentVerified) {
+          alert('Verify payment (or record initial payment) before moving to Processing.');
+          return;
+        }
+      }
+    } catch {}
+
     setRowStatus(targetRow, nextStatusKey);
 
     if (window.UpressStaffData && String(orderId).startsWith('ORD-')) {
@@ -745,6 +539,40 @@ document.addEventListener('click', (e) => {
     if (window.UpressStaffData && oid && UpressStaffData.verifyWebPayment(oid)) {
       UpressStaffData.hydrateTablesFromStorage();
       renderDashboardMetricsAndTransactions();
+    }
+    return;
+  }
+
+  const approveBtn = e.target.closest('.btn-org-approve');
+  if (approveBtn) {
+    const oid = approveBtn.getAttribute('data-order-id') || '';
+    const notes = document.getElementById('orgReviewNotes')?.value || '';
+    if (window.UpressStaffData && oid) {
+      try {
+        UpressStaffData.setOrderReviewStatus(oid, { status: 'approved', notes });
+        UpressStaffData.hydrateTablesFromStorage();
+        const row = getRowByOrderId('orderQueueTable', oid);
+        if (row) renderOrderModal(getOrderFromRow(row), 'process');
+      } catch (err) {
+        alert(String(err?.message || 'Failed to approve.'));
+      }
+    }
+    return;
+  }
+
+  const rejectBtn = e.target.closest('.btn-org-reject');
+  if (rejectBtn) {
+    const oid = rejectBtn.getAttribute('data-order-id') || '';
+    const notes = document.getElementById('orgReviewNotes')?.value || '';
+    if (window.UpressStaffData && oid) {
+      try {
+        UpressStaffData.setOrderReviewStatus(oid, { status: 'rejected', notes });
+        UpressStaffData.hydrateTablesFromStorage();
+        const row = getRowByOrderId('orderQueueTable', oid);
+        if (row) renderOrderModal(getOrderFromRow(row), 'process');
+      } catch (err) {
+        alert(String(err?.message || 'Failed to reject.'));
+      }
     }
     return;
   }
@@ -962,28 +790,90 @@ function renderDashboardMetricsAndTransactions() {
   if (empty) empty.style.display = 'none';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    window.lucide.createIcons();
-  }
-  if (window.UpressStaffData) {
-    UpressStaffData.hydrateTablesFromStorage();
-  }
+function initDashboardPage() {
+  if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   renderDashboardMetricsAndTransactions();
-  renderAnalyticsMockCharts();
-  setupOrderQueueSorting();
-  setupQrScanner();
 
-  document.addEventListener('staff:data-changed', () => {
-    if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
-    renderDashboardMetricsAndTransactions();
-    if (typeof window.renderWalkInPosHistory === 'function') window.renderWalkInPosHistory();
+  const viewAll = document.getElementById("viewAllOrdersBtn");
+  viewAll?.addEventListener("click", () => {
+    window.location.href = "order-queue.html";
   });
 
-  if (window.location.hash === '#walk-in-pos') {
-    activateStaffPage('walk-in-pos');
-  }
-});
+  const viewAnalytics = document.getElementById("viewAnalyticsBtn");
+  viewAnalytics?.addEventListener("click", () => {
+    window.location.href = "analytics.html";
+  });
+
+  document.addEventListener("staff:data-changed", () => {
+    if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
+    renderDashboardMetricsAndTransactions();
+    if (typeof window.renderWalkInPosHistory === "function") window.renderWalkInPosHistory();
+  });
+}
+
+function initAnalyticsPage() {
+  renderAnalyticsMockCharts();
+}
+
+function initOrderQueuePage() {
+  if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
+  setupOrderQueueSorting();
+  window.UpressListTools?.initTableList?.({
+    tableId: "orderQueueTable",
+    searchInputId: "oqSearchInput",
+    countId: "oqResultCount",
+    paginationId: "oqPagination",
+    pageSize: 8,
+    emptyLabel: "orders",
+  });
+}
+
+function initQrScannerPage() {
+  setupQrScanner();
+}
+
+function initOrderLookupPage() {
+  syncLookupLastScanned();
+
+  const lookupInput = document.getElementById("lookupReferenceInput");
+  lookupInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") runOrderLookup();
+  });
+
+  document.getElementById("lookupReferenceBtn")?.addEventListener("click", runOrderLookup);
+  document.getElementById("lookupGoToQrBtn")?.addEventListener("click", () => {
+    window.location.href = "qr-scanner.html";
+  });
+
+  document.addEventListener("staff:qr-scan", () => syncLookupLastScanned());
+}
+
+function initReadyReleasePage() {
+  if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
+  window.UpressListTools?.initTableList?.({
+    tableId: "readyReleaseTable",
+    searchInputId: "rrSearchInput",
+    countId: "rrResultCount",
+    paginationId: "rrPagination",
+    pageSize: 8,
+    emptyLabel: "orders",
+  });
+}
+
+function initCompletedPage() {
+  if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
+  window.UpressListTools?.initTableList?.({
+    tableId: "completedOrdersTable",
+    searchInputId: "coSearchInput",
+    countId: "coResultCount",
+    paginationId: "coPagination",
+    pageSize: 10,
+    emptyLabel: "orders",
+  });
+  document.addEventListener("staff:data-changed", () => {
+    if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
+  });
+}
 
 function setupOrderQueueSorting() {
   const table = document.getElementById('orderQueueTable');
@@ -1120,11 +1010,7 @@ function renderAnalyticsMockCharts() {
   `).join('');
 }
 
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('#viewAnalyticsBtn');
-  if (!btn) return;
-  activateStaffPage('analytics');
-});
+// (legacy) viewAnalytics click delegation removed; handled per-page init.
 
 function setupQrScanner() {
   const startBtn = document.getElementById('qrStartBtn');
@@ -1410,28 +1296,25 @@ function completeReleaseFlow() {
   if (completeBtn) completeBtn.disabled = true;
 }
 
-document.addEventListener('change', (e) => {
-  const paymentEl = e.target.closest('#releasePaymentReceived');
-  if (paymentEl) {
-    const btn = document.getElementById('releaseCompleteBtn');
-    if (btn) btn.disabled = !paymentEl.checked;
-  }
-});
-
-document.addEventListener('staff:qr-scan', () => {
-  syncLookupLastScanned();
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  syncLookupLastScanned();
-
+function initOrderReleasePage() {
   const selected = loadSelectedReleaseOrder();
   if (selected && selected.orderId) setReleasePageOrder(selected);
 
-  const lookupInput = document.getElementById('lookupReferenceInput');
-  if (lookupInput) {
-    lookupInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') runOrderLookup();
-    });
-  }
-});
+  document.addEventListener("change", (e) => {
+    const paymentEl = e.target.closest("#releasePaymentReceived");
+    if (paymentEl) {
+      const btn = document.getElementById("releaseCompleteBtn");
+      if (btn) btn.disabled = !paymentEl.checked;
+    }
+  });
+}
+
+window.UpressStaffPages = window.UpressStaffPages || {};
+window.UpressStaffPages.initDashboard = initDashboardPage;
+window.UpressStaffPages.initAnalytics = initAnalyticsPage;
+window.UpressStaffPages.initOrderQueue = initOrderQueuePage;
+window.UpressStaffPages.initQrScanner = initQrScannerPage;
+window.UpressStaffPages.initOrderLookup = initOrderLookupPage;
+window.UpressStaffPages.initReadyRelease = initReadyReleasePage;
+window.UpressStaffPages.initCompleted = initCompletedPage;
+window.UpressStaffPages.initOrderRelease = initOrderReleasePage;

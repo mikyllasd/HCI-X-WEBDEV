@@ -193,6 +193,45 @@
     return updated;
   }
 
+  function setOrderReviewStatus(orderId, { status, notes } = {}) {
+    const oid = String(orderId || "").trim();
+    const next = String(status || "").trim().toLowerCase();
+    if (!oid) return false;
+    if (!["pending_review", "approved", "rejected"].includes(next)) {
+      throw new Error("Invalid review status.");
+    }
+
+    const stamp = new Date().toISOString();
+    const reviewNotes = String(notes || "").trim();
+
+    // Update LS order (compat / demo).
+    const lsList = safeJsonParse(localStorage.getItem(LS_ORDERS), []);
+    if (Array.isArray(lsList)) {
+      const i = lsList.findIndex((x) => x?.orderId === oid);
+      if (i !== -1) {
+        lsList[i].staffReviewStatus = next;
+        lsList[i].staffReviewNotes = reviewNotes;
+        lsList[i].staffReviewedAt = stamp;
+        saveWebOrders(lsList);
+      }
+    }
+
+    // Update canonical DB transaction if available.
+    if (typeof window.updateTransaction === "function") {
+      try {
+        window.updateTransaction(oid, {
+          staffReviewStatus: next,
+          staffReviewNotes: reviewNotes,
+          staffReviewedAt: stamp,
+        });
+      } catch {
+        // ignore if missing in DB
+      }
+    }
+
+    return true;
+  }
+
   function persistWebOrderStatus(orderId, staffNextKey) {
     const map = {
       processing: "Processing",
@@ -249,6 +288,9 @@
       rush: p.rush,
       notes: p.notes,
       paymentVerified: p.paymentVerified,
+      staffReviewStatus: p.staffReviewStatus || "pending_review",
+      staffReviewNotes: p.staffReviewNotes || "",
+      staffReviewedAt: p.staffReviewedAt || "",
       orderType: p.orderType || "Individual",
       orderOrg: p.orderOrg || "",
     };
@@ -435,6 +477,7 @@
     getWalkInSaleById,
     addWalkInSale,
     verifyWebPayment,
+    setOrderReviewStatus,
     persistWebOrderStatus,
     hydrateTablesFromStorage,
     orderToStaffPayload,

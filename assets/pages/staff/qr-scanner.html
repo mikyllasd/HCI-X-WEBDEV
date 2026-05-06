@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – QR Scanner</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/staff/staff-pos.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+  </head>
+  <body class="staff-dashboard-body" data-page="qr-scanner">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Staff sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Staff &amp; walk-in POS</span>
+          </div>
+          <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Close menu"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button class="user-pill" aria-label="Logged in as Staff" type="button">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Staff</span>
+          </button>
+          <p class="user-handle">@staff</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Staff navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="walk-in-pos.html" class="nav-link" data-page="walk-in-pos">
+                <i data-lucide="store" aria-hidden="true"></i
+                ><span>Walk-in POS</span></a
+              >
+            </li>
+            <li class="nav-section-label" aria-hidden="true">Staff</li>
+            <li>
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i
+                ><span>Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a href="analytics.html" class="nav-link" data-page="analytics">
+                <i data-lucide="bar-chart-3" aria-hidden="true"></i
+                ><span>Analytics</span></a
+              >
+            </li>
+            <li>
+              <a href="organizations.html" class="nav-link" data-page="organizations">
+                <i data-lucide="building-2" aria-hidden="true"></i
+                ><span>Organizations</span></a
+              >
+            </li>
+            <li>
+              <a href="sales-report.html" class="nav-link" data-page="sales-report">
+                <i data-lucide="receipt" aria-hidden="true"></i
+                ><span>Sales Report</span></a
+              >
+            </li>
+            <li>
+              <a href="order-queue.html" class="nav-link" data-page="order-queue">
+                <i data-lucide="package" aria-hidden="true"></i
+                ><span>Orders Queue</span></a
+              >
+            </li>
+            <li>
+              <a href="ready-release.html" class="nav-link" data-page="ready-release">
+                <i data-lucide="check-circle" aria-hidden="true"></i
+                ><span>Release</span></a
+              >
+            </li>
+            <li>
+              <a href="order-lookup.html" class="nav-link" data-page="order-lookup">
+                <i data-lucide="search" aria-hidden="true"></i
+                ><span>Order Lookup</span></a
+              >
+            </li>
+            <li>
+              <a href="qr-scanner.html" class="nav-link" data-page="qr-scanner">
+                <i data-lucide="scan-qr-code" aria-hidden="true"></i
+                ><span>QR Scanner</span></a
+              >
+            </li>
+            <li>
+              <a href="completed.html" class="nav-link" data-page="completed">
+                <i data-lucide="check-check" aria-hidden="true"></i
+                ><span>Completed</span></a
+              >
+            </li>
+          </ul>
+
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="../auth/portal.html"
+                class="nav-link nav-link--logout"
+                id="logout-btn"
+                aria-label="Logout"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i
+                ><span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button
+          class="hamburger main-hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <section id="page-qr-scanner" aria-labelledby="staff-qr-heading">
+          <header class="staff-header page-dark-header">
+            <div>
+              <h1 id="staff-qr-heading">QR Scanner</h1>
+              <p>Scan student QR codes to confirm release</p>
+            </div>
+          </header>
+          <div class="staff-panel-full card sp">
+            <h3>Scanner</h3>
+            <div class="sd-scan">
+              <div class="sd-scan__toolbar">
+                <div class="sd-scan__status" id="qrStatusText">Camera is off.</div>
+                <div class="sd-scan__actions">
+                  <button class="sd-scan__btn" id="qrStartBtn" type="button">
+                    Start scanner
+                  </button>
+                  <button
+                    class="sd-scan__btn sd-scan__btn--ghost"
+                    id="qrStopBtn"
+                    type="button"
+                    disabled
+                  >
+                    Stop
+                  </button>
+                </div>
+              </div>
+
+              <div class="sd-scan__box" aria-label="Camera preview">
+                <video
+                  id="qrVideo"
+                  class="sd-scan__video"
+                  playsinline
+                  muted
+                ></video>
+                <div class="sd-scan__frame" aria-hidden="true"></div>
+              </div>
+
+              <div class="sd-scan__helper" id="qrHelperText">
+                Click <b>Start scanner</b>. If you see a browser prompt, choose
+                <b>Allow</b> to use the camera.
+              </div>
+
+              <div class="sd-scan__result">
+                <div class="sd-scan__label">Last scanned</div>
+                <div class="sd-scan__value" id="qrResultText">—</div>
+              </div>
+
+              <div class="sd-scan__manual">
+                <div class="sd-scan__label">Manual entry</div>
+                <div class="sd-scan__manualRow">
+                  <input
+                    id="qrManualInput"
+                    class="sd-scan__input"
+                    type="text"
+                    placeholder="Enter QR code text (mock)"
+                  />
+                  <button class="sd-scan__btn" id="qrManualSubmit" type="button">
+                    Validate
+                  </button>
+                </div>
+                <div class="sd-scan__hint">
+                  Use this if camera is blocked or not supported.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/staff/staff-data.js"></script>
+    <script src="../../js/staff/staff-shell.js"></script>
+    <script src="../../js/staff/staff.js"></script>
+    <script src="../../js/staff/staff-qr.js"></script>
+  </body>
+</html>
+

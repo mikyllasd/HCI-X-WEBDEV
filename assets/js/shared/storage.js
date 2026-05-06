@@ -10,6 +10,8 @@ const defaultDB = {
   archives: {},
   affiliationRequests: [],
   organizations: [],
+  orgLedgers: [],
+  orgLedgerArchive: [],
   systemSettings: {
     maintenanceMode: false,
     policies: {},
@@ -81,6 +83,10 @@ function mergeWithDefaults(db) {
       ? db.affiliationRequests
       : [],
     organizations: Array.isArray(db.organizations) ? db.organizations : [],
+    orgLedgers: Array.isArray(db.orgLedgers) ? db.orgLedgers : [],
+    orgLedgerArchive: Array.isArray(db.orgLedgerArchive)
+      ? db.orgLedgerArchive
+      : [],
     systemSettings: {
       maintenanceMode: db.systemSettings?.maintenanceMode || false,
       policies: db.systemSettings?.policies || {},
@@ -497,4 +503,19 @@ function getArchivedServices(fromYear) {
   } catch (e) {
     console.warn("UPRESS demo storage ensure skipped:", e);
   }
+})();
+
+// Staff-specific demo seeds (safe no-ops if already populated)
+(function ensureStaffDemoSeeds() {
+  if (typeof window === "undefined" || !window.UpressDemoSeed) return;
+  try {
+    if (typeof window.UpressDemoSeed.seedStaffWalkInSalesIfEmpty === "function") {
+      window.UpressDemoSeed.seedStaffWalkInSalesIfEmpty();
+    }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedOrgLedgersIfEmpty === "function") {
+      window.UpressDemoSeed.seedOrgLedgersIfEmpty();
+    }
+  } catch {}
 })();

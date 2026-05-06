@@ -404,6 +404,7 @@ body:not(.staff-dashboard-body) .signup a {
   transition:
     box-shadow 0.2s ease,
     transform 0.2s ease;
+  margin-bottom: 18px;
 }
 
 .sd-panel:hover {
@@ -417,6 +418,139 @@ body:not(.staff-dashboard-body) .signup a {
   justify-content: space-between;
   gap: 12px;
   padding: 2px 4px 10px;
+}
+
+/* Staff filter bar (aligned with admin report filters) */
+.staff-dashboard-body .rpt-filters-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+@media (max-width: 700px) {
+  .staff-dashboard-body .rpt-filters-row {
+    grid-template-columns: 1fr;
+  }
+}
+.staff-dashboard-body .rpt-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.staff-dashboard-body .rpt-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.staff-dashboard-body .rpt-filter-actions .sd-panel__cta {
+  width: 100%;
+}
+
+/* Bring over admin/superadmin filter input look for staff reports */
+.staff-dashboard-body .filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.staff-dashboard-body .filter-input,
+.staff-dashboard-body .filter-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(17, 24, 39, 0.12);
+  border-radius: 12px;
+  background: #fff;
+  color: #111827;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.staff-dashboard-body .filter-input:focus,
+.staff-dashboard-body .filter-select:focus {
+  border-color: var(--color-header);
+  box-shadow: 0 0 0 3px rgba(15, 42, 73, 0.12);
+}
+
+@media (max-width: 768px) {
+  .staff-dashboard-body .filter-input,
+  .staff-dashboard-body .filter-select {
+    padding: 14px 16px;
+  }
+}
+
+/* Table list toolbar + pagination (match superadmin list UI) */
+.staff-dashboard-body .list-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 6px 0 12px;
+}
+
+.staff-dashboard-body .list-search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 520px;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.staff-dashboard-body .list-search__input {
+  width: 100%;
+  border: 1.5px solid rgba(17, 24, 39, 0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  color: #111827;
+  background: #fff;
+}
+
+.staff-dashboard-body .list-search__input:focus {
+  outline: none;
+  border-color: var(--color-header);
+  box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+}
+
+.staff-dashboard-body .list-toolbar__count {
+  font-size: 13px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.staff-dashboard-body .list-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0 4px;
+}
+
+.staff-dashboard-body .list-pagination__summary {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.staff-dashboard-body .list-pagination__actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .staff-dashboard-body .list-toolbar,
+  .staff-dashboard-body .list-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .staff-dashboard-body .list-search {
+    max-width: none;
+  }
 }
 
 .sd-panel__head > div {
@@ -1743,6 +1877,7 @@ body.staff-dashboard-body .main-content .card:has(> .card-header) {
 body.staff-dashboard-body .main-content .card.sp,
 body.staff-dashboard-body .main-content .staff-panel-full.card {
   padding: 20px;
+  margin-top: 18px;
 }
 
 body.staff-dashboard-body .main-content .card.sp:has(> .card-header) {

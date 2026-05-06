@@ -38,43 +38,9 @@
     el.classList.add("signup-hidden");
   }
 
-<<<<<<< HEAD
   function showAlert(title, text, callback) {
     window.alert(`${title}\n\n${text}`);
     if (typeof callback === "function") callback();
-=======
-  function getSignupUserByEmailOrCampusId(email, campusId) {
-    const db = getDB();
-    const normalizedEmail = String(email || "").toLowerCase();
-    const normalizedId = String(campusId || "").trim();
-
-    const foundByEmail =
-      (db.users || []).find(
-        (user) => String(user.email || "").toLowerCase() === normalizedEmail,
-      ) ||
-      (db.authUsers || []).find(
-        (user) => String(user.email || "").toLowerCase() === normalizedEmail,
-      );
-
-    const foundById = (db.users || []).find((user) => {
-      const idValue = String(
-        user.campusId || user.studentId || user.facultyId || "",
-      ).trim();
-      return idValue === normalizedId;
-    });
-
-    return {
-      existingUser: foundByEmail || null,
-      existingCampusIdUser: foundById || null,
-    };
-  }
-
-  function showAlert(title, text, onOk) {
-    window.alert(`${title}\n\n${text}`);
-    if (typeof onOk === "function") {
-      onOk();
-    }
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
   }
 
   function getAccountType() {
@@ -323,7 +289,6 @@
     try {
       const db = getDB();
 
-<<<<<<< HEAD
       ["users", "authUsers"].forEach((key) => {
         db[key] = Array.isArray(db[key]) ? db[key] : [];
         const idx = db[key].findIndex(
@@ -335,39 +300,6 @@
           db[key].unshift(user);
         }
       });
-=======
-      // Save to users array (for admin dashboard)
-      db.users = Array.isArray(db.users) ? db.users : [];
-      const userExistingIndex = db.users.findIndex(
-        (item) =>
-          String(item.email || "").toLowerCase() ===
-          String(user.email || "").toLowerCase(),
-      );
-      if (userExistingIndex !== -1) {
-        db.users[userExistingIndex] = {
-          ...db.users[userExistingIndex],
-          ...user,
-        };
-      } else {
-        db.users.unshift(user);
-      }
-
-      // Save to authUsers array (for login authentication)
-      db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
-      const authExistingIndex = db.authUsers.findIndex(
-        (item) =>
-          String(item.email || "").toLowerCase() ===
-          String(user.email || "").toLowerCase(),
-      );
-      if (authExistingIndex !== -1) {
-        db.authUsers[authExistingIndex] = {
-          ...db.authUsers[authExistingIndex],
-          ...user,
-        };
-      } else {
-        db.authUsers.unshift(user);
-      }
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
 
       saveDB(db);
     } catch (err) {
@@ -728,7 +660,6 @@
 
       if (!validateStep2()) { goToStep(2); return; }
 
-<<<<<<< HEAD
       if (!capturedIdDataUrl) {
         showInlineAlert("Please capture your ID card using the camera (Step 3).");
         return;
@@ -754,88 +685,6 @@
       }
 
       const user = buildUserObject();
-=======
-        const first = document.getElementById("signup-first")?.value.trim();
-        const last = document.getElementById("signup-last")?.value.trim();
-        const campusId = document
-          .getElementById("signup-campus-id")
-          ?.value.trim();
-        const college = document.getElementById("signup-college")?.value;
-        const course = document.getElementById("signup-course")?.value;
-        const yearLevel = document.getElementById("signup-year")?.value;
-        const email = document.getElementById("signup-email")?.value.trim();
-        const phone = document.getElementById("signup-phone")?.value.trim();
-        const pass = document.getElementById("signup-pass")?.value;
-        const type = getAccountType();
-        const fullName = `${first} ${last}`.trim();
-
-        const { existingUser, existingCampusIdUser } =
-          getSignupUserByEmailOrCampusId(email, campusId);
-
-        if (
-          existingCampusIdUser &&
-          (!existingUser || existingCampusIdUser.email !== email)
-        ) {
-          showInlineAlert(
-            type === "faculty"
-              ? "An account with this employee ID already exists."
-              : "An account with this student ID already exists.",
-          );
-          return;
-        }
-
-        if (existingUser) {
-          const status = String(
-            existingUser.accountStatus || existingUser.status || "pending",
-          ).toLowerCase();
-
-          if (status === "pending") {
-            window.location.href =
-              "../auth/portal.html?signupPending=1&email=" +
-              encodeURIComponent(email);
-            return;
-          }
-
-          window.location.href =
-            "../auth/portal.html?accountExists=1&email=" +
-            encodeURIComponent(email);
-          return;
-        }
-
-        const user = {
-          id: `UPRESS_USER_${Date.now()}`,
-          accountType: type,
-          role: type,
-          firstName: first,
-          lastName: last,
-          name: fullName,
-          fullName: fullName,
-          email: email,
-          phone: phone,
-          password: pass,
-          campusId: campusId,
-          studentId: type === "student" ? campusId : "",
-          facultyId: type === "faculty" ? campusId : "",
-          college: college || "",
-          course: course || "",
-          yearLevel: yearLevel || "",
-          status: "pending",
-          accountStatus: "pending",
-          flagged: false,
-          disabled: false,
-          idDocument: capturedIdDataUrl,
-          corDocument: capturedCorDataUrl,
-          submittedAt: new Date().toISOString(),
-          signupPath: email.toLowerCase().endsWith("@wmsu.edu.ph") ? "A" : "B",
-          createdAt: new Date().toISOString(),
-        };
-
-        try {
-          localStorage.removeItem("upressUser");
-        } catch (err) {
-          console.error("Error clearing current signup session:", err);
-        }
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
 
       // Save session
       try {
@@ -844,20 +693,8 @@
         console.error("Error saving session user:", err);
       }
 
-<<<<<<< HEAD
       // Save to shared DB — this is what the admin pages read
       persistUserToDB(user);
-=======
-        showAlert(
-          "Request submitted",
-          "Your request is still being processed. You will receive an email if your account has been verified.",
-          () => {
-            window.location.href =
-              "../auth/portal.html?signupPending=1&email=" +
-              encodeURIComponent(email);
-          },
-        );
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
 
       // Reset
       document.getElementById("signup-form")?.reset();

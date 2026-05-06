@@ -195,7 +195,6 @@
       <article class="request-card" data-user-id="${user.id}">
         <div class="request-card__header">
           <div>
-<<<<<<< HEAD
             <h3 class="card-title">${displayName}</h3>
             <p class="card-subtitle">
               ${displayId}
@@ -203,10 +202,6 @@
               &nbsp;·&nbsp; ${formatField(user.college)}
               ${user.course ? `&nbsp;·&nbsp; ${user.course}` : ""}
             </p>
-=======
-            <h3 class="card-title">${formatField(user.fullName)}</h3>
-            <p class="card-subtitle">${formatField(user.studentId || user.campusId)} · ${formatField(user.college)} · ${formatField(user.course)}</p>
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
           </div>
           ${buildStatusBadge(status)}
         </div>
@@ -217,11 +212,7 @@
             <span class="request-card__value">${formatField(user.email)}</span>
           </div>
           <div class="request-card__item">
-<<<<<<< HEAD
             <span class="request-card__label">Mobile</span>
-=======
-            <span class="request-card__label">Phone</span>
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
             <span class="request-card__value">${formatField(user.phone)}</span>
           </div>
           <div class="request-card__item">
@@ -256,20 +247,8 @@
           </div>` : ""}
         </div>
 
-<<<<<<< HEAD
         <div class="request-card__image">
           ${buildDocImages(user)}
-=======
-        <div class="request-card__documents">
-          <div class="request-card__document">
-            <span class="request-card__label">Student ID</span>
-            ${user.idDocument ? `<img src="${user.idDocument}" alt="Student ID document" />` : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`}
-          </div>
-          <div class="request-card__document">
-            <span class="request-card__label">COR / Proof</span>
-            ${user.corDocument ? `<img src="${user.corDocument}" alt="Student COR document" />` : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`}
-          </div>
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
         </div>
 
         <div class="request-card__actions">
@@ -313,7 +292,6 @@
   function updateUserStatus(id, newStatus) {
     const db = getDB();
 
-<<<<<<< HEAD
     ["users", "authUsers"].forEach((key) => {
       const arr = Array.isArray(db[key]) ? db[key] : [];
       const user = arr.find((item) => item.id === id);
@@ -324,43 +302,6 @@
       user.active = newStatus === "approved";
       user.reviewedAt = new Date().toISOString();
     });
-=======
-    user.status = newStatus;
-    user.verified = newStatus === "approved";
-    user.active = newStatus === "approved";
-    user.accountStatus = updatedStatus;
-    user.reviewedAt = new Date().toISOString();
-
-    db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
-    let authUser = db.authUsers.find(
-      (item) =>
-        item.email && item.email.toLowerCase() === user.email.toLowerCase(),
-    );
-
-    if (authUser) {
-      authUser.accountStatus = updatedStatus;
-      authUser.verified = newStatus === "approved";
-      authUser.active = newStatus === "approved";
-      authUser.reviewedAt = user.reviewedAt;
-    } else {
-      authUser = {
-        id: user.id || `auth_${Date.now()}`,
-        email: user.email,
-        password: user.password || "",
-        fullName:
-          user.fullName ||
-          `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-        phone: user.phone || "",
-        accountType: user.accountType || "student",
-        accountStatus: updatedStatus,
-        verified: newStatus === "approved",
-        active: newStatus === "approved",
-        reviewedAt: user.reviewedAt,
-        createdAt: user.createdAt || new Date().toISOString(),
-      };
-      db.authUsers.push(authUser);
-    }
->>>>>>> ea178d960aab7b27a18fe2d1bb70524c94262be1
 
     saveDB(db);
 

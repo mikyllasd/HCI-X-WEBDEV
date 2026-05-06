@@ -1,4 +1,4 @@
-/* Superadmin Settings Styles */
+/* Superadmin System Settings — theme-aware (loads after upress-super-content) */
 
 .page-header {
   margin-bottom: 24px;
@@ -13,17 +13,17 @@
 
 .page-sub {
   font-size: 14px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 .settings-section {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   border: 1px solid var(--color-border);
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .settings-section-header {
@@ -68,7 +68,7 @@
 
 .settings-section-sub {
   font-size: 14px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin: 4px 0 0 0;
 }
 
@@ -90,7 +90,7 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 14px;
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   color: var(--color-text);
   transition:
     border-color 0.2s ease,
@@ -99,18 +99,18 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+  border-color: var(--color-header);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-header) 28%, transparent);
 }
 
 .sticky-save {
   position: sticky;
   bottom: 24px;
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   margin-top: 24px;
 }
 
@@ -137,7 +137,7 @@
 .btn-primary {
   background: var(--color-header);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.35);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-header) 45%, transparent);
 }
 
 .btn-primary:hover {
@@ -159,13 +159,13 @@
 }
 
 .maintenance-alert.active {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.28);
 }
 
 .maintenance-alert.normal {
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.28);
 }
 
 .maintenance-alert-text {
@@ -181,7 +181,7 @@
 
 .maintenance-alert-text span {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .btn-sm {
@@ -196,7 +196,7 @@
 
 .btn-ghost {
   background: transparent;
-  color: #5a6170;
+  color: var(--color-text-muted);
   border: 1.5px solid var(--color-border);
 }
 
@@ -241,7 +241,7 @@
 
 .role-count {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .role-list {
@@ -254,7 +254,7 @@
   padding: 14px;
   border: 1px dashed var(--color-border);
   border-radius: 10px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: 13px;
 }
 
@@ -266,7 +266,7 @@
   padding: 12px 12px;
   border: 1px solid var(--color-border);
   border-radius: 10px;
-  background: var(--color-white);
+  background: var(--color-surface-soft);
 }
 
 .role-main {
@@ -285,7 +285,7 @@
   flex-wrap: wrap;
   gap: 8px;
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .role-desc {
@@ -300,7 +300,7 @@
     "Courier New", monospace;
   padding: 2px 6px;
   border-radius: 999px;
-  background: var(--color-surface-soft);
+  background: var(--color-card-muted);
   border: 1px solid var(--color-border);
   color: var(--color-text);
 }
@@ -319,7 +319,7 @@
   border: 1px solid var(--color-border);
   border-radius: 10px;
   cursor: pointer;
-  background: var(--color-white);
+  background: var(--color-surface-soft);
 }
 
 .toggle-row input[type="checkbox"] {
@@ -343,7 +343,7 @@
   display: block;
   margin-top: 3px;
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .toast {
@@ -351,7 +351,7 @@
   bottom: 28px;
   right: 28px;
   background: var(--color-text);
-  color: #fff;
+  color: var(--color-surface-raised);
   padding: 12px 18px;
   border-radius: 10px;
   font-size: 13px;
@@ -366,6 +366,11 @@
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
     opacity 0.35s ease;
   box-shadow: var(--shadow-lg);
+}
+
+html[data-theme="dark"] .toast {
+  background: #292524;
+  color: #fafaf9;
 }
 
 .toast.show {

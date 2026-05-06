@@ -96,7 +96,7 @@
           <option value="">Select school year…</option>
           ${schoolYearOptions(db.academicYear || "")}
         </select>
-        <div style="font-size: 12px; color: var(--color-text-secondary); margin-top: 4px;">
+        <div style="font-size: 12px; color: var(--color-text-muted); margin-top: 4px;">
           School years run as two consecutive calendar years (e.g. 2025–2026). Required for dashboards, users, and services.
         </div>
       </div>
@@ -121,7 +121,7 @@
         <div class="form-group">
           <label class="form-label" for="roleKey">Role key</label>
           <input class="form-input" id="roleKey" type="text" placeholder="e.g. finance_officer" />
-          <div style="font-size: 12px; color: var(--color-text-secondary); margin-top: 4px;">
+          <div style="font-size: 12px; color: var(--color-text-muted); margin-top: 4px;">
             Used internally for filtering/permissions later. Auto-generated from role name if left blank.
           </div>
         </div>

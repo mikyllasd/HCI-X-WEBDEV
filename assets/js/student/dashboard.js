@@ -629,25 +629,6 @@
   }
   window.submitAffiliateRequest = submitAffiliateRequest;
 
-  // ── UPDATE EMAIL MODAL ─────────────────────────────────────────────────────
-
-  function showUpdateEmailModal() {
-    const newEmail = prompt('Enter your new email address:');
-    if (!newEmail || !newEmail.includes('@')) { if (newEmail !== null) alert('Please enter a valid email.'); return; }
-    const db = getDB();
-    ['users', 'authUsers'].forEach(key => {
-      const arr = Array.isArray(db[key]) ? db[key] : [];
-      const user = arr.find(u => u.id === currentUser.id);
-      if (user) user.email = newEmail;
-    });
-    saveDB(db);
-    const session = getCurrentUser();
-    if (session) { session.email = newEmail; localStorage.setItem('upressUser', JSON.stringify(session)); }
-    populateProfile();
-    alert('Email updated successfully!');
-  }
-  window.showUpdateEmailModal = showUpdateEmailModal;
-
   // ── CLOSE PANELS ON OUTSIDE CLICK ─────────────────────────────────────────
 
   document.addEventListener('click', function (e) {

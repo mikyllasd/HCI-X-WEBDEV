@@ -17,7 +17,7 @@
 }
 
 .modal {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 480px;

@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function(){var k='upress-theme';var s=localStorage.getItem(k);var t=(s==='dark'||s==='light')?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+
     <title>UPRESSease | Create Order</title>
     <link rel="stylesheet" href="../../css/student/student.css" />
     <link rel="stylesheet" href="../../css/student/create-order.css" />
+  <link rel="stylesheet" href="../../css/upress-theme-toggle.css" />
+
 </head>
 <body>
 
@@ -171,5 +177,7 @@
 
 <script src="../../js/student/student.js"></script>
 <script src="../../js/student/create-order.js"></script>
+  <script src="../../js/shared/theme-toggle.js" defer></script>
+
 </body>
 </html>

@@ -7,7 +7,7 @@
 }
 
 .user-card {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   border: 1px solid var(--color-border);
   padding: 20px;
@@ -50,7 +50,7 @@
 
 .user-handle-sm {
   font-size: 12px;
-  color: #9aa1b0;
+  color: var(--color-text-muted);
   font-family: var(--font-sans);
   margin-top: 2px;
 }
@@ -68,7 +68,7 @@
 
 .role-badge.admin {
   background: rgba(59, 130, 246, 0.12);
-  color: #2563eb;
+  color: var(--clr-blue, #2563eb);
 }
 
 .role-badge.staff {
@@ -81,7 +81,7 @@
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #5a6170;
+  color: var(--color-text-muted);
   margin-bottom: 14px;
 }
 
@@ -137,7 +137,7 @@
 }
 
 .settings-section {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   border: 1px solid var(--color-border);
   padding: 24px;
@@ -165,7 +165,7 @@
 
 .settings-section-icon.blue {
   background: rgba(59, 130, 246, 0.12);
-  color: #3b82f6;
+  color: var(--clr-blue, #3b82f6);
 }
 
 .settings-section-icon.green {
@@ -201,7 +201,7 @@
 
 .settings-section-sub {
   font-size: 12px;
-  color: #9aa1b0;
+  color: var(--color-text-muted);
   margin-top: 2px;
 }
 
@@ -211,7 +211,7 @@
 
 .form-help {
   font-size: 12px;
-  color: #9aa1b0;
+  color: var(--color-text-muted);
   margin-top: 6px;
 }
 
@@ -311,11 +311,12 @@
 }
 
 .summary-block {
-  background: linear-gradient(135deg, var(--color-header) 0%, var(--color-header-hover) 100%);
+  background: var(--color-header);
   border-radius: 12px;
   padding: 24px;
   margin-top: 8px;
   box-shadow: 0 4px 20px rgba(128, 0, 0, 0.2);
+  border: 1px solid color-mix(in srgb, var(--color-header) 55%, transparent);
 }
 
 .summary-title {
@@ -366,7 +367,7 @@
 }
 
 .reports-header-section {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   border: 1px solid var(--color-border);
   padding: 20px 24px;
@@ -557,7 +558,7 @@
   align-items: center;
   padding: 6px 10px;
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-white);
+  background: var(--color-surface-raised);
 }
 
 .pricing-print-row:last-child {

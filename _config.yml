@@ -1,0 +1,26 @@
+# GitHub Pages (Jekyll) — https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site
+# If you publish this repo as a project site, set baseurl to "/<repository-name>" (leading slash, no trailing slash).
+# For a user/org site (username.github.io repo), keep baseurl empty.
+
+title: UPRESSease
+description: University printing services — WMSU
+url: "" # e.g. https://your-username.github.io
+baseurl: "" # e.g. /HCI-X-WEBDEV for https://your-username.github.io/HCI-X-WEBDEV/
+
+markdown: kramdown
+strict_front_matter: false
+
+exclude:
+  - README.md
+  - LICENSE
+  - .gitignore
+  - .github
+  - node_modules
+  - Gemfile
+  - Gemfile.lock
+  - package.json
+  - package-lock.json
+
+# Uncomment if you add a Gemfile with jekyll plugins:
+# plugins:
+#   - jekyll-seo-tag

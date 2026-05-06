@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function(){var k='upress-theme';var s=localStorage.getItem(k);var t=(s==='dark'||s==='light')?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+
     <title>UPRESSease – Superadmin Dashboard</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -14,6 +18,8 @@
     <link rel="stylesheet" href="../../css/upress-super-content.css" />
     <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/superadmin/dashboard.css" />
+  <link rel="stylesheet" href="../../css/upress-theme-toggle.css" />
     <link rel="stylesheet" href="dashboard.css" />
   </head>
   <body class="staff-dashboard-body" data-page="dashboard">
@@ -144,6 +150,8 @@
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="../../js/superadmin/dashboard.js"></script>
+  <script src="../../js/shared/theme-toggle.js" defer></script>
     <script src="dashboard.js"></script>
   </body>
 </html>

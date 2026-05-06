@@ -17,7 +17,7 @@
 }
 
 .signup-card {
-    background: var(--color-white);
+    background: var(--color-surface-raised);
     border-radius: var(--radius-xl);
     width: 100%;
     max-width: 32rem;
@@ -572,7 +572,7 @@
 .signup-btn-outline {
     flex: 1;
     padding: 12px 14px;
-    background: var(--color-white);
+    background: var(--color-surface-raised);
     color: var(--color-text-muted);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-md);

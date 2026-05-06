@@ -262,7 +262,7 @@ function renderOrderModal(order, mode) {
         </div>
         <div style="padding:14px 16px; display:grid; gap:10px">
           <label style="display:grid;gap:6px">
-            <span style="font-weight:700;font-size:12px;color:#667085">Review notes</span>
+            <span class="sd-field-cap">Review notes</span>
             <input id="orgReviewNotes" class="sd-lookup__input" type="text" value="${escapeHtml(
               order.staffReviewNotes || '',
             )}" placeholder="e.g. Can fulfill by Friday; need 50 copies; payment verified" />

@@ -114,9 +114,9 @@ img {
 }
 
 .btn-light {
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
   color: var(--color-primary);
-  border-color: var(--color-white);
+  border-color: var(--color-border);
 }
 
 .btn-light:hover {
@@ -131,7 +131,7 @@ img {
 }
 
 .btn-outline-light:hover {
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
   color: var(--color-primary);
 }
 
@@ -247,7 +247,7 @@ img {
   top: 100%;
   left: 0;
   right: 0;
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
   border-bottom: 1px solid var(--color-border);
   padding: 24px;
 }
@@ -380,7 +380,7 @@ img {
   align-items: center;
   gap: 12px;
   padding: 16px 24px;
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   font-weight: 600;
@@ -482,7 +482,7 @@ img {
 /* Services Section */
 .services {
   padding: 80px 0;
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
 }
 
 .services-grid {
@@ -646,7 +646,7 @@ img {
 /* Pricing Section */
 .pricing {
   padding: 80px 0;
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
 }
 
 .pricing-tables {
@@ -794,10 +794,11 @@ img {
 }
 
 .contact-form {
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
   padding: 32px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
 }
 
 .form-group {
@@ -827,7 +828,7 @@ img {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
 }
 
 .form-group textarea {
@@ -845,8 +846,8 @@ img {
 /* Footer */
 .footer {
   padding: 60px 0 32px;
-  background-color: var(--color-text);
-  color: var(--color-white);
+  background-color: var(--color-footer-bg);
+  color: var(--color-footer-text);
 }
 
 .footer-content {
@@ -856,12 +857,12 @@ img {
 }
 
 .footer-brand .logo-text {
-  color: var(--color-white);
+  color: var(--color-footer-text);
 }
 
 .footer-description {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-footer-muted);
   margin-top: 16px;
   max-width: 300px;
   line-height: 1.6;
@@ -887,22 +888,22 @@ img {
 
 .footer-column a {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-footer-muted);
   transition: var(--transition);
 }
 
 .footer-column a:hover {
-  color: var(--color-white);
+  color: var(--color-footer-text);
 }
 
 .footer-bottom {
   padding-top: 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--color-footer-rule);
   display: flex;
   flex-direction: column;
   gap: 8px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-footer-muted);
 }
 
 @media (min-width: 768px) {
@@ -936,10 +937,11 @@ img {
 }
 
 .auth-card {
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
   padding: 40px;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
 }
 
 .auth-header {
@@ -1256,7 +1258,7 @@ img {
 .select-wrapper select:focus {
   outline: none;
   border-color: var(--color-primary);
-  background-color: var(--color-white);
+  background-color: var(--color-surface-raised);
 }
 
 .select-wrapper::after {
@@ -1387,7 +1389,7 @@ img {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-primary);
-  background-color: white;
+  background-color: var(--color-surface-raised);
   border: 1px solid var(--color-primary);
   border-radius: 20px;
   cursor: pointer;
@@ -1396,5 +1398,15 @@ img {
 
 .test-account-btn:hover {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-white);
+}
+
+/* Dark mode: landing chrome */
+html[data-theme="dark"] .header {
+  background-color: color-mix(in srgb, var(--color-surface-raised) 92%, transparent);
+  border-bottom-color: var(--color-border);
+}
+
+html[data-theme="dark"] .hero-card {
+  border: 1px solid var(--color-border);
 }

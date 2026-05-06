@@ -31,9 +31,6 @@
   justify-content: center;
   gap: 8px;
 }
-.accounts-button--flagged {
-  color: #be185d;
-}
 @media (max-width: 960px) {
   .accounts-filter-grid {
     grid-template-columns: 1fr;

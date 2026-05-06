@@ -927,6 +927,203 @@
     }
   }
 
+  function seedStudentsIfEmpty() {
+    if (typeof window === "undefined") return;
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+    try {
+      const db = window.getDB();
+      db.students = Array.isArray(db.students) ? db.students : [];
+      if (db.students.length) return;
+
+      const rows = [
+        {
+          id: "stu_demo_001",
+          name: "Maria Santos",
+          studentNumber: "2025-00123",
+          college: "College of Computing",
+          course: "Computer Science",
+          yearLevel: "3rd Year",
+          contact: "maria.santos@wmsu.edu.ph",
+          isFreshman: false,
+          createdAt: "2026-01-05T09:05:00.000Z",
+          createdBy: "demo",
+          source: "seed",
+        },
+        {
+          id: "stu_demo_002",
+          name: "Juan Dela Cruz",
+          studentNumber: "2025-00124",
+          college: "College of Computing",
+          course: "Information Technology",
+          yearLevel: "2nd Year",
+          contact: "juan.delacruz@wmsu.edu.ph",
+          isFreshman: false,
+          createdAt: "2026-01-05T10:10:00.000Z",
+          createdBy: "demo",
+          source: "seed",
+        },
+        {
+          id: "stu_demo_003",
+          name: "Pedro Garcia",
+          studentNumber: "2025-00126",
+          college: "College of Engineering",
+          course: "Engineering",
+          yearLevel: "1st Year",
+          contact: "pedro.garcia@wmsu.edu.ph",
+          isFreshman: true,
+          createdAt: "2026-01-06T14:20:00.000Z",
+          createdBy: "demo",
+          source: "seed",
+        },
+      ];
+
+      db.students = rows.concat(db.students);
+      window.saveDB(db);
+    } catch (e) {
+      console.warn("Students demo seed skipped:", e);
+    }
+  }
+
+  function seedFacultyIfEmpty() {
+    if (typeof window === "undefined") return;
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+    try {
+      const db = window.getDB();
+      db.faculty = Array.isArray(db.faculty) ? db.faculty : [];
+      if (db.faculty.length) return;
+
+      const rows = [
+        {
+          id: "fac_demo_001",
+          name: "Anna Lopez",
+          employeeNumber: "EMP-001",
+          college: "College of Business",
+          department: "Marketing Management",
+          contact: "anna.lopez@wmsu.edu.ph",
+          createdAt: "2026-01-05T08:30:00.000Z",
+          createdBy: "demo",
+          source: "seed",
+        },
+        {
+          id: "fac_demo_002",
+          name: "Carlo Garcia",
+          employeeNumber: "EMP-002",
+          college: "College of Engineering",
+          department: "Civil Engineering",
+          contact: "carlo.garcia@wmsu.edu.ph",
+          createdAt: "2026-01-05T08:40:00.000Z",
+          createdBy: "demo",
+          source: "seed",
+        },
+      ];
+
+      db.faculty = rows.concat(db.faculty);
+      window.saveDB(db);
+    } catch (e) {
+      console.warn("Faculty demo seed skipped:", e);
+    }
+  }
+
+  function seedActivityRecordsIfEmpty() {
+    if (typeof window === "undefined") return;
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+    try {
+      const db = window.getDB();
+      db.transactions = Array.isArray(db.transactions) ? db.transactions : [];
+
+      // Only add if our seed rows don't exist yet (non-destructive).
+      const hasSeed = db.transactions.some((t) => String(t?.id || "").startsWith("txn_activity_seed_"));
+      if (hasSeed) return;
+
+      const now = Date.now();
+      const iso = (msAgo) => new Date(now - msAgo).toISOString();
+
+      const seedTx = [
+        // Faculty web/system completed transaction (links to db.users via email)
+        {
+          id: "txn_activity_seed_faculty_001",
+          serviceId: "svc_demo_printing",
+          serviceName: "Printing",
+          amount: 95,
+          category: "printing",
+          status: "completed",
+          semester: "2nd",
+          date: iso(2 * 24 * 60 * 60 * 1000),
+          academicYear: db.academicYear || DEMO_ACADEMIC_YEAR,
+          paymentType: "credit",
+          paymentMethod: "Pay Onsite",
+          email: "anna.lopez@wmsu.edu.ph",
+        },
+        // Organization web/system completed transaction
+        {
+          id: "txn_activity_seed_org_001",
+          serviceId: "svc_demo_lanyards",
+          serviceName: "Lanyards",
+          amount: 680,
+          category: "merchandise",
+          status: "completed",
+          semester: "2nd",
+          date: iso(3 * 24 * 60 * 60 * 1000),
+          academicYear: db.academicYear || DEMO_ACADEMIC_YEAR,
+          paymentType: "gcash",
+          paymentMethod: "Online Payment",
+          email: "org@local.demo",
+          order_type: "organization",
+          order_org: "Venom Publication",
+          orgName: "Venom Publication",
+          refNumber: "GCash-123456",
+        },
+      ];
+
+      db.transactions = seedTx.concat(db.transactions);
+      window.saveDB(db);
+    } catch (e) {
+      console.warn("Activity Records demo seed skipped:", e);
+    }
+
+    // Also seed a couple walk-in activity rows (non-destructive) so filters show variety.
+    try {
+      const LS_WALKIN = "upressWalkInSales";
+      let existing = [];
+      try {
+        existing = JSON.parse(localStorage.getItem(LS_WALKIN) || "[]");
+      } catch {
+        existing = [];
+      }
+      existing = Array.isArray(existing) ? existing : [];
+      const seen = new Set(existing.map((r) => String(r?.saleId || "")));
+
+      const now = Date.now();
+      const mk = (msAgo, saleId, total, method, patronType) => ({
+        saleId,
+        ts: new Date(now - msAgo).toISOString(),
+        date: new Date(now - msAgo).toISOString(),
+        customerName: patronType === "Organization" ? "Venom Publication" : "Walk-in Customer",
+        customerPhone: "",
+        patronType,
+        paymentMethod: method,
+        gcashRef: method.toLowerCase() === "gcash" ? `GCASH-${Math.floor(100000 + Math.random() * 900000)}` : "",
+        items: [{ service: "Printing", qty: 10, price: 3 }],
+        grandTotal: total,
+      });
+
+      const rows = [
+        mk(1 * 24 * 60 * 60 * 1000, "SALE-ACT-ORG-01", 250, "Cash", "Organization"),
+        mk(4 * 24 * 60 * 60 * 1000, "SALE-ACT-FAC-01", 180, "GCash", "Faculty"),
+      ];
+
+      let changed = false;
+      for (const r of rows) {
+        if (seen.has(String(r.saleId))) continue;
+        existing.unshift(r);
+        changed = true;
+      }
+      if (changed) localStorage.setItem(LS_WALKIN, JSON.stringify(existing));
+    } catch (e) {
+      console.warn("Activity Records walk-in seed skipped:", e);
+    }
+  }
+
   global.UpressDemoSeed = {
     DEMO_ACADEMIC_YEAR,
     getDemoDatabase,
@@ -934,5 +1131,8 @@
     seedStaffWebOrdersIfEmpty,
     seedStaffWalkInSalesIfEmpty,
     seedOrgLedgersIfEmpty,
+    seedStudentsIfEmpty,
+    seedFacultyIfEmpty,
+    seedActivityRecordsIfEmpty,
   };
 })(typeof window !== "undefined" ? window : globalThis);

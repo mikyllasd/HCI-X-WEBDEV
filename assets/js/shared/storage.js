@@ -10,6 +10,8 @@ const defaultDB = {
   archives: {},
   affiliationRequests: [],
   organizations: [],
+  students: [],
+  faculty: [],
   orgLedgers: [],
   orgLedgerArchive: [],
   systemSettings: {
@@ -83,6 +85,8 @@ function mergeWithDefaults(db) {
       ? db.affiliationRequests
       : [],
     organizations: Array.isArray(db.organizations) ? db.organizations : [],
+    students: Array.isArray(db.students) ? db.students : [],
+    faculty: Array.isArray(db.faculty) ? db.faculty : [],
     orgLedgers: Array.isArray(db.orgLedgers) ? db.orgLedgers : [],
     orgLedgerArchive: Array.isArray(db.orgLedgerArchive)
       ? db.orgLedgerArchive
@@ -517,5 +521,51 @@ function getArchivedServices(fromYear) {
     if (typeof window.UpressDemoSeed.seedOrgLedgersIfEmpty === "function") {
       window.UpressDemoSeed.seedOrgLedgersIfEmpty();
     }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedStudentsIfEmpty === "function") {
+      window.UpressDemoSeed.seedStudentsIfEmpty();
+    }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedFacultyIfEmpty === "function") {
+      window.UpressDemoSeed.seedFacultyIfEmpty();
+    }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedActivityRecordsIfEmpty === "function") {
+      window.UpressDemoSeed.seedActivityRecordsIfEmpty();
+    }
+  } catch {}
+})();
+
+/**
+ * Keep demo user roles aligned with seeded faculty/students.
+ * (Existing localStorage may have older demo rows where some faculty were tagged as students.)
+ */
+(function normalizeDemoUserRoles() {
+  if (typeof window === "undefined") return;
+  if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+  try {
+    const db = window.getDB();
+    const users = Array.isArray(db.users) ? db.users : [];
+    if (!users.length) return;
+
+    const emailToRole = new Map([
+      ["anna.lopez@wmsu.edu.ph", "faculty"],
+      ["carlo.garcia@wmsu.edu.ph", "faculty"],
+    ]);
+
+    let changed = false;
+    for (const u of users) {
+      const email = String(u?.email || "").toLowerCase();
+      const desired = emailToRole.get(email);
+      if (!desired) continue;
+      if (String(u.role || "").toLowerCase() !== desired) {
+        u.role = desired;
+        changed = true;
+      }
+    }
+    if (changed) window.saveDB(db);
   } catch {}
 })();

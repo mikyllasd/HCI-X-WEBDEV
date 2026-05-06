@@ -861,6 +861,8 @@ function initReadyReleasePage() {
 }
 
 function initCompletedPage() {
+  // Activity page is rendered by staff-activity.js. Keep legacy hydration for older markup.
+  if (document.getElementById("actPeriod")) return;
   if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   window.UpressListTools?.initTableList?.({
     tableId: "completedOrdersTable",

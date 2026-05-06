@@ -470,6 +470,45 @@
     },
   ];
 
+  const DEMO_ORGANIZATIONS = [
+    {
+      id: "ORG-001",
+      name: "Computer Science Club",
+      college: "College of Computing",
+      type: "Student Organization",
+      description:
+        "Official WMSU computing club recognized for co-curricular activities.",
+      proofImage: "",
+      approvedBy: "Admin",
+      approvedAt: "2026-04-15T09:00:00.000Z",
+      recognizedAt: "2026-04-15T09:00:00.000Z",
+    },
+    {
+      id: "ORG-002",
+      name: "Business Administration Society",
+      college: "College of Business",
+      type: "Student Organization",
+      description:
+        "WMSU business student organization recognized by the College of Business.",
+      proofImage: "",
+      approvedBy: "Admin",
+      approvedAt: "2026-04-20T11:00:00.000Z",
+      recognizedAt: "2026-04-20T11:00:00.000Z",
+    },
+    {
+      id: "ORG-003",
+      name: "Engineering Guild",
+      college: "College of Engineering",
+      type: "Student Organization",
+      description:
+        "Recognized engineering student organization for campus technical programs.",
+      proofImage: "",
+      approvedBy: "Admin",
+      approvedAt: "2026-04-22T13:30:00.000Z",
+      recognizedAt: "2026-04-22T13:30:00.000Z",
+    },
+  ];
+
   const SERVICE_BY_NAME = Object.fromEntries(
     DEMO_SERVICES.map((s) => [s.name, s]),
   );
@@ -548,6 +587,7 @@
       transactions: buildDemoTransactions(),
       ratings: clone(DEMO_RATINGS),
       archives: {},
+      organizations: clone(DEMO_ORGANIZATIONS),
       systemSettings: {
         maintenanceMode: false,
         policies: {},

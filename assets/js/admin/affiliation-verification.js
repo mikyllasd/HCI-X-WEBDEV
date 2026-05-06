@@ -48,32 +48,111 @@
 
   function normalizeStatus(request) {
     const status = String(request.status || "").toLowerCase();
-    return ["approved", "rejected", "pending"].includes(status) ? status : "pending";
+    return ["approved", "rejected", "pending"].includes(status)
+      ? status
+      : "pending";
   }
 
   function getFilteredRequests() {
     return getAffiliationRequests().filter(request => {
       const status = normalizeStatus(request);
+<<<<<<< HEAD
       const matchesSearch = !filterState.search ||
         (request.userName || "").toLowerCase().includes(filterState.search.toLowerCase()) ||
         (request.userEmail || "").toLowerCase().includes(filterState.search.toLowerCase()) ||
         (request.organizationName || "").toLowerCase().includes(filterState.search.toLowerCase());
       const matchesStatus = filterState.status === "all" || status === filterState.status;
       const matchesType = filterState.type === "all" || request.organizationType === filterState.type;
+=======
+      const matchesSearch =
+        !filterState.search ||
+        request.userName
+          ?.toLowerCase()
+          .includes(filterState.search.toLowerCase()) ||
+        request.userEmail
+          ?.toLowerCase()
+          .includes(filterState.search.toLowerCase()) ||
+        request.organizationName
+          ?.toLowerCase()
+          .includes(filterState.search.toLowerCase());
+
+      const matchesStatus =
+        filterState.status === "all" || status === filterState.status;
+      const matchesType =
+        filterState.type === "all" ||
+        request.organizationType === filterState.type;
+
+>>>>>>> a4f811037d26832df1a9bc721564f540ff2fcdd6
       return matchesSearch && matchesStatus && matchesType;
     });
   }
 
   function updateStats(requests) {
+<<<<<<< HEAD
     const stats = requests.reduce((acc, r) => {
       acc.total++;
       acc[normalizeStatus(r)]++;
       return acc;
     }, { total: 0, pending: 0, approved: 0, rejected: 0 });
+=======
+    const stats = requests.reduce(
+      (acc, request) => {
+        const status = normalizeStatus(request);
+        acc.total++;
+        acc[status]++;
+        return acc;
+      },
+      { total: 0, pending: 0, approved: 0, rejected: 0 },
+    );
+
+>>>>>>> a4f811037d26832df1a9bc721564f540ff2fcdd6
     if (totalEl) totalEl.textContent = stats.total;
     if (pendingEl) pendingEl.textContent = stats.pending;
     if (approvedEl) approvedEl.textContent = stats.approved;
     if (rejectedEl) rejectedEl.textContent = stats.rejected;
+  }
+
+  function addOrUpdateOrganizationDirectory(request) {
+    const db = getDB();
+    db.organizations = Array.isArray(db.organizations) ? db.organizations : [];
+
+    const orgName = String(request.organizationName || "").trim();
+    const college = String(
+      request.college || request.organizationTypeDisplay || "",
+    ).trim();
+    if (!orgName) return;
+
+    const exists = db.organizations.some((org) => {
+      return (
+        String(org.name || "")
+          .trim()
+          .toLowerCase() === orgName.toLowerCase() &&
+        String(org.college || "")
+          .trim()
+          .toLowerCase() === college.toLowerCase()
+      );
+    });
+
+    if (!exists) {
+      db.organizations.push({
+        id: `ORG_${Date.now()}`,
+        name: orgName,
+        college: college || "Unknown College",
+        type:
+          request.organizationType === "known"
+            ? "Known Organization"
+            : "Other Organization",
+        description:
+          request.description ||
+          `Verified organization recognized by WMSU ${college}`,
+        proofImage: request.proofImage || "",
+        approvedBy: "Admin",
+        approvedAt: new Date().toISOString(),
+        recognizedAt: new Date().toISOString(),
+      });
+    }
+
+    saveDB(db);
   }
 
   function buildStatusBadge(status) {
@@ -92,7 +171,9 @@
 
   function renderRequestCard(request) {
     const status = normalizeStatus(request);
-    const submittedDate = request.submittedAt ? new Date(request.submittedAt).toLocaleDateString() : "—";
+    const submittedDate = request.submittedAt
+      ? new Date(request.submittedAt).toLocaleDateString()
+      : "—";
 
     const details = request.organizationType === "known"
       ? `<div class="request-card__item"><span class="request-card__label">Organization</span><span class="request-card__value">${formatField(request.organizationName)}</span></div>
@@ -123,10 +204,14 @@
         <div class="request-card__image">${uploadedImage}</div>
         <div class="request-card__actions">
           <button class="btn btn--outline btn--sm" type="button" data-action="view" data-request="${request.id}">View Details</button>
-          ${status === "pending" ? `
+          ${
+            status === "pending"
+              ? `
             <button class="btn btn--success btn--sm" type="button" data-action="approve" data-request="${request.id}">Approve</button>
             <button class="btn btn--danger btn--sm" type="button" data-action="reject" data-request="${request.id}">Reject</button>
-          ` : ""}
+          `
+              : ""
+          }
         </div>
       </article>`;
   }
@@ -144,6 +229,7 @@
     requestsContainer.innerHTML = requests.map(renderRequestCard).join("");
   }
 
+<<<<<<< HEAD
   // ── ACTIONS ────────────────────────────────────────────────────────────────
 
   function approveRequest(requestId) {
@@ -185,11 +271,77 @@
       "success"
     );
 
+=======
+  function handleAction(event) {
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+
+    const action = button.dataset.action;
+    const requestId = button.dataset.request;
+
+    if (action === "view") {
+      viewRequest(requestId);
+    } else if (action === "approve") {
+      approveRequest(requestId);
+    } else if (action === "reject") {
+      rejectRequest(requestId);
+    }
+  }
+
+  function viewRequest(requestId) {
+    const requests = getAffiliationRequests();
+    const request = requests.find((r) => r.id === requestId);
+    if (!request) return;
+
+    currentRequest = request;
+    showAffiliationModal(request);
+  }
+
+  function approveRequest(requestId) {
+    const requests = getAffiliationRequests();
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
+    if (requestIndex === -1) return;
+
+    requests[requestIndex].status = "approved";
+    requests[requestIndex].reviewedAt = new Date().toISOString();
+
+    // Add to user's affiliations
+    const db = getDB();
+    const userIndex = db.users.findIndex(
+      (u) => u.id === requests[requestIndex].userId,
+    );
+    if (userIndex !== -1) {
+      if (!db.users[userIndex].affiliations) {
+        db.users[userIndex].affiliations = [];
+      }
+      db.users[userIndex].affiliations.push({
+        id: requestId,
+        organizationName: requests[requestIndex].organizationName,
+        position: requests[requestIndex].position,
+        contactNumber: requests[requestIndex].contactNumber,
+        organizationType: requests[requestIndex].organizationType,
+        verifiedAt: new Date().toISOString(),
+        status: "verified",
+      });
+    }
+
+    addOrUpdateOrganizationDirectory(requests[requestIndex]);
+>>>>>>> a4f811037d26832df1a9bc721564f540ff2fcdd6
     renderRequests();
     closeAffiliationModal();
   }
 
   function rejectRequest(requestId) {
+<<<<<<< HEAD
+=======
+    const requests = getAffiliationRequests();
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
+    if (requestIndex === -1) return;
+
+    requests[requestIndex].status = "rejected";
+    requests[requestIndex].reviewedAt = new Date().toISOString();
+
+>>>>>>> a4f811037d26832df1a9bc721564f540ff2fcdd6
     const db = getDB();
     const requests = db.affiliationRequests || [];
     const idx = requests.findIndex(r => r.id === requestId);
@@ -297,5 +449,9 @@
   window.closeAffiliationModal = closeAffiliationModal;
   window.approveAffiliation = approveAffiliation;
   window.rejectAffiliation = rejectAffiliation;
+<<<<<<< HEAD
 
 })();
+=======
+})();
+>>>>>>> a4f811037d26832df1a9bc721564f540ff2fcdd6

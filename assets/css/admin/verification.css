@@ -135,3 +135,135 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Filter Section Styles ── */
+.filters-section {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filters-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--clr-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filter-input,
+.filter-select {
+  padding: 12px 16px;
+  border: 2px solid var(--clr-border);
+  border-radius: 12px;
+  background: var(--clr-background);
+  color: var(--clr-text-primary);
+  font-size: 14px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: var(--clr-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filter-input::placeholder {
+  color: var(--clr-gray);
+}
+
+.filter-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.filter-input {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+  background-position: left 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-left: 40px;
+}
+
+@media (max-width: 768px) {
+  .filters-section {
+    padding: 20px;
+  }
+
+  .filters-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .filter-input,
+  .filter-select {
+    padding: 14px 16px;
+  }
+
+  .filter-input {
+    padding-left: 44px;
+  }
+
+  .filter-select {
+    padding-right: 44px;
+  }
+}
+
+/* ── Button Styles ── */
+.filter-actions {
+  display: flex;
+  align-items: end;
+  height: 100%;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.btn-secondary {
+  background: var(--clr-gray-lt);
+  color: var(--clr-text-primary);
+  border: 2px solid var(--clr-border);
+}
+
+.btn-secondary:hover {
+  background: var(--clr-gray);
+  border-color: var(--clr-gray);
+  color: white;
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+}

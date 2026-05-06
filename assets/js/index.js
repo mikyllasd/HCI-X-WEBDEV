@@ -117,21 +117,78 @@ const Orders = {
             orderId,
             order_type,
             order_org,
+            userId: User.get()?.id,
+            userEmail: User.get()?.email,
+            userName: User.get()?.name || User.get()?.fullName,
+            userRole: User.get()?.accountType || 'student',
             dateOrdered: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }),
             expectedPickupDate,
             preferredPickupDate,
             status: 'Pending',
             paymentVerified: false,
-            paymentStatus
+            paymentStatus,
+            createdAt: new Date().toISOString()
         };
         orders.unshift(fullOrder);
         this.save(orders);
+        
+        // Also save to admin database (upressDB)
+        try {
+            const getDB = () => {
+                try { return JSON.parse(localStorage.getItem('upressease_db') || '{}'); } catch { return {}; }
+            };
+            const saveDB = (db) => {
+                try { localStorage.setItem('upressease_db', JSON.stringify(db)); } catch (e) { console.error(e); }
+            };
+            const db = getDB();
+            db.orders = Array.isArray(db.orders) ? db.orders : [];
+            db.orders.unshift(fullOrder);
+            saveDB(db);
+            
+            // Add notification for admin
+            if (!Array.isArray(db.notifications)) db.notifications = [];
+            db.notifications.push({
+                id: 'notif_' + Date.now() + '_' + Math.random().toString(36).slice(2),
+                userId: 'admin',
+                message: `New order submitted by ${fullOrder.userName || 'Student'}: ${orderId}`,
+                type: 'info',
+                read: false,
+                createdAt: new Date().toISOString()
+            });
+            saveDB(db);
+        } catch (err) {
+            console.error('Error saving to admin DB:', err);
+        }
+        
         return orderId;
     },
     updateStatus(orderId, status) {
         const orders = this.getAll();
         const i = orders.findIndex(o => o.orderId === orderId);
-        if (i !== -1) { orders[i].status = status; this.save(orders); }
+        if (i !== -1) { 
+            orders[i].status = status;
+            this.save(orders);
+            
+            // Also update in admin database and send notification
+            try {
+                const getDB = () => {
+                    try { return JSON.parse(localStorage.getItem('upressease_db') || '{}'); } catch { return {}; }
+                };
+                const saveDB = (db) => {
+                    try { localStorage.setItem('upressease_db', JSON.stringify(db)); } catch (e) { console.error(e); }
+                };
+                const db = getDB();
+                db.orders = Array.isArray(db.orders) ? db.orders : [];
+                const adminIndex = db.orders.findIndex(o => o.orderId === orderId);
+                if (adminIndex !== -1) {
+                    db.orders[adminIndex].status = status;
+                    db.orders[adminIndex].updatedAt = new Date().toISOString();
+                    saveDB(db);
+                }
+            } catch (err) {
+                console.error('Error updating admin DB:', err);
+            }
+        }
     }
 };
 

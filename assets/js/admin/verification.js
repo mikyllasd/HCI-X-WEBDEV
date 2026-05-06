@@ -41,7 +41,7 @@
 
   // ── DATA ───────────────────────────────────────────────────────────────────
 
-  function getAllFaculty() {
+  function getAllStudents() {
     const db = getDB();
     const merged = [
       ...(Array.isArray(db.users) ? db.users : []),
@@ -53,7 +53,7 @@
       if (seen.has(user.id)) return false;
       seen.add(user.id);
       const role = String(user.role || user.accountType || "").toLowerCase();
-      return role === "faculty" || user.accountType === "faculty";
+      return role === "student" || user.accountType === "student";
     });
   }
 
@@ -174,7 +174,7 @@
   }
 
   function renderRequests() {
-    const all = getAllFaculty();
+    const all = getAllStudents();
     const filtered = getFiltered(all);
     updateStats(all);
     renderFilters(all);
@@ -256,6 +256,7 @@
     requestsContainer?.addEventListener("click", handleListClick);
     initFilters();
     window.addEventListener("storage", e => { if (e.key === "upressDB") renderRequests(); });
+    setInterval(renderRequests, 2000);
   }
 
   window.addEventListener("DOMContentLoaded", init);

@@ -320,6 +320,40 @@
             <div class="sd-tx" id="todayTransactionsList" style="display: none"></div>
           </section>
 
+          <section
+            class="sd-panel"
+            id="staffRecentRatingsSection"
+            aria-label="Recent customer ratings"
+            style="display: none"
+          >
+            <div class="sd-panel__head">
+              <div>
+                <div class="sd-panel__title">
+                  <span class="sd-panel__titleIcon" aria-hidden="true">★</span>
+                  <span>Recent ratings</span>
+                </div>
+                <div class="sd-panel__sub">
+                  Latest product and service feedback from completed orders (read-only)
+                </div>
+              </div>
+            </div>
+            <div class="table-wrap" style="overflow-x: auto">
+              <table class="data-table" style="width: 100%; font-size: 0.875rem">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Order / txn</th>
+                    <th>Service</th>
+                    <th>Product / Service</th>
+                    <th>Product note</th>
+                    <th>Service note</th>
+                  </tr>
+                </thead>
+                <tbody id="staffRatingsBody"></tbody>
+              </table>
+            </div>
+          </section>
+
           <section class="sd-hero" aria-label="Performance analytics">
             <div class="sd-hero__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
@@ -381,6 +415,7 @@
     </div>
 
     <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
     <script src="../../js/staff/staff-data.js"></script>
     <script src="../../js/staff/staff-shell.js"></script>
     <script src="../../js/staff/staff.js"></script>

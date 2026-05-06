@@ -11,7 +11,22 @@ const User = {
     get() { try { return JSON.parse(localStorage.getItem('upressUser') || 'null'); } catch { return null; } },
     update(patch) { const u = this.get() || {}; this.save({ ...u, ...patch }); },
     clear() { localStorage.removeItem('upressUser'); },
-    isLoggedIn() { return !!this.get(); }
+    isLoggedIn() { return !!this.get(); },
+    hasVerifiedAffiliations() {
+        const u = this.get();
+        if (!u) return false;
+        if (Array.isArray(u.affiliations)) {
+            if (u.affiliations.some(a => a.status === 'verified' || a.status === 'approved')) return true;
+        }
+        if (typeof window.getDB === 'function') {
+            try {
+                const db = window.getDB();
+                const requests = Array.isArray(db.affiliationRequests) ? db.affiliationRequests : [];
+                if (requests.some(r => r.userId === u.id && (r.status === 'approved' || r.status === 'verified'))) return true;
+            } catch { /* ignore */ }
+        }
+        return false;
+    }
 };
 
 // ============================================================

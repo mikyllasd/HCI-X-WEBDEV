@@ -117,15 +117,30 @@
     return value || "—";
   }
 
+  function getCampusIdForRequest(request) {
+    const direct =
+      request.campusId || request.studentId || request.facultyId || "";
+    if (direct) return direct;
+    const db = getDB();
+    const uid = request.userId;
+    const u =
+      (db.users || []).find((x) => x && x.id === uid) ||
+      (db.authUsers || []).find((x) => x && x.id === uid) ||
+      {};
+    return u.campusId || u.studentId || u.facultyId || "";
+  }
+
   function renderAffiliationRequestCard(request) {
     const status = normalizeStatus(request);
     const submittedDate = request.submittedAt
       ? new Date(request.submittedAt).toLocaleDateString()
       : "—";
+    const idNum = formatField(getCampusIdForRequest(request));
 
     const details =
       request.organizationType === "known"
         ? `<div class="request-card__item"><span class="request-card__label">Organization</span><span class="request-card__value">${formatField(request.organizationName)}</span></div>
+         <div class="request-card__item"><span class="request-card__label">College</span><span class="request-card__value">${formatField(request.college)}</span></div>
          <div class="request-card__item"><span class="request-card__label">Position</span><span class="request-card__value">${formatField(request.position)}</span></div>
          <div class="request-card__item"><span class="request-card__label">Contact</span><span class="request-card__value">${formatField(request.contactNumber)}</span></div>`
         : `<div class="request-card__item"><span class="request-card__label">Organization</span><span class="request-card__value">${formatField(request.organizationName)}</span></div>
@@ -146,6 +161,7 @@
           ${buildAffiliationStatusBadge(status)}
         </div>
         <div class="request-card__meta">
+          <div class="request-card__item"><span class="request-card__label">ID number</span><span class="request-card__value">${idNum}</span></div>
           ${details}
           <div class="request-card__item"><span class="request-card__label">Type</span><span class="request-card__value">${request.organizationType === "known" ? "Known Organization" : "Other Organization"}</span></div>
           <div class="request-card__item"><span class="request-card__label">Submitted</span><span class="request-card__value">${submittedDate}</span></div>
@@ -268,6 +284,12 @@
 
     addOrUpdateOrganizationDirectory(requests[requestIndex], db);
     saveDB(db);
+    const orgLabel = requests[requestIndex].organizationName || "your organization";
+    notifyUser(
+      uid,
+      `Your affiliation request for ${orgLabel} has been approved. You can now place organization orders.`,
+      "success",
+    );
     renderAffiliationRequests();
     renderOrganizations();
     closeAffiliationModal();
@@ -280,10 +302,18 @@
     const requestIndex = requests.findIndex((r) => r.id === requestId);
     if (requestIndex === -1) return;
 
+    const uid = requests[requestIndex].userId;
+    const orgLabel = requests[requestIndex].organizationName || "your organization";
+
     requests[requestIndex].status = "rejected";
     requests[requestIndex].reviewedAt = new Date().toISOString();
     saveDB(db);
 
+    notifyUser(
+      uid,
+      `Your affiliation request for ${orgLabel} was not approved. Your profile remains without this affiliation.`,
+      "warning",
+    );
     renderAffiliationRequests();
     closeAffiliationModal();
   }
@@ -321,6 +351,7 @@
     modalBody.innerHTML = `
       <div class="modal-details">
         <div class="modal-detail"><strong>User:</strong> ${formatField(request.userName)} (${formatField(request.userEmail)})</div>
+        <div class="modal-detail"><strong>ID number:</strong> ${formatField(getCampusIdForRequest(request))}</div>
         <div class="modal-detail"><strong>Type:</strong> ${request.organizationType === "known" ? "Known Organization" : "Other Organization"}</div>
         ${details}
         <div class="modal-detail"><strong>Submitted:</strong> ${request.submittedAt ? new Date(request.submittedAt).toLocaleString() : "—"}</div>

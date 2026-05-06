@@ -493,13 +493,74 @@
 
   let affiliateOtpCode = null;
 
+  function normalizeAffilText(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function findDirectoryOrganization(db, orgName, college) {
+    const orgs = Array.isArray(db.organizations) ? db.organizations : [];
+    const n = normalizeAffilText(orgName);
+    const c = normalizeAffilText(college);
+    return orgs.find(o =>
+      normalizeAffilText(o.name) === n &&
+      normalizeAffilText(o.college) === c
+    ) || null;
+  }
+
+  function pushUserNotification(db, userId, message, type) {
+    if (!Array.isArray(db.notifications)) db.notifications = [];
+    db.notifications.push({
+      id: 'notif_' + Date.now() + '_' + Math.random().toString(36).slice(2),
+      userId,
+      message,
+      type: type || 'info',
+      read: false,
+      createdAt: new Date().toISOString()
+    });
+  }
+
+  function applyVerifiedAffiliationToStores(db, userId, affPayload) {
+    ['users', 'authUsers'].forEach((key) => {
+      const arr = Array.isArray(db[key]) ? db[key] : [];
+      const userIndex = arr.findIndex(u => u && u.id === userId);
+      if (userIndex === -1) return;
+      if (!arr[userIndex].affiliations) arr[userIndex].affiliations = [];
+      arr[userIndex].affiliations.push({ ...affPayload });
+    });
+  }
+
+  function syncSessionUserFromDb(db) {
+    if (!currentUser || !currentUser.id) return;
+    const arr = Array.isArray(db.users) ? db.users : [];
+    const fresh = arr.find(u => u && u.id === currentUser.id);
+    if (!fresh) return;
+    try {
+      localStorage.setItem('upressUser', JSON.stringify(fresh));
+    } catch (e) { console.error(e); }
+  }
+
+  function setAffiliateSuccessCopy(mode) {
+    const titleEl = document.getElementById('affiliate-success-title');
+    const msgEl = document.getElementById('affiliate-success-msg');
+    if (!titleEl || !msgEl) return;
+    if (mode === 'instant') {
+      titleEl.textContent = 'You are now affiliated';
+      msgEl.textContent = 'Your organization affiliation is verified. You can access organization ordering right away.';
+    } else {
+      titleEl.textContent = 'Request Submitted';
+      msgEl.textContent = 'Your affiliation request has been submitted. We will notify you once it has been reviewed.';
+    }
+  }
+
   function showAffiliateModal() {
     const db = getDB();
     const existing = (db.affiliationRequests || []).find(r =>
-      r.userId === currentUser.id && r.status === 'pending'
+      r.userId === currentUser.id &&
+      r.status === 'pending' &&
+      r.organizationType === 'other'
     );
     if (existing) {
-      alert('You already have a pending affiliation request. Please wait for it to be reviewed.');
+      alert('You already have a pending affiliation request for a custom organization. Please wait for it to be reviewed, or contact support.');
       return;
     }
     goToAffiliateStep(1);
@@ -645,6 +706,7 @@
     const college = collegeField ? collegeField.value.trim() : '';
     const position = posField ? posField.value.trim() : '';
     const contact = contactField ? contactField.value.trim() : '';
+    const campusId = currentUser.campusId || currentUser.studentId || currentUser.facultyId || '';
 
     if (!orgName || !college || !position || !contact) {
       alert('Please fill all required fields.');
@@ -656,6 +718,7 @@
       userId: currentUser.id,
       userName: getDisplayName(currentUser),
       userEmail: currentUser.email || '',
+      campusId: campusId,
       organizationType: selectedOrg === 'Other' ? 'other' : 'known',
       organizationName: orgName,
       college: college,
@@ -665,12 +728,42 @@
       submittedAt: new Date().toISOString()
     };
 
+    if (selectedOrg !== 'Other') {
+      const dirOrg = findDirectoryOrganization(db, orgName, college);
+      if (dirOrg) {
+        const affId = 'affil_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        const affPayload = {
+          id: affId,
+          organizationName: orgName,
+          position: position,
+          contactNumber: contact,
+          organizationType: 'known',
+          verifiedAt: new Date().toISOString(),
+          status: 'verified'
+        };
+        applyVerifiedAffiliationToStores(db, currentUser.id, affPayload);
+        pushUserNotification(
+          db,
+          currentUser.id,
+          'Your affiliation with ' + orgName + ' is verified. You can now place organization orders.',
+          'success'
+        );
+        saveDB(db);
+        syncSessionUserFromDb(db);
+        populateProfile();
+        setAffiliateSuccessCopy('instant');
+        goToAffiliateStep('success');
+        return;
+      }
+    }
+
     if (selectedOrg === 'Other' && proofInput && proofInput.files && proofInput.files[0]) {
       const reader = new FileReader();
       reader.onload = function (e) {
         requestData.proofImage = e.target.result;
         db.affiliationRequests.push(requestData);
         saveDB(db);
+        setAffiliateSuccessCopy('pending');
         goToAffiliateStep('success');
       };
       reader.readAsDataURL(proofInput.files[0]);
@@ -679,6 +772,7 @@
 
     db.affiliationRequests.push(requestData);
     saveDB(db);
+    setAffiliateSuccessCopy('pending');
     goToAffiliateStep('success');
   }
   window.submitAffiliateRequest = submitAffiliateRequest;

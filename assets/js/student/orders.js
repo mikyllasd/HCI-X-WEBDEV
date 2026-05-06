@@ -3,10 +3,13 @@
     const u = User.get();
     if (!u) { window.location.href = '../auth/portal.html'; return; }
 
+    const LS_PROMPT_DISMISSED = 'upress_rating_prompt_dismissed';
+
     let currentTypeFilter   = 'individual';
     let currentStatusFilter = 'all';
     let ratingTargetOrderId = null;
-    const ratings = { system: 0, staff: 0, admin: 0 };
+    let ratingModalReadOnly = false;
+    const ratings = { product: 0, service: 0 };
 
     /* ── Helpers ── */
     function escHtml(str) {
@@ -22,14 +25,85 @@
         catch { return {}; }
     }
 
-    function saveRating(orderId, data) {
+    function normalizeRatingEntry(raw) {
+        if (!raw || typeof raw !== 'object') return null;
+        if (raw.productRating > 0 && raw.serviceRating > 0) return raw;
+        if (raw.system > 0 && raw.staff > 0 && raw.admin > 0) {
+            return {
+                productRating: raw.system,
+                serviceRating: raw.staff,
+                productMessage: raw.message || '',
+                serviceMessage: '',
+                createdAt: raw.date || new Date().toISOString(),
+                userId: raw.userId
+            };
+        }
+        return null;
+    }
+
+    function getRatingForOrder(orderId) {
+        return normalizeRatingEntry(getRatingsStore()[orderId]);
+    }
+
+    function saveRatingLocal(orderId, data) {
         const store = getRatingsStore();
         store[orderId] = data;
         localStorage.setItem('upress_ratings', JSON.stringify(store));
     }
 
     function hasRated(orderId) {
-        return !!getRatingsStore()[orderId];
+        return !!getRatingForOrder(orderId);
+    }
+
+    function getPromptDismissedMap() {
+        try { return JSON.parse(localStorage.getItem(LS_PROMPT_DISMISSED) || '{}'); }
+        catch { return {}; }
+    }
+
+    function isPromptDismissed(orderId) {
+        return !!getPromptDismissedMap()[orderId];
+    }
+
+    function dismissRatingPrompt(orderId) {
+        const m = getPromptDismissedMap();
+        m[orderId] = true;
+        localStorage.setItem(LS_PROMPT_DISMISSED, JSON.stringify(m));
+    }
+
+    function formatStarDisplay(n) {
+        const v = Math.min(5, Math.max(0, Number(n) || 0));
+        return '★'.repeat(v) + '☆'.repeat(5 - v);
+    }
+
+    function orderServiceLabel(o) {
+        const items = Array.isArray(o.items) ? o.items : [o];
+        return (items[0] && (items[0].service || items[0].serviceName)) || 'Order';
+    }
+
+    function pushRatingToSharedDb(orderId, payload, order) {
+        if (typeof window.getDB !== 'function' || typeof window.saveDB !== 'function') return;
+        try {
+            const db = window.getDB();
+            if (!Array.isArray(db.ratings)) db.ratings = [];
+            const user = User.get() || {};
+            const combinedComment = [payload.productMessage, payload.serviceMessage].filter(Boolean).join('\n\n');
+            db.ratings.push({
+                id: 'rating_' + Date.now() + '_' + Math.random().toString(36).slice(2),
+                transactionId: orderId,
+                orderId,
+                userId: user.id,
+                userEmail: user.email || '',
+                productRating: payload.productRating,
+                serviceRating: payload.serviceRating,
+                productComment: payload.productMessage || '',
+                serviceComment: payload.serviceMessage || '',
+                comment: combinedComment,
+                serviceName: orderServiceLabel(order),
+                createdAt: payload.createdAt || new Date().toISOString(),
+                academicYear: db.academicYear || ''
+            });
+            window.saveDB(db);
+        } catch (e) { console.warn('pushRatingToSharedDb:', e); }
     }
 
     /* ── Orders ── */
@@ -48,13 +122,11 @@
         const orders = getOrders();
         const typeFiltered = getTypeFiltered(orders);
 
-        /* Type tab counts */
         const indTab = document.querySelector('.manage-tab[data-type="individual"] .tab-count');
         const orgTab = document.querySelector('.manage-tab[data-type="organization"] .tab-count');
         if (indTab) indTab.textContent = orders.filter(o => !o.order_type || o.order_type === 'individual').length;
         if (orgTab) orgTab.textContent = orders.filter(o => o.order_type === 'organization').length;
 
-        /* Status tab counts scoped to current type */
         document.querySelectorAll('.status-tab').forEach(btn => {
             const s = btn.dataset.status;
             const countEl = btn.querySelector('.tab-count');
@@ -64,7 +136,6 @@
                 : typeFiltered.filter(o => o.status === s).length;
         });
 
-        /* Show/hide org tab */
         const hasAffiliations = typeof User.hasVerifiedAffiliations === 'function'
             ? User.hasVerifiedAffiliations()
             : false;
@@ -73,6 +144,19 @@
         if (orgTabEl) {
             orgTabEl.style.display = (hasAffiliations && orgCount > 0) ? 'flex' : 'none';
         }
+    }
+
+    function buildRatedSummaryHtml(r) {
+        if (!r) return '';
+        const pm = escHtml(r.productMessage || '');
+        const sm = escHtml(r.serviceMessage || '');
+        return `
+            <div class="order-rate-summary">
+                <div class="rate-summary-line"><strong>Product</strong> <span class="rate-stars">${formatStarDisplay(r.productRating)}</span></div>
+                ${pm ? `<div class="rate-summary-line">${pm}</div>` : ''}
+                <div class="rate-summary-line"><strong>Service</strong> <span class="rate-stars">${formatStarDisplay(r.serviceRating)}</span></div>
+                ${sm ? `<div class="rate-summary-line">${sm}</div>` : ''}
+            </div>`;
     }
 
     /* ── Render ── */
@@ -99,12 +183,13 @@
                         Browse Services
                     </button>
                 </div>`;
+            maybeAutoPromptRating(orders);
             return;
         }
 
         const user       = User.get() || {};
-        const fullName   = user.name     || '—';
-        const studentId  = user.campusId || '—';
+        const fullName   = user.name || user.fullName || '—';
+        const studentId  = user.campusId || user.studentId || user.facultyId || '—';
         const course     = user.course   || '—';
         const department = user.college  || '—';
         const mobile     = user.phone    || '—';
@@ -122,15 +207,18 @@
             );
 
             const isCompleted  = status === 'Completed';
-            const alreadyRated = hasRated(o.orderId);
+            const ratedEntry   = getRatingForOrder(o.orderId);
+            const alreadyRated = !!ratedEntry;
 
             const rateRow = isCompleted ? `
                 <div class="order-rate-row">
                     ${alreadyRated
-                        ? `<span class="rated-badge">✔ Rated</span>`
-                        : `<button class="rate-btn" data-orderid="${escHtml(o.orderId)}">⭐ Rate Order</button>`
+                        ? `<span class="rated-badge">✔ Rated</span>
+                           <button type="button" class="rate-btn rate-btn--view" data-orderid="${escHtml(o.orderId)}">View rating</button>`
+                        : `<button type="button" class="rate-btn" data-orderid="${escHtml(o.orderId)}">⭐ Rate Order</button>`
                     }
-                </div>` : '';
+                </div>
+                ${alreadyRated ? buildRatedSummaryHtml(ratedEntry) : ''}` : '';
 
             return `
             <div class="order-card" data-status="${escHtml(status)}">
@@ -196,56 +284,140 @@
             </div>`;
         }).join('');
 
-        /* Attach rate button listeners */
         listEl.querySelectorAll('.rate-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                openRatingModal(this.dataset.orderid);
+                const oid = this.dataset.orderid;
+                const viewOnly = this.classList.contains('rate-btn--view');
+                openRatingModal(oid, viewOnly);
             });
         });
+
+        maybeAutoPromptRating(orders);
+    }
+
+    function findOrderById(orderId) {
+        return getOrders().find(o => o.orderId === orderId) || null;
+    }
+
+    function maybeAutoPromptRating(allOrders) {
+        const completed = allOrders.filter(o =>
+            o.status === 'Completed' &&
+            !hasRated(o.orderId) &&
+            !isPromptDismissed(o.orderId)
+        );
+        if (completed.length === 0) return;
+        let latest = completed[0];
+        let best = 0;
+        completed.forEach(o => {
+            const t = Date.parse(o.dateOrdered) || 0;
+            if (t >= best) { best = t; latest = o; }
+        });
+        if (ratingTargetOrderId) return;
+        const modal = document.getElementById('rating-modal');
+        if (modal && modal.style.display === 'flex') return;
+        openRatingModal(latest.orderId, false, true);
     }
 
     /* ── Rating Modal ── */
-    function openRatingModal(orderId) {
+    function updateRatingActionButtons(readOnly) {
+        const submitBtn = document.getElementById('rating-submit-btn');
+        const skipBtn = document.getElementById('rating-skip-btn');
+        if (submitBtn) submitBtn.style.display = readOnly ? 'none' : '';
+        if (skipBtn) skipBtn.style.display = readOnly ? 'none' : '';
+    }
+
+    function resetStarUi() {
+        document.querySelectorAll('.star-group').forEach(group => {
+            group.querySelectorAll('.star').forEach(s => s.classList.remove('selected', 'hovered'));
+        });
+    }
+
+    function applyStarSelection(category, val) {
+        const group = document.querySelector(`.star-group[data-category="${category}"]`);
+        if (!group) return;
+        const stars = group.querySelectorAll('.star');
+        stars.forEach(s => s.classList.toggle('selected', parseInt(s.dataset.value, 10) <= val));
+    }
+
+    function openRatingModal(orderId, readOnly, isAuto) {
         ratingTargetOrderId = orderId;
-        ratings.system = 0;
-        ratings.staff  = 0;
-        ratings.admin  = 0;
-        document.getElementById('rating-message').value = '';
-        document.querySelectorAll('.star').forEach(s => s.classList.remove('selected', 'hovered'));
+        ratingModalReadOnly = !!readOnly;
+        const order = findOrderById(orderId);
+        if (order && order.status !== 'Completed') {
+            closeRatingModal();
+            return;
+        }
+
+        const existing = getRatingForOrder(orderId);
+        ratings.product = existing ? existing.productRating : 0;
+        ratings.service = existing ? existing.serviceRating : 0;
+
+        const prodTa = document.getElementById('rating-product-message');
+        const servTa = document.getElementById('rating-service-message');
+        if (prodTa) {
+            prodTa.value = existing ? (existing.productMessage || '') : '';
+            prodTa.readOnly = !!readOnly;
+        }
+        if (servTa) {
+            servTa.value = existing ? (existing.serviceMessage || '') : '';
+            servTa.readOnly = !!readOnly;
+        }
+
+        resetStarUi();
+        if (existing) {
+            applyStarSelection('product', existing.productRating);
+            applyStarSelection('service', existing.serviceRating);
+        }
         updateSubmitBtn();
+
         document.getElementById('rating-order-label').textContent = 'Order ID: ' + orderId;
+        updateRatingActionButtons(!!readOnly);
         document.getElementById('rating-modal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
+
+        if (isAuto && !readOnly) {
+            const skipBtn = document.getElementById('rating-skip-btn');
+            if (skipBtn) skipBtn.style.display = '';
+        }
     }
 
     function closeRatingModal() {
-        document.getElementById('rating-modal').style.display = 'none';
+        const modal = document.getElementById('rating-modal');
+        if (modal && ratingTargetOrderId && !ratingModalReadOnly) {
+            const rated = hasRated(ratingTargetOrderId);
+            if (!rated) dismissRatingPrompt(ratingTargetOrderId);
+        }
+        if (modal) modal.style.display = 'none';
         document.body.style.overflow = '';
         ratingTargetOrderId = null;
+        ratingModalReadOnly = false;
+        updateRatingActionButtons(false);
     }
 
     function updateSubmitBtn() {
-        const allSet = ratings.system > 0 && ratings.staff > 0 && ratings.admin > 0;
-        document.getElementById('rating-submit-btn').disabled = !allSet;
+        const allSet = ratings.product > 0 && ratings.service > 0;
+        const btn = document.getElementById('rating-submit-btn');
+        if (btn) btn.disabled = !allSet;
     }
 
-    /* Star interactions */
     document.querySelectorAll('.star-group').forEach(group => {
         const category = group.dataset.category;
         const stars    = group.querySelectorAll('.star');
 
         stars.forEach(star => {
-            const val = parseInt(star.dataset.value);
+            const val = parseInt(star.dataset.value, 10);
 
             star.addEventListener('mouseenter', () => {
-                stars.forEach(s => s.classList.toggle('hovered', parseInt(s.dataset.value) <= val));
+                if (ratingModalReadOnly) return;
+                stars.forEach(s => s.classList.toggle('hovered', parseInt(s.dataset.value, 10) <= val));
             });
             star.addEventListener('mouseleave', () => {
                 stars.forEach(s => s.classList.remove('hovered'));
             });
             star.addEventListener('click', () => {
+                if (ratingModalReadOnly) return;
                 ratings[category] = val;
-                stars.forEach(s => s.classList.toggle('selected', parseInt(s.dataset.value) <= val));
+                stars.forEach(s => s.classList.toggle('selected', parseInt(s.dataset.value, 10) <= val));
                 updateSubmitBtn();
             });
         });
@@ -256,17 +428,33 @@
         if (e.target === this) closeRatingModal();
     });
 
-    document.getElementById('rating-submit-btn').addEventListener('click', function () {
-        if (!ratingTargetOrderId) return;
-        if (!ratings.system || !ratings.staff || !ratings.admin) return;
+    document.getElementById('rating-skip-btn').addEventListener('click', function () {
+        if (ratingTargetOrderId) dismissRatingPrompt(ratingTargetOrderId);
+        closeRatingModal();
+        renderOrders();
+    });
 
-        saveRating(ratingTargetOrderId, {
-            system:  ratings.system,
-            staff:   ratings.staff,
-            admin:   ratings.admin,
-            message: document.getElementById('rating-message').value.trim(),
-            date:    new Date().toISOString()
-        });
+    document.getElementById('rating-submit-btn').addEventListener('click', function () {
+        if (!ratingTargetOrderId || ratingModalReadOnly) return;
+        if (!ratings.product || !ratings.service) return;
+
+        const user = User.get() || {};
+        const productMessage = (document.getElementById('rating-product-message') || {}).value || '';
+        const serviceMessage = (document.getElementById('rating-service-message') || {}).value || '';
+        const createdAt = new Date().toISOString();
+
+        const payload = {
+            productRating: ratings.product,
+            serviceRating: ratings.service,
+            productMessage: productMessage.trim(),
+            serviceMessage: serviceMessage.trim(),
+            createdAt,
+            userId: user.id
+        };
+
+        saveRatingLocal(ratingTargetOrderId, payload);
+        const order = findOrderById(ratingTargetOrderId);
+        pushRatingToSharedDb(ratingTargetOrderId, payload, order || {});
 
         closeRatingModal();
         renderOrders();
@@ -295,7 +483,6 @@
         });
     });
 
-    /* Initial render */
     renderOrders();
 
 })();

@@ -34,34 +34,44 @@
     return Number.isNaN(date.getTime()) ? null : date;
   }
 
+  function getTransaction(transactionId) {
+    const txs = db.transactions || [];
+    const tid = String(transactionId || "");
+    let t = txs.find((tx) => String(tx.id || "") === tid);
+    if (t) return t;
+    t = txs.find((tx) => String(tx.orderId || "") === tid);
+    if (t) return t;
+    const stripped = tid.replace(/^txn_/, "");
+    if (stripped && stripped !== tid) {
+      t = txs.find(
+        (tx) =>
+          String(tx.id || "") === stripped ||
+          String(tx.orderId || "") === stripped,
+      );
+      if (t) return t;
+    }
+    return {};
+  }
+
   function getRatedTransactions() {
     return (db.ratings || []).filter((rating) => {
-      if (!rating.transactionId) return false;
-      const transaction = getTransaction(rating.transactionId);
-      if (!transaction.id) return false;
-      if (db.academicYear && transaction.academicYear !== db.academicYear)
-        return false;
-      return true;
+      const tid = rating.transactionId || rating.orderId;
+      if (!tid) return false;
+      const transaction = getTransaction(tid);
+      if (transaction.id) {
+        if (
+          db.academicYear &&
+          transaction.academicYear &&
+          transaction.academicYear !== db.academicYear
+        ) {
+          return false;
+        }
+        return true;
+      }
+      return (
+        Number(rating.productRating) > 0 && Number(rating.serviceRating) > 0
+      );
     });
-  }
-
-  function getTransaction(transactionId) {
-    return (db.ratings || []).filter((rating) => {
-      if (!rating.transactionId) return false;
-      const transaction = getTransaction(rating.transactionId);
-      if (!transaction.id) return false;
-      if (db.academicYear && transaction.academicYear !== db.academicYear)
-        return false;
-      return true;
-    });
-  }
-
-  function getTransaction(transactionId) {
-    return (
-      (db.transactions || []).find(
-        (transaction) => transaction.id === transactionId,
-      ) || {}
-    );
   }
 
   function getUser(transaction) {
@@ -92,8 +102,10 @@
     const date = parseDate(rating.createdAt || transaction.date);
     const studentName =
       user.fullName ||
+      user.name ||
       transaction.studentName ||
       transaction.email ||
+      rating.userEmail ||
       "Unknown";
     const serviceRating = Number(rating.serviceRating ?? rating.rating) || 0;
     const productRating = Number(rating.productRating) || 0;
@@ -102,15 +114,33 @@
         ? (serviceRating + productRating) / 2
         : serviceRating || productRating || 0;
 
+    const productComment = String(rating.productComment || "").trim();
+    const serviceComment = String(rating.serviceComment || "").trim();
+    const legacyComment = String(rating.comment || rating.message || "").trim();
+    const comment =
+      [productComment && `Product: ${productComment}`, serviceComment && `Service: ${serviceComment}`]
+        .filter(Boolean)
+        .join(" · ") || legacyComment;
+
+    const status = transaction.id
+      ? String(transaction.status || "").toLowerCase()
+      : "completed";
+
     return {
       date,
       studentName,
-      serviceName: transaction.serviceName || transaction.service || "—",
+      serviceName:
+        transaction.serviceName ||
+        transaction.service ||
+        rating.serviceName ||
+        "—",
       serviceRating,
       productRating,
       rating: overallRating,
-      comment: String(rating.comment || rating.message || "").trim(),
-      status: String(transaction.status || "").toLowerCase(),
+      productComment,
+      serviceComment,
+      comment,
+      status,
       organization: String(
         user.organization ||
           transaction.order_org ||
@@ -134,8 +164,15 @@
 
     return getRatedTransactions()
       .map((rating) => {
-        const transaction = getTransaction(rating.transactionId);
-        const user = getUser(transaction);
+        const tid = rating.transactionId || rating.orderId;
+        const transaction = getTransaction(tid);
+        let user = getUser(transaction);
+        if (!user.id && rating.userId) {
+          user =
+            (db.users || []).find((u) => u.id === rating.userId) ||
+            (db.authUsers || []).find((u) => u.id === rating.userId) ||
+            {};
+        }
         return buildRatingRecord(rating, transaction, user);
       })
       .filter((record) => {
@@ -219,13 +256,26 @@
       total > 0
         ? records.reduce((sum, record) => sum + record.rating, 0) / total
         : 0;
-    const commented = records.filter((record) => record.comment).length;
-    const flagged = records.filter(
+    const commented = records.filter(
       (record) =>
-        record.comment.toLowerCase().includes("issue") ||
-        record.comment.toLowerCase().includes("problem") ||
-        record.comment.toLowerCase().includes("unhappy"),
+        record.productComment ||
+        record.serviceComment ||
+        record.comment,
     ).length;
+    const flagged = records.filter((record) => {
+      const blob = [
+        record.productComment,
+        record.serviceComment,
+        record.comment,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return (
+        blob.includes("issue") ||
+        blob.includes("problem") ||
+        blob.includes("unhappy")
+      );
+    }).length;
 
     if (averageEl) averageEl.textContent = average.toFixed(1);
     if (countEl) countEl.textContent = total;
@@ -303,7 +353,7 @@
     if (!recordsBody) return;
     if (records.length === 0) {
       recordsBody.innerHTML =
-        '<tr><td colspan="6" class="text-center">No feedback records found.</td></tr>';
+        '<tr><td colspan="7" class="text-center">No feedback records found.</td></tr>';
       emptyState?.classList.remove("hidden");
       return;
     }
@@ -319,18 +369,12 @@
           <td>${record.serviceName}</td>
           <td>${record.serviceRating > 0 ? `<span class="rating-stars">${formatStars(record.serviceRating)}</span>` : "—"}</td>
           <td>${record.productRating > 0 ? `<span class="rating-stars">${formatStars(record.productRating)}</span>` : "—"}</td>
-
-          <td><span class="rating-comment">${record.comment || "No comment"}</span></td>
+          <td><span class="rating-comment">${record.productComment || "—"}</span></td>
+          <td><span class="rating-comment">${record.serviceComment || "—"}</span></td>
         </tr>
       `,
       )
       .join("");
-  }
-
-  function formatStars(value) {
-    const filled = Number(value) || 0;
-    const empty = 5 - filled;
-    return "★".repeat(filled) + "☆".repeat(empty);
   }
 
   function renderServiceScores(records) {

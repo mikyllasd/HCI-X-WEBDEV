@@ -816,9 +816,45 @@ function renderDashboardMetricsAndTransactions() {
   if (empty) empty.style.display = 'none';
 }
 
+function renderStaffRecentRatings() {
+  const section = document.getElementById("staffRecentRatingsSection");
+  const tbody = document.getElementById("staffRatingsBody");
+  if (!section || !tbody || typeof window.getDB !== "function") return;
+  const db = window.getDB();
+  const list = Array.isArray(db.ratings) ? db.ratings : [];
+  const rows = list.slice().reverse().slice(0, 20);
+  if (rows.length === 0) {
+    section.style.display = "none";
+    return;
+  }
+  section.style.display = "";
+  tbody.innerHTML = rows
+    .map((r) => {
+      const tid = r.transactionId || r.orderId || "—";
+      const d = r.createdAt
+        ? new Date(r.createdAt).toLocaleDateString()
+        : "—";
+      const p = Number(r.productRating) || 0;
+      const s = Number(r.serviceRating) || 0;
+      const svc = escapeHtml(String(r.serviceName || "—"));
+      const pc = escapeHtml(String(r.productComment || "").slice(0, 120));
+      const sc = escapeHtml(String(r.serviceComment || "").slice(0, 120));
+      return `<tr>
+        <td>${escapeHtml(d)}</td>
+        <td>${escapeHtml(String(tid))}</td>
+        <td>${svc}</td>
+        <td>${p}★ / ${s}★</td>
+        <td>${pc || "—"}</td>
+        <td>${sc || "—"}</td>
+      </tr>`;
+    })
+    .join("");
+}
+
 function initDashboardPage() {
   if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   renderDashboardMetricsAndTransactions();
+  renderStaffRecentRatings();
 
   const viewAll = document.getElementById("viewAllOrdersBtn");
   viewAll?.addEventListener("click", () => {
@@ -833,6 +869,7 @@ function initDashboardPage() {
   document.addEventListener("staff:data-changed", () => {
     if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
     renderDashboardMetricsAndTransactions();
+    renderStaffRecentRatings();
     if (typeof window.renderWalkInPosHistory === "function") window.renderWalkInPosHistory();
   });
 }

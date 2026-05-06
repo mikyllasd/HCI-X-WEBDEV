@@ -520,6 +520,19 @@
     },
   ];
 
+  const AFFILIATE_DROPDOWN_ORGS = [
+    ["Computer Science Department", "College of Computing Studies"],
+    ["Mathematics Department", "College of Science and Mathematics"],
+    ["Physics Department", "College of Science and Mathematics"],
+    ["Chemistry Department", "College of Science and Mathematics"],
+    ["Biology Department", "College of Science and Mathematics"],
+    ["Engineering Department", "College of Engineering"],
+    ["Business Administration Department", "College of Business Administration"],
+    ["Education Department", "College of Education"],
+    ["Arts Department", "College of Arts and Sciences"],
+    ["Sports Department", "Office of Student Affairs"],
+  ];
+
   const DEMO_ORGANIZATIONS = [
     {
       id: "ORG-001",
@@ -557,6 +570,17 @@
       approvedAt: "2025-04-22T13:30:00.000Z",
       recognizedAt: "2025-04-22T13:30:00.000Z",
     },
+    ...AFFILIATE_DROPDOWN_ORGS.map(([name, college], i) => ({
+      id: `ORG-AFF-${i + 1}`,
+      name,
+      college,
+      type: "Department",
+      description: "Listed organization for student and faculty affiliation.",
+      proofImage: "",
+      approvedBy: "Admin",
+      approvedAt: "2025-01-01T00:00:00.000Z",
+      recognizedAt: "2025-01-01T00:00:00.000Z",
+    })),
   ];
 
   const SERVICE_BY_NAME = Object.fromEntries(

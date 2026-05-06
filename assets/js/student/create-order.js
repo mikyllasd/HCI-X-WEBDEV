@@ -13,19 +13,17 @@
 
     function hasVerifiedAffiliation(user) {
         if (!user) return false;
-        // Check affiliations array on user object
         if (Array.isArray(user.affiliations)) {
             const found = user.affiliations.find(a =>
                 a.status === 'verified' || a.status === 'approved'
             );
             if (found) return true;
         }
-        // Also check affiliationRequests in DB
         const db = getDB();
         const requests = Array.isArray(db.affiliationRequests) ? db.affiliationRequests : [];
         return requests.some(r =>
             r.userId === user.id &&
-            (r.status === 'verified' || r.status === 'approved')
+            (r.status === 'approved' || r.status === 'verified')
         );
     }
 

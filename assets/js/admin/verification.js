@@ -155,7 +155,7 @@
         <div class="request-card__header">
           <div>
             <h3 class="card-title">${formatField(user.fullName)}</h3>
-            <p class="card-subtitle">${formatField(user.studentId)} · ${formatField(user.college)} · ${formatField(user.course)}</p>
+            <p class="card-subtitle">${formatField(user.studentId || user.campusId)} · ${formatField(user.college)} · ${formatField(user.course)}</p>
           </div>
           ${buildStatusBadge(status)}
         </div>
@@ -164,6 +164,10 @@
           <div class="request-card__item">
             <span class="request-card__label">Email</span>
             <span class="request-card__value">${formatField(user.email)}</span>
+          </div>
+          <div class="request-card__item">
+            <span class="request-card__label">Phone</span>
+            <span class="request-card__value">${formatField(user.phone)}</span>
           </div>
           <div class="request-card__item">
             <span class="request-card__label">Year Level</span>
@@ -179,8 +183,15 @@
           </div>
         </div>
 
-        <div class="request-card__image">
-          ${uploadedImage}
+        <div class="request-card__documents">
+          <div class="request-card__document">
+            <span class="request-card__label">Student ID</span>
+            ${user.idDocument ? `<img src="${user.idDocument}" alt="Student ID document" />` : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`}
+          </div>
+          <div class="request-card__document">
+            <span class="request-card__label">COR / Proof</span>
+            ${user.corDocument ? `<img src="${user.corDocument}" alt="Student COR document" />` : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`}
+          </div>
         </div>
 
         <div class="request-card__actions">

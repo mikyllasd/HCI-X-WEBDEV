@@ -149,8 +149,33 @@
     el.classList.add("signup-hidden");
   }
 
-  function showAlert(title, text) {
+  function getSignupUserByEmailOrCampusId(email, campusId) {
+    const db = getDB();
+    const normalizedEmail = String(email || "").toLowerCase();
+    const normalizedId = String(campusId || "").trim();
+
+    const foundByEmail = (db.users || []).find(
+      (user) => String(user.email || "").toLowerCase() === normalizedEmail,
+    ) || (db.authUsers || []).find(
+      (user) => String(user.email || "").toLowerCase() === normalizedEmail,
+    );
+
+    const foundById = (db.users || []).find((user) => {
+      const idValue = String(user.campusId || user.studentId || user.facultyId || "").trim();
+      return idValue === normalizedId;
+    });
+
+    return {
+      existingUser: foundByEmail || null,
+      existingCampusIdUser: foundById || null,
+    };
+  }
+
+  function showAlert(title, text, onOk) {
     window.alert(`${title}\n\n${text}`);
+    if (typeof onOk === "function") {
+      onOk();
+    }
   }
 
   function getAccountType() {
@@ -777,8 +802,41 @@
         const yearLevel = document.getElementById("signup-year")?.value;
         const email = document.getElementById("signup-email")?.value.trim();
         const phone = document.getElementById("signup-phone")?.value.trim();
+        const pass = document.getElementById("signup-pass")?.value;
         const type = getAccountType();
         const fullName = `${first} ${last}`.trim();
+
+        const { existingUser, existingCampusIdUser } = getSignupUserByEmailOrCampusId(
+          email,
+          campusId,
+        );
+
+        if (existingCampusIdUser && (!existingUser || existingCampusIdUser.email !== email)) {
+          showInlineAlert(
+            type === "faculty"
+              ? "An account with this employee ID already exists."
+              : "An account with this student ID already exists.",
+          );
+          return;
+        }
+
+        if (existingUser) {
+          const status = String(
+            existingUser.accountStatus || existingUser.status || "pending",
+          ).toLowerCase();
+
+          if (status === "pending") {
+            window.location.href =
+              "../auth/portal.html?signupPending=1&email=" +
+              encodeURIComponent(email);
+            return;
+          }
+
+          window.location.href =
+            "../auth/portal.html?accountExists=1&email=" +
+            encodeURIComponent(email);
+          return;
+        }
 
         const user = {
           id: `UPRESS_USER_${Date.now()}`,
@@ -792,6 +850,8 @@
           phone: phone,
           password: pass,
           campusId: campusId,
+          studentId: type === "student" ? campusId : "",
+          facultyId: type === "faculty" ? campusId : "",
           college: college || "",
           course: course || "",
           yearLevel: yearLevel || "",
@@ -799,23 +859,28 @@
           accountStatus: "pending",
           flagged: false,
           disabled: false,
+          idDocument: capturedIdDataUrl,
+          corDocument: capturedCorDataUrl,
+          submittedAt: new Date().toISOString(),
           signupPath: email.toLowerCase().endsWith("@wmsu.edu.ph") ? "A" : "B",
           createdAt: new Date().toISOString(),
         };
 
         try {
-          localStorage.setItem("upressUser", JSON.stringify(user));
+          localStorage.removeItem("upressUser");
         } catch (err) {
-          console.error("Error saving current user:", err);
+          console.error("Error clearing current signup session:", err);
         }
 
         persistUserToDB(user);
 
         showAlert(
-          "Registration complete!",
-          "Your account has been created. You are now signed in.",
+          "Request submitted",
+          "Your request is still being processed. You will receive an email if your account has been verified.",
           () => {
-            window.location.href = "dashboard.html";
+            window.location.href =
+              "../auth/portal.html?signupPending=1&email=" +
+              encodeURIComponent(email);
           },
         );
 

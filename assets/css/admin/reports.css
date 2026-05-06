@@ -79,6 +79,10 @@
 .record-search .form-input {
   padding-left: 38px;
 }
+.reports-export-tools {
+  display: flex;
+  gap: 8px;
+}
 .reports-records-count,
 .reports-pagination__summary {
   color: var(--clr-text-muted);

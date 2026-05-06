@@ -14,8 +14,12 @@
   const emptyState = document.getElementById("ratingsEmptyState");
   const chartCanvas = document.getElementById("ratingsChart");
 
+  const serviceScoresBody = document.getElementById("serviceScoresBody");
+  const serviceScoresEmptyState = document.getElementById(
+    "serviceScoresEmptyState",
+  );
+
   const starsSelect = document.getElementById("ratingsStars");
-  const paymentSelect = document.getElementById("ratingsPaymentType");
   const collegeSelect = document.getElementById("ratingsCollege");
   const organizationSelect = document.getElementById("ratingsOrganization");
   const courseSelect = document.getElementById("ratingsCourse");
@@ -30,25 +34,18 @@
     return Number.isNaN(date.getTime()) ? null : date;
   }
 
-  function getPaymentType(transaction) {
-    const value = String(
-      transaction.paymentType ||
-        transaction.paymentMethod ||
-        transaction.payment ||
-        transaction.method ||
-        "",
-    ).toLowerCase();
-    if (value.includes("gcash") || value.includes("online")) return "gcash";
-    if (
-      value.includes("credit") ||
-      value.includes("pay onsite") ||
-      value.includes("cash")
-    )
-      return "credit";
-    return "other";
+  function getRatedTransactions() {
+    return (db.ratings || []).filter((rating) => {
+      if (!rating.transactionId) return false;
+      const transaction = getTransaction(rating.transactionId);
+      if (!transaction.id) return false;
+      if (db.academicYear && transaction.academicYear !== db.academicYear)
+        return false;
+      return true;
+    });
   }
 
-  function getRatedTransactions() {
+  function getTransaction(transactionId) {
     return (db.ratings || []).filter((rating) => {
       if (!rating.transactionId) return false;
       const transaction = getTransaction(rating.transactionId);
@@ -93,25 +90,26 @@
 
   function buildRatingRecord(rating, transaction, user) {
     const date = parseDate(rating.createdAt || transaction.date);
-    const paymentType = getPaymentType(transaction);
     const studentName =
       user.fullName ||
       transaction.studentName ||
       transaction.email ||
       "Unknown";
+    const serviceRating = Number(rating.serviceRating ?? rating.rating) || 0;
+    const productRating = Number(rating.productRating) || 0;
+    const overallRating =
+      serviceRating > 0 && productRating > 0
+        ? (serviceRating + productRating) / 2
+        : serviceRating || productRating || 0;
 
     return {
       date,
       studentName,
       serviceName: transaction.serviceName || transaction.service || "—",
-      rating: Number(rating.rating) || 0,
-      paymentType:
-        paymentType === "gcash"
-          ? "GCash"
-          : paymentType === "credit"
-            ? "Credit"
-            : "Other",
-      comment: String(rating.comment || "").trim(),
+      serviceRating,
+      productRating,
+      rating: overallRating,
+      comment: String(rating.comment || rating.message || "").trim(),
       status: String(transaction.status || "").toLowerCase(),
       organization: String(
         user.organization ||
@@ -127,7 +125,6 @@
 
   function getFilteredRatings() {
     const starsFilter = starsSelect?.value || "all";
-    const paymentFilter = paymentSelect?.value || "all";
     const collegeFilter = collegeSelect?.value || "all";
     const organizationFilter = organizationSelect?.value || "all";
     const courseFilter = courseSelect?.value || "all";
@@ -143,11 +140,9 @@
       })
       .filter((record) => {
         if (!record.status || record.status !== "completed") return false;
-        if (starsFilter !== "all" && record.rating !== Number(starsFilter))
-          return false;
         if (
-          paymentFilter !== "all" &&
-          record.paymentType.toLowerCase() !== paymentFilter
+          starsFilter !== "all" &&
+          Math.round(record.rating) !== Number(starsFilter)
         )
           return false;
         if (
@@ -238,30 +233,31 @@
     if (flaggedEl) flaggedEl.textContent = flagged;
     if (fiveEl)
       fiveEl.textContent = records.filter(
-        (record) => record.rating === 5,
+        (record) => Math.round(record.rating) === 5,
       ).length;
     if (fourEl)
       fourEl.textContent = records.filter(
-        (record) => record.rating === 4,
+        (record) => Math.round(record.rating) === 4,
       ).length;
     if (threeEl)
       threeEl.textContent = records.filter(
-        (record) => record.rating === 3,
+        (record) => Math.round(record.rating) === 3,
       ).length;
     if (twoEl)
       twoEl.textContent = records.filter(
-        (record) => record.rating === 2,
+        (record) => Math.round(record.rating) === 2,
       ).length;
     if (oneEl)
       oneEl.textContent = records.filter(
-        (record) => record.rating === 1,
+        (record) => Math.round(record.rating) === 1,
       ).length;
   }
 
   function renderChart(records) {
     if (!chartCanvas) return;
     const distribution = [5, 4, 3, 2, 1].map(
-      (value) => records.filter((record) => record.rating === value).length,
+      (value) =>
+        records.filter((record) => Math.round(record.rating) === value).length,
     );
 
     if (ratingsChart) {
@@ -307,7 +303,7 @@
     if (!recordsBody) return;
     if (records.length === 0) {
       recordsBody.innerHTML =
-        '<tr><td colspan=6 class="text-center">No feedback records found.</td></tr>';
+        '<tr><td colspan="6" class="text-center">No feedback records found.</td></tr>';
       emptyState?.classList.remove("hidden");
       return;
     }
@@ -321,8 +317,9 @@
           <td>${record.date ? record.date.toLocaleDateString() : "N/A"}</td>
           <td>${record.studentName}</td>
           <td>${record.serviceName}</td>
-          <td><span class="rating-stars">${formatStars(record.rating)}</span></td>
-          <td>${record.paymentType}</td>
+          <td>${record.serviceRating > 0 ? `<span class="rating-stars">${formatStars(record.serviceRating)}</span>` : "—"}</td>
+          <td>${record.productRating > 0 ? `<span class="rating-stars">${formatStars(record.productRating)}</span>` : "—"}</td>
+
           <td><span class="rating-comment">${record.comment || "No comment"}</span></td>
         </tr>
       `,
@@ -336,11 +333,76 @@
     return "★".repeat(filled) + "☆".repeat(empty);
   }
 
+  function renderServiceScores(records) {
+    if (!serviceScoresBody) return;
+    const serviceMap = {};
+
+    records.forEach((record) => {
+      const service = record.serviceName;
+      if (!serviceMap[service]) {
+        serviceMap[service] = {
+          serviceRatings: [],
+          productRatings: [],
+          count: 0,
+        };
+      }
+      if (record.serviceRating > 0) {
+        serviceMap[service].serviceRatings.push(record.serviceRating);
+      }
+      if (record.productRating > 0) {
+        serviceMap[service].productRatings.push(record.productRating);
+      }
+      serviceMap[service].count++;
+    });
+
+    const serviceScores = Object.entries(serviceMap).map(([service, data]) => {
+      const avgService =
+        data.serviceRatings.length > 0
+          ? data.serviceRatings.reduce((a, b) => a + b, 0) /
+            data.serviceRatings.length
+          : 0;
+      const avgProduct =
+        data.productRatings.length > 0
+          ? data.productRatings.reduce((a, b) => a + b, 0) /
+            data.productRatings.length
+          : 0;
+      return {
+        service,
+        avgService: avgService.toFixed(1),
+        avgProduct: avgProduct.toFixed(1),
+        count: data.count,
+      };
+    });
+
+    if (serviceScores.length === 0) {
+      serviceScoresBody.innerHTML =
+        '<tr><td colspan="4" class="text-center">No service scores available.</td></tr>';
+      serviceScoresEmptyState?.classList.remove("hidden");
+      return;
+    }
+
+    serviceScoresEmptyState?.classList.add("hidden");
+    serviceScoresBody.innerHTML = serviceScores
+      .sort((a, b) => b.count - a.count)
+      .map(
+        (score) => `
+        <tr>
+          <td>${score.service}</td>
+          <td>${score.avgService > 0 ? `<span class="rating-stars">${formatStars(Number(score.avgService))}</span> (${score.avgService})` : "—"}</td>
+          <td>${score.avgProduct > 0 ? `<span class="rating-stars">${formatStars(Number(score.avgProduct))}</span> (${score.avgProduct})` : "—"}</td>
+          <td>${score.count}</td>
+        </tr>
+      `,
+      )
+      .join("");
+  }
+
   function applyFilters() {
     const records = getFilteredRatings();
     updateSummary(records);
     renderChart(records);
     renderRecords(records);
+    renderServiceScores(records);
   }
 
   function init() {
@@ -349,7 +411,6 @@
 
     [
       starsSelect,
-      paymentSelect,
       organizationSelect,
       collegeSelect,
       courseSelect,

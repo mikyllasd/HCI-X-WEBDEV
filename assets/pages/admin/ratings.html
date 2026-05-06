@@ -149,8 +149,7 @@
           <div class="page-header">
             <h1 id="ratings-heading">Ratings</h1>
             <p class="page-subtitle">
-              Review feedback from completed transactions and rating
-              submissions.
+              Review service and product feedback from completed transactions.
             </p>
           </div>
 
@@ -200,16 +199,6 @@
                   <option value="3">3 Stars</option>
                   <option value="2">2 Stars</option>
                   <option value="1">1 Star</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="ratingsPaymentType"
-                  >Payment Type</label
-                >
-                <select class="form-input form-select" id="ratingsPaymentType">
-                  <option value="all">All Payment Types</option>
-                  <option value="gcash">GCash</option>
-                  <option value="credit">Credit</option>
                 </select>
               </div>
               <div class="form-group">
@@ -296,6 +285,40 @@
             </div>
           </div>
 
+          <div class="card ratings-service-scores-card">
+            <div class="card-title-group">
+              <div>
+                <h2 class="card-title">Service Scores</h2>
+                <p class="card-subtitle">Average ratings for each service.</p>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table" aria-label="Service scores">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Avg Service Rating</th>
+                    <th>Avg Product Rating</th>
+                    <th>Total Reviews</th>
+                  </tr>
+                </thead>
+                <tbody id="serviceScoresBody"></tbody>
+              </table>
+            </div>
+            <div
+              class="empty-state empty-state--mini hidden"
+              id="serviceScoresEmptyState"
+            >
+              <div class="empty-state__icon" aria-hidden="true">
+                <i data-lucide="bar-chart-3"></i>
+              </div>
+              <div class="empty-state__title">No service scores available</div>
+              <div class="empty-state__sub">
+                Scores will appear once ratings data is available.
+              </div>
+            </div>
+          </div>
+
           <div class="card ratings-records-card">
             <div class="card-title-group">
               <div>
@@ -312,8 +335,8 @@
                     <th>Date</th>
                     <th>Student</th>
                     <th>Service</th>
-                    <th>Rating</th>
-                    <th>Payment</th>
+                    <th>Service Rating</th>
+                    <th>Product Rating</th>
                     <th>Comment</th>
                   </tr>
                 </thead>

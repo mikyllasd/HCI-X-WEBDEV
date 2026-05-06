@@ -10,6 +10,8 @@
     />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <link rel="stylesheet" href="../../css/admin/admin.css" />
     <link rel="stylesheet" href="../../css/staff/staff.css" />
@@ -164,19 +166,19 @@
             </article>
             <article class="stat-card stat-card--green">
               <div class="stat-card__header">
-                <span>GCash Paid</span>
+                <span>Online Paid</span>
                 <i data-lucide="credit-card" aria-hidden="true"></i>
               </div>
               <p class="stat-card__value" id="reportsGCashSales">₱0.00</p>
-              <p class="stat-card__text">Automatically paid orders</p>
+              <p class="stat-card__text">Automatically paid online orders</p>
             </article>
             <article class="stat-card stat-card--yellow">
               <div class="stat-card__header">
-                <span>Credit Unpaid</span>
+                <span>Cash (Paid)</span>
                 <i data-lucide="clock" aria-hidden="true"></i>
               </div>
               <p class="stat-card__value" id="reportsCreditSales">₱0.00</p>
-              <p class="stat-card__text">Credit orders pending settlement</p>
+              <p class="stat-card__text">Cash payments recorded</p>
             </article>
             <article class="stat-card stat-card--purple">
               <div class="stat-card__header">
@@ -207,8 +209,8 @@
                 >
                 <select class="form-input form-select" id="reportsPaymentType">
                   <option value="all">All Payment Types</option>
-                  <option value="gcash">GCash</option>
-                  <option value="credit">Credit</option>
+                  <option value="gcash">Online</option>
+                  <option value="credit">Cash (Paid)</option>
                 </select>
               </div>
               <div class="form-group">
@@ -268,7 +270,7 @@
                 <div>
                   <h2 class="card-title">Paid vs Unpaid</h2>
                   <p class="card-subtitle">
-                    Compare completed GCash and credit sales.
+                    Compare completed online and cash sales.
                   </p>
                 </div>
               </div>
@@ -329,6 +331,26 @@
                     placeholder="Search records"
                     aria-label="Search transaction records"
                   />
+                </div>
+                <div class="reports-export-tools">
+                  <button
+                    class="btn btn--outline btn--sm"
+                    id="exportPdfBtn"
+                    type="button"
+                    aria-label="Export to PDF"
+                  >
+                    <i data-lucide="file-text" aria-hidden="true"></i>
+                    Export PDF
+                  </button>
+                  <button
+                    class="btn btn--outline btn--sm"
+                    id="exportExcelBtn"
+                    type="button"
+                    aria-label="Export to Excel"
+                  >
+                    <i data-lucide="file-spreadsheet" aria-hidden="true"></i>
+                    Export Excel
+                  </button>
                 </div>
                 <span class="reports-records-count" id="reportsRecordsCount"
                   >0 records</span

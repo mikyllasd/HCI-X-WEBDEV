@@ -17,12 +17,35 @@
     </div>
 </div>
 
-<div class="manage-tabs" id="tabs-bar">
-    <button class="manage-tab active" data-filter="individual">
-        Individual Orders (<span class="tab-count" data-status="individual">0</span>)
+<!-- Type Filter -->
+<div class="manage-tabs" id="type-tabs-bar">
+    <button class="manage-tab active" data-type="individual">
+        Individual <span class="tab-count">0</span>
     </button>
-    <button class="manage-tab" data-filter="organization" id="org-orders-tab" style="display:none;">
-        Organization Orders (<span class="tab-count" data-status="organization">0</span>)
+    <button class="manage-tab" data-type="organization" id="org-orders-tab" style="display:none;">
+        Organization <span class="tab-count">0</span>
+    </button>
+</div>
+
+<!-- Status Filter -->
+<div class="status-tabs" id="status-tabs-bar">
+    <button class="status-tab active" data-status="all">
+        All <span class="tab-count">0</span>
+    </button>
+    <button class="status-tab" data-status="Pending">
+        Pending <span class="tab-count">0</span>
+    </button>
+    <button class="status-tab" data-status="Processing">
+        Processing <span class="tab-count">0</span>
+    </button>
+    <button class="status-tab" data-status="Ready">
+        Ready <span class="tab-count">0</span>
+    </button>
+    <button class="status-tab" data-status="Completed">
+        Completed <span class="tab-count">0</span>
+    </button>
+    <button class="status-tab" data-status="Cancelled">
+        Cancelled <span class="tab-count">0</span>
     </button>
 </div>
 
@@ -38,7 +61,6 @@
         <p class="rating-order-label" id="rating-order-label"></p>
 
         <div class="rating-categories">
-
             <div class="rating-category">
                 <div class="rating-cat-title">
                     <span class="rating-cat-icon">🖥️</span> System
@@ -51,7 +73,6 @@
                     <span class="star" data-value="5">★</span>
                 </div>
             </div>
-
             <div class="rating-category">
                 <div class="rating-cat-title">
                     <span class="rating-cat-icon">👤</span> Staff
@@ -64,7 +85,6 @@
                     <span class="star" data-value="5">★</span>
                 </div>
             </div>
-
             <div class="rating-category">
                 <div class="rating-cat-title">
                     <span class="rating-cat-icon">🛡️</span> Admin
@@ -77,7 +97,6 @@
                     <span class="star" data-value="5">★</span>
                 </div>
             </div>
-
         </div>
 
         <div class="rating-message-wrap">

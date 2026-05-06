@@ -19,7 +19,7 @@
             <p>Western Mindanao State University</p>
         </div>
     </div>
-    <div class="co-nav-right"><!-- spacer --></div>
+    <div class="co-nav-right"></div>
 </header>
 
 <!-- Step Indicator -->
@@ -46,6 +46,7 @@
         </div>
 
         <div class="co-type-grid">
+            <!-- Individual — always visible -->
             <button type="button" class="co-type-card" id="btn-individual" onclick="selectOrderType('individual')">
                 <div class="co-type-icon-wrap">
                     <span class="co-type-emoji">👤</span>
@@ -54,10 +55,11 @@
                     <div class="co-type-name">Individual Order</div>
                     <div class="co-type-sub">For personal use</div>
                 </div>
-                <span class="co-type-check" id="check-individual">✔</span>
+                <span class="co-type-check">✔</span>
             </button>
 
-            <button type="button" class="co-type-card" id="btn-organization" onclick="selectOrderType('organization')">
+            <!-- Organization — only shown if user has verified affiliation -->
+            <button type="button" class="co-type-card" id="btn-organization" onclick="selectOrderType('organization')" style="display:none;">
                 <div class="co-type-icon-wrap">
                     <span class="co-type-emoji">🏫</span>
                 </div>
@@ -65,11 +67,17 @@
                     <div class="co-type-name">Organization Order</div>
                     <div class="co-type-sub">For your student organization</div>
                 </div>
-                <span class="co-type-check" id="check-organization">✔</span>
+                <span class="co-type-check">✔</span>
             </button>
         </div>
 
-        <!-- Organization dropdown (shown only if org selected) -->
+        <!-- No affiliation notice -->
+        <div class="co-no-affil-notice" id="co-no-affil-notice" style="display:none;">
+            <span class="co-no-affil-icon">ℹ️</span>
+            <span>To place an organization order, <a href="dashboard.html" class="co-affil-link">affiliate with an organization</a> first.</span>
+        </div>
+
+        <!-- Organization dropdown (shown only when org type selected) -->
         <div class="co-org-section" id="co-org-section" style="display:none;">
             <label class="co-label" for="co-org-select">Select Organization <span class="co-required">*</span></label>
             <select id="co-org-select" class="co-select" onchange="onOrgChange(this.value)">
@@ -80,6 +88,8 @@
                 <option value="Arts and Culture Guild">Arts and Culture Guild</option>
                 <option value="Sports Association">Sports Association</option>
                 <option value="Science Club">Science Club</option>
+                <option value="Mathematics Club">Mathematics Club</option>
+                <option value="Education Society">Education Society</option>
                 <option value="Others">Others</option>
             </select>
             <div class="co-others-wrap" id="co-others-wrap" style="display:none;">
@@ -103,9 +113,7 @@
             <p>Pick the service you need to proceed with your order.</p>
         </div>
 
-        <div class="co-order-summary-bar" id="co-order-summary-bar">
-            <!-- Filled dynamically -->
-        </div>
+        <div class="co-order-summary-bar" id="co-order-summary-bar"></div>
 
         <div class="co-services-grid">
             <button type="button" class="co-service-card" onclick="serviceHref('printing.html')">

@@ -208,6 +208,27 @@
   }
   window.closeSidebar = closeSidebar;
 
+  // ── ACCORDION ──────────────────────────────────────────────────────────────
+
+  window.toggleAccordion = function(section, btn) {
+    const body = document.getElementById('accordion-' + section);
+    const allBodies = document.querySelectorAll('.sidebar-accordion-body');
+    const allHeaders = document.querySelectorAll('.sidebar-accordion-header');
+
+    const isOpen = body.style.display === 'block';
+
+    allBodies.forEach(b => b.style.display = 'none');
+    allHeaders.forEach(h => h.classList.remove('open'));
+
+    if (!isOpen) {
+      body.style.display = 'block';
+      btn.classList.add('open');
+      if (section === 'cart') renderSidebarCart();
+      if (section === 'orders') renderSidebarOrders();
+      if (section === 'history') renderSidebarHistory();
+    }
+  };
+
   function switchSidebarTab(tab, btn) {
     document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
@@ -222,8 +243,8 @@
 
   function openSidebarCart() {
     openSidebar();
-    const cartTab = document.querySelector('.sidebar-tab:nth-child(2)');
-    if (cartTab) switchSidebarTab('cart', cartTab);
+    const cartHeader = document.querySelector('.sidebar-accordion-header[onclick*="cart"]');
+    if (cartHeader) toggleAccordion('cart', cartHeader);
   }
   window.openSidebarCart = openSidebarCart;
 
@@ -489,7 +510,6 @@
   function closeAffiliateModal() {
     document.getElementById('affiliate-modal').style.display = 'none';
 
-    // Reset step 1
     const sel = document.getElementById('affiliate-org-select');
     if (sel) sel.value = '';
     const specifyWrap = document.getElementById('affiliate-other-specify-wrap');
@@ -497,7 +517,6 @@
     const specify = document.getElementById('affiliate-org-specify');
     if (specify) specify.value = '';
 
-    // Reset step 2
     const college = document.getElementById('affiliate-college-field');
     if (college) { college.value = ''; college.removeAttribute('readonly'); }
     const proofWrap = document.getElementById('affiliate-proof-wrap');

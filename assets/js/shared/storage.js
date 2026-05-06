@@ -10,6 +10,8 @@ const defaultDB = {
   archives: {},
   affiliationRequests: [],
   organizations: [],
+  students: [],
+  faculty: [],
   orgLedgers: [],
   orgLedgerArchive: [],
   systemSettings: {
@@ -83,6 +85,8 @@ function mergeWithDefaults(db) {
       ? db.affiliationRequests
       : [],
     organizations: Array.isArray(db.organizations) ? db.organizations : [],
+    students: Array.isArray(db.students) ? db.students : [],
+    faculty: Array.isArray(db.faculty) ? db.faculty : [],
     orgLedgers: Array.isArray(db.orgLedgers) ? db.orgLedgers : [],
     orgLedgerArchive: Array.isArray(db.orgLedgerArchive)
       ? db.orgLedgerArchive
@@ -517,5 +521,138 @@ function getArchivedServices(fromYear) {
     if (typeof window.UpressDemoSeed.seedOrgLedgersIfEmpty === "function") {
       window.UpressDemoSeed.seedOrgLedgersIfEmpty();
     }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedStudentsIfEmpty === "function") {
+      window.UpressDemoSeed.seedStudentsIfEmpty();
+    }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedFacultyIfEmpty === "function") {
+      window.UpressDemoSeed.seedFacultyIfEmpty();
+    }
+  } catch {}
+  try {
+    if (typeof window.UpressDemoSeed.seedActivityRecordsIfEmpty === "function") {
+      window.UpressDemoSeed.seedActivityRecordsIfEmpty();
+    }
+  } catch {}
+})();
+
+/**
+ * Keep demo user roles aligned with seeded faculty/students.
+ * (Existing localStorage may have older demo rows where some faculty were tagged as students.)
+ */
+(function normalizeDemoUserRoles() {
+  if (typeof window === "undefined") return;
+  if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+  try {
+    const db = window.getDB();
+    const users = Array.isArray(db.users) ? db.users : [];
+    if (!users.length) return;
+
+    const emailToRole = new Map([
+      ["anna.lopez@wmsu.edu.ph", "faculty"],
+      ["carlo.garcia@wmsu.edu.ph", "faculty"],
+    ]);
+
+    let changed = false;
+    for (const u of users) {
+      const email = String(u?.email || "").toLowerCase();
+      const desired = emailToRole.get(email);
+      if (!desired) continue;
+      if (String(u.role || "").toLowerCase() !== desired) {
+        u.role = desired;
+        changed = true;
+      }
+    }
+    if (changed) window.saveDB(db);
+  } catch {}
+})();
+
+/**
+ * Migrate older demo-seeded transaction IDs to ORG-* formats.
+ * Safe to run multiple times; only affects known demo prefixes.
+ */
+(function normalizeDemoSeedTransactionIds() {
+  if (typeof window === "undefined") return;
+  if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+  try {
+    const db = window.getDB();
+    const txs = Array.isArray(db.transactions) ? db.transactions : [];
+    if (!txs.length) return;
+
+    const exists = new Set(txs.map((t) => String(t?.id || "")));
+    const out = [];
+    let changed = false;
+
+    for (const t of txs) {
+      const id = String(t?.id || "");
+      let newId = "";
+
+      // Old org payment mirror IDs: txn_orgpay_<ledgerId>_<payId>
+      if (id.startsWith("txn_orgpay_")) {
+        const rest = id.slice("txn_orgpay_".length);
+        const parts = rest.split("_org_pay_");
+        if (parts.length === 2) {
+          const ledgerId = parts[0];
+          const paySuffix = parts[1];
+          const orderKey = String(t?.orderId || ledgerId).replaceAll(" ", "_");
+          newId = `ORG-PAY-${orderKey}-org_pay_${paySuffix}`;
+        } else {
+          // Fallback if unexpected shape
+          newId = `ORG-PAY-${rest.replaceAll(" ", "_")}`;
+        }
+      }
+
+      // Old activity seed IDs
+      if (id === "txn_activity_seed_faculty_001") newId = "ORG-ACT-FAC-001";
+      if (id === "txn_activity_seed_org_001") newId = "ORG-ACT-ORG-001";
+
+      if (newId && newId !== id) {
+        if (!exists.has(newId)) {
+          out.push({ ...t, id: newId });
+          exists.add(newId);
+        }
+        changed = true;
+        continue; // drop old row
+      }
+
+      out.push(t);
+    }
+
+    if (changed) {
+      db.transactions = out;
+      window.saveDB(db);
+    }
+  } catch {}
+})();
+
+/**
+ * Ensure transactions have a stable `orderId` for display consistency.
+ * - Demo transactions are shaped like: id: "txn_<ORD|ORG>-...."
+ * - UI should show the real order ID, not the internal txn id.
+ */
+(function normalizeTransactionOrderIds() {
+  if (typeof window === "undefined") return;
+  if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+  try {
+    const db = window.getDB();
+    const txs = Array.isArray(db.transactions) ? db.transactions : [];
+    if (!txs.length) return;
+
+    let changed = false;
+    for (const t of txs) {
+      if (!t || t.orderId) continue;
+      const id = String(t.id || "");
+      if (id.startsWith("txn_")) {
+        const maybeOrder = id.slice(4);
+        if (maybeOrder.startsWith("ORD-") || maybeOrder.startsWith("ORG-")) {
+          t.orderId = maybeOrder;
+          changed = true;
+        }
+      }
+    }
+    if (changed) window.saveDB(db);
   } catch {}
 })();

@@ -696,6 +696,11 @@ body:not(.staff-dashboard-body) .signup a {
   overflow-x: auto;
 }
 
+/* Ensure wide activity/report tables can horizontally scroll */
+.staff-dashboard-body .staff-table-wrap > .data-table {
+  min-width: 1100px;
+}
+
 .staff-panel table {
   width: 100%;
   border-collapse: collapse;

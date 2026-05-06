@@ -68,12 +68,6 @@
               >
             </li>
             <li>
-              <a href="analytics.html" class="nav-link" data-page="analytics">
-                <i data-lucide="bar-chart-3" aria-hidden="true"></i
-                ><span>Analytics</span></a
-              >
-            </li>
-            <li>
               <a href="organizations.html" class="nav-link" data-page="organizations">
                 <i data-lucide="building-2" aria-hidden="true"></i
                 ><span>Organizations</span></a
@@ -83,6 +77,18 @@
               <a href="sales-report.html" class="nav-link" data-page="sales-report">
                 <i data-lucide="receipt" aria-hidden="true"></i
                 ><span>Sales Report</span></a
+              >
+            </li>
+            <li>
+              <a href="students.html" class="nav-link" data-page="students">
+                <i data-lucide="users" aria-hidden="true"></i
+                ><span>Students</span></a
+              >
+            </li>
+            <li>
+              <a href="faculty.html" class="nav-link" data-page="faculty">
+                <i data-lucide="user-plus" aria-hidden="true"></i
+                ><span>Faculty</span></a
               >
             </li>
             <li>
@@ -146,59 +152,104 @@
         <section id="page-completed" aria-labelledby="staff-completed-heading">
           <header class="staff-header page-header">
             <div>
-              <h1 id="staff-completed-heading">Completed Orders</h1>
-              <p>All orders that have been successfully released</p>
+              <h1 id="staff-completed-heading">Activity Records</h1>
+              <p>Full completed activity log — filter by user type, college, course, year level, and period.</p>
             </div>
           </header>
 
-          <div class="staff-card-grid" style="margin-bottom: 18px">
-            <div class="staff-card">
-              <h3>Today</h3>
-              <span class="staff-number">12</span>
-              <span>Completed</span>
+          <section class="sd-panel" aria-label="Activity filters">
+            <div class="sd-panel__head">
+              <div>
+                <div class="sd-panel__title">
+                  <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+                  <span>Filters</span>
+                </div>
+                <div class="sd-panel__sub">Weekly, monthly, or semestral filtering with user metadata.</div>
+              </div>
             </div>
-            <div class="staff-card">
-              <h3>This Week</h3>
-              <span class="staff-number">47</span>
-              <span>Total releases</span>
+
+            <div class="rpt-filters-row" style="grid-template-columns: 1fr 1fr 1fr 1fr">
+              <div class="rpt-filter-group">
+                <label class="filter-label" for="actPeriod">Period</label>
+                <div class="rpt-select-wrapper">
+                  <select id="actPeriod" class="filter-input rpt-select">
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="semester">Semester</option>
+                    <option value="all">All time</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="rpt-select-chevron" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="rpt-filter-group">
+                <label class="filter-label" for="actUserType">User type</label>
+                <div class="rpt-select-wrapper">
+                  <select id="actUserType" class="filter-input rpt-select">
+                    <option value="all">All</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="organization">Organization</option>
+                  </select>
+                  <i data-lucide="chevron-down" class="rpt-select-chevron" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="rpt-filter-group">
+                <label class="filter-label" for="actCollege">College</label>
+                <select id="actCollege" class="filter-input rpt-select">
+                  <option value="all">All colleges</option>
+                </select>
+              </div>
+              <div class="rpt-filter-group">
+                <label class="filter-label" for="actCourse">Course</label>
+                <select id="actCourse" class="filter-input rpt-select">
+                  <option value="all">All courses</option>
+                </select>
+              </div>
             </div>
-            <div class="staff-card">
-              <h3>This Month</h3>
-              <span class="staff-number">183</span>
-              <span>Total releases</span>
+
+            <div class="rpt-filters-row" style="grid-template-columns: 1fr 1fr auto">
+              <div class="rpt-filter-group">
+                <label class="filter-label" for="actYearLevel">Year level</label>
+                <select id="actYearLevel" class="filter-input rpt-select">
+                  <option value="all">All years</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
+              <div class="rpt-filter-group">
+                <label class="filter-label" for="actSearch">Search</label>
+                <input id="actSearch" class="filter-input" type="search" placeholder="Search order ID, name, service…" />
+              </div>
+              <div class="rpt-filter-group rpt-filter-actions">
+                <button class="sd-panel__cta" type="button" id="actClear">Clear</button>
+              </div>
             </div>
-            <div class="staff-card">
-              <h3>All Time</h3>
-              <span class="staff-number">1,240</span>
-              <span>Total releases</span>
-            </div>
-          </div>
+          </section>
 
           <div class="staff-panel-full card sp">
-            <h3>Completed Order History</h3>
+            <h3>Activity Records</h3>
             <div class="list-toolbar">
-              <label class="list-search" for="coSearchInput">
-                <span>Search orders</span>
-                <input
-                  type="search"
-                  id="coSearchInput"
-                  class="list-search__input"
-                  placeholder="Search order ID, student, service…"
-                />
-              </label>
-              <div class="list-toolbar__count" id="coResultCount">0 orders</div>
+              <div class="list-toolbar__count" id="coResultCount">0 records</div>
             </div>
             <div class="staff-table-wrap">
               <table class="data-table" id="completedOrdersTable">
                 <thead>
                   <tr>
                     <th>Order ID</th>
-                    <th>Student</th>
+                    <th>Name</th>
+                    <th>User type</th>
+                    <th>College</th>
+                    <th>Course</th>
+                    <th>Year</th>
                     <th>Service</th>
-                    <th>Completed</th>
-                    <th>Released By</th>
                     <th>Status</th>
-                    <th>Receipt</th>
+                    <th>Date</th>
+                    <th>Channel</th>
+                    <th>Payment</th>
+                    <th>Reference</th>
+                    <th>Amount</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -211,11 +262,13 @@
     </div>
 
     <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
     <script src="../../js/staff/staff-data.js"></script>
     <script src="../../js/staff/staff-shell.js"></script>
     <script src="../../js/staff/staff-list-tools.js"></script>
     <script src="../../js/staff/staff.js"></script>
     <script src="../../js/staff/staff-completed.js"></script>
+    <script src="../../js/staff/staff-activity.js"></script>
   </body>
 </html>
 

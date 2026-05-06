@@ -41,9 +41,10 @@
             <li><a href="walk-in-pos.html" class="nav-link" data-page="walk-in-pos"><i data-lucide="store" aria-hidden="true"></i><span>Walk-in POS</span></a></li>
             <li class="nav-section-label" aria-hidden="true">Staff</li>
             <li><a href="dashboard.html" class="nav-link" data-page="dashboard"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></a></li>
-            <li><a href="analytics.html" class="nav-link" data-page="analytics"><i data-lucide="bar-chart-3" aria-hidden="true"></i><span>Analytics</span></a></li>
             <li><a href="organizations.html" class="nav-link" data-page="organizations"><i data-lucide="building-2" aria-hidden="true"></i><span>Organizations</span></a></li>
             <li><a href="sales-report.html" class="nav-link" data-page="sales-report"><i data-lucide="receipt" aria-hidden="true"></i><span>Sales Report</span></a></li>
+            <li><a href="students.html" class="nav-link" data-page="students"><i data-lucide="users" aria-hidden="true"></i><span>Students</span></a></li>
+            <li><a href="faculty.html" class="nav-link" data-page="faculty"><i data-lucide="user-plus" aria-hidden="true"></i><span>Faculty</span></a></li>
             <li><a href="order-queue.html" class="nav-link" data-page="order-queue"><i data-lucide="package" aria-hidden="true"></i><span>Orders Queue</span></a></li>
             <li><a href="ready-release.html" class="nav-link" data-page="ready-release"><i data-lucide="check-circle" aria-hidden="true"></i><span>Release</span></a></li>
             <li><a href="order-lookup.html" class="nav-link" data-page="order-lookup"><i data-lucide="search" aria-hidden="true"></i><span>Order Lookup</span></a></li>
@@ -68,7 +69,7 @@
         <header class="staff-header page-header">
           <div>
             <h1>Sales Report</h1>
-            <p>Total Revenue, Credit Sales (utang), and Physical Cash by date range.</p>
+            <p>Total Revenue, Credit Sales, and Physical Cash by date range.</p>
           </div>
         </header>
 
@@ -121,7 +122,7 @@
             <span>All payments received</span>
           </div>
           <div class="staff-card">
-            <h3>Credit Sales (Utang)</h3>
+            <h3>Credit Sales</h3>
             <span class="staff-number" id="srCreditSales">₱0.00</span>
             <span>Outstanding balances</span>
           </div>
@@ -129,6 +130,11 @@
             <h3>Physical Cash</h3>
             <span class="staff-number" id="srPhysicalCash">₱0.00</span>
             <span>Cash received</span>
+          </div>
+          <div class="staff-card">
+            <h3>Online Payments</h3>
+            <span class="staff-number" id="srOnlinePayments">₱0.00</span>
+            <span>GCash / similar</span>
           </div>
           <div class="staff-card">
             <h3>Transactions</h3>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Students</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="../../css/admin/admin.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+  </head>
+  <body class="staff-dashboard-body">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside class="sidebar staff-sidebar" id="sidebar" role="navigation" aria-label="Admin sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true"><i data-lucide="shield"></i></div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Admin Portal</span>
+          </div>
+          <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close sidebar">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-user">
+          <button class="user-pill" type="button" aria-label="Logged in as Admin">
+            <i data-lucide="user" aria-hidden="true"></i><span>Admin</span>
+          </button>
+          <p class="user-handle">@admin</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li><a href="dashboard.html" class="nav-link"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></a></li>
+            <li><a href="verification.html" class="nav-link"><i data-lucide="user-check" aria-hidden="true"></i><span>Student Verification</span></a></li>
+            <li><a href="faculty-verification.html" class="nav-link"><i data-lucide="user-check" aria-hidden="true"></i><span>Faculty Verification</span></a></li>
+            <li><a href="organizations.html" class="nav-link"><i data-lucide="building-2" aria-hidden="true"></i><span>Organizations</span></a></li>
+            <li><a href="students.html" class="nav-link active" aria-current="page"><i data-lucide="users" aria-hidden="true"></i><span>Students</span></a></li>
+            <li><a href="reports.html" class="nav-link"><i data-lucide="bar-chart-3" aria-hidden="true"></i><span>Reports</span></a></li>
+            <li><a href="ratings.html" class="nav-link"><i data-lucide="star" aria-hidden="true"></i><span>Ratings</span></a></li>
+            <li><a href="information.html" class="nav-link"><i data-lucide="info" aria-hidden="true"></i><span>Information</span></a></li>
+            <li><a href="pricing-settings.html" class="nav-link"><i data-lucide="settings" aria-hidden="true"></i><span>Pricing</span></a></li>
+            <li><a href="accounts.html" class="nav-link"><i data-lucide="users-2" aria-hidden="true"></i><span>Accounts</span></a></li>
+          </ul>
+
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a href="../../pages/admin-login-entry-point.html" class="nav-link nav-link--logout" id="logoutBtn">
+                <i data-lucide="log-out" aria-hidden="true"></i><span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button class="hamburger main-hamburger" id="hamburger" type="button" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+
+        <section class="page-section active" id="page-students" aria-label="Students">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Students</h1>
+              <p class="page-sub">Walk-in encoded students (synced from staff Freshman Tagging / Add Student).</p>
+            </div>
+          </div>
+
+          <div class="filters-section">
+            <div class="filters-row">
+              <div class="filter-group">
+                <label for="adminStudentSearch" class="filter-label">
+                  <i data-lucide="search" aria-hidden="true"></i>
+                  Search
+                </label>
+                <input type="search" id="adminStudentSearch" class="filter-input" placeholder="Search name or student number…" />
+              </div>
+              <div class="filter-group">
+                <label for="adminStudentCollege" class="filter-label">
+                  <i data-lucide="building-2" aria-hidden="true"></i>
+                  College
+                </label>
+                <input type="text" id="adminStudentCollege" class="filter-input" placeholder="All colleges" />
+              </div>
+              <div class="filter-group">
+                <label for="adminStudentCourse" class="filter-label">
+                  <i data-lucide="graduation-cap" aria-hidden="true"></i>
+                  Course
+                </label>
+                <input type="text" id="adminStudentCourse" class="filter-input" placeholder="All courses" />
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="list-toolbar">
+              <div class="list-toolbar__count" id="adminStudentCount">0 students</div>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table" id="adminStudentsTable">
+                <thead>
+                  <tr>
+                    <th>Student #</th>
+                    <th>Name</th>
+                    <th>College</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                    <th>Tag</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="list-pagination" id="adminStudentsPagination" aria-label="Students pagination"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/staff/staff-shell.js"></script>
+    <script src="../../js/staff/staff-list-tools.js"></script>
+    <script src="../../js/admin/admin-students.js"></script>
+  </body>
+</html>
+

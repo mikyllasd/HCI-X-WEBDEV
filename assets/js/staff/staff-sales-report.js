@@ -71,6 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
         method: s.paymentMethod || "cash",
         amount: Number(s.grandTotal) || 0,
         isCash: String(s.paymentMethod || "").toLowerCase() === "cash",
+        isOnline:
+          String(s.paymentMethod || "").toLowerCase().includes("gcash") ||
+          String(s.paymentMethod || "").toLowerCase().includes("online"),
       });
     });
 
@@ -79,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     [...open, ...archived].forEach((l) => {
       (Array.isArray(l.payments) ? l.payments : []).forEach((p) => {
         if (!isWithin(p.date, from, to)) return;
+        const m = String(p.method || "").toLowerCase();
         rows.push({
           date: p.date,
           channel: "Org Ledger",
@@ -86,7 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
           ref: l.orderId || l.id,
           method: p.method || "cash",
           amount: Number(p.amount) || 0,
-          isCash: String(p.method || "").toLowerCase() === "cash",
+          isCash: m === "cash",
+          isOnline: m.includes("gcash") || m.includes("online"),
         });
       });
     });
@@ -107,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const payments = collectPayments(from, to);
     const totalRevenue = payments.reduce((s, r) => s + (Number(r.amount) || 0), 0);
     const physicalCash = payments.filter((r) => r.isCash).reduce((s, r) => s + (Number(r.amount) || 0), 0);
+    const onlinePayments = payments.filter((r) => r.isOnline).reduce((s, r) => s + (Number(r.amount) || 0), 0);
     const creditSales = computeCreditOutstanding(from, to);
 
     const setText = (id, v) => {
@@ -116,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setText("srTotalRevenue", money(totalRevenue));
     setText("srPhysicalCash", money(physicalCash));
+    setText("srOnlinePayments", money(onlinePayments));
     setText("srCreditSales", money(creditSales));
     setText("srTxCount", String(payments.length));
 

@@ -437,6 +437,19 @@ function clearSelectedReleaseOrder() {
   } catch {}
 }
 
+function openReleaseModal() {
+  const m = document.getElementById('releaseModal');
+  if (!m) return;
+  m.setAttribute('aria-hidden', 'false');
+}
+
+function closeReleaseModal() {
+  const m = document.getElementById('releaseModal');
+  if (m) m.setAttribute('aria-hidden', 'true');
+  clearSelectedReleaseOrder();
+  setReleasePageOrder(null);
+}
+
 function setReleasePageOrder(order) {
   const emptyEl = document.getElementById('releaseEmpty');
   const contentEl = document.getElementById('releaseContent');
@@ -487,6 +500,12 @@ function setReleasePageOrder(order) {
 }
 
 document.addEventListener('click', (e) => {
+  const releaseClose = e.target.closest('[data-release-modal-close]');
+  if (releaseClose) {
+    closeReleaseModal();
+    return;
+  }
+
   const closeEl = e.target.closest('[data-modal-close]');
   if (closeEl) {
     closeStaffModal();
@@ -494,7 +513,7 @@ document.addEventListener('click', (e) => {
   }
 
   const footProceed = e.target.closest('.sd-modal__footProceed');
-  if (footProceed) {
+  if (footProceed && footProceed.id !== 'releaseCompleteBtn') {
     const orderId = footProceed.getAttribute('data-order-id') || '';
     const nextStatusKey = footProceed.getAttribute('data-next-status-key') || '';
     if (!orderId || !nextStatusKey) return;
@@ -523,7 +542,8 @@ document.addEventListener('click', (e) => {
 
     setRowStatus(targetRow, nextStatusKey);
 
-    if (window.UpressStaffData && String(orderId).startsWith('ORD-')) {
+    const oid = String(orderId);
+    if (window.UpressStaffData && (oid.startsWith('ORD-') || oid.startsWith('ORG-'))) {
       UpressStaffData.persistWebOrderStatus(orderId, nextStatusKey);
       UpressStaffData.hydrateTablesFromStorage();
     }
@@ -596,7 +616,7 @@ document.addEventListener('click', (e) => {
     const tr = releaseBtn.closest('tr');
     const order = getOrderFromSimpleRow(tr);
     setReleasePageOrder(order);
-    activateStaffPage('order-release');
+    openReleaseModal();
     return;
   }
 
@@ -624,13 +644,13 @@ document.addEventListener('click', (e) => {
 
     const order = qRow ? getOrderFromRow(tr) : getOrderFromSimpleRow(tr);
     setReleasePageOrder(order);
-    activateStaffPage('order-release');
+    openReleaseModal();
     return;
   }
 
   const releaseBackBtn = e.target.closest('#releaseBackBtn');
   if (releaseBackBtn) {
-    activateStaffPage('ready-release');
+    closeReleaseModal();
     return;
   }
 
@@ -644,7 +664,13 @@ document.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeStaffModal();
+  if (e.key !== 'Escape') return;
+  const rm = document.getElementById('releaseModal');
+  if (rm && rm.getAttribute('aria-hidden') === 'false') {
+    closeReleaseModal();
+    return;
+  }
+  closeStaffModal();
 });
 
 function parsePesoAmount(amountStr) {
@@ -861,6 +887,8 @@ function initReadyReleasePage() {
 }
 
 function initCompletedPage() {
+  // Activity page is rendered by staff-activity.js. Keep legacy hydration for older markup.
+  if (document.getElementById("actPeriod")) return;
   if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   window.UpressListTools?.initTableList?.({
     tableId: "completedOrdersTable",
@@ -1259,7 +1287,8 @@ function completeReleaseFlow() {
 
   statusEl.textContent = `Order ${order.orderId} released and marked as completed.`;
 
-  if (window.UpressStaffData && String(order.orderId || '').startsWith('ORD-')) {
+  const rid = String(order.orderId || '');
+  if (window.UpressStaffData && (rid.startsWith('ORD-') || rid.startsWith('ORG-'))) {
     const list = UpressStaffData.getWebOrders();
     const i = list.findIndex((x) => x.orderId === order.orderId);
     if (i !== -1) {
@@ -1289,24 +1318,11 @@ function completeReleaseFlow() {
   }
 
   renderDashboardMetricsAndTransactions();
-  clearSelectedReleaseOrder();
-
-  // Keep details visible but disable the button until a new selection
-  const completeBtn = document.getElementById('releaseCompleteBtn');
-  if (completeBtn) completeBtn.disabled = true;
+  closeReleaseModal();
 }
 
 function initOrderReleasePage() {
-  const selected = loadSelectedReleaseOrder();
-  if (selected && selected.orderId) setReleasePageOrder(selected);
-
-  document.addEventListener("change", (e) => {
-    const paymentEl = e.target.closest("#releasePaymentReceived");
-    if (paymentEl) {
-      const btn = document.getElementById("releaseCompleteBtn");
-      if (btn) btn.disabled = !paymentEl.checked;
-    }
-  });
+  // Release uses `#releaseModal` on Ready Release / Order Lookup; checkbox is bound once below.
 }
 
 window.UpressStaffPages = window.UpressStaffPages || {};
@@ -1318,3 +1334,14 @@ window.UpressStaffPages.initOrderLookup = initOrderLookupPage;
 window.UpressStaffPages.initReadyRelease = initReadyReleasePage;
 window.UpressStaffPages.initCompleted = initCompletedPage;
 window.UpressStaffPages.initOrderRelease = initOrderReleasePage;
+
+(function attachReleaseModalCheckboxOnce() {
+  if (typeof window === "undefined" || window.__upressReleaseCheckboxBound) return;
+  window.__upressReleaseCheckboxBound = true;
+  document.addEventListener("change", (e) => {
+    const paymentEl = e.target.closest("#releasePaymentReceived");
+    if (!paymentEl) return;
+    const btn = document.getElementById("releaseCompleteBtn");
+    if (btn) btn.disabled = !paymentEl.checked;
+  });
+})();

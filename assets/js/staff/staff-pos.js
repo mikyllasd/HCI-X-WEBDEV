@@ -3,6 +3,7 @@
  */
 (function () {
   let ticketLines = [];
+  let lastIdStudent = null;
 
   function money(n) {
     return "₱" + (Number(n) || 0).toFixed(2);
@@ -56,7 +57,15 @@
     const service = document.getElementById("posLineService")?.value || "Other";
     const qty = Math.max(1, parseInt(document.getElementById("posLineQty")?.value, 10) || 1);
     const unit = Math.max(0, parseFloat(document.getElementById("posLineUnit")?.value) || 0);
-    const notes = document.getElementById("posLineNotes")?.value.trim() || "";
+    let notes = document.getElementById("posLineNotes")?.value.trim() || "";
+
+    if (isIdPrintingService(service) && lastIdStudent) {
+      const tag = lastIdStudent.isFreshman ? "Freshman" : "Student";
+      const auto = `${tag} ID — ${lastIdStudent.studentNumber} · ${lastIdStudent.course} · ${lastIdStudent.yearLevel}`;
+      notes = notes ? `${auto} · ${notes}` : auto;
+      const inEl = document.getElementById("posLineNotes");
+      if (inEl) inEl.value = notes;
+    }
 
     ticketLines.push({
       id: "L-" + Date.now(),
@@ -168,6 +177,120 @@
     alert("Sale recorded. Use Print on the sale row (today’s list or Completed orders).");
   }
 
+  function openStudentModal({ title = "Add Student", preset = {} } = {}) {
+    const modal = document.getElementById("studentModal");
+    if (!modal) return;
+    const setVal = (id, v) => {
+      const el = document.getElementById(id);
+      if (el) el.value = v || "";
+    };
+    const setCheck = (id, v) => {
+      const el = document.getElementById(id);
+      if (el) el.checked = !!v;
+    };
+    document.getElementById("studentModalTitle").textContent = title;
+    setVal("stuName", preset.name);
+    setVal("stuNumber", preset.studentNumber);
+    setVal("stuCollege", preset.college);
+    setVal("stuCourse", preset.course);
+    if (document.getElementById("stuYearLevel")) {
+      document.getElementById("stuYearLevel").value = preset.yearLevel || "1st Year";
+    }
+    setVal("stuContact", preset.contact);
+    setCheck("stuIsFreshman", preset.isFreshman);
+    const err = document.getElementById("stuErr");
+    if (err) {
+      err.style.display = "none";
+      err.textContent = "";
+    }
+    modal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeStudentModal() {
+    document.getElementById("studentModal")?.setAttribute("aria-hidden", "true");
+  }
+
+  function saveStudent() {
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") {
+      alert("Storage not ready.");
+      return;
+    }
+
+    const name = document.getElementById("stuName")?.value.trim() || "";
+    const studentNumber = document.getElementById("stuNumber")?.value.trim() || "";
+    const college = document.getElementById("stuCollege")?.value.trim() || "";
+    const course = document.getElementById("stuCourse")?.value.trim() || "";
+    const yearLevel = document.getElementById("stuYearLevel")?.value || "1st Year";
+    const contact = document.getElementById("stuContact")?.value.trim() || "";
+    const isFreshman = !!document.getElementById("stuIsFreshman")?.checked;
+
+    const err = document.getElementById("stuErr");
+    const setErr = (msg) => {
+      if (!err) return;
+      err.style.display = msg ? "" : "none";
+      err.textContent = msg || "";
+    };
+
+    if (!studentNumber) return setErr("Student Number is required.");
+    if (!course) return setErr("Course is required.");
+
+    const db = window.getDB();
+    db.students = Array.isArray(db.students) ? db.students : [];
+
+    const exists = db.students.some(
+      (s) => String(s.studentNumber || "").toLowerCase() === studentNumber.toLowerCase(),
+    );
+    if (exists) return setErr("Student Number already exists.");
+
+    db.students.unshift({
+      id: `stu_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+      name,
+      studentNumber,
+      college,
+      course,
+      yearLevel,
+      contact,
+      isFreshman,
+      createdAt: new Date().toISOString(),
+      createdBy: "staff",
+      source: "walk-in",
+    });
+
+    window.saveDB(db);
+
+    // Auto-fill POS fields for ID processing context.
+    lastIdStudent = { name, studentNumber, college, course, yearLevel, contact, isFreshman };
+    const nameEl = document.getElementById("posCustomerName");
+    if (nameEl && name) nameEl.value = name;
+    const patron = document.getElementById("posPatronType");
+    if (patron) patron.value = "student";
+    const notesEl = document.getElementById("posLineNotes");
+    const svc = document.getElementById("posLineService")?.value || "";
+    if (notesEl && isIdPrintingService(svc)) {
+      const tag = isFreshman ? "Freshman" : "Student";
+      const auto = `${tag} ID — ${studentNumber} · ${course} · ${yearLevel}`;
+      notesEl.value = notesEl.value ? `${auto} · ${notesEl.value}` : auto;
+    }
+
+    closeStudentModal();
+    document.dispatchEvent(new CustomEvent("staff:data-changed"));
+  }
+
+  function isIdPrintingService(service) {
+    const s = String(service || "").toLowerCase();
+    return s.includes("id");
+  }
+
+  function syncFreshmanUi() {
+    const service = document.getElementById("posLineService")?.value || "";
+    const wrap = document.getElementById("posFreshmanWrap");
+    const check = document.getElementById("posFreshmanCheck");
+    if (!wrap || !check) return;
+    const isId = isIdPrintingService(service);
+    wrap.style.display = isId ? "" : "none";
+    if (!isId) check.checked = false;
+  }
+
   window.renderWalkInPosHistory = function () {
     const host = document.getElementById("posWalkInHistory");
     const tot = document.getElementById("posWalkInTodayTotal");
@@ -231,5 +354,27 @@
 
     renderTicket();
     window.renderWalkInPosHistory();
+
+    document.getElementById("posLineService")?.addEventListener("change", () => {
+      syncFreshmanUi();
+    });
+
+    document.getElementById("posFreshmanCheck")?.addEventListener("change", (e) => {
+      const checked = !!e.target.checked;
+      const service = document.getElementById("posLineService")?.value || "";
+      if (!checked || !isIdPrintingService(service)) return;
+      openStudentModal({
+        title: "Freshman New ID",
+        preset: { isFreshman: true, yearLevel: "1st Year" },
+      });
+    });
+
+    document.getElementById("stuSaveBtn")?.addEventListener("click", saveStudent);
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("[data-modal-close]")) closeStudentModal();
+    });
+
+    syncFreshmanUi();
   });
 })();

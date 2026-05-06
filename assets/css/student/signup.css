@@ -144,7 +144,7 @@
     font-size: 1.05rem;
     font-weight: 700;
     margin: 0 0 0.35rem;
-    color: #222;
+    color: var(--color-text);
 }
 
 .signup-step-lead {
@@ -208,12 +208,12 @@
     font-size: 0.9375rem;
     font-weight: 700;
     margin-bottom: 0.15rem;
-    color: #222;
+    color: var(--color-text);
 }
 
 .role-card-description {
     font-size: 0.75rem;
-    color: #777;
+    color: var(--color-text);
 }
 
 .signup-grid-2 {
@@ -237,7 +237,7 @@
 .slabel {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #444;
+    color: var(--color-text);
 }
 
 .sinput {

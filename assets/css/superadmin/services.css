@@ -18,7 +18,7 @@
 
 .page-sub {
   font-size: 14px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin: 4px 0 0 0;
 }
 
@@ -50,7 +50,7 @@
 .btn-primary {
   background: var(--color-header);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(139, 0, 0, 0.35);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-header) 45%, transparent);
 }
 
 .btn-primary:hover {
@@ -76,7 +76,7 @@
 
 .btn-ghost {
   background: transparent;
-  color: #5a6170;
+  color: var(--color-text-muted);
   border: 1.5px solid var(--color-border);
 }
 
@@ -96,10 +96,10 @@
   gap: 14px;
   padding: 16px;
   margin-bottom: 18px;
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .list-search {
@@ -109,7 +109,7 @@
   max-width: 520px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .list-search__input {
@@ -119,18 +119,18 @@
   padding: 10px 12px;
   font: inherit;
   color: var(--color-text);
-  background: var(--color-white);
+  background: var(--color-surface-raised);
 }
 
 .list-search__input:focus {
   outline: none;
   border-color: var(--color-header);
-  box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-header) 28%, transparent);
 }
 
 .list-toolbar__count {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
@@ -144,7 +144,7 @@
 
 .list-pagination__summary {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .list-pagination__actions {
@@ -199,8 +199,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f3f4f6;
-  color: var(--color-text-secondary);
+  background: var(--color-card-muted);
+  color: var(--color-text-muted);
 }
 
 .services-grid {
@@ -211,11 +211,11 @@
 }
 
 .service-card {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   border: 1px solid var(--color-border);
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -226,7 +226,7 @@
 
 .service-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 @keyframes cardFadeIn {
@@ -254,8 +254,8 @@
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  background: #f3f4f6;
-  color: var(--color-text-secondary);
+  background: var(--color-card-muted);
+  color: var(--color-text-muted);
 }
 
 .service-category.printing {
@@ -283,7 +283,7 @@
 
 .service-description {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin: 8px 0;
   line-height: 1.4;
 }
@@ -299,7 +299,7 @@
   display: flex;
   gap: 8px;
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   padding: 8px 0;
   margin-bottom: 12px;
 }
@@ -350,7 +350,7 @@
   background: transparent;
   border-radius: 8px;
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -372,7 +372,7 @@
 
 .service-action-btn.history:hover {
   background: rgba(59, 130, 246, 0.1);
-  color: #1e40af;
+  color: var(--clr-blue, #1e40af);
 }
 
 .service-action-btn.danger:hover {
@@ -384,7 +384,7 @@
 .empty-state {
   text-align: center;
   padding: 48px 24px;
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   border: 1px solid var(--color-border);
 }
@@ -393,7 +393,7 @@
   width: 48px;
   height: 48px;
   margin: 0 auto 16px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .empty-state__title {
@@ -405,7 +405,7 @@
 
 .empty-state__sub {
   font-size: 14px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin-bottom: 16px;
 }
 
@@ -427,11 +427,11 @@
 }
 
 .modal {
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   border-radius: 12px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-xl);
   animation: modalIn 0.25s ease;
   max-height: 90vh;
   overflow-y: auto;
@@ -465,7 +465,7 @@
 
 .modal-sub {
   font-size: 13px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin: 4px 0 0 0;
 }
 
@@ -479,7 +479,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   flex-shrink: 0;
   transition:
     background 0.2s ease,
@@ -526,7 +526,7 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 14px;
-  background: var(--color-white);
+  background: var(--color-surface-raised);
   color: var(--color-text);
   font-family: var(--font-sans);
   transition:
@@ -536,8 +536,8 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+  border-color: var(--color-header);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-header) 28%, transparent);
 }
 
 .required {
@@ -554,7 +554,7 @@
 .history-item {
   padding: 12px;
   border-left: 3px solid var(--color-border);
-  background: #f9fafb;
+  background: var(--color-surface-soft);
   border-radius: 4px;
 }
 
@@ -591,19 +591,19 @@
 
 .history-item-time {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .history-item-details {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   margin-top: 4px;
 }
 
 .empty-history {
   text-align: center;
   padding: 24px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 
@@ -615,7 +615,7 @@
 }
 
 .service-pricing-block {
-  background: #fff;
+  background: var(--color-surface-soft);
   border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 14px;
@@ -629,7 +629,7 @@
 
 .service-pricing-sub {
   margin-top: 6px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: 12px;
 }
 
@@ -647,7 +647,7 @@
 }
 
 .pricing-print-row--head {
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -713,7 +713,7 @@
   bottom: 28px;
   right: 28px;
   background: var(--color-text);
-  color: #fff;
+  color: var(--color-surface-raised);
   padding: 12px 18px;
   border-radius: 10px;
   font-size: 13px;
@@ -727,10 +727,27 @@
   transition:
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
     opacity 0.35s ease;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+}
+
+html[data-theme="dark"] .toast {
+  background: #292524;
+  color: #fafaf9;
 }
 
 .toast.show {
   transform: translateY(0);
   opacity: 1;
+}
+
+html[data-theme="dark"] .service-category.printing {
+  color: var(--clr-blue, #60a5fa);
+}
+
+html[data-theme="dark"] .service-category.merchandise {
+  color: var(--color-success);
+}
+
+html[data-theme="dark"] .service-category.special {
+  color: var(--clr-purple, #a78bfa);
 }

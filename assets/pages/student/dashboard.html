@@ -41,13 +41,6 @@
                 <p class="sidebar-section-label">My Orders</p>
                 <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
             </div>
-            <div class="order-status-tabs" id="order-status-tabs">
-                <button type="button" class="order-status-tab active" onclick="setOrderFilter('all')">All</button>
-                <button type="button" class="order-status-tab" onclick="setOrderFilter('pending')">Pending</button>
-                <button type="button" class="order-status-tab" onclick="setOrderFilter('processing')">Processing</button>
-                <button type="button" class="order-status-tab" onclick="setOrderFilter('completed')">Completed</button>
-                <button type="button" class="order-status-tab" onclick="setOrderFilter('cancelled')">Cancelled</button>
-            </div>
             <div id="sidebar-orders-list" class="sidebar-empty-state">
                 <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
                 <p>No orders yet.</p>
@@ -233,7 +226,6 @@
         </div>
         <div class="affiliate-modal-body">
 
-            <!-- STEP 1: Single dropdown org selection -->
             <div class="affiliate-step" id="affiliate-step-1">
                 <h3>Select Organization</h3>
                 <p>Choose your organization from the list below.</p>
@@ -266,7 +258,6 @@
                 </div>
             </div>
 
-            <!-- STEP 2: Details -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-2">
                 <h3>Organization Details</h3>
                 <div class="affiliate-form">
@@ -302,7 +293,6 @@
                 </div>
             </div>
 
-            <!-- SUCCESS -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-success">
                 <div class="affiliate-success">
                     <div class="affiliate-success-icon">

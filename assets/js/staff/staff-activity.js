@@ -97,14 +97,35 @@ document.addEventListener("DOMContentLoaded", () => {
     txs.forEach((tx) => {
       const status = String(tx?.status || "").toLowerCase();
       if (!(status === "completed" || status === "paid")) return;
+
+      // IMPORTANT:
+      // Walk-in POS sales are already collected below from `upressWalkInSales`.
+      // The app also mirrors some walk-ins into `db.transactions` for reporting consistency,
+      // using internal IDs like `txn_pos_SALE-1003`. Do NOT show those internal IDs here,
+      // or we’ll get duplicates and confusing prefixes.
+      const txId = String(tx?.id || "");
+      const isWalkInMirror =
+        txId.startsWith("txn_pos_") ||
+        String(tx?.serviceId || "") === "svc_walkin" ||
+        String(tx?.serviceName || "") === "Walk-in POS";
+      if (isWalkInMirror) return;
+
       const email = String(tx?.email || "").toLowerCase();
       const user = email ? userIdx.get(email) : null;
       const userType = normalizeUserType(tx, user);
       const paymentMethod = tx?.paymentMethod || tx?.payment || tx?.method || "—";
       const reference = tx?.refNumber || tx?.reference || tx?.paymentRef || "—";
+      const displayOrderId =
+        tx?.orderId ||
+        tx?.orderID ||
+        tx?.order_id ||
+        tx?.orderNo ||
+        tx?.orderNumber ||
+        tx?.id ||
+        tx?.orderId;
 
       out.push({
-        id: String(tx?.id || tx?.orderId || ""),
+        id: String(displayOrderId || ""),
         name: user?.fullName || tx?.customerName || tx?.email || "—",
         userType,
         college: user?.college || "—",

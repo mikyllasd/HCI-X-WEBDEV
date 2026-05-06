@@ -80,7 +80,7 @@
       order_type: "individual",
     },
     {
-      id: "ORD-2025-103",
+      id: "ORG-2025-103",
       email: "student@wmsu.edu.ph",
       service: "Lanyards",
       amount: 300,
@@ -209,7 +209,7 @@
       order_type: "individual",
     },
     {
-      id: "ORD-2025-008",
+      id: "ORG-2025-008",
       email: "carlo.garcia@wmsu.edu.ph",
       service: "Mug Printing",
       amount: 650,
@@ -569,6 +569,7 @@
       const sem = "2nd";
       return {
         id: `txn_${o.id}`,
+        orderId: o.id,
         serviceId: svc.id,
         serviceName: o.service,
         amount: o.amount,
@@ -580,6 +581,8 @@
         paymentType: paymentTypeFromOrder(o),
         paymentMethod: o.payment,
         email: o.email,
+        order_type: o.order_type || "",
+        order_org: o.order_org || "",
       };
     });
   }
@@ -844,7 +847,7 @@
           "Venom Publication",
           1500,
           "2026-01-18T09:00:00",
-          "ORD-2025-131",
+          "ORG-2025-131",
           [pay("2026-01-18T10:30:00", 600, "cash", "Initial payment")],
         ),
       );
@@ -857,7 +860,7 @@
           "Google Developers Group On Campus",
           1200,
           "2025-12-02T09:00:00",
-          "ORD-2025-099",
+          "ORG-2025-099",
           [
             pay("2025-12-02T11:00:00", 400, "gcash", "Installment 1"),
             pay("2025-12-10T14:45:00", 400, "gcash", "Installment 2"),
@@ -876,7 +879,7 @@
           "Computer Science Club",
           1200,
           "2026-01-05T08:30:00",
-          "ORD-2025-103",
+          "ORG-2025-103",
           [
             pay("2026-01-05T10:00:00", 500, "cash", "Downpayment"),
             pay("2026-01-10T14:10:00", 200, "cash", "Installment"),
@@ -898,7 +901,7 @@
       const ledgersForTx = [...openAdds, ...archiveAdds];
       for (const l of ledgersForTx) {
         for (const p of Array.isArray(l.payments) ? l.payments : []) {
-          const id = `txn_orgpay_${l.id}_${p.id}`;
+          const id = `ORG-PAY-${String(l.orderId || l.id).replaceAll(" ", "_")}-${String(p.id || "").replaceAll(" ", "_")}`;
           if (existingIds.has(id)) continue;
           const method = String(p.method || "");
           const m = method.toLowerCase();
@@ -1041,7 +1044,7 @@
       const seedTx = [
         // Faculty web/system completed transaction (links to db.users via email)
         {
-          id: "txn_activity_seed_faculty_001",
+          id: "ORG-ACT-FAC-001",
           serviceId: "svc_demo_printing",
           serviceName: "Printing",
           amount: 95,
@@ -1056,7 +1059,7 @@
         },
         // Organization web/system completed transaction
         {
-          id: "txn_activity_seed_org_001",
+          id: "ORG-ACT-ORG-001",
           serviceId: "svc_demo_lanyards",
           serviceName: "Lanyards",
           amount: 680,

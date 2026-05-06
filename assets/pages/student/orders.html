@@ -18,20 +18,11 @@
 </div>
 
 <div class="manage-tabs" id="tabs-bar">
-    <button class="manage-tab active" data-filter="all">
-        All (<span class="tab-count" data-status="all">0</span>)
+    <button class="manage-tab active" data-filter="individual">
+        Individual Orders (<span class="tab-count" data-status="individual">0</span>)
     </button>
-    <button class="manage-tab" data-filter="Pending">
-        Pending (<span class="tab-count" data-status="Pending">0</span>)
-    </button>
-    <button class="manage-tab" data-filter="Processing">
-        Processing (<span class="tab-count" data-status="Processing">0</span>)
-    </button>
-    <button class="manage-tab" data-filter="Ready">
-        Ready (<span class="tab-count" data-status="Ready">0</span>)
-    </button>
-    <button class="manage-tab" data-filter="Completed">
-        Completed (<span class="tab-count" data-status="Completed">0</span>)
+    <button class="manage-tab" data-filter="organization" id="org-orders-tab" style="display:none;">
+        Organization Orders (<span class="tab-count" data-status="organization">0</span>)
     </button>
 </div>
 

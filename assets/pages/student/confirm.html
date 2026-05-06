@@ -30,7 +30,7 @@
                 <span class="upress-icon upress-icon--check upress-icon--xl" aria-hidden="true"></span>
             </div>
             <h2>Order Submitted!</h2>
-            <p>
+            <p id="confirm-message">
                 Your order has been received and is now pending processing.
                 We'll notify you when it's ready for pickup.
             </p>
@@ -62,6 +62,12 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Get all orders and select the most recent one */
     const all    = Orders.getAll();
     const latest = all[0];
+
+    /* Update message based on order type */
+    const messageEl = document.getElementById('confirm-message');
+    if (latest && latest.order_type === 'organization') {
+        messageEl.textContent = 'Your request is pending for review. You will receive a call shortly.';
+    }
 
     /* Target container for displaying order details */
     const detailsEl = document.getElementById('confirm-details-list');

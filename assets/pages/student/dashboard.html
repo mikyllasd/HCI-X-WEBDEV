@@ -45,6 +45,9 @@
         <button type="button" class="sidebar-update-email-btn" id="update-email-btn" onclick="showUpdateEmailModal()">
             <span class="upress-icon upress-icon--mail" aria-hidden="true"></span> Update Email
         </button>
+        <button type="button" class="sidebar-affiliate-btn" id="affiliate-btn" onclick="showAffiliateModal()">
+            <span class="upress-icon upress-icon--users" aria-hidden="true"></span> Affiliate
+        </button>
     </div>
 
     <!-- Sidebar Tabs -->
@@ -202,6 +205,147 @@
 
     <div style="text-align:center; padding: 2rem 0;">
         <a href="create-order.html" class="btn-create-order">+ Create Order</a>
+    </div>
+</div>
+
+<!-- Affiliate Modal -->
+<div id="affiliate-modal" class="affiliate-modal" style="display:none;">
+    <div class="affiliate-modal-backdrop" onclick="closeAffiliateModal()"></div>
+    <div class="affiliate-modal-dialog">
+        <div class="affiliate-modal-header">
+            <h2 class="affiliate-modal-title">Affiliate with Organization</h2>
+            <button type="button" class="affiliate-modal-close" onclick="closeAffiliateModal()" aria-label="Close">
+                <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="affiliate-modal-body">
+            <!-- Step 1: Choose affiliation type -->
+            <div class="affiliate-step" id="affiliate-step-1">
+                <h3>Select Organization Type</h3>
+                <p>Choose whether your organization is recognized by WMSU or if it's a custom organization.</p>
+                <div class="affiliate-type-options">
+                    <label class="affiliate-type-card selected" data-type="known">
+                        <input type="radio" name="affiliate-type" value="known" checked>
+                        <div class="affiliate-type-icon">
+                            <span class="upress-icon upress-icon--building" aria-hidden="true"></span>
+                        </div>
+                        <div class="affiliate-type-title">Known Organization</div>
+                        <div class="affiliate-type-desc">Select from WMSU-recognized organizations</div>
+                    </label>
+                    <label class="affiliate-type-card" data-type="other">
+                        <input type="radio" name="affiliate-type" value="other">
+                        <div class="affiliate-type-icon">
+                            <span class="upress-icon upress-icon--plus" aria-hidden="true"></span>
+                        </div>
+                        <div class="affiliate-type-title">Other Organization</div>
+                        <div class="affiliate-type-desc">Specify a custom organization</div>
+                    </label>
+                </div>
+                <div class="affiliate-step-actions">
+                    <button type="button" class="affiliate-btn-secondary" onclick="closeAffiliateModal()">Cancel</button>
+                    <button type="button" class="affiliate-btn-primary" onclick="goToAffiliateStep(2)">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Known org details -->
+            <div class="affiliate-step affiliate-hidden" id="affiliate-step-2-known">
+                <h3>Organization Details</h3>
+                <div class="affiliate-form">
+                    <div class="affiliate-field">
+                        <label for="affiliate-org-known">Organization Name *</label>
+                        <select id="affiliate-org-known" onchange="onKnownOrgChange(this.value)">
+                            <option value="">Select organization</option>
+                            <option value="Computer Science Department">Computer Science Department</option>
+                            <option value="Mathematics Department">Mathematics Department</option>
+                            <option value="Physics Department">Physics Department</option>
+                            <option value="Chemistry Department">Chemistry Department</option>
+                            <option value="Biology Department">Biology Department</option>
+                            <option value="Engineering Department">Engineering Department</option>
+                            <option value="Business Administration Department">Business Administration Department</option>
+                            <option value="Education Department">Education Department</option>
+                            <option value="Arts Department">Arts Department</option>
+                            <option value="Sports Department">Sports Department</option>
+                        </select>
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-college-known">College *</label>
+                        <input type="text" id="affiliate-college-known" readonly placeholder="Auto-filled based on organization">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-position-known">Position in Organization *</label>
+                        <input type="text" id="affiliate-position-known" placeholder="e.g. President, Secretary, Member">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-contact-known">Contact Number *</label>
+                        <input type="tel" id="affiliate-contact-known" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-otp-known">Verification Code *</label>
+                        <div class="affiliate-otp-row">
+                            <input type="text" id="affiliate-otp-known" placeholder="Enter 6-digit code" maxlength="6" disabled>
+                            <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-known" onclick="sendAffiliateOTP('known')">Send OTP</button>
+                        </div>
+                        <small>Demo OTP: 123456</small>
+                    </div>
+                </div>
+                <div class="affiliate-step-actions">
+                    <button type="button" class="affiliate-btn-secondary" onclick="goToAffiliateStep(1)">Back</button>
+                    <button type="button" class="affiliate-btn-primary" id="affiliate-submit-known" onclick="submitAffiliateRequest('known')" disabled>Submit Request</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Other org details -->
+            <div class="affiliate-step affiliate-hidden" id="affiliate-step-2-other">
+                <h3>Organization Details</h3>
+                <div class="affiliate-form">
+                    <div class="affiliate-field">
+                        <label for="affiliate-org-other">Organization Name *</label>
+                        <input type="text" id="affiliate-org-other" placeholder="Enter organization name">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-college-other">Under what College *</label>
+                        <input type="text" id="affiliate-college-other" placeholder="e.g. College of Computing Studies">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-proof-other">Proof of Recognition *</label>
+                        <input type="file" id="affiliate-proof-other" accept="image/*,.pdf" onchange="onProofUpload(this)">
+                        <small>Upload a picture proving the org is recognized by WMSU (JPG, PNG, PDF up to 5MB)</small>
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-position-other">Position in Organization *</label>
+                        <input type="text" id="affiliate-position-other" placeholder="e.g. President, Secretary, Member">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-contact-other">Contact Number *</label>
+                        <input type="tel" id="affiliate-contact-other" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}">
+                    </div>
+                    <div class="affiliate-field">
+                        <label for="affiliate-otp-other">Verification Code *</label>
+                        <div class="affiliate-otp-row">
+                            <input type="text" id="affiliate-otp-other" placeholder="Enter 6-digit code" maxlength="6" disabled>
+                            <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-other" onclick="sendAffiliateOTP('other')">Send OTP</button>
+                        </div>
+                        <small>Demo OTP: 123456</small>
+                    </div>
+                </div>
+                <div class="affiliate-step-actions">
+                    <button type="button" class="affiliate-btn-secondary" onclick="goToAffiliateStep(1)">Back</button>
+                    <button type="button" class="affiliate-btn-primary" id="affiliate-submit-other" onclick="submitAffiliateRequest('other')" disabled>Submit Request</button>
+                </div>
+            </div>
+
+            <!-- Success message -->
+            <div class="affiliate-step affiliate-hidden" id="affiliate-step-success">
+                <div class="affiliate-success">
+                    <div class="affiliate-success-icon">
+                        <span class="upress-icon upress-icon--check" aria-hidden="true"></span>
+                    </div>
+                    <h3>Request Submitted</h3>
+                    <p>Your request is being processed. We will send you a notification if your request has been verified.</p>
+                    <button type="button" class="affiliate-btn-primary" onclick="closeAffiliateModal()">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

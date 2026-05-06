@@ -23,73 +23,96 @@
         </button>
     </div>
 
-    <div class="sidebar-tabs">
-        <button type="button" class="sidebar-tab active" onclick="switchSidebarTab('orders', this)">
-            <span class="upress-icon upress-icon--pkg" aria-hidden="true"></span> My Orders
-        </button>
-        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('cart', this)">
-            <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart
-        </button>
-        <button type="button" class="sidebar-tab" onclick="switchSidebarTab('history', this)">
-            <span class="upress-icon upress-icon--clock" aria-hidden="true"></span> History
-        </button>
-    </div>
+    <div style="flex:1; overflow-y:auto;">
 
-    <div class="sidebar-panel active" id="panel-orders">
-        <div class="sidebar-panel-inner">
-            <div class="sidebar-orders-actions">
-                <p class="sidebar-section-label">My Orders</p>
-                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
-            </div>
-            <div id="sidebar-orders-list" class="sidebar-empty-state">
-                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
-                <p>No orders yet.</p>
-                <button type="button" class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="sidebar-panel" id="panel-cart">
-        <div class="sidebar-panel-inner">
-            <div class="sidebar-cart-toolbar">
-                <label class="sidebar-check-label">
-                    <input type="checkbox" id="sidebar-select-all" onchange="sidebarSelectAll(this.checked)" />
-                    <span>Select All</span>
-                </label>
-                <span class="sidebar-selected-count" id="sidebar-selected-count">0 selected</span>
-            </div>
-            <div id="sidebar-cart-list"></div>
-            <div class="sidebar-cart-footer">
-                <div class="sidebar-cart-total-row">
-                    <span class="sidebar-cart-total-label">Selected Total</span>
-                    <span class="sidebar-cart-total-amount" id="sidebar-cart-total">₱0.00</span>
+        <!-- My Orders Accordion -->
+        <div class="sidebar-accordion-item">
+            <button type="button" class="sidebar-accordion-header" onclick="toggleAccordion('orders', this)">
+                <span style="display:flex; align-items:center; gap:0.5rem;">
+                    <span class="upress-icon upress-icon--pkg" aria-hidden="true"></span> My Orders
+                </span>
+                <span class="sidebar-accordion-chevron">&#8250;</span>
+            </button>
+            <div class="sidebar-accordion-body" id="accordion-orders" style="display:none;">
+                <div class="sidebar-panel-inner">
+                    <div class="sidebar-orders-actions">
+                        <p class="sidebar-section-label">My Orders</p>
+                        <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
+                    </div>
+                    <div id="sidebar-orders-list" class="sidebar-empty-state">
+                        <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
+                        <p>No orders yet.</p>
+                        <button type="button" class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
+                    </div>
                 </div>
-                <button type="button" class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()">
-                    <span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Checkout Selected
-                </button>
-                <button type="button" class="sidebar-clear-btn" onclick="sidebarClearCart()">
-                    <span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart
-                </button>
             </div>
         </div>
-    </div>
 
-    <div class="sidebar-panel" id="panel-history">
-        <div class="sidebar-panel-inner">
-            <div class="sidebar-orders-actions">
-                <p class="sidebar-section-label">Order History</p>
-                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
-            </div>
-            <div id="sidebar-history-list" class="sidebar-empty-state">
-                <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span></div>
-                <p>No completed orders yet.</p>
+        <!-- Cart Accordion -->
+        <div class="sidebar-accordion-item">
+            <button type="button" class="sidebar-accordion-header" onclick="toggleAccordion('cart', this)">
+                <span style="display:flex; align-items:center; gap:0.5rem;">
+                    <span class="upress-icon upress-icon--cart" aria-hidden="true"></span> Cart
+                </span>
+                <span class="sidebar-accordion-chevron">&#8250;</span>
+            </button>
+            <div class="sidebar-accordion-body" id="accordion-cart" style="display:none;">
+                <div class="sidebar-panel-inner">
+                    <div class="sidebar-orders-actions">
+                        <p class="sidebar-section-label">Cart</p>
+                        <button type="button" class="sidebar-fullscreen-btn" onclick="window.location.href='checkout.html'">⤢ Full View</button>
+                    </div>
+                    <div class="sidebar-cart-toolbar">
+                        <label class="sidebar-check-label">
+                            <input type="checkbox" id="sidebar-select-all" onchange="sidebarSelectAll(this.checked)" />
+                            <span>Select All</span>
+                        </label>
+                        <span class="sidebar-selected-count" id="sidebar-selected-count">0 selected</span>
+                    </div>
+                    <div id="sidebar-cart-list"></div>
+                    <div class="sidebar-cart-footer">
+                        <div class="sidebar-cart-total-row">
+                            <span class="sidebar-cart-total-label">Selected Total</span>
+                            <span class="sidebar-cart-total-amount" id="sidebar-cart-total">₱0.00</span>
+                        </div>
+                        <button type="button" class="sidebar-checkout-btn" id="sidebar-checkout-btn" onclick="sidebarCheckout()">
+                            <span class="upress-icon upress-icon--bag" aria-hidden="true"></span> Checkout Selected
+                        </button>
+                        <button type="button" class="sidebar-clear-btn" onclick="sidebarClearCart()">
+                            <span class="upress-icon upress-icon--trash" aria-hidden="true"></span> Clear Cart
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- History Accordion -->
+        <div class="sidebar-accordion-item">
+            <button type="button" class="sidebar-accordion-header" onclick="toggleAccordion('history', this)">
+                <span style="display:flex; align-items:center; gap:0.5rem;">
+                    <span class="upress-icon upress-icon--clock" aria-hidden="true"></span> History
+                </span>
+                <span class="sidebar-accordion-chevron">&#8250;</span>
+            </button>
+            <div class="sidebar-accordion-body" id="accordion-history" style="display:none;">
+                <div class="sidebar-panel-inner">
+                    <div class="sidebar-orders-actions">
+                        <p class="sidebar-section-label">Order History</p>
+                        <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
+                    </div>
+                    <div id="sidebar-history-list" class="sidebar-empty-state">
+                        <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span></div>
+                        <p>No completed orders yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="sidebar-footer">
         <button type="button" class="sidebar-logout-btn" onclick="logout()">
-            <span class="upress-icon upress-icon--x" aria-hidden="true"></span> Logout
+            Logout
         </button>
     </div>
 </aside>
@@ -142,7 +165,7 @@
 <!-- Profile Panel Overlay -->
 <div class="profile-overlay" id="profileOverlay" onclick="closeProfilePanel()"></div>
 
-<!-- Profile Panel Dropdown -->
+<!-- Profile Panel -->
 <div class="profile-panel" id="profile-panel" style="display:none;">
     <div class="profile-panel-inner">
         <div class="profile-panel-header">

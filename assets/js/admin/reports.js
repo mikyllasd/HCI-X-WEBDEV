@@ -85,6 +85,12 @@
     return "other";
   }
 
+  function getPaymentLabel(paymentType) {
+    if (paymentType === "gcash") return "Online";
+    if (paymentType === "credit") return "Cash (Paid)";
+    return "Other";
+  }
+
   function inDateRange(date, start, end) {
     if (!date) return false;
     if (start && date < start) return false;
@@ -364,7 +370,7 @@
     paymentChart = new Chart(paymentChartCanvas, {
       type: "doughnut",
       data: {
-        labels: ["GCash Paid", "Credit Unpaid"],
+        labels: ["Online Paid", "Cash (Paid)"],
         datasets: [
           {
             data: [paid, unpaid],
@@ -435,7 +441,7 @@
             <td>${date ? date.toLocaleDateString() : "N/A"}</td>
             <td>${String(transaction.studentName || transaction.email || "Unknown")}</td>
             <td>${String(transaction.serviceName || transaction.service || "—")}</td>
-            <td>${paymentType === "gcash" ? "GCash" : paymentType === "credit" ? "Credit" : "Other"}</td>
+            <td>${getPaymentLabel(paymentType)}</td>
             <td>${toMoney(transaction.amount)}</td>
             <td>${String(transaction.status || "").toUpperCase()}</td>
           </tr>
@@ -483,12 +489,122 @@
       });
   }
 
-  function applyFilters() {
-    recordsPage = Math.max(recordsPage, 1);
-    const filtered = getFilteredTransactions();
-    updateSummaryCards(filtered);
-    renderPaymentChart(filtered);
-    renderRecords(filtered);
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Get current filtered data
+    const transactions = getFilteredTransactions();
+
+    // Add title
+    doc.setFontSize(18);
+    doc.text("UPRESSease Transaction Report", 20, 20);
+
+    // Add date range
+    const period = periodSelect?.value || "daily";
+    const { start, end } = getDateRange(period);
+    doc.setFontSize(12);
+    doc.text(
+      `Period: ${start.toLocaleDateString()} - ${end.toLocaleDateString()}`,
+      20,
+      35,
+    );
+
+    // Add summary
+    const totalSales = transactions.reduce(
+      (sum, t) => sum + Number(t.amount || 0),
+      0,
+    );
+    const gcashSales = transactions
+      .filter((t) => getPaymentType(t) === "gcash")
+      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+    const creditSales = transactions
+      .filter((t) => getPaymentType(t) === "credit")
+      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
+    doc.text(`Total Sales: ₱${totalSales.toFixed(2)}`, 20, 50);
+    doc.text(`Online Paid: ₱${gcashSales.toFixed(2)}`, 20, 60);
+    doc.text(`Cash (Paid): ₱${creditSales.toFixed(2)}`, 20, 70);
+    doc.text(`Total Records: ${transactions.length}`, 20, 80);
+
+    // Add table headers
+    let yPosition = 100;
+    doc.setFontSize(10);
+    doc.text("Date", 20, yPosition);
+    doc.text("Student", 60, yPosition);
+    doc.text("Service", 120, yPosition);
+    doc.text("Payment", 160, yPosition);
+    doc.text("Amount", 190, yPosition);
+
+    // Add table data
+    yPosition += 10;
+    transactions.slice(0, 50).forEach((transaction) => {
+      // Limit to 50 records for PDF
+      const date = parseDate(transaction.date)?.toLocaleDateString() || "—";
+      const student = getUserName(transaction.email) || "—";
+      const service = transaction.service || "—";
+const payment = getPaymentLabel(getPaymentType(transaction));
+      const amount = `₱${Number(transaction.amount || 0).toFixed(2)}`;
+
+      doc.text(date, 20, yPosition);
+      doc.text(student.substring(0, 15), 60, yPosition);
+      doc.text(service.substring(0, 15), 120, yPosition);
+      doc.text(payment, 160, yPosition);
+      doc.text(amount, 190, yPosition);
+
+      yPosition += 8;
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+      }
+    });
+
+    // Save the PDF
+    const fileName = `upress-reports-${new Date().toISOString().split("T")[0]}.pdf`;
+    doc.save(fileName);
+  }
+
+  function exportToExcel() {
+    const transactions = getFilteredTransactions();
+
+    // Prepare data for Excel
+    const data = [
+      ["Date", "Student", "Service", "Payment", "Amount", "Status"],
+      ...transactions.map((transaction) => [
+        parseDate(transaction.date)?.toLocaleDateString() || "—",
+        getUserName(transaction.email) || "—",
+        transaction.service || "—",
+        getPaymentLabel(getPaymentType(transaction)),
+        Number(transaction.amount || 0),
+        transaction.status || "—",
+      ]),
+    ];
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+
+    // Set column widths
+    ws["!cols"] = [
+      { wch: 12 }, // Date
+      { wch: 25 }, // Student
+      { wch: 20 }, // Service
+      { wch: 10 }, // Payment
+      { wch: 12 }, // Amount
+      { wch: 10 }, // Status
+    ];
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+
+    // Save the file
+    const fileName = `upress-reports-${new Date().toISOString().split("T")[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+  }
+
+  function getUserName(email) {
+    const user = (db.users || []).find((u) => u.email === email);
+    return user?.fullName || user?.name || email?.split("@")[0] || "—";
   }
 
   function initFilters() {
@@ -515,6 +631,14 @@
       recordsPage = 1;
       applyFilters();
     });
+
+    // Add export button listeners
+    document
+      .getElementById("exportPdfBtn")
+      ?.addEventListener("click", exportToPDF);
+    document
+      .getElementById("exportExcelBtn")
+      ?.addEventListener("click", exportToExcel);
   }
 
   function init() {

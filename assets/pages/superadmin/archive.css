@@ -1,0 +1,126 @@
+/* Superadmin — Academic year archives (read-only) */
+
+#page-archive .archive-meta {
+  font-size: 13px;
+  color: var(--clr-text-muted, #6b7280);
+  margin-top: 6px;
+}
+
+#page-archive .archive-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+#page-archive .archive-toolbar .form-group {
+  margin: 0;
+  min-width: min(280px, 100%);
+}
+
+#page-archive .archive-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#page-archive .archive-tab {
+  border: 1px solid var(--clr-border, #e5e7eb);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--clr-text-muted, #6b7280);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+#page-archive .archive-tab:hover {
+  border-color: var(--clr-primary, #7b0000);
+  color: var(--clr-primary, #7b0000);
+}
+
+#page-archive .archive-tab.is-active {
+  background: var(--clr-primary, #7b0000);
+  border-color: var(--clr-primary, #7b0000);
+  color: #fff;
+}
+
+#page-archive .archive-panel {
+  display: none;
+}
+
+#page-archive .archive-panel.is-active {
+  display: block;
+}
+
+#page-archive .archive-panel-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+#page-archive .archive-panel .record-search {
+  width: min(520px, 100%);
+}
+
+#page-archive .btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--clr-primary, #7b0000);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+#page-archive .btn-download:hover {
+  background: var(--clr-primary-dark, #600000);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(123, 0, 0, 0.2);
+}
+
+#page-archive .btn-download:active {
+  transform: translateY(0);
+}
+
+#page-archive .btn-download i {
+  width: 16px;
+  height: 16px;
+}
+
+#page-archive .archive-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--clr-text-muted, #6b7280);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  #page-archive .archive-panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #page-archive .archive-panel .record-search {
+    width: 100%;
+  }
+
+  #page-archive .btn-download {
+    width: 100%;
+    justify-content: center;
+  }
+}

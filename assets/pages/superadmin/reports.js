@@ -344,131 +344,57 @@
       if (!canvas || typeof Chart === "undefined") return;
 
       const txns = getChartTransactions();
-      const paid = txns
-        .filter((txn) => getPaymentType(txn) === "gcash")
-        .reduce((sum, txn) => sum + Number(txn.amount || 0), 0);
-      const unpaid = txns
-        .filter((txn) => getPaymentType(txn) === "credit")
-        .reduce((sum, txn) => sum + Number(txn.amount || 0), 0);
-
-      if (paymentChart) {
-        paymentChart.destroy();
-        paymentChart = null;
-      }
-
-      paymentChart = new Chart(canvas, {
-        type: "doughnut",
-        data: {
-          labels: ["GCash Paid", "Credit Unpaid"],
-          datasets: [
-            {
-              data: [paid, unpaid],
-              backgroundColor: ["#34d399", "#facc15"],
-              borderWidth: 0,
-            },
-          ],
-        },
-        options: {
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: "bottom",
-            },
-            tooltip: {
-              callbacks: {
-                label: (context) =>
-                  `${context.label}: ₱${Number(context.parsed || 0).toFixed(2)}`,
-              },
-            },
-          },
-        },
-      });
-    }
-
-    /**
-     * Bar chart aligned with admin dashboard `renderReportsChart`:
-     * Orders (all statuses) + Income (completed / paid / ready) by time buckets.
-     */
-    function renderPerformanceChart() {
-      const canvas = document.getElementById("reportsPerformanceChart");
-      if (!canvas || typeof Chart === "undefined") return;
-
-      const periodOrders = getPeriodTransactions();
+      const period = currentFilters.period || "daily";
       let labels = [];
-      let orderCounts = [];
-      let incomeValues = [];
+      let revenueValues = [];
 
-      if (performancePeriod === "daily") {
-        const hourOrders = new Array(24).fill(0);
-        const hourIncome = new Array(24).fill(0);
-        periodOrders.forEach((o) => {
-          const d = parseTxnDate(o);
-          if (!d) return;
-          const h = d.getHours();
-          hourOrders[h]++;
-          if (countsTowardPerformanceIncome(o)) {
-            hourIncome[h] += Number(o.amount || 0);
-          }
+      if (period === "daily") {
+        const buckets = [0, 0, 0, 0];
+        txns.forEach((txn) => {
+          const date = parseTxnDate(txn);
+          if (!date) return;
+          const hour = date.getHours();
+          if (hour < 6) buckets[0] += Number(txn.amount || 0);
+          else if (hour < 12) buckets[1] += Number(txn.amount || 0);
+          else if (hour < 18) buckets[2] += Number(txn.amount || 0);
+          else buckets[3] += Number(txn.amount || 0);
         });
         labels = ["12am–6am", "6am–12pm", "12pm–6pm", "6pm–12am"];
-        orderCounts = [
-          hourOrders.slice(0, 6).reduce((a, b) => a + b, 0),
-          hourOrders.slice(6, 12).reduce((a, b) => a + b, 0),
-          hourOrders.slice(12, 18).reduce((a, b) => a + b, 0),
-          hourOrders.slice(18, 24).reduce((a, b) => a + b, 0),
-        ];
-        incomeValues = [
-          hourIncome.slice(0, 6).reduce((a, b) => a + b, 0),
-          hourIncome.slice(6, 12).reduce((a, b) => a + b, 0),
-          hourIncome.slice(12, 18).reduce((a, b) => a + b, 0),
-          hourIncome.slice(18, 24).reduce((a, b) => a + b, 0),
-        ];
-      } else if (performancePeriod === "monthly") {
-        const weeks = 5;
-        const wOrders = new Array(weeks).fill(0);
-        const wIncome = new Array(weeks).fill(0);
-        periodOrders.forEach((o) => {
-          const d = parseTxnDate(o);
-          if (!d) return;
-          const day = d.getDate();
-          const w = Math.min(Math.floor((day - 1) / 7), weeks - 1);
-          wOrders[w]++;
-          if (countsTowardPerformanceIncome(o)) {
-            wIncome[w] += Number(o.amount || 0);
-          }
-        });
-        labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
-        orderCounts = wOrders;
-        incomeValues = wIncome;
-      } else if (performancePeriod === "weekly") {
+        revenueValues = buckets;
+      } else if (period === "weekly") {
         const labelsByDay = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-        const dOrders = new Array(7).fill(0);
-        const dIncome = new Array(7).fill(0);
         const range = getPeriodRange("weekly");
-        periodOrders.forEach((o) => {
-          const d = parseTxnDate(o);
-          if (!d) return;
-          const idx = Math.floor((d - range.start) / 86400000);
-          if (idx < 0 || idx > 6) return;
-          dOrders[idx]++;
-          if (countsTowardPerformanceIncome(o)) {
-            dIncome[idx] += Number(o.amount || 0);
+        const dayTotals = new Array(7).fill(0);
+        txns.forEach((txn) => {
+          const date = parseTxnDate(txn);
+          if (!date || date < range.start || date > range.end) return;
+          const diff = Math.floor((date - range.start) / 86400000);
+          if (diff >= 0 && diff < 7) {
+            dayTotals[diff] += Number(txn.amount || 0);
           }
         });
         labels = labelsByDay;
-        orderCounts = dOrders;
-        incomeValues = dIncome;
+        revenueValues = dayTotals;
+      } else if (period === "monthly") {
+        const weeks = 5;
+        const weekTotals = new Array(weeks).fill(0);
+        txns.forEach((txn) => {
+          const date = parseTxnDate(txn);
+          if (!date) return;
+          const weekIndex = Math.min(
+            Math.floor((date.getDate() - 1) / 7),
+            weeks - 1,
+          );
+          weekTotals[weekIndex] += Number(txn.amount || 0);
+        });
+        labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+        revenueValues = weekTotals;
       } else {
-        const mOrders = new Array(12).fill(0);
-        const mIncome = new Array(12).fill(0);
-        periodOrders.forEach((o) => {
-          const d = parseTxnDate(o);
-          if (!d) return;
-          const m = d.getMonth();
-          mOrders[m]++;
-          if (countsTowardPerformanceIncome(o)) {
-            mIncome[m] += Number(o.amount || 0);
-          }
+        const monthTotals = new Array(12).fill(0);
+        txns.forEach((txn) => {
+          const date = parseTxnDate(txn);
+          if (!date) return;
+          monthTotals[date.getMonth()] += Number(txn.amount || 0);
         });
         labels = [
           "Jan",
@@ -484,17 +410,136 @@
           "Nov",
           "Dec",
         ];
-        orderCounts = mOrders;
-        incomeValues = mIncome;
+        revenueValues = monthTotals;
+      }
+
+      if (paymentChart) {
+        paymentChart.destroy();
+        paymentChart = null;
+      }
+
+      paymentChart = new Chart(canvas, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Total revenue (₱)",
+              data: revenueValues,
+              backgroundColor: "#34d399",
+              borderRadius: 4,
+            },
+          ],
+        },
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) =>
+                  `₱${Number(context.parsed.y || context.parsed || 0).toFixed(2)}`,
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Revenue (₱)",
+              },
+            },
+          },
+        },
+      });
+    }
+
+    /**
+     * Bar chart showing revenue by the selected performance period.
+     */
+    function renderPerformanceChart() {
+      const canvas = document.getElementById("reportsPerformanceChart");
+      if (!canvas || typeof Chart === "undefined") return;
+
+      const periodOrders = getPeriodTransactions();
+      let labels = [];
+      let revenueValues = [];
+
+      if (performancePeriod === "daily") {
+        const buckets = [0, 0, 0, 0];
+        periodOrders.forEach((o) => {
+          const d = parseTxnDate(o);
+          if (!d) return;
+          const hour = d.getHours();
+          if (hour < 6) buckets[0] += Number(o.amount || 0);
+          else if (hour < 12) buckets[1] += Number(o.amount || 0);
+          else if (hour < 18) buckets[2] += Number(o.amount || 0);
+          else buckets[3] += Number(o.amount || 0);
+        });
+        labels = ["12am–6am", "6am–12pm", "12pm–6pm", "6pm–12am"];
+        revenueValues = buckets;
+      } else if (performancePeriod === "weekly") {
+        const labelsByDay = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const dayRevenue = new Array(7).fill(0);
+        const range = getPeriodRange("weekly");
+        periodOrders.forEach((o) => {
+          const d = parseTxnDate(o);
+          if (!d) return;
+          const idx = Math.floor((d - range.start) / 86400000);
+          if (idx < 0 || idx > 6) return;
+          dayRevenue[idx] += Number(o.amount || 0);
+        });
+        labels = labelsByDay;
+        revenueValues = dayRevenue;
+      } else if (performancePeriod === "monthly") {
+        const weeks = 5;
+        const weekRevenue = new Array(weeks).fill(0);
+        periodOrders.forEach((o) => {
+          const d = parseTxnDate(o);
+          if (!d) return;
+          const weekIndex = Math.min(
+            Math.floor((d.getDate() - 1) / 7),
+            weeks - 1,
+          );
+          weekRevenue[weekIndex] += Number(o.amount || 0);
+        });
+        labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+        revenueValues = weekRevenue;
+      } else {
+        const monthRevenue = new Array(12).fill(0);
+        periodOrders.forEach((o) => {
+          const d = parseTxnDate(o);
+          if (!d) return;
+          monthRevenue[d.getMonth()] += Number(o.amount || 0);
+        });
+        labels = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        revenueValues = monthRevenue;
       }
 
       const labelEl = document.getElementById("saPerfChartLabel");
       if (labelEl) {
         const map = {
-          daily: "Today — order volume and revenue by time of day",
-          weekly: "This week — by day",
-          monthly: "This month — by week of month",
-          yearly: "This year — by calendar month",
+          daily: "Today — revenue by time of day",
+          weekly: "This week — revenue by day",
+          monthly: "This month — revenue by week",
+          yearly: "This year — revenue by month",
         };
         labelEl.textContent = map[performancePeriod] || "";
       }
@@ -512,18 +557,10 @@
           labels,
           datasets: [
             {
-              label: "Orders",
-              data: orderCounts,
-              backgroundColor: PERF_C_RED,
-              borderRadius: 4,
-              yAxisID: "y",
-            },
-            {
-              label: "Income (₱)",
-              data: incomeValues,
+              label: "Revenue (₱)",
+              data: revenueValues,
               backgroundColor: PERF_C_GREEN,
               borderRadius: 4,
-              yAxisID: "y1",
             },
           ],
         },
@@ -532,11 +569,12 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: "bottom",
-              labels: {
-                font: { family: "Inter, sans-serif", size: 12 },
-                usePointStyle: true,
-                padding: 20,
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) =>
+                  `₱${Number(context.parsed.y || context.parsed || 0).toFixed(2)}`,
               },
             },
           },
@@ -545,19 +583,9 @@
               beginAtZero: true,
               title: {
                 display: true,
-                text: "Orders",
+                text: "Revenue (₱)",
                 font: { family: "Inter, sans-serif" },
               },
-            },
-            y1: {
-              beginAtZero: true,
-              position: "right",
-              title: {
-                display: true,
-                text: "Income (₱)",
-                font: { family: "Inter, sans-serif" },
-              },
-              grid: { drawOnChartArea: false },
             },
           },
         },
@@ -808,23 +836,23 @@
           <div class="card reports-chart-card">
             <div class="card-title-group">
               <div>
-                <h2 class="card-title">Paid vs Unpaid</h2>
-                <p class="card-subtitle">Completed orders: GCash vs credit revenue (current filters).</p>
+                <h2 class="card-title">Total revenue</h2>
+                <p class="card-subtitle">Revenue for the selected period and filters.</p>
               </div>
             </div>
             <div class="reports-chart-wrapper">
-              <canvas id="reportsPaymentChart" aria-label="Payment type comparison chart"></canvas>
+              <canvas id="reportsPaymentChart" aria-label="Total revenue chart"></canvas>
             </div>
           </div>
           <div class="card reports-chart-card">
             <div class="card-title-group sa-chart-card-head">
               <div>
-                <h2 class="card-title">Performance chart</h2>
-                <p class="card-subtitle" id="saPerfChartLabel">Today — order volume and revenue by time of day</p>
+                <h2 class="card-title">Revenue performance</h2>
+                <p class="card-subtitle" id="saPerfChartLabel">Today — revenue by time of day</p>
               </div>
             </div>
             <div class="reports-chart-wrapper">
-              <canvas id="reportsPerformanceChart" aria-label="Orders and income performance chart"></canvas>
+              <canvas id="reportsPerformanceChart" aria-label="Revenue performance chart"></canvas>
             </div>
           </div>
         </div>

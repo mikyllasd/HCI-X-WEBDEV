@@ -50,6 +50,65 @@ function __cloneDemoList(key, fallback) {
   return Array.isArray(fallback) ? JSON.parse(JSON.stringify(fallback)) : [];
 }
 
+function ensureDemoSeedData() {
+  if (
+    Array.isArray(ORDERS) &&
+    ORDERS.length > 0 &&
+    Array.isArray(VERIFICATION_REQUESTS) &&
+    VERIFICATION_REQUESTS.length > 0 &&
+    Array.isArray(PAYMENT_SUBMISSIONS) &&
+    PAYMENT_SUBMISSIONS.length > 0 &&
+    Array.isArray(ACCOUNTS) &&
+    ACCOUNTS.length > 0
+  ) {
+    return;
+  }
+
+  if (
+    typeof window !== "undefined" &&
+    window.UpressDemoSeed &&
+    typeof window.UpressDemoSeed.getAdminPortalSampleData === "function"
+  ) {
+    const sample = window.UpressDemoSeed.getAdminPortalSampleData();
+    if (sample) {
+      if (Array.isArray(sample.orders) && sample.orders.length) {
+        ORDERS.splice(
+          0,
+          ORDERS.length,
+          ...JSON.parse(JSON.stringify(sample.orders)),
+        );
+      }
+      if (
+        Array.isArray(sample.verificationRequests) &&
+        sample.verificationRequests.length
+      ) {
+        VERIFICATION_REQUESTS.splice(
+          0,
+          VERIFICATION_REQUESTS.length,
+          ...JSON.parse(JSON.stringify(sample.verificationRequests)),
+        );
+      }
+      if (
+        Array.isArray(sample.paymentSubmissions) &&
+        sample.paymentSubmissions.length
+      ) {
+        PAYMENT_SUBMISSIONS.splice(
+          0,
+          PAYMENT_SUBMISSIONS.length,
+          ...JSON.parse(JSON.stringify(sample.paymentSubmissions)),
+        );
+      }
+      if (Array.isArray(sample.accounts) && sample.accounts.length) {
+        ACCOUNTS.splice(
+          0,
+          ACCOUNTS.length,
+          ...JSON.parse(JSON.stringify(sample.accounts)),
+        );
+      }
+    }
+  }
+}
+
 /** Student verification requests (aligned with superadmin users / demo seed) */
 const VERIFICATION_REQUESTS = __cloneDemoList("verificationRequests", []);
 
@@ -292,8 +351,8 @@ function setVerificationStatus(id, newStatus) {
     newStatus === "approved"
       ? "verified"
       : newStatus === "rejected"
-      ? "rejected"
-      : "pending";
+        ? "rejected"
+        : "pending";
   const reviewedAt = new Date().toISOString();
 
   req.status = newStatus;
@@ -302,8 +361,7 @@ function setVerificationStatus(id, newStatus) {
   const db = getDB();
   const user = (db.users || []).find(
     (item) =>
-      item.email &&
-      item.email.toLowerCase() === req.email.toLowerCase(),
+      item.email && item.email.toLowerCase() === req.email.toLowerCase(),
   );
 
   if (user) {
@@ -317,8 +375,7 @@ function setVerificationStatus(id, newStatus) {
   db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
   let authUser = db.authUsers.find(
     (item) =>
-      item.email &&
-      item.email.toLowerCase() === req.email.toLowerCase(),
+      item.email && item.email.toLowerCase() === req.email.toLowerCase(),
   );
 
   if (authUser) {
@@ -2609,75 +2666,274 @@ function parseOrderDateForDash(o) {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+function getAccountTypeFromEmail(email) {
+  const account = ACCOUNTS.find(
+    (item) =>
+      String(item.email || "").toLowerCase() ===
+      String(email || "").toLowerCase(),
+  );
+  return String(
+    account?.accountType || account?.type || account?.role || "student",
+  ).toLowerCase();
+}
+
 /**
  * Fills dashboard metric cards and "Today's transactions" from ORDERS
  * (demo-seed / in-memory SPA data).
  */
 function renderDashboardOverview() {
-  const now = new Date();
-  const todayStr = now.toDateString();
-
-  const todayOrders = ORDERS.filter((o) => {
-    const d = parseOrderDateForDash(o);
-    return d && d.toDateString() === todayStr;
+  // Calculate sales metrics
+  const completedOrders = ORDERS.filter((o) => {
+    const s = String(o.status || "").toLowerCase();
+    return s === "completed" || s === "paid" || s === "ready";
   });
+  console.log("completedOrders length:", completedOrders.length);
 
-  const todayIncome = todayOrders
+  const totalSales = completedOrders.reduce(
+    (sum, o) => sum + Number(o.amount || 0),
+    0,
+  );
+
+  // Today's sales
+  const today = new Date();
+  const todayStr = today.toDateString();
+  const todaySales = completedOrders
     .filter((o) => {
-      const s = String(o.status || "").toLowerCase();
-      return s === "completed" || s === "paid";
+      const orderDate = parseOrderDateForDash(o);
+      return orderDate && orderDate.toDateString() === todayStr;
     })
     .reduce((sum, o) => sum + Number(o.amount || 0), 0);
 
-  const countPending = ORDERS.filter((o) => o.status === "pending").length;
-  const countProcessing = ORDERS.filter(
-    (o) => o.status === "processing",
-  ).length;
-  const countReady = ORDERS.filter((o) => o.status === "ready").length;
-  const countCompleted = ORDERS.filter((o) => {
+  // This week's sales
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  weekStart.setHours(0, 0, 0, 0);
+  const weekSales = completedOrders
+    .filter((o) => {
+      const orderDate = parseOrderDateForDash(o);
+      return orderDate && orderDate >= weekStart;
+    })
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+
+  // This month's sales
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthSales = completedOrders
+    .filter((o) => {
+      const orderDate = parseOrderDateForDash(o);
+      return orderDate && orderDate >= monthStart;
+    })
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+
+  // Current semester sales (simplified: current year)
+  const yearStart = new Date(today.getFullYear(), 0, 1);
+  const semesterSales = completedOrders
+    .filter((o) => {
+      const orderDate = parseOrderDateForDash(o);
+      return orderDate && orderDate >= yearStart;
+    })
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+
+  // Update sales stats
+  setText("dashboardTotalSales", `₱${totalSales.toFixed(2)}`);
+  setText("dashboardDailySales", `₱${todaySales.toFixed(2)}`);
+  setText("dashboardWeeklySales", `₱${weekSales.toFixed(2)}`);
+  setText("dashboardMonthlySales", `₱${monthSales.toFixed(2)}`);
+  setText("dashboardSemestralSales", `₱${semesterSales.toFixed(2)}`);
+
+  // Payment breakdown
+  const gcashPaid = completedOrders
+    .filter((o) =>
+      String(o.payment || "")
+        .toLowerCase()
+        .includes("online"),
+    )
+    .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+
+  const creditUnpaid = ORDERS.filter((o) => {
     const s = String(o.status || "").toLowerCase();
-    return s === "completed" || s === "paid";
-  }).length;
+    return (
+      (s === "pending" || s === "processing") &&
+      String(o.payment || "")
+        .toLowerCase()
+        .includes("onsite")
+    );
+  }).reduce((sum, o) => sum + Number(o.amount || 0), 0);
 
-  setText("dash-orders", String(todayOrders.length));
-  setText("dash-income", `₱${todayIncome.toFixed(2)}`);
-  setText("dash-pending", String(countPending));
-  setText("dash-processing", String(countProcessing));
-  setText("dash-ready", String(countReady));
-  setText("dash-completed", String(countCompleted));
+  const verifiedUsers = ACCOUNTS.filter(
+    (a) => a.status === "verified" || a.status === "approved",
+  ).length;
+  const pendingRequests = ACCOUNTS.filter((a) => a.status === "pending").length;
 
-  const empty = document.getElementById("dash-empty");
-  const tableWrap = document.getElementById("dash-table");
-  const tbody = document.getElementById("dash-table-body");
-  if (!tbody) return;
+  setText("dashboardGCashPaid", `₱${gcashPaid.toFixed(2)}`);
+  setText("dashboardCreditUnpaid", `₱${creditUnpaid.toFixed(2)}`);
+  setText("dashboardVerifiedUsers", String(verifiedUsers));
+  setText("dashboardPendingRequests", String(pendingRequests));
 
-  const todayRows = todayOrders.slice().sort((a, b) => {
-    const da = parseOrderDateForDash(a)?.getTime() || 0;
-    const db = parseOrderDateForDash(b)?.getTime() || 0;
-    return db - da;
+  // Render sales trend chart with demo data
+  renderDashboardSalesChart(completedOrders);
+
+  // Render recent transactions
+  renderDashboardTransactions();
+}
+
+/**
+ * Renders the sales trend chart with demo data for the last six months
+ */
+function renderDashboardSalesChart(completedOrders) {
+  // Group orders by month for the last 6 months
+  const months = [];
+  const salesData = [];
+  const now = new Date();
+
+  // Create a map of month-year to total sales
+  const salesByMonth = {};
+
+  completedOrders.forEach((order) => {
+    const orderDate = parseOrderDateForDash(order);
+    if (orderDate) {
+      const monthKey = `${orderDate.getFullYear()}-${String(orderDate.getMonth() + 1).padStart(2, "0")}`;
+      const monthLabel = orderDate.toLocaleDateString("en-US", {
+        month: "short",
+        year: "numeric",
+      });
+      if (!salesByMonth[monthKey]) {
+        salesByMonth[monthKey] = { label: monthLabel, total: 0 };
+      }
+      salesByMonth[monthKey].total += Number(order.amount || 0);
+    }
   });
 
-  if (todayRows.length === 0) {
-    empty?.classList.remove("hidden");
-    tableWrap?.classList.add("hidden");
+  // Generate last 6 months
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const monthLabel = date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+    months.push(monthLabel);
+    salesData.push(salesByMonth[monthKey]?.total || 0);
+  }
+
+  console.log("Months:", months);
+  console.log("Sales data:", salesData);
+
+  makeChart("dashboardSalesChart", {
+    type: "line",
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: "Sales (₱)",
+          data: salesData,
+          borderColor: C_BLUE,
+          backgroundColor: "rgba(37, 99, 235, 0.1)",
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: C_BLUE,
+          pointBorderColor: "#ffffff",
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+        },
+      ],
+    },
+    options: {
+      ...CHART_DEFAULTS,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Sales Amount (₱)",
+            font: { family: "Inter", size: 12 },
+          },
+          ticks: {
+            callback: function (value) {
+              return "₱" + (value / 1000).toFixed(0) + "k";
+            },
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Month",
+            font: { family: "Inter", size: 12 },
+          },
+        },
+      },
+    },
+  });
+  console.log("Chart created for dashboardSalesChart");
+}
+
+/**
+ * Renders the recent completed transactions table
+ */
+function renderDashboardTransactions() {
+  const tbody = document.getElementById("dashboardTransactionsBody");
+  const emptyState = document.getElementById("dashboardEmptyState");
+  const wrapper = document.getElementById("dashboardTransactionsWrapper");
+
+  if (!tbody) return;
+
+  // Get completed orders, sorted by date (newest first)
+  const completedOrders = ORDERS.filter((o) => {
+    const s = String(o.status || "").toLowerCase();
+    return s === "completed" || s === "paid" || s === "ready";
+  })
+    .sort((a, b) => {
+      const dateA = parseOrderDateForDash(a)?.getTime() || 0;
+      const dateB = parseOrderDateForDash(b)?.getTime() || 0;
+      return dateB - dateA;
+    })
+    .slice(0, 10); // Show only last 10 transactions
+
+  if (completedOrders.length === 0) {
+    if (emptyState) emptyState.style.display = "block";
+    if (wrapper) wrapper.style.display = "none";
     tbody.innerHTML = "";
     return;
   }
 
-  empty?.classList.add("hidden");
-  tableWrap?.classList.remove("hidden");
-  tbody.innerHTML = todayRows
-    .map(
-      (o) => `
-    <tr>
-      <td><strong>${escHtml(o.id)}</strong></td>
-      <td>${escHtml(o.email)}</td>
-      <td>${escHtml(o.service)}</td>
-      <td style="color:var(--clr-primary);font-weight:600">₱${Number(o.amount).toFixed(2)}</td>
-      <td>${statusBadgeHTML(o.status)}</td>
-      <td>${escHtml(o.payment)}</td>
-    </tr>`,
-    )
+  if (emptyState) emptyState.style.display = "none";
+  if (wrapper) wrapper.style.display = "block";
+
+  tbody.innerHTML = completedOrders
+    .map((o) => {
+      const orderDate = parseOrderDateForDash(o);
+      const dateStr = orderDate ? orderDate.toLocaleDateString() : "—";
+      const paymentType = String(o.payment || "")
+        .toLowerCase()
+        .includes("online")
+        ? "GCash"
+        : "Credit";
+      const statusHtml = statusBadgeHTML(o.status);
+      const accountType = capitalise(getAccountTypeFromEmail(o.email));
+      const account = ACCOUNTS.find(
+        (item) =>
+          String(item.email || "").toLowerCase() ===
+          String(o.email || "").toLowerCase(),
+      );
+      const userLabel = account?.name || o.email || "—";
+
+      return `
+        <tr>
+          <td>${escHtml(dateStr)}</td>
+          <td>${escHtml(userLabel)}</td>
+          <td>${escHtml(accountType)}</td>
+          <td>${escHtml(o.service || "—")}</td>
+          <td>${escHtml(paymentType)}</td>
+          <td>₱${Number(o.amount || 0).toFixed(2)}</td>
+          <td>${statusHtml}</td>
+        </tr>`;
+    })
     .join("");
 }
 
@@ -3056,17 +3312,27 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---- Initial renders & date labels ---- */
-  setDashboardDate();
-  setDailyDate();
-  refreshVerificationCounters();
-  refreshPaymentCounters();
-  renderVerificationList();
-  renderOrdersTable();
-  renderAccountsTable();
+  initAdminDashboard();
 
   /* ---- Start on the Dashboard ---- */
   navigateTo("dashboard");
 });
+
+/**
+ * Initialises the admin dashboard page and shared admin views.
+ */
+function initAdminDashboard() {
+  ensureDemoSeedData();
+  setDashboardDate();
+  setDailyDate();
+  refreshVerificationCounters();
+  refreshPaymentCounters();
+  renderDashboardOverview();
+  renderVerificationList();
+  renderOrdersTable();
+  renderAccountsTable();
+}
+
 // Wire up the Report Type select to update the chart label and
 // trigger whatever the external JS expects from tab-btn clicks.
 (function () {

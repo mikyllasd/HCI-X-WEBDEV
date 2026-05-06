@@ -9,7 +9,7 @@
   border-top: 1px solid var(--clr-border);
 }
 
-/* Two equal chart columns (Paid vs Unpaid + Performance); stacks on narrow viewports */
+/* Two equal chart columns (Total revenue + Performance); stacks on narrow viewports */
 .reports-grid.sa-reports-charts-grid {
   grid-template-columns: 1fr 1fr;
   margin-bottom: 22px;

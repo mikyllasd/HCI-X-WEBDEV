@@ -71,12 +71,6 @@
               >
             </li>
             <li>
-              <a href="accounts.html" class="nav-link" data-page="accounts">
-                <i data-lucide="user-check" aria-hidden="true"></i
-                ><span>Faculty & Students</span></a
-              >
-            </li>
-            <li>
               <a href="services.html" class="nav-link" data-page="services">
                 <i data-lucide="settings" aria-hidden="true"></i
                 ><span>Services</span></a
@@ -209,6 +203,14 @@
                 <p class="stat-card__value" id="archiveStatRatings">0</p>
                 <p class="stat-card__text">Feedback entries</p>
               </article>
+              <article class="stat-card stat-card--orange">
+                <div class="stat-card__header">
+                  <span>Sales Records</span>
+                  <i data-lucide="shopping-cart" aria-hidden="true"></i>
+                </div>
+                <p class="stat-card__value" id="archiveStatSalesRecords">0</p>
+                <p class="stat-card__text">Completed sales</p>
+              </article>
             </div>
 
             <div class="sp" style="margin-top: 12px">
@@ -253,6 +255,15 @@
                 >
                   Ratings
                 </button>
+                <button
+                  type="button"
+                  class="archive-tab"
+                  data-archive-tab="sales-records"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Sales Records
+                </button>
               </div>
 
               <div
@@ -260,15 +271,27 @@
                 data-archive-panel="transactions"
                 role="tabpanel"
               >
-                <div class="record-search" style="margin-bottom: 12px">
-                  <i data-lucide="search" aria-hidden="true"></i>
-                  <input
-                    type="search"
-                    id="archiveSearchTransactions"
-                    class="form-input archive-list-search"
-                    placeholder="Search by ID, service, amount, status, email, date…"
-                    aria-label="Search archived transactions"
-                  />
+                <div class="archive-panel-header">
+                  <div class="record-search" style="margin-bottom: 12px">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      type="search"
+                      id="archiveSearchTransactions"
+                      class="form-input archive-list-search"
+                      placeholder="Search by ID, service, amount, status, email, date…"
+                      aria-label="Search archived transactions"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-download"
+                    id="downloadTransactions"
+                    aria-label="Download transactions as CSV"
+                    title="Download this data as CSV"
+                  >
+                    <i data-lucide="download" aria-hidden="true"></i>
+                    <span>Download</span>
+                  </button>
                 </div>
                 <div class="table-wrapper">
                   <table class="data-table" aria-label="Archived transactions">
@@ -292,15 +315,27 @@
                 data-archive-panel="users"
                 role="tabpanel"
               >
-                <div class="record-search" style="margin-bottom: 12px">
-                  <i data-lucide="search" aria-hidden="true"></i>
-                  <input
-                    type="search"
-                    id="archiveSearchUsers"
-                    class="form-input archive-list-search"
-                    placeholder="Search by name, email, or role…"
-                    aria-label="Search archived users"
-                  />
+                <div class="archive-panel-header">
+                  <div class="record-search" style="margin-bottom: 12px">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      type="search"
+                      id="archiveSearchUsers"
+                      class="form-input archive-list-search"
+                      placeholder="Search by name, email, or role…"
+                      aria-label="Search archived users"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-download"
+                    id="downloadUsers"
+                    aria-label="Download users as CSV"
+                    title="Download this data as CSV"
+                  >
+                    <i data-lucide="download" aria-hidden="true"></i>
+                    <span>Download</span>
+                  </button>
                 </div>
                 <div class="table-wrapper">
                   <table class="data-table" aria-label="Archived users">
@@ -321,15 +356,27 @@
                 data-archive-panel="services"
                 role="tabpanel"
               >
-                <div class="record-search" style="margin-bottom: 12px">
-                  <i data-lucide="search" aria-hidden="true"></i>
-                  <input
-                    type="search"
-                    id="archiveSearchServices"
-                    class="form-input archive-list-search"
-                    placeholder="Search by name, category, or price…"
-                    aria-label="Search archived services"
-                  />
+                <div class="archive-panel-header">
+                  <div class="record-search" style="margin-bottom: 12px">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      type="search"
+                      id="archiveSearchServices"
+                      class="form-input archive-list-search"
+                      placeholder="Search by name, category, or price…"
+                      aria-label="Search archived services"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-download"
+                    id="downloadServices"
+                    aria-label="Download services as CSV"
+                    title="Download this data as CSV"
+                  >
+                    <i data-lucide="download" aria-hidden="true"></i>
+                    <span>Download</span>
+                  </button>
                 </div>
                 <div class="table-wrapper">
                   <table class="data-table" aria-label="Archived services">
@@ -350,15 +397,27 @@
                 data-archive-panel="ratings"
                 role="tabpanel"
               >
-                <div class="record-search" style="margin-bottom: 12px">
-                  <i data-lucide="search" aria-hidden="true"></i>
-                  <input
-                    type="search"
-                    id="archiveSearchRatings"
-                    class="form-input archive-list-search"
-                    placeholder="Search by transaction, stars, comment, or date…"
-                    aria-label="Search archived ratings"
-                  />
+                <div class="archive-panel-header">
+                  <div class="record-search" style="margin-bottom: 12px">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      type="search"
+                      id="archiveSearchRatings"
+                      class="form-input archive-list-search"
+                      placeholder="Search by transaction, stars, comment, or date…"
+                      aria-label="Search archived ratings"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-download"
+                    id="downloadRatings"
+                    aria-label="Download ratings as CSV"
+                    title="Download this data as CSV"
+                  >
+                    <i data-lucide="download" aria-hidden="true"></i>
+                    <span>Download</span>
+                  </button>
                 </div>
                 <div class="table-wrapper">
                   <table class="data-table" aria-label="Archived ratings">
@@ -371,6 +430,50 @@
                       </tr>
                     </thead>
                     <tbody id="archiveRatingsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                class="card archive-panel"
+                data-archive-panel="sales-records"
+                role="tabpanel"
+              >
+                <div class="archive-panel-header">
+                  <div class="record-search" style="margin-bottom: 12px">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <input
+                      type="search"
+                      id="archiveSearchSalesRecords"
+                      class="form-input archive-list-search"
+                      placeholder="Search by order ID, service, customer, amount, or status…"
+                      aria-label="Search archived sales records"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-download"
+                    id="downloadSalesRecords"
+                    aria-label="Download sales records as CSV"
+                    title="Download this data as CSV"
+                  >
+                    <i data-lucide="download" aria-hidden="true"></i>
+                    <span>Download</span>
+                  </button>
+                </div>
+                <div class="table-wrapper">
+                  <table class="data-table" aria-label="Archived sales records">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Service</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody id="archiveSalesRecordsBody"></tbody>
                   </table>
                 </div>
               </div>

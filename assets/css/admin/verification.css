@@ -267,3 +267,47 @@
 .btn-secondary:active {
   transform: translateY(1px);
 }
+
+/* ── Tab Styles ── */
+.tabs-container {
+  margin-bottom: 24px;
+}
+
+.tabs-nav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--clr-border);
+  margin-bottom: 24px;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  border: 1px solid var(--clr-border);
+  background: transparent;
+  color: var(--clr-text-secondary);
+  border-radius: 8px 8px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: none;
+}
+
+.tab-btn:hover {
+  background: var(--clr-bg-secondary);
+  color: var(--clr-text-primary);
+}
+
+.tab-btn.active {
+  background: var(--clr-blue);
+  color: white;
+  border-color: var(--clr-blue);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}

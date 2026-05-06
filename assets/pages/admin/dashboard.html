@@ -59,8 +59,9 @@
           <ul class="nav-list" role="list">
             <li>
               <a
-                href="dashboard.html"
+                href="#"
                 class="nav-link active"
+                data-page="dashboard"
                 aria-current="page"
               >
                 <i data-lucide="layout-dashboard" aria-hidden="true"></i
@@ -80,21 +81,9 @@
               </a>
             </li>
             <li>
-              <a href="orders-management.html" class="nav-link">
-                <i data-lucide="package" aria-hidden="true"></i
-                ><span>Orders Management</span>
-              </a>
-            </li>
-            <li>
               <a href="organizations.html" class="nav-link">
                 <i data-lucide="building" aria-hidden="true"></i
                 ><span>Organizations</span>
-              </a>
-            </li>
-            <li>
-              <a href="affiliation-verification.html" class="nav-link">
-                <i data-lucide="users" aria-hidden="true"></i
-                ><span>Affiliation Requests</span>
               </a>
             </li>
             <li>
@@ -272,7 +261,8 @@
                 <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Student</th>
+                    <th>User</th>
+                    <th>Type</th>
                     <th>Service</th>
                     <th>Payment type</th>
                     <th>Amount</th>
@@ -304,6 +294,6 @@
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
-    <script src="../../js/admin/dashboard.js"></script>
+    <script src="../../js/admin/admin-dashboard.js"></script>
   </body>
 </html>

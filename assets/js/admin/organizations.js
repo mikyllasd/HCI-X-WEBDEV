@@ -12,9 +12,344 @@
     college: "all",
   };
 
-  function getOrganizations() {
+  // Tab elements
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  // Affiliation elements
+  const requestsContainer = document.getElementById("affiliationList");
+  const affiliationEmptyState = document.getElementById("affiliationEmpty");
+  const affiliationTotalEl = document.getElementById("affiliationTotal");
+  const affiliationPendingEl = document.getElementById("affiliationPending");
+  const affiliationApprovedEl = document.getElementById("affiliationApproved");
+  const affiliationRejectedEl = document.getElementById("affiliationRejected");
+  const affiliationSearchInput = document.getElementById("affiliationSearch");
+  const affiliationStatusSelect = document.getElementById("affiliationStatus");
+  const affiliationTypeSelect = document.getElementById("affiliationType");
+
+  let affiliationFilterState = { search: "", status: "all", type: "all" };
+  let currentRequest = null;
+
+  const modal = document.getElementById("organizationModal");
+  const modalBody = document.getElementById("organizationModalBody");
+
+  // Tab switching
+  function switchTab(tabName) {
+    tabButtons.forEach((btn) => btn.classList.remove("active"));
+    tabContents.forEach((content) => content.classList.remove("active"));
+
+    const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+    const activeContent = document.getElementById(`${tabName}-tab`);
+
+    if (activeBtn) activeBtn.classList.add("active");
+    if (activeContent) activeContent.classList.add("active");
+  }
+
+  // ── AFFILIATION FUNCTIONS ──────────────────────────────────────────────────
+
+  function getAffiliationRequests() {
+    return getDB().affiliationRequests || [];
+  }
+
+  function normalizeStatus(request) {
+    const status = String(request.status || "").toLowerCase();
+    return ["approved", "rejected", "pending"].includes(status)
+      ? status
+      : "pending";
+  }
+
+  function getFilteredAffiliationRequests() {
+    return getAffiliationRequests().filter((request) => {
+      const status = normalizeStatus(request);
+      const matchesSearch =
+        !affiliationFilterState.search ||
+        request.userName
+          ?.toLowerCase()
+          .includes(affiliationFilterState.search.toLowerCase()) ||
+        request.userEmail
+          ?.toLowerCase()
+          .includes(affiliationFilterState.search.toLowerCase()) ||
+        request.organizationName
+          ?.toLowerCase()
+          .includes(affiliationFilterState.search.toLowerCase());
+
+      const matchesStatus =
+        affiliationFilterState.status === "all" ||
+        status === affiliationFilterState.status;
+      const matchesType =
+        affiliationFilterState.type === "all" ||
+        request.organizationType === affiliationFilterState.type;
+
+      return matchesSearch && matchesStatus && matchesType;
+    });
+  }
+
+  function updateAffiliationStats(requests) {
+    const stats = requests.reduce(
+      (acc, request) => {
+        const status = normalizeStatus(request);
+        acc.total++;
+        acc[status]++;
+        return acc;
+      },
+      { total: 0, pending: 0, approved: 0, rejected: 0 },
+    );
+
+    if (affiliationTotalEl) affiliationTotalEl.textContent = stats.total;
+    if (affiliationPendingEl) affiliationPendingEl.textContent = stats.pending;
+    if (affiliationApprovedEl)
+      affiliationApprovedEl.textContent = stats.approved;
+    if (affiliationRejectedEl)
+      affiliationRejectedEl.textContent = stats.rejected;
+  }
+
+  function buildAffiliationStatusBadge(status) {
+    const map = {
+      pending: ["status-pending", "Pending"],
+      approved: ["status-approved", "Approved"],
+      rejected: ["status-rejected", "Rejected"],
+    };
+    const [cls, label] = map[status] || map.pending;
+    return `<span class="status-badge ${cls}">${label}</span>`;
+  }
+
+  function formatField(value) {
+    return value || "—";
+  }
+
+  function renderAffiliationRequestCard(request) {
+    const status = normalizeStatus(request);
+    const submittedDate = request.submittedAt
+      ? new Date(request.submittedAt).toLocaleDateString()
+      : "—";
+
+    const details =
+      request.organizationType === "known"
+        ? `<div class="request-card__item"><span class="request-card__label">Organization</span><span class="request-card__value">${formatField(request.organizationName)}</span></div>
+         <div class="request-card__item"><span class="request-card__label">Position</span><span class="request-card__value">${formatField(request.position)}</span></div>
+         <div class="request-card__item"><span class="request-card__label">Contact</span><span class="request-card__value">${formatField(request.contactNumber)}</span></div>`
+        : `<div class="request-card__item"><span class="request-card__label">Organization</span><span class="request-card__value">${formatField(request.organizationName)}</span></div>
+         <div class="request-card__item"><span class="request-card__label">College</span><span class="request-card__value">${formatField(request.college)}</span></div>
+         <div class="request-card__item"><span class="request-card__label">Contact</span><span class="request-card__value">${formatField(request.contactNumber)}</span></div>`;
+
+    const uploadedImage = request.proofImage
+      ? `<img src="${request.proofImage}" alt="Proof document" style="max-width:100%;border-radius:6px;" />`
+      : `<em style="font-size:12px;color:#999">No proof uploaded.</em>`;
+
+    return `
+      <article class="request-card">
+        <div class="request-card__header">
+          <div>
+            <h3 class="card-title">${formatField(request.userName)}</h3>
+            <p class="card-subtitle">${formatField(request.userEmail)}</p>
+          </div>
+          ${buildAffiliationStatusBadge(status)}
+        </div>
+        <div class="request-card__meta">
+          ${details}
+          <div class="request-card__item"><span class="request-card__label">Type</span><span class="request-card__value">${request.organizationType === "known" ? "Known Organization" : "Other Organization"}</span></div>
+          <div class="request-card__item"><span class="request-card__label">Submitted</span><span class="request-card__value">${submittedDate}</span></div>
+        </div>
+        <div class="request-card__image">${uploadedImage}</div>
+        <div class="request-card__actions">
+          <button class="btn btn--outline btn--sm" type="button" data-action="view" data-request="${request.id}">View Details</button>
+          ${
+            status === "pending"
+              ? `
+            <button class="btn btn--success btn--sm" type="button" data-action="approve" data-request="${request.id}">Approve</button>
+            <button class="btn btn--danger btn--sm" type="button" data-action="reject" data-request="${request.id}">Reject</button>
+          `
+              : ""
+          }
+        </div>
+      </article>`;
+  }
+
+  function renderAffiliationRequests() {
+    const requests = getFilteredAffiliationRequests();
+    updateAffiliationStats(getAffiliationRequests());
+    if (!requestsContainer) return;
+    if (requests.length === 0) {
+      requestsContainer.innerHTML = "";
+      if (affiliationEmptyState) affiliationEmptyState.style.display = "block";
+      return;
+    }
+    if (affiliationEmptyState) affiliationEmptyState.style.display = "none";
+    requestsContainer.innerHTML = requests
+      .map(renderAffiliationRequestCard)
+      .join("");
+  }
+
+  function addOrUpdateOrganizationDirectory(request) {
     const db = getDB();
-    return Array.isArray(db.organizations) ? db.organizations : [];
+    db.organizations = Array.isArray(db.organizations) ? db.organizations : [];
+
+    const orgName = String(request.organizationName || "").trim();
+    const college = String(
+      request.college || request.organizationTypeDisplay || "",
+    ).trim();
+    if (!orgName) return;
+
+    const exists = db.organizations.some((org) => {
+      return (
+        String(org.name || "")
+          .trim()
+          .toLowerCase() === orgName.toLowerCase() &&
+        String(org.college || "")
+          .trim()
+          .toLowerCase() === college.toLowerCase()
+      );
+    });
+
+    if (!exists) {
+      db.organizations.push({
+        id: `ORG_${Date.now()}`,
+        name: orgName,
+        college: college || "Unknown College",
+        type:
+          request.organizationType === "known"
+            ? "Known Organization"
+            : "Other Organization",
+        description:
+          request.description ||
+          `Verified organization recognized by WMSU ${college}`,
+        proofImage: request.proofImage || "",
+        approvedBy: "Admin",
+        approvedAt: new Date().toISOString(),
+        recognizedAt: new Date().toISOString(),
+      });
+    }
+
+    saveDB(db);
+  }
+
+  function notifyUser(userId, message, type) {
+    const db = getDB();
+    if (!Array.isArray(db.notifications)) db.notifications = [];
+    db.notifications.push({
+      id: "notif_" + Date.now() + "_" + Math.random().toString(36).slice(2),
+      userId,
+      message,
+      type: type || "info",
+      read: false,
+      createdAt: new Date().toISOString(),
+    });
+    saveDB(db);
+  }
+
+  function approveAffiliationRequest(requestId) {
+    const requests = getAffiliationRequests();
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
+    if (requestIndex === -1) return;
+
+    requests[requestIndex].status = "approved";
+    requests[requestIndex].reviewedAt = new Date().toISOString();
+
+    // Add to user's affiliations
+    const db = getDB();
+    const userIndex = db.users.findIndex(
+      (u) => u.id === requests[requestIndex].userId,
+    );
+    if (userIndex !== -1) {
+      if (!db.users[userIndex].affiliations) {
+        db.users[userIndex].affiliations = [];
+      }
+      db.users[userIndex].affiliations.push({
+        id: requestId,
+        organizationName: requests[requestIndex].organizationName,
+        position: requests[requestIndex].position,
+        contactNumber: requests[requestIndex].contactNumber,
+        organizationType: requests[requestIndex].organizationType,
+        verifiedAt: new Date().toISOString(),
+        status: "verified",
+      });
+    }
+
+    addOrUpdateOrganizationDirectory(requests[requestIndex]);
+    renderAffiliationRequests();
+    renderOrganizations(); // Refresh organizations list
+    closeAffiliationModal();
+  }
+
+  function rejectAffiliationRequest(requestId) {
+    const requests = getAffiliationRequests();
+    const requestIndex = requests.findIndex((r) => r.id === requestId);
+    if (requestIndex === -1) return;
+
+    requests[requestIndex].status = "rejected";
+    requests[requestIndex].reviewedAt = new Date().toISOString();
+
+    const db = getDB();
+    saveDB(db);
+
+    renderAffiliationRequests();
+    closeAffiliationModal();
+  }
+
+  function viewAffiliationRequest(requestId) {
+    const requests = getAffiliationRequests();
+    const request = requests.find((r) => r.id === requestId);
+    if (!request) return;
+
+    currentRequest = request;
+    showAffiliationModal(request);
+  }
+
+  function showAffiliationModal(request) {
+    const modal = document.getElementById("affiliationModal");
+    const modalBody = document.getElementById("affiliationModalBody");
+    if (!modal || !modalBody) return;
+
+    const status = normalizeStatus(request);
+    const proofImage = request.proofImage
+      ? `<img src="${request.proofImage}" alt="Proof document" style="max-width:100%;height:auto;border-radius:6px;" />`
+      : "<p>No proof document uploaded.</p>";
+
+    const details =
+      request.organizationType === "known"
+        ? `<div class="modal-detail"><strong>Organization:</strong> ${formatField(request.organizationName)}</div>
+         <div class="modal-detail"><strong>College:</strong> ${formatField(request.college)}</div>
+         <div class="modal-detail"><strong>Position:</strong> ${formatField(request.position)}</div>
+         <div class="modal-detail"><strong>Contact:</strong> ${formatField(request.contactNumber)}</div>`
+        : `<div class="modal-detail"><strong>Organization:</strong> ${formatField(request.organizationName)}</div>
+         <div class="modal-detail"><strong>College:</strong> ${formatField(request.college)}</div>
+         <div class="modal-detail"><strong>Position:</strong> ${formatField(request.position)}</div>
+         <div class="modal-detail"><strong>Contact:</strong> ${formatField(request.contactNumber)}</div>`;
+
+    modalBody.innerHTML = `
+      <div class="modal-details">
+        <div class="modal-detail"><strong>User:</strong> ${formatField(request.userName)} (${formatField(request.userEmail)})</div>
+        <div class="modal-detail"><strong>Type:</strong> ${request.organizationType === "known" ? "Known Organization" : "Other Organization"}</div>
+        ${details}
+        <div class="modal-detail"><strong>Submitted:</strong> ${request.submittedAt ? new Date(request.submittedAt).toLocaleString() : "—"}</div>
+        <div class="modal-detail"><strong>Status:</strong> ${buildAffiliationStatusBadge(status)}</div>
+        ${request.reviewedAt ? `<div class="modal-detail"><strong>Reviewed:</strong> ${new Date(request.reviewedAt).toLocaleString()}</div>` : ""}
+        <div class="modal-detail"><strong>Proof Document:</strong><div style="margin-top:10px;">${proofImage}</div></div>
+      </div>`;
+
+    modal.style.display = "flex";
+  }
+
+  function closeAffiliationModal() {
+    const modal = document.getElementById("affiliationModal");
+    if (modal) modal.style.display = "none";
+    currentRequest = null;
+  }
+
+  function handleAffiliationAction(event) {
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+
+    const action = button.dataset.action;
+    const requestId = button.dataset.request;
+
+    if (action === "view") {
+      viewAffiliationRequest(requestId);
+    } else if (action === "approve") {
+      approveAffiliationRequest(requestId);
+    } else if (action === "reject") {
+      rejectAffiliationRequest(requestId);
+    }
   }
 
   function formatField(value) {
@@ -204,6 +539,15 @@
   }
 
   function setupEventListeners() {
+    // Tab switching
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tabName = btn.dataset.tab;
+        switchTab(tabName);
+      });
+    });
+
+    // Organization events
     if (searchInput) {
       searchInput.addEventListener("input", (e) => {
         filterState.search = e.target.value;
@@ -233,10 +577,47 @@
         if (e.target === modal) closeOrganizationModal();
       });
     }
+
+    // Affiliation events
+    if (affiliationSearchInput) {
+      affiliationSearchInput.addEventListener("input", (e) => {
+        affiliationFilterState.search = e.target.value.toLowerCase();
+        renderAffiliationRequests();
+      });
+    }
+    if (affiliationStatusSelect) {
+      affiliationStatusSelect.addEventListener("change", (e) => {
+        affiliationFilterState.status = e.target.value;
+        renderAffiliationRequests();
+      });
+    }
+    if (affiliationTypeSelect) {
+      affiliationTypeSelect.addEventListener("change", (e) => {
+        affiliationFilterState.type = e.target.value;
+        renderAffiliationRequests();
+      });
+    }
+    if (requestsContainer) {
+      requestsContainer.addEventListener("click", handleAffiliationAction);
+    }
+    const affiliationModal = document.getElementById("affiliationModal");
+    if (affiliationModal) {
+      affiliationModal.addEventListener("click", (e) => {
+        if (e.target === affiliationModal) closeAffiliationModal();
+      });
+    }
   }
 
   setupEventListeners();
   renderOrganizations();
+  renderAffiliationRequests();
 
   window.closeOrganizationModal = closeOrganizationModal;
+  window.closeAffiliationModal = closeAffiliationModal;
+  window.approveAffiliation = () => {
+    if (currentRequest) approveAffiliationRequest(currentRequest.id);
+  };
+  window.rejectAffiliation = () => {
+    if (currentRequest) rejectAffiliationRequest(currentRequest.id);
+  };
 })();

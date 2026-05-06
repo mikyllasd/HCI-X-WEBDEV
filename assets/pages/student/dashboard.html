@@ -38,12 +38,12 @@
     <div class="sidebar-panel active" id="panel-orders">
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
-                <p class="sidebar-section-label">Active Orders</p>
+                <p class="sidebar-section-label">My Orders</p>
                 <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
             </div>
             <div id="sidebar-orders-list" class="sidebar-empty-state">
                 <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
-                <p>No active orders yet.</p>
+                <p>No orders yet.</p>
                 <button type="button" class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>
             </div>
         </div>
@@ -139,9 +139,18 @@
     </div>
 </div>
 
+<!-- Profile Panel Overlay -->
+<div class="profile-overlay" id="profileOverlay" onclick="closeProfilePanel()"></div>
+
 <!-- Profile Panel Dropdown -->
 <div class="profile-panel" id="profile-panel" style="display:none;">
     <div class="profile-panel-inner">
+        <div class="profile-panel-header">
+            <span class="profile-panel-title">My Profile</span>
+            <button type="button" class="profile-panel-close-btn" onclick="closeProfilePanel()" aria-label="Close profile panel">
+                <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="profile-panel-avatar-wrap" aria-hidden="true">
             <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
                 <circle cx="16" cy="11" r="5.5" stroke="currentColor" stroke-width="2"/>
@@ -217,7 +226,6 @@
         </div>
         <div class="affiliate-modal-body">
 
-            <!-- STEP 1: Single dropdown org selection -->
             <div class="affiliate-step" id="affiliate-step-1">
                 <h3>Select Organization</h3>
                 <p>Choose your organization from the list below.</p>
@@ -250,7 +258,6 @@
                 </div>
             </div>
 
-            <!-- STEP 2: Details -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-2">
                 <h3>Organization Details</h3>
                 <div class="affiliate-form">
@@ -286,7 +293,6 @@
                 </div>
             </div>
 
-            <!-- SUCCESS -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-success">
                 <div class="affiliate-success">
                     <div class="affiliate-success-icon">

@@ -104,16 +104,32 @@
 
   function toggleProfilePanel() {
     const panel = document.getElementById('profile-panel');
+    const overlay = document.getElementById('profileOverlay');
     const notifPanel = document.getElementById('notif-panel');
     if (!panel) return;
     if (notifPanel) notifPanel.style.display = 'none';
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    if (panel.classList.contains('open')) {
+      closeProfilePanel();
+      return;
+    }
+    panel.style.display = 'block';
+    if (overlay) overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => panel.classList.add('open'));
   }
   window.toggleProfilePanel = toggleProfilePanel;
 
   function closeProfilePanel() {
     const panel = document.getElementById('profile-panel');
-    if (panel) panel.style.display = 'none';
+    const overlay = document.getElementById('profileOverlay');
+    if (!panel) return;
+    panel.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    panel.addEventListener('transitionend', function hideAfterTransition() {
+      panel.style.display = 'none';
+      panel.removeEventListener('transitionend', hideAfterTransition);
+    }, { once: true });
   }
   window.closeProfilePanel = closeProfilePanel;
 
@@ -373,16 +389,34 @@
     return (db.orders || []).filter(o => o.userId === currentUser.id || o.studentId === currentUser.id);
   }
 
+  let currentOrderFilter = 'all';
+
+  function setOrderFilter(status) {
+    currentOrderFilter = status;
+    document.querySelectorAll('.order-status-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.getAttribute('onclick')?.includes(`'${status}'`) || tab.dataset.status === status);
+    });
+    renderSidebarOrders();
+  }
+  window.setOrderFilter = setOrderFilter;
+
   function renderSidebarOrders() {
     const orders = getUserOrders().filter(o => {
       const s = String(o.status || '').toLowerCase();
-      return !['completed', 'cancelled'].includes(s);
+      return currentOrderFilter === 'all' ? true : s === currentOrderFilter;
     });
     const listEl = document.getElementById('sidebar-orders-list');
     if (!listEl) return;
     if (orders.length === 0) {
       listEl.className = 'sidebar-empty-state';
-      listEl.innerHTML = '<div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg"></span></div><p>No active orders yet.</p><button type="button" class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>';
+      const headerText = {
+        all: 'No orders yet.',
+        pending: 'No pending orders yet.',
+        processing: 'No processing orders yet.',
+        completed: 'No completed orders yet.',
+        cancelled: 'No cancelled orders yet.'
+      }[currentOrderFilter] || 'No orders yet.';
+      listEl.innerHTML = `<div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg"></span></div><p>${headerText}</p><button type="button" class="sidebar-browse-btn" onclick="closeSidebar()">Browse Services</button>`;
       return;
     }
     listEl.className = '';
@@ -643,9 +677,9 @@
         notifPanel.style.display = 'none';
       }
     }
-    if (profilePanel && profilePanel.style.display !== 'none') {
+    if (profilePanel && profilePanel.classList.contains('open')) {
       if (!profilePanel.contains(e.target) && !profileBtn.contains(e.target)) {
-        profilePanel.style.display = 'none';
+        closeProfilePanel();
       }
     }
   });

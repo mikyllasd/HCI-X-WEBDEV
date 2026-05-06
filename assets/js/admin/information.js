@@ -54,16 +54,25 @@
   }
 
   function getUsers() {
-    return (db.users || []).map((user) => ({
-      ...user,
-      role: normalizeRole(user),
-      status: normalizeStatus(user),
-      studentType: normalizeType(user),
-      college: formatValue(user.college),
-      organization: formatValue(normalizeOrganization(user)),
-      course: formatValue(user.course),
-      yearLevel: formatValue(user.yearLevel),
-    }));
+    return (db.users || []).map((user) => {
+      const role = normalizeRole(user);
+      const studentId =
+        user.studentId || (role === "student" ? user.campusId : undefined);
+      const facultyId =
+        user.facultyId || (role === "faculty" ? user.campusId : undefined);
+      return {
+        ...user,
+        role,
+        status: normalizeStatus(user),
+        studentType: normalizeType(user),
+        college: formatValue(user.college),
+        organization: formatValue(normalizeOrganization(user)),
+        course: formatValue(user.course),
+        yearLevel: formatValue(user.yearLevel),
+        studentId: formatValue(studentId),
+        facultyId: formatValue(facultyId),
+      };
+    });
   }
 
   function getUniqueValues(items, key) {
@@ -204,7 +213,7 @@
     if (!recordsBody) return;
     if (users.length === 0) {
       recordsBody.innerHTML =
-        '<tr><td colspan="8" class="text-center">No user records found.</td></tr>';
+        '<tr><td colspan="10" class="text-center">No user records found.</td></tr>';
       emptyState?.classList.remove("hidden");
       return;
     }
@@ -219,6 +228,8 @@
         <tr>
           <td>${formatValue(user.fullName || user.email || "Unknown")}</td>
           <td>${String(user.role).charAt(0).toUpperCase() + String(user.role).slice(1)}</td>
+          <td>${formatValue(user.studentId)}</td>
+          <td>${formatValue(user.facultyId)}</td>
           <td>${formatValue(user.organization)}</td>
           <td>${formatValue(user.college)}</td>
           <td>${formatValue(user.course)}</td>

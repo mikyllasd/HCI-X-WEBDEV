@@ -229,6 +229,56 @@
             </div>
           </div>
         </div>
+
+        <div class="sd-modal" id="releaseModal" aria-hidden="true">
+          <div class="sd-modal__backdrop" data-release-modal-close></div>
+          <div
+            class="sd-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="releaseModalTitle"
+          >
+            <div class="sd-modal__head">
+              <h2 class="sd-modal__title" id="releaseModalTitle">Release order</h2>
+              <button
+                class="sd-modal__close"
+                type="button"
+                data-release-modal-close
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <div class="sd-modal__body">
+              <div id="releaseEmpty" class="sd-empty" style="padding: 18px 12px">
+                <div class="sd-empty__title">No order selected</div>
+                <div class="sd-empty__sub">Use Order Lookup to find an order, then <strong>Open for Release</strong>.</div>
+              </div>
+              <div id="releaseContent" style="display: none">
+                <div id="releaseDetailsGrid" class="sd-modal__grid"></div>
+                <div class="sd-release__confirm" style="margin-top: 12px">
+                  <label class="sd-release__check">
+                    <input id="releasePaymentReceived" type="checkbox" />
+                    <span>I confirm payment received / verified at pickup</span>
+                  </label>
+                  <div class="sd-release__hint">Required before completing release.</div>
+                </div>
+                <p id="releaseStatusText" class="sd-release__status" style="margin-top: 10px"></p>
+              </div>
+            </div>
+            <div class="sd-modal__foot">
+              <button class="sd-modal__btn" type="button" id="releaseBackBtn">Cancel</button>
+              <button
+                class="sd-modal__btn sd-modal__footProceed"
+                type="button"
+                id="releaseCompleteBtn"
+                disabled
+              >
+                Complete release
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
 

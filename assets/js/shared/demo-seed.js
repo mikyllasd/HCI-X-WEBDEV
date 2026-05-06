@@ -203,7 +203,7 @@
       email: "anna.lopez@wmsu.edu.ph",
       service: "Lanyards",
       amount: 500,
-      status: "paid",
+      status: "completed",
       payment: "Online Payment",
       date: "2026-04-22T14:30:00",
       order_type: "individual",
@@ -319,6 +319,7 @@
       registrationDate: "2025-03-01",
       lastCOR: "2025-03-01",
       accountType: "student",
+      studentId: "2025-00003",
     },
     {
       name: "Maria Santos",
@@ -326,6 +327,7 @@
       registrationDate: "2025-06-15",
       lastCOR: "2025-06-15",
       accountType: "student",
+      studentId: "2025-00002",
     },
     {
       name: "Pedro Reyes",
@@ -333,6 +335,7 @@
       registrationDate: "2025-09-20",
       lastCOR: "2025-09-20",
       accountType: "student",
+      studentId: "2025-00006",
     },
     {
       name: "Anna Lopez",
@@ -340,6 +343,7 @@
       registrationDate: "2025-01-10",
       lastCOR: "2025-01-10",
       accountType: "faculty",
+      facultyId: "FAC-002",
     },
     {
       name: "Carlo Garcia",
@@ -347,6 +351,7 @@
       registrationDate: "2025-12-05",
       lastCOR: "2025-12-05",
       accountType: "faculty",
+      facultyId: "FAC-003",
     },
   ];
 
@@ -409,6 +414,7 @@
       college: "College of Computing",
       course: "Information Technology",
       yearLevel: "2nd Year",
+      studentId: "2025-00001",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -421,6 +427,7 @@
       college: "College of Computing",
       course: "Computer Science",
       yearLevel: "3rd Year",
+      studentId: "2025-00002",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -433,6 +440,7 @@
       college: "College of Computing",
       course: "Information Technology",
       yearLevel: "2nd Year",
+      studentId: "2025-00003",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -445,6 +453,7 @@
       college: "College of Business",
       course: "Marketing Management",
       yearLevel: "4th Year",
+      studentId: "2025-00004",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -457,6 +466,7 @@
       college: "College of Engineering",
       course: "Civil Engineering",
       yearLevel: "1st Year",
+      studentId: "2025-00005",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -469,6 +479,7 @@
       college: "College of Computing",
       course: "Computer Science",
       yearLevel: "1st Year",
+      studentId: "2025-00006",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -478,6 +489,7 @@
       username: "staffdemo",
       role: "staff",
       suspended: false,
+      facultyId: "FAC-001",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -490,6 +502,7 @@
       college: "College of Business",
       course: "Business Administration",
       yearLevel: "4th Year",
+      studentId: "2025-00007",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
@@ -502,6 +515,7 @@
       college: "College of Engineering",
       course: "Mechanical Engineering",
       yearLevel: "1st Year",
+      studentId: "2025-00008",
       createdAt: "2025-01-12T08:00:00.000Z",
     },
   ];
@@ -589,28 +603,32 @@
 
   const DEMO_RATINGS = [
     {
-      transactionId: "txn_ORD-2025-104",
-      rating: 5,
-      comment: "Excellent print quality.",
-      createdAt: "2026-01-05T20:00:00.000Z",
-    },
-    {
-      transactionId: "txn_ORD-2025-110",
-      rating: 4,
-      comment: "Fast turnaround.",
-      createdAt: "2026-01-05T21:00:00.000Z",
-    },
-    {
       transactionId: "txn_ORD-2025-005",
-      rating: 5,
-      comment: "",
-      createdAt: "2026-02-18T12:00:00.000Z",
+      serviceRating: 5,
+      productRating: 5,
+      comment: "Excellent print quality.",
+      createdAt: "2026-02-18T20:00:00.000Z",
     },
     {
-      transactionId: "txn_ORD-2025-004",
-      rating: 4,
+      transactionId: "txn_ORD-2025-006",
+      serviceRating: 4,
+      productRating: 4,
+      comment: "Fast turnaround.",
+      createdAt: "2026-03-15T21:00:00.000Z",
+    },
+    {
+      transactionId: "txn_ORD-2025-008",
+      serviceRating: 5,
+      productRating: 5,
+      comment: "",
+      createdAt: "2026-05-02T22:00:00.000Z",
+    },
+    {
+      transactionId: "txn_ORD-2025-007",
+      serviceRating: 4,
+      productRating: 4,
       comment: "Good service.",
-      createdAt: "2025-02-20T10:00:00.000Z",
+      createdAt: "2026-04-22T23:00:00.000Z",
     },
   ];
 
@@ -725,7 +743,10 @@
       customerPhone: extra.customerPhone || "",
       patronType: extra.patronType || "Student",
       paymentMethod: method,
-      gcashRef: method.toLowerCase() === "gcash" ? `GCASH-${Math.floor(100000 + Math.random() * 900000)}` : "",
+      gcashRef:
+        method.toLowerCase() === "gcash"
+          ? `GCASH-${Math.floor(100000 + Math.random() * 900000)}`
+          : "",
       items: extra.items || [{ service: "Printing", qty: 10, price: 3 }],
       grandTotal: total,
     });
@@ -761,18 +782,25 @@
     }
 
     // Also mirror as completed transactions so admin/superadmin reports match.
-    if (typeof window !== "undefined" && typeof window.getDB === "function" && typeof window.saveDB === "function") {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.getDB === "function" &&
+      typeof window.saveDB === "function"
+    ) {
       try {
         const db = window.getDB();
         db.transactions = Array.isArray(db.transactions) ? db.transactions : [];
-        const existingIds = new Set(db.transactions.map((t) => String(t?.id || "")));
+        const existingIds = new Set(
+          db.transactions.map((t) => String(t?.id || "")),
+        );
         const ay = db.academicYear || DEMO_ACADEMIC_YEAR;
         for (const s of rows) {
           const id = `txn_pos_${s.saleId}`;
           if (existingIds.has(id)) continue;
           const method = String(s.paymentMethod || "");
           const m = method.toLowerCase();
-          const paymentType = m.includes("gcash") || m.includes("online") ? "gcash" : "credit";
+          const paymentType =
+            m.includes("gcash") || m.includes("online") ? "gcash" : "credit";
           db.transactions.push({
             id,
             serviceId: "svc_walkin",
@@ -798,17 +826,36 @@
   function seedOrgLedgersIfEmpty() {
     // Requires storage.js to be loaded (getDB/saveDB available).
     if (typeof window === "undefined") return;
-    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function") return;
+    if (
+      typeof window.getDB !== "function" ||
+      typeof window.saveDB !== "function"
+    )
+      return;
 
     const db = window.getDB();
     db.orgLedgers = Array.isArray(db.orgLedgers) ? db.orgLedgers : [];
-    db.orgLedgerArchive = Array.isArray(db.orgLedgerArchive) ? db.orgLedgerArchive : [];
+    db.orgLedgerArchive = Array.isArray(db.orgLedgerArchive)
+      ? db.orgLedgerArchive
+      : [];
 
     const allLedgers = [...db.orgLedgers, ...db.orgLedgerArchive];
     const hasOrg = (name) =>
-      allLedgers.some((l) => String(l?.orgName || "").trim().toLowerCase() === String(name).trim().toLowerCase());
+      allLedgers.some(
+        (l) =>
+          String(l?.orgName || "")
+            .trim()
+            .toLowerCase() === String(name).trim().toLowerCase(),
+      );
 
-    const base = (id, orgName, total, availedAt, orderId, payments = [], archivedAt = "") => {
+    const base = (
+      id,
+      orgName,
+      total,
+      availedAt,
+      orderId,
+      payments = [],
+      archivedAt = "",
+    ) => {
       const paid = payments.reduce((s, p) => s + (Number(p.amount) || 0), 0);
       const remaining = Math.max(0, +(Number(total || 0) - paid).toFixed(2));
       const status = remaining <= 0 ? "fully_paid" : "open";
@@ -895,8 +942,12 @@
     // Mirror org payments into transactions for admin/superadmin reports consistency.
     try {
       const txDb = window.getDB();
-      txDb.transactions = Array.isArray(txDb.transactions) ? txDb.transactions : [];
-      const existingIds = new Set(txDb.transactions.map((t) => String(t?.id || "")));
+      txDb.transactions = Array.isArray(txDb.transactions)
+        ? txDb.transactions
+        : [];
+      const existingIds = new Set(
+        txDb.transactions.map((t) => String(t?.id || "")),
+      );
       const ay = txDb.academicYear || DEMO_ACADEMIC_YEAR;
       const ledgersForTx = [...openAdds, ...archiveAdds];
       for (const l of ledgersForTx) {
@@ -905,7 +956,8 @@
           if (existingIds.has(id)) continue;
           const method = String(p.method || "");
           const m = method.toLowerCase();
-          const paymentType = m.includes("gcash") || m.includes("online") ? "gcash" : "credit";
+          const paymentType =
+            m.includes("gcash") || m.includes("online") ? "gcash" : "credit";
           txDb.transactions.push({
             id,
             serviceId: "svc_org_payment",

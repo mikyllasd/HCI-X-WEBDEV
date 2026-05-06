@@ -1117,9 +1117,9 @@ function buildRatingRecord(rating, transaction, user) {
     rating: Number(rating.rating) || 0,
     paymentType:
       paymentType === "gcash"
-        ? "GCash"
+        ? "Online"
         : paymentType === "credit"
-          ? "Credit"
+          ? "Cash (Paid)"
           : "Other",
     comment: String(rating.comment || "").trim(),
     status: String(transaction.status || "").toLowerCase(),
@@ -2912,8 +2912,8 @@ function renderDashboardTransactions() {
       const paymentType = String(o.payment || "")
         .toLowerCase()
         .includes("online")
-        ? "GCash"
-        : "Credit";
+        ? "Online"
+        : "Cash (Paid)";
       const statusHtml = statusBadgeHTML(o.status);
       const accountType = capitalise(getAccountTypeFromEmail(o.email));
       const account = ACCOUNTS.find(
@@ -2922,12 +2922,16 @@ function renderDashboardTransactions() {
           String(o.email || "").toLowerCase(),
       );
       const userLabel = account?.name || o.email || "—";
+      const studentId = account?.studentId || "—";
+      const facultyId = account?.facultyId || "—";
 
       return `
         <tr>
           <td>${escHtml(dateStr)}</td>
           <td>${escHtml(userLabel)}</td>
           <td>${escHtml(accountType)}</td>
+          <td>${escHtml(studentId)}</td>
+          <td>${escHtml(facultyId)}</td>
           <td>${escHtml(o.service || "—")}</td>
           <td>${escHtml(paymentType)}</td>
           <td>₱${Number(o.amount || 0).toFixed(2)}</td>

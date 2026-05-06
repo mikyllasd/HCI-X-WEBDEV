@@ -5,6 +5,9 @@
   let capturedIdDataUrl = null;
   let capturedCorDataUrl = null;
   let faceMatchComplete = false;
+  let currentIdCapture = 'front';
+  let capturedIdFrontDataUrl = null;
+  let capturedIdBackDataUrl = null;
 
   // ── DB ─────────────────────────────────────────────────────────────────────
   // Always use the same key "upressDB" so admin pages read the same data.
@@ -162,15 +165,15 @@
         : '<span class="upress-icon upress-icon--grad upress-icon--md" aria-hidden="true"></span>';
     }
 
-    if (type === "faculty") {
+  if (type === "faculty") {
       studentBlock?.classList.add("signup-hidden");
       if (yearEl) { yearEl.removeAttribute("required"); yearEl.value = ""; }
       if (courseEl) { courseEl.removeAttribute("required"); courseEl.innerHTML = '<option value="">—</option>'; }
       if (idLabel) idLabel.textContent = "Employee ID *";
       if (collegeLabel) collegeLabel.textContent = "College / department *";
       if (lead2) lead2.textContent = "Faculty contact and sign-in credentials.";
-      if (title3) title3.textContent = "Verify your affiliation";
-      if (lead3) lead3.textContent = "Capture your valid ID, proof of employment, and complete face verification.";
+      if (title3) title3.textContent = "Upload Faculty ID";
+      if (lead3) lead3.textContent = "Capture your Faculty ID (front and back) using your camera, then complete face verification.";
       if (docCor) docCor.textContent = "Proof of employment *";
     } else {
       studentBlock?.classList.remove("signup-hidden");
@@ -179,8 +182,8 @@
       if (idLabel) idLabel.textContent = "Student ID *";
       if (collegeLabel) collegeLabel.textContent = "College *";
       if (lead2) lead2.textContent = "Tell us who you are and how to reach you.";
-      if (title3) title3.textContent = "Upload verification";
-      if (lead3) lead3.textContent = "Capture your valid ID and COR using your camera, then complete face verification.";
+      if (title3) title3.textContent = "Upload School ID";
+      if (lead3) lead3.textContent = "Capture your School ID (front and back) and Certificate of Registration using your camera, then complete face verification.";
       if (docCor) docCor.textContent = "First semester COR *";
     }
   }
@@ -408,6 +411,28 @@
     faceMatchComplete = false;
     capturedIdDataUrl = null;
     capturedCorDataUrl = null;
+    currentIdCapture = 'front';
+    capturedIdFrontDataUrl = null;
+    capturedIdBackDataUrl = null;
+
+    const type = getAccountType();
+    const alignText = document.getElementById('id-align-text');
+    const captureBtn = document.getElementById('capture-id-btn');
+    if (type === 'student') {
+      alignText.textContent = 'Align School ID front within box';
+      captureBtn.textContent = 'Capture School ID Front';
+    } else {
+      alignText.textContent = 'Align Faculty ID front within box';
+      captureBtn.textContent = 'Capture Faculty ID Front';
+    }
+
+    if (type === 'faculty') {
+      document.getElementById('camera-step-4').classList.add('signup-hidden');
+      document.getElementById('camera-step-5').classList.add('signup-hidden');
+    } else {
+      document.getElementById('camera-step-4').classList.remove('signup-hidden');
+      document.getElementById('camera-step-5').classList.remove('signup-hidden');
+    }
 
     CameraCapture.stopAll();
     showCameraStep("camera-step-1");
@@ -449,7 +474,15 @@
       if (warningEl) warningEl.classList.add("signup-hidden");
 
       faceMatchComplete = true;
-      setTimeout(goToFormDisplay, 900);
+      const type = getAccountType();
+      if (type === 'student') {
+        setTimeout(async () => {
+          showCameraStep("camera-step-4");
+          await CameraCapture.initCorCamera();
+        }, 900);
+      } else {
+        setTimeout(goToFormDisplay, 900);
+      }
     }, 1800);
   }
 
@@ -609,25 +642,57 @@
     document.getElementById("capture-id-btn")?.addEventListener("click", function () {
       const snapshot = CameraCapture.captureIdSnapshot();
       if (!snapshot) return;
-      const preview = document.getElementById("id-preview-img");
-      if (preview) preview.src = snapshot;
-      CameraCapture.stopIdCamera();
-      showCameraStep("camera-step-2");
+      const type = getAccountType();
+      const alignText = document.getElementById('id-align-text');
+      const captureBtn = document.getElementById('capture-id-btn');
+      if (currentIdCapture === 'front') {
+        capturedIdFrontDataUrl = snapshot;
+        currentIdCapture = 'back';
+        if (type === 'student') {
+          alignText.textContent = 'Align School ID back within box';
+          captureBtn.textContent = 'Capture School ID Back';
+        } else {
+          alignText.textContent = 'Align Faculty ID back within box';
+          captureBtn.textContent = 'Capture Faculty ID Back';
+        }
+        // stay in step1
+      } else {
+        capturedIdBackDataUrl = snapshot;
+        capturedIdDataUrl = capturedIdFrontDataUrl; // set for compatibility
+        const preview = document.getElementById("id-preview-img");
+        if (preview) preview.src = snapshot;
+        CameraCapture.stopIdCamera();
+        showCameraStep("camera-step-2");
+      }
     });
 
     // Camera: Step 2 — retake ID
     document.getElementById("retake-id-btn")?.addEventListener("click", async function () {
       capturedIdDataUrl = null;
+      capturedIdFrontDataUrl = null;
+      capturedIdBackDataUrl = null;
+      currentIdCapture = 'front';
+      const type = getAccountType();
+      const alignText = document.getElementById('id-align-text');
+      const captureBtn = document.getElementById('capture-id-btn');
+      if (type === 'student') {
+        alignText.textContent = 'Align School ID front within box';
+        captureBtn.textContent = 'Capture School ID Front';
+      } else {
+        alignText.textContent = 'Align Faculty ID front within box';
+        captureBtn.textContent = 'Capture Faculty ID Front';
+      }
       const preview = document.getElementById("id-preview-img");
       if (preview) preview.src = "";
       showCameraStep("camera-step-1");
       await CameraCapture.initIdCamera();
     });
 
-    // Camera: Step 2 — proceed to COR
+    // Camera: Step 2 — proceed to face
     document.getElementById("next-after-id-btn")?.addEventListener("click", async function () {
-      showCameraStep("camera-step-4");
-      await CameraCapture.initCorCamera();
+      showCameraStep("camera-step-3");
+      const ok = await CameraCapture.initFaceCamera();
+      if (ok) runFaceVerification();
     });
 
     // Camera: Step 4 — capture COR
@@ -649,11 +714,9 @@
       await CameraCapture.initCorCamera();
     });
 
-    // Camera: Step 5 — proceed to face
-    document.getElementById("continue-to-face-btn")?.addEventListener("click", async function () {
-      showCameraStep("camera-step-3");
-      const ok = await CameraCapture.initFaceCamera();
-      if (ok) runFaceVerification();
+    // Camera: Step 5 — proceed to form
+    document.getElementById("continue-to-face-btn")?.addEventListener("click", function () {
+      goToFormDisplay();
     });
 
     // Form submit

@@ -217,40 +217,15 @@
         </div>
         <div class="affiliate-modal-body">
 
+            <!-- STEP 1: Single dropdown org selection -->
             <div class="affiliate-step" id="affiliate-step-1">
-                <h3>Select Organization Type</h3>
-                <p>Choose whether your organization is recognized by WMSU or if it's a custom organization.</p>
-                <div class="affiliate-type-options">
-                    <label class="affiliate-type-card selected" data-type="known">
-                        <input type="radio" name="affiliate-type" value="known" checked>
-                        <div class="affiliate-type-icon">
-                            <span class="upress-icon upress-icon--building" aria-hidden="true"></span>
-                        </div>
-                        <div class="affiliate-type-title">Known Organization</div>
-                        <div class="affiliate-type-desc">Select from WMSU-recognized organizations</div>
-                    </label>
-                    <label class="affiliate-type-card" data-type="other">
-                        <input type="radio" name="affiliate-type" value="other">
-                        <div class="affiliate-type-icon">
-                            <span class="upress-icon upress-icon--plus" aria-hidden="true"></span>
-                        </div>
-                        <div class="affiliate-type-title">Other Organization</div>
-                        <div class="affiliate-type-desc">Specify a custom organization</div>
-                    </label>
-                </div>
-                <div class="affiliate-step-actions">
-                    <button type="button" class="affiliate-btn-secondary" onclick="closeAffiliateModal()">Cancel</button>
-                    <button type="button" class="affiliate-btn-primary" onclick="goToAffiliateStep(2)">Continue</button>
-                </div>
-            </div>
-
-            <div class="affiliate-step affiliate-hidden" id="affiliate-step-2-known">
-                <h3>Organization Details</h3>
+                <h3>Select Organization</h3>
+                <p>Choose your organization from the list below.</p>
                 <div class="affiliate-form">
                     <div class="affiliate-field">
-                        <label for="affiliate-org-known">Organization Name *</label>
-                        <select id="affiliate-org-known" onchange="onKnownOrgChange(this.value)">
-                            <option value="">Select organization</option>
+                        <label for="affiliate-org-select">Organization *</label>
+                        <select id="affiliate-org-select" onchange="onAffiliateOrgChange(this.value)">
+                            <option value="">— Select organization —</option>
                             <option value="Computer Science Department">Computer Science Department</option>
                             <option value="Mathematics Department">Mathematics Department</option>
                             <option value="Physics Department">Physics Department</option>
@@ -261,74 +236,57 @@
                             <option value="Education Department">Education Department</option>
                             <option value="Arts Department">Arts Department</option>
                             <option value="Sports Department">Sports Department</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="affiliate-field">
-                        <label for="affiliate-college-known">College *</label>
-                        <input type="text" id="affiliate-college-known" readonly placeholder="Auto-filled based on organization">
-                    </div>
-                    <div class="affiliate-field">
-                        <label for="affiliate-position-known">Position in Organization *</label>
-                        <input type="text" id="affiliate-position-known" placeholder="e.g. President, Secretary, Member">
-                    </div>
-                    <div class="affiliate-field">
-                        <label for="affiliate-contact-known">Contact Number *</label>
-                        <input type="tel" id="affiliate-contact-known" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}">
-                    </div>
-                    <div class="affiliate-field">
-                        <label for="affiliate-otp-known">Verification Code *</label>
-                        <div class="affiliate-otp-row">
-                            <input type="text" id="affiliate-otp-known" placeholder="Enter 6-digit code" maxlength="6" disabled>
-                            <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-known" onclick="sendAffiliateOTP('known')">Send OTP</button>
-                        </div>
-                        <small>A verification code will be sent to your contact number.</small>
+                    <div class="affiliate-field" id="affiliate-other-specify-wrap" style="display:none;">
+                        <label for="affiliate-org-specify">Please specify *</label>
+                        <input type="text" id="affiliate-org-specify" placeholder="Enter your organization name" />
                     </div>
                 </div>
                 <div class="affiliate-step-actions">
-                    <button type="button" class="affiliate-btn-secondary" onclick="goToAffiliateStep(1)">Back</button>
-                    <button type="button" class="affiliate-btn-primary" id="affiliate-submit-known" onclick="submitAffiliateRequest('known')" disabled>Submit Request</button>
+                    <button type="button" class="affiliate-btn-secondary" onclick="closeAffiliateModal()">Cancel</button>
+                    <button type="button" class="affiliate-btn-primary" onclick="goToAffiliateStep(2)">Continue</button>
                 </div>
             </div>
 
-            <div class="affiliate-step affiliate-hidden" id="affiliate-step-2-other">
+            <!-- STEP 2: Details -->
+            <div class="affiliate-step affiliate-hidden" id="affiliate-step-2">
                 <h3>Organization Details</h3>
                 <div class="affiliate-form">
                     <div class="affiliate-field">
-                        <label for="affiliate-org-other">Organization Name *</label>
-                        <input type="text" id="affiliate-org-other" placeholder="Enter organization name">
+                        <label for="affiliate-college-field">College / Department *</label>
+                        <input type="text" id="affiliate-college-field" placeholder="e.g. College of Computing Studies" />
                     </div>
-                    <div class="affiliate-field">
-                        <label for="affiliate-college-other">Under what College *</label>
-                        <input type="text" id="affiliate-college-other" placeholder="e.g. College of Computing Studies">
-                    </div>
-                    <div class="affiliate-field">
-                        <label for="affiliate-proof-other">Proof of Recognition *</label>
-                        <input type="file" id="affiliate-proof-other" accept="image/*,.pdf" onchange="onProofUpload(this)">
+                    <div class="affiliate-field" id="affiliate-proof-wrap" style="display:none;">
+                        <label for="affiliate-proof-file">Proof of Recognition *</label>
+                        <input type="file" id="affiliate-proof-file" accept="image/*,.pdf" onchange="onProofUpload(this)" />
                         <small>Upload a picture proving the org is recognized by WMSU (JPG, PNG, PDF up to 5MB)</small>
                     </div>
                     <div class="affiliate-field">
-                        <label for="affiliate-position-other">Position in Organization *</label>
-                        <input type="text" id="affiliate-position-other" placeholder="e.g. President, Secretary, Member">
+                        <label for="affiliate-position-field">Position in Organization *</label>
+                        <input type="text" id="affiliate-position-field" placeholder="e.g. President, Secretary, Member" />
                     </div>
                     <div class="affiliate-field">
-                        <label for="affiliate-contact-other">Contact Number *</label>
-                        <input type="tel" id="affiliate-contact-other" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}">
+                        <label for="affiliate-contact-field">Contact Number *</label>
+                        <input type="tel" id="affiliate-contact-field" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}" />
                     </div>
                     <div class="affiliate-field">
-                        <label for="affiliate-otp-other">Verification Code *</label>
+                        <label for="affiliate-otp-field">Verification Code *</label>
                         <div class="affiliate-otp-row">
-                            <input type="text" id="affiliate-otp-other" placeholder="Enter 6-digit code" maxlength="6" disabled>
-                            <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-other" onclick="sendAffiliateOTP('other')">Send OTP</button>
+                            <input type="text" id="affiliate-otp-field" placeholder="Enter 6-digit code" maxlength="6" disabled />
+                            <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-btn" onclick="sendAffiliateOTP()">Send OTP</button>
                         </div>
                         <small>A verification code will be sent to your contact number.</small>
                     </div>
                 </div>
                 <div class="affiliate-step-actions">
                     <button type="button" class="affiliate-btn-secondary" onclick="goToAffiliateStep(1)">Back</button>
-                    <button type="button" class="affiliate-btn-primary" id="affiliate-submit-other" onclick="submitAffiliateRequest('other')" disabled>Submit Request</button>
+                    <button type="button" class="affiliate-btn-primary" id="affiliate-submit-btn" onclick="submitAffiliateRequest()" disabled>Submit Request</button>
                 </div>
             </div>
 
+            <!-- SUCCESS -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-success">
                 <div class="affiliate-success">
                     <div class="affiliate-success-icon">

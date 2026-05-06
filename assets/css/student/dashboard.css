@@ -57,6 +57,30 @@
     font-size: 0.65rem; font-weight: 700;
 }
 
+/* ===================== NAV PROFILE BUTTON ===================== */
+.nav-profile-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.12);
+    border: none; color: white; cursor: pointer;
+    border-radius: 2rem;
+    padding: 0.375rem 0.875rem 0.375rem 0.5rem;
+    transition: background 0.2s;
+    font-family: var(--font-sans);
+}
+.nav-profile-btn:hover { background: rgba(255,255,255,0.25); }
+.nav-profile-avatar {
+    width: 2rem; height: 2rem;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; color: white;
+}
+.nav-profile-name-label {
+    font-size: 0.875rem; font-weight: 600; color: white;
+    max-width: 8rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
 /* ===================== NOTIFICATION PANEL ===================== */
 .notif-panel {
     position: fixed; top: 4.5rem; right: 4rem;
@@ -88,10 +112,20 @@
     padding: 2rem 1.25rem; color: #aaa; font-size: 0.875rem;
     gap: 0.5rem; text-align: center;
 }
+.notif-item {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid #f5f5f5;
+    background: #fffbf0;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item-msg { font-size: 0.875rem; color: #333; line-height: 1.45; }
+.notif-item-date { font-size: 0.7rem; color: #aaa; margin-top: 0.25rem; }
+.notif-item--read { background: white; }
+.notif-item--read .notif-item-msg { color: #aaa; }
 
 /* ===================== PROFILE PANEL ===================== */
 .profile-panel {
-    position: fixed; top: 4.5rem; right: 4rem;
+    position: fixed; top: 4.5rem; right: 1rem;
     width: 18rem; background: var(--color-white);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
@@ -100,46 +134,44 @@
     animation: slideDown 0.2s ease;
 }
 .profile-panel-inner {
-    padding: 1.5rem;
+    display: flex; flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1.25rem 1.25rem;
+    gap: 0.35rem;
 }
 .profile-panel-avatar-wrap {
-    display: flex; justify-content: center; margin-bottom: 1rem;
-}
-.profile-panel-avatar-wrap svg {
+    width: 4rem; height: 4rem;
+    background: var(--color-surface); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--color-border);
+    margin-bottom: 0.5rem;
     color: var(--color-text-secondary);
 }
-.profile-panel-name {
-    font-weight: 700; font-size: 1.125rem; color: var(--color-text);
-    text-align: center; margin-bottom: 0.25rem;
-}
-.profile-panel-id {
-    font-size: 0.875rem; color: var(--color-text-secondary);
-    text-align: center; margin-bottom: 0.5rem;
-}
-.profile-panel-email {
-    font-size: 0.8125rem; color: #666;
-    text-align: center; margin-bottom: 0.75rem;
-}
+.profile-panel-name { font-weight: 700; font-size: 1rem; color: var(--color-text); text-align: center; }
+.profile-panel-id { font-size: 0.8125rem; color: var(--color-text-secondary); }
+.profile-panel-email { font-size: 0.75rem; color: #aaa; text-align: center; word-break: break-all; }
 .profile-panel-affil {
-    text-align: center; margin-bottom: 1rem;
-    font-size: 0.875rem; color: var(--color-text-secondary);
+    display: flex; align-items: center; gap: 0.35rem;
+    font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.25rem;
 }
-.profile-panel-affil-label {
-    font-weight: 600; color: var(--color-header);
-}
+.profile-panel-affil-label { font-weight: 600; }
 .profile-panel-actions {
-    display: flex; flex-direction: column; gap: 0.5rem;
+    width: 100%; display: flex; flex-direction: column;
+    gap: 0.5rem; margin-top: 1rem;
+    border-top: 1px solid var(--color-border); padding-top: 1rem;
 }
 .profile-panel-action-btn {
-    width: 100%; background: var(--color-cta); color: white;
-    border: none; padding: 0.625rem 1rem; border-radius: 0.5rem;
-    font-size: 0.875rem; font-weight: 600; cursor: pointer;
-    font-family: var(--font-sans);
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    transition: background 0.2s;
+    width: 100%; display: flex; align-items: center; gap: 0.5rem;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 0.6rem 0.875rem; border-radius: 0.5rem;
+    font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; font-family: var(--font-sans);
+    transition: background 0.2s; text-align: left;
 }
 .profile-panel-action-btn .upress-icon { width: 1rem; height: 1rem; }
-.profile-panel-action-btn:hover { background: var(--color-cta-hover); }
+.profile-panel-action-btn:hover { background: #fff0f0; border-color: var(--color-cta); color: var(--color-cta); }
 
 /* ===================== SIDEBAR OVERLAY ===================== */
 .sidebar-overlay {
@@ -166,8 +198,7 @@
 .sidebar-header {
     background: linear-gradient(180deg, var(--color-header) 0%, #6a0000 100%);
     color: white; padding: 1rem 1.25rem;
-    display: flex; align-items: center; gap: 0.75rem;
-    flex-shrink: 0;
+    display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;
 }
 .sidebar-logo {
     background: rgba(255,255,255,0.2); border-radius: 50%;
@@ -186,29 +217,6 @@
 .sidebar-close-btn .upress-icon { width: 1rem; height: 1rem; color: #fff; }
 .sidebar-close-btn:hover { background: rgba(255,255,255,0.3); }
 
-/* Profile Section */
-.sidebar-profile {
-    background: var(--color-white); padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--color-border);
-    display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;
-}
-.profile-avatar {
-    width: 3rem; height: 3rem;
-    background: var(--color-surface); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid var(--color-border); flex-shrink: 0;
-}
-.profile-avatar .upress-icon { width: 1.5rem; height: 1.5rem; color: var(--color-text-secondary); }
-.profile-info { flex: 1; min-width: 0; }
-.profile-name {
-    font-weight: 700; font-size: 1rem; color: var(--color-text);
-    margin-bottom: 0.125rem;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.profile-id { font-size: 0.8125rem; color: var(--color-text-secondary); margin-bottom: 0.25rem; }
-.profile-email { font-size: 0.75rem; color: #aaa; margin-bottom: 0.25rem; }
-.profile-status { display: flex; }
-
 .status-badge {
     padding: 0.25rem 0.5rem; border-radius: 0.25rem;
     font-size: 0.75rem; font-weight: 600;
@@ -219,23 +227,6 @@
 .status-badge.status-active   { background: #d1fae5; color: #065f46; }
 .status-badge.status-suspended,
 .status-badge.status-other    { background: #fee2e2; color: #dc2626; }
-
-/* Update Email Button */
-.sidebar-profile-actions {
-    background: var(--color-white);
-    padding: 0 1.25rem 1rem;
-    border-bottom: 1px solid var(--color-border); flex-shrink: 0;
-}
-.sidebar-update-email-btn {
-    width: 100%; background: var(--color-cta); color: white;
-    border: none; padding: 0.625rem 1rem; border-radius: 0.5rem;
-    font-size: 0.875rem; font-weight: 600; cursor: pointer;
-    font-family: var(--font-sans);
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    transition: background 0.2s;
-}
-.sidebar-update-email-btn .upress-icon { width: 1rem; height: 1rem; }
-.sidebar-update-email-btn:hover { background: var(--color-cta-hover); }
 
 /* Tabs */
 .sidebar-tabs {
@@ -410,7 +401,6 @@
 .sidebar-order-name { font-weight: 700; font-size: 0.875rem; color: #333; grid-column: 1; }
 .sidebar-order-meta { font-size: 0.75rem; color: #888; grid-column: 1; }
 .sidebar-order-price { font-weight: 700; color: var(--color-cta); font-size: 0.9375rem; grid-column: 2; grid-row: 1 / 3; align-self: center; }
-
 .sidebar-order-status {
     display: inline-block; font-size: 0.7rem; font-weight: 700;
     padding: 0.15rem 0.5rem; border-radius: 999px; margin-top: 0.2rem;
@@ -434,10 +424,8 @@
 }
 .welcome-card h2 { font-size: 1.375rem; margin-bottom: 0.375rem; color: #222; }
 .welcome-card p { font-size: 0.875rem; color: #555; margin-bottom: 0.25rem; }
-
 .services-title { font-size: 1.25rem; margin-bottom: 1.25rem; }
 
-/* Create Order Button (anchor styled as button) */
 .btn-create-order {
     display: inline-block;
     background: linear-gradient(135deg, var(--color-header) 0%, #6a0000 100%);
@@ -452,12 +440,10 @@
 .btn-create-order:hover {
     background: linear-gradient(135deg, #6a0000 0%, #4a0000 100%);
     box-shadow: 0 6px 24px rgba(139,0,0,0.35);
-    transform: translateY(-2px);
-    color: #fff;
+    transform: translateY(-2px); color: #fff;
 }
 .btn-create-order:active { transform: translateY(0); }
 
-/* Cart preview strip */
 .dash-cart-preview-box {
     background: white; border-radius: 1rem; padding: 1.25rem;
     margin-bottom: 1.5rem;
@@ -490,7 +476,6 @@
 }
 .dash-cart-preview-total strong { color: var(--color-cta); font-size: 1rem; }
 
-/* Workflow strip */
 .account-status-banner {
     border-radius: 0.75rem; padding: 0.85rem 1rem;
     margin-bottom: 1rem; font-size: 0.875rem; line-height: 1.45;
@@ -532,7 +517,6 @@
 }
 .page-section-lead { font-size: 0.9rem; color: #777; margin-top: 0.25rem; }
 
-/* Animation */
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-0.5rem); }
     to   { opacity: 1; transform: translateY(0); }
@@ -547,6 +531,9 @@
     .nav-right { gap: 0.5rem; }
     .sidebar { width: 100%; right: -100%; }
     .notif-panel { right: 0.75rem; width: calc(100vw - 1.5rem); }
+    .nav-profile-name-label { display: none; }
+    .nav-profile-btn { padding: 0.375rem 0.5rem; border-radius: 50%; }
+    .profile-panel { right: 0.5rem; width: calc(100vw - 1rem); }
 }
 
 /* ===================== AFFILIATE MODAL ===================== */
@@ -580,28 +567,7 @@
 .affiliate-step h3 { margin: 0 0 0.5rem; font-size: 1.125rem; color: var(--color-header); }
 .affiliate-step p { margin: 0 0 1.5rem; color: var(--color-text-muted); }
 
-.affiliate-type-options {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;
-}
-.affiliate-type-card {
-    display: flex; flex-direction: column; align-items: center;
-    padding: 1.5rem; border: 2px solid var(--color-border);
-    border-radius: var(--radius-md); cursor: pointer;
-    transition: all 0.2s; text-align: center;
-}
-.affiliate-type-card:hover { border-color: var(--color-cta); }
-.affiliate-type-card.selected { border-color: var(--color-cta); background: rgba(163,32,32,0.05); }
-.affiliate-type-card input[type="radio"] { display: none; }
-.affiliate-type-icon {
-    width: 3rem; height: 3rem; border-radius: 50%;
-    background: var(--color-surface); display: flex; align-items: center; justify-content: center;
-    margin-bottom: 0.75rem;
-}
-.affiliate-type-icon .upress-icon { width: 1.5rem; height: 1.5rem; color: var(--color-cta); }
-.affiliate-type-title { font-weight: 600; margin-bottom: 0.25rem; }
-.affiliate-type-desc { font-size: 0.875rem; color: var(--color-text-muted); }
-
-.affiliate-form { margin-bottom: 2rem; }
+.affiliate-form { margin-bottom: 1.5rem; }
 .affiliate-field { margin-bottom: 1.25rem; }
 .affiliate-field label {
     display: block; margin-bottom: 0.5rem;
@@ -611,7 +577,8 @@
 .affiliate-field select {
     width: 100%; padding: 0.75rem;
     border: 1px solid var(--color-border); border-radius: var(--radius-sm);
-    font-size: 0.875rem;
+    font-size: 0.875rem; font-family: var(--font-sans);
+    box-sizing: border-box;
 }
 .affiliate-field input:focus,
 .affiliate-field select:focus {
@@ -627,6 +594,7 @@
     padding: 0.75rem 1rem; background: var(--color-cta);
     color: white; border: none; border-radius: var(--radius-sm);
     cursor: pointer; font-size: 0.875rem; font-weight: 500;
+    font-family: var(--font-sans); white-space: nowrap;
 }
 .affiliate-verify-btn:disabled { background: var(--color-text-muted); cursor: not-allowed; }
 
@@ -638,6 +606,7 @@
     flex: 1; padding: 0.75rem 1.5rem;
     border-radius: var(--radius-sm); font-weight: 500;
     cursor: pointer; transition: all 0.2s;
+    font-family: var(--font-sans);
 }
 .affiliate-btn-primary {
     background: var(--color-cta); color: white; border: none;
@@ -649,9 +618,7 @@
 }
 .affiliate-btn-secondary:hover { background: var(--color-surface-soft); }
 
-.affiliate-success {
-    text-align: center; padding: 2rem 0;
-}
+.affiliate-success { text-align: center; padding: 2rem 0; }
 .affiliate-success-icon {
     width: 4rem; height: 4rem; border-radius: 50%;
     background: #10b981; display: flex; align-items: center; justify-content: center;

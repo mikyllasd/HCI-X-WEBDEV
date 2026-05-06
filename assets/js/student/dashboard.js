@@ -1,7 +1,5 @@
 (function () {
 
-  // ── HELPERS ────────────────────────────────────────────────────────────────
-
   function getDB() {
     if (typeof window.getDB === 'function') return window.getDB();
     try { return JSON.parse(localStorage.getItem('upressDB') || '{}'); } catch { return {}; }
@@ -14,20 +12,6 @@
 
   function getCurrentUser() {
     try { return JSON.parse(localStorage.getItem('upressUser') || 'null'); } catch { return null; }
-  }
-
-  function addNotificationToUser(userId, message, type) {
-    const db = getDB();
-    if (!Array.isArray(db.notifications)) db.notifications = [];
-    db.notifications.push({
-      id: 'notif_' + Date.now() + '_' + Math.random().toString(36).slice(2),
-      userId,
-      message,
-      type: type || 'info',
-      read: false,
-      createdAt: new Date().toISOString()
-    });
-    saveDB(db);
   }
 
   // ── SESSION GUARD ──────────────────────────────────────────────────────────
@@ -116,7 +100,7 @@
     }
   }
 
-  // ── PROFILE PANEL TOGGLE ───────────────────────────────────────────────────
+  // ── PROFILE PANEL ──────────────────────────────────────────────────────────
 
   function toggleProfilePanel() {
     const panel = document.getElementById('profile-panel');
@@ -227,9 +211,7 @@
   }
   window.openSidebarCart = openSidebarCart;
 
-  function goToFullOrders() {
-    window.location.href = 'orders.html';
-  }
+  function goToFullOrders() { window.location.href = 'orders.html'; }
   window.goToFullOrders = goToFullOrders;
 
   // ── CART ───────────────────────────────────────────────────────────────────
@@ -454,6 +436,8 @@
     'Sports Department': 'Office of Student Affairs'
   };
 
+  let affiliateOtpCode = null;
+
   function showAffiliateModal() {
     const db = getDB();
     const existing = (db.affiliationRequests || []).find(r =>
@@ -470,69 +454,89 @@
 
   function closeAffiliateModal() {
     document.getElementById('affiliate-modal').style.display = 'none';
-    const orgKnown = document.getElementById('affiliate-org-known');
-    if (orgKnown) orgKnown.value = '';
-    const collegeKnown = document.getElementById('affiliate-college-known');
-    if (collegeKnown) collegeKnown.value = '';
-    const posKnown = document.getElementById('affiliate-position-known');
-    if (posKnown) posKnown.value = '';
-    const contactKnown = document.getElementById('affiliate-contact-known');
-    if (contactKnown) contactKnown.value = '';
-    const otpKnown = document.getElementById('affiliate-otp-known');
-    if (otpKnown) { otpKnown.value = ''; otpKnown.disabled = true; }
-    const submitKnown = document.getElementById('affiliate-submit-known');
-    if (submitKnown) submitKnown.disabled = true;
 
-    const orgOther = document.getElementById('affiliate-org-other');
-    if (orgOther) orgOther.value = '';
-    const collegeOther = document.getElementById('affiliate-college-other');
-    if (collegeOther) collegeOther.value = '';
-    const posOther = document.getElementById('affiliate-position-other');
-    if (posOther) posOther.value = '';
-    const contactOther = document.getElementById('affiliate-contact-other');
-    if (contactOther) contactOther.value = '';
-    const otpOther = document.getElementById('affiliate-otp-other');
-    if (otpOther) { otpOther.value = ''; otpOther.disabled = true; }
-    const submitOther = document.getElementById('affiliate-submit-other');
-    if (submitOther) submitOther.disabled = true;
+    // Reset step 1
+    const sel = document.getElementById('affiliate-org-select');
+    if (sel) sel.value = '';
+    const specifyWrap = document.getElementById('affiliate-other-specify-wrap');
+    if (specifyWrap) specifyWrap.style.display = 'none';
+    const specify = document.getElementById('affiliate-org-specify');
+    if (specify) specify.value = '';
+
+    // Reset step 2
+    const college = document.getElementById('affiliate-college-field');
+    if (college) { college.value = ''; college.removeAttribute('readonly'); }
+    const proofWrap = document.getElementById('affiliate-proof-wrap');
+    if (proofWrap) proofWrap.style.display = 'none';
+    const proofFile = document.getElementById('affiliate-proof-file');
+    if (proofFile) proofFile.value = '';
+    const pos = document.getElementById('affiliate-position-field');
+    if (pos) pos.value = '';
+    const contact = document.getElementById('affiliate-contact-field');
+    if (contact) contact.value = '';
+    const otp = document.getElementById('affiliate-otp-field');
+    if (otp) { otp.value = ''; otp.disabled = true; }
+    const sendBtn = document.getElementById('affiliate-send-otp-btn');
+    if (sendBtn) { sendBtn.textContent = 'Send OTP'; sendBtn.disabled = false; }
+    const submitBtn = document.getElementById('affiliate-submit-btn');
+    if (submitBtn) submitBtn.disabled = true;
+
+    affiliateOtpCode = null;
   }
   window.closeAffiliateModal = closeAffiliateModal;
 
   function goToAffiliateStep(step) {
-    document.getElementById('affiliate-step-1').classList.add('affiliate-hidden');
-    document.getElementById('affiliate-step-2-known').classList.add('affiliate-hidden');
-    document.getElementById('affiliate-step-2-other').classList.add('affiliate-hidden');
-    document.getElementById('affiliate-step-success').classList.add('affiliate-hidden');
+    ['affiliate-step-1', 'affiliate-step-2', 'affiliate-step-success'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('affiliate-hidden');
+    });
 
     if (step === 1) {
-      document.getElementById('affiliate-step-1').classList.remove('affiliate-hidden');
+      document.getElementById('affiliate-step-1')?.classList.remove('affiliate-hidden');
     } else if (step === 2) {
-      const type = document.querySelector('input[name="affiliate-type"]:checked');
-      const val = type ? type.value : 'known';
-      document.getElementById('affiliate-step-2-' + val).classList.remove('affiliate-hidden');
+      const sel = document.getElementById('affiliate-org-select');
+      if (!sel || !sel.value) {
+        alert('Please select an organization first.');
+        document.getElementById('affiliate-step-1')?.classList.remove('affiliate-hidden');
+        return;
+      }
+      document.getElementById('affiliate-step-2')?.classList.remove('affiliate-hidden');
     } else if (step === 'success') {
-      document.getElementById('affiliate-step-success').classList.remove('affiliate-hidden');
+      document.getElementById('affiliate-step-success')?.classList.remove('affiliate-hidden');
     }
   }
   window.goToAffiliateStep = goToAffiliateStep;
 
-  document.querySelectorAll('.affiliate-type-card').forEach(card => {
-    card.addEventListener('click', function () {
-      document.querySelectorAll('.affiliate-type-card').forEach(c => c.classList.remove('selected'));
-      this.classList.add('selected');
-    });
-  });
+  function onAffiliateOrgChange(value) {
+    const specifyWrap = document.getElementById('affiliate-other-specify-wrap');
+    const specify = document.getElementById('affiliate-org-specify');
+    const collegeField = document.getElementById('affiliate-college-field');
+    const proofWrap = document.getElementById('affiliate-proof-wrap');
 
-  function onKnownOrgChange(value) {
-    const collegeInput = document.getElementById('affiliate-college-known');
-    if (collegeInput) collegeInput.value = orgCollegeMap[value] || '';
+    if (value === 'Other') {
+      if (specifyWrap) specifyWrap.style.display = 'block';
+      if (specify) specify.value = '';
+      if (collegeField) { collegeField.value = ''; collegeField.removeAttribute('readonly'); }
+      if (proofWrap) proofWrap.style.display = 'block';
+    } else {
+      if (specifyWrap) specifyWrap.style.display = 'none';
+      if (specify) specify.value = '';
+      if (collegeField) {
+        collegeField.value = orgCollegeMap[value] || '';
+        if (orgCollegeMap[value]) {
+          collegeField.setAttribute('readonly', 'readonly');
+        } else {
+          collegeField.removeAttribute('readonly');
+        }
+      }
+      if (proofWrap) proofWrap.style.display = 'none';
+    }
   }
-  window.onKnownOrgChange = onKnownOrgChange;
+  window.onAffiliateOrgChange = onAffiliateOrgChange;
 
   function onProofUpload(input) {
     if (input.files && input.files[0]) {
-      const file = input.files[0];
-      if (file.size > 5 * 1024 * 1024) {
+      if (input.files[0].size > 5 * 1024 * 1024) {
         alert('File is too large. Maximum size is 5MB.');
         input.value = '';
       }
@@ -540,87 +544,84 @@
   }
   window.onProofUpload = onProofUpload;
 
-  const otpStore = {};
-
-  function sendAffiliateOTP(type) {
-    const contactId = 'affiliate-contact-' + type;
-    const otpInputId = 'affiliate-otp-' + type;
-    const sendBtnId = 'affiliate-send-otp-' + type;
-    const contact = document.getElementById(contactId);
+  function sendAffiliateOTP() {
+    const contact = document.getElementById('affiliate-contact-field');
     if (!contact || !contact.value.match(/^09[0-9]{9}$/)) {
       alert('Please enter a valid Philippine mobile number (09XXXXXXXXX).');
       return;
     }
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otpStore[type] = otp;
-    console.log('OTP for demo:', otp);
+    affiliateOtpCode = otp;
+    console.log('Demo OTP:', otp);
 
-    const otpInput = document.getElementById(otpInputId);
-    if (otpInput) otpInput.disabled = false;
-    const sendBtn = document.getElementById(sendBtnId);
+    const otpInput = document.getElementById('affiliate-otp-field');
+    if (otpInput) {
+      otpInput.disabled = false;
+      otpInput.oninput = function () {
+        const submitBtn = document.getElementById('affiliate-submit-btn');
+        if (submitBtn) submitBtn.disabled = otpInput.value !== affiliateOtpCode;
+      };
+    }
+
+    const sendBtn = document.getElementById('affiliate-send-otp-btn');
     if (sendBtn) {
       sendBtn.textContent = 'Resend OTP';
       sendBtn.disabled = true;
       setTimeout(() => { if (sendBtn) sendBtn.disabled = false; }, 30000);
     }
 
-    if (otpInput) {
-      otpInput.oninput = function () {
-        const submitBtn = document.getElementById('affiliate-submit-' + type);
-        if (submitBtn) submitBtn.disabled = otpInput.value !== otpStore[type];
-      };
-    }
-
     alert('OTP sent! (Demo OTP: ' + otp + ')');
   }
   window.sendAffiliateOTP = sendAffiliateOTP;
 
-  function submitAffiliateRequest(type) {
+  function submitAffiliateRequest() {
     const db = getDB();
     if (!Array.isArray(db.affiliationRequests)) db.affiliationRequests = [];
 
-    let requestData = {
+    const orgSelect = document.getElementById('affiliate-org-select');
+    const orgSpecify = document.getElementById('affiliate-org-specify');
+    const collegeField = document.getElementById('affiliate-college-field');
+    const posField = document.getElementById('affiliate-position-field');
+    const contactField = document.getElementById('affiliate-contact-field');
+    const proofInput = document.getElementById('affiliate-proof-file');
+
+    const selectedOrg = orgSelect ? orgSelect.value : '';
+    const orgName = selectedOrg === 'Other'
+      ? (orgSpecify ? orgSpecify.value.trim() : '')
+      : selectedOrg;
+    const college = collegeField ? collegeField.value.trim() : '';
+    const position = posField ? posField.value.trim() : '';
+    const contact = contactField ? contactField.value.trim() : '';
+
+    if (!orgName || !college || !position || !contact) {
+      alert('Please fill all required fields.');
+      return;
+    }
+
+    const requestData = {
       id: 'affil_' + Date.now() + '_' + Math.random().toString(36).slice(2),
       userId: currentUser.id,
       userName: getDisplayName(currentUser),
       userEmail: currentUser.email || '',
-      organizationType: type,
+      organizationType: selectedOrg === 'Other' ? 'other' : 'known',
+      organizationName: orgName,
+      college: college,
+      position: position,
+      contactNumber: contact,
       status: 'pending',
       submittedAt: new Date().toISOString()
     };
 
-    if (type === 'known') {
-      const org = document.getElementById('affiliate-org-known').value;
-      const college = document.getElementById('affiliate-college-known').value;
-      const position = document.getElementById('affiliate-position-known').value;
-      const contact = document.getElementById('affiliate-contact-known').value;
-      if (!org || !position || !contact) { alert('Please fill all required fields.'); return; }
-      requestData.organizationName = org;
-      requestData.college = college;
-      requestData.position = position;
-      requestData.contactNumber = contact;
-    } else {
-      const org = document.getElementById('affiliate-org-other').value;
-      const college = document.getElementById('affiliate-college-other').value;
-      const position = document.getElementById('affiliate-position-other').value;
-      const contact = document.getElementById('affiliate-contact-other').value;
-      const proofInput = document.getElementById('affiliate-proof-other');
-      if (!org || !college || !position || !contact) { alert('Please fill all required fields.'); return; }
-      requestData.organizationName = org;
-      requestData.college = college;
-      requestData.position = position;
-      requestData.contactNumber = contact;
-      if (proofInput && proofInput.files && proofInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          requestData.proofImage = e.target.result;
-          db.affiliationRequests.push(requestData);
-          saveDB(db);
-          goToAffiliateStep('success');
-        };
-        reader.readAsDataURL(proofInput.files[0]);
-        return;
-      }
+    if (selectedOrg === 'Other' && proofInput && proofInput.files && proofInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        requestData.proofImage = e.target.result;
+        db.affiliationRequests.push(requestData);
+        saveDB(db);
+        goToAffiliateStep('success');
+      };
+      reader.readAsDataURL(proofInput.files[0]);
+      return;
     }
 
     db.affiliationRequests.push(requestData);

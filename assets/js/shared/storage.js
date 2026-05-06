@@ -68,6 +68,93 @@ function saveDB(db) {
 }
 
 /**
+ * After admin approves a portal signup, mirror the user into staff/admin directory
+ * tables (`students` / `faculty`) so those lists stay in sync with `db.users`.
+ * @param {Object|null|undefined} user
+ */
+function syncStaffDirectoryFromApprovedUser(user) {
+  if (!user || !user.id) return;
+  const db = getDB();
+  const role = String(user.role || user.accountType || "").toLowerCase();
+
+  if (role === "student") {
+    db.students = Array.isArray(db.students) ? db.students : [];
+    const studentNumber = String(user.studentId || user.campusId || "").trim();
+    if (!studentNumber) return;
+    const name = String(user.fullName || user.name || "").trim();
+    const portalId = String(user.id);
+    const idx = db.students.findIndex(
+      (s) =>
+        String(s.portalUserId || "") === portalId ||
+        String(s.studentNumber || "").toLowerCase() ===
+          studentNumber.toLowerCase(),
+    );
+    const row = {
+      id:
+        idx >= 0
+          ? db.students[idx].id
+          : `stu_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+      name,
+      studentNumber,
+      college: String(user.college || "").trim(),
+      course: String(user.course || "").trim(),
+      yearLevel: String(user.yearLevel || "").trim(),
+      contact: String(user.phone || "").trim(),
+      isFreshman: idx >= 0 ? !!db.students[idx].isFreshman : false,
+      createdAt:
+        idx >= 0
+          ? db.students[idx].createdAt
+          : user.createdAt || new Date().toISOString(),
+      portalUserId: portalId,
+      source: idx >= 0 ? db.students[idx].source || "signup" : "signup",
+    };
+    if (idx >= 0) db.students[idx] = { ...db.students[idx], ...row };
+    else db.students.unshift(row);
+    saveDB(db);
+    return;
+  }
+
+  if (role === "faculty") {
+    db.faculty = Array.isArray(db.faculty) ? db.faculty : [];
+    const employeeNumber = String(
+      user.facultyId || user.campusId || "",
+    ).trim();
+    if (!employeeNumber) return;
+    const name = String(user.fullName || user.name || "").trim();
+    const portalId = String(user.id);
+    const department =
+      String(user.department || user.course || user.college || "").trim() ||
+      "—";
+    const idx = db.faculty.findIndex(
+      (f) =>
+        String(f.portalUserId || "") === portalId ||
+        String(f.employeeNumber || "").toLowerCase() ===
+          employeeNumber.toLowerCase(),
+    );
+    const row = {
+      id:
+        idx >= 0
+          ? db.faculty[idx].id
+          : `fac_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+      name,
+      employeeNumber,
+      college: String(user.college || "").trim(),
+      department,
+      contact: String(user.phone || "").trim(),
+      createdAt:
+        idx >= 0
+          ? db.faculty[idx].createdAt
+          : user.createdAt || new Date().toISOString(),
+      portalUserId: portalId,
+      source: idx >= 0 ? db.faculty[idx].source || "signup" : "signup",
+    };
+    if (idx >= 0) db.faculty[idx] = { ...db.faculty[idx], ...row };
+    else db.faculty.unshift(row);
+    saveDB(db);
+  }
+}
+
+/**
  * Merge loaded data with defaults to ensure structure integrity
  * @param {Object} db - Loaded database object
  * @returns {Object} Merged database object

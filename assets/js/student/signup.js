@@ -174,7 +174,10 @@
       if (lead2) lead2.textContent = "Faculty contact and sign-in credentials.";
       if (title3) title3.textContent = "Upload Faculty ID";
       if (lead3) lead3.textContent = "Capture your Faculty ID (front and back) using your camera, then complete face verification.";
-      if (docCor) docCor.textContent = "Proof of employment *";
+      if (docCor) {
+        docCor.textContent = "";
+        docCor.classList.add("signup-hidden");
+      }
     } else {
       studentBlock?.classList.remove("signup-hidden");
       yearEl?.setAttribute("required", "required");
@@ -184,7 +187,10 @@
       if (lead2) lead2.textContent = "Tell us who you are and how to reach you.";
       if (title3) title3.textContent = "Upload School ID";
       if (lead3) lead3.textContent = "Capture your School ID (front and back) and Certificate of Registration using your camera, then complete face verification.";
-      if (docCor) docCor.textContent = "First semester COR *";
+      if (docCor) {
+        docCor.textContent = "First semester COR *";
+        docCor.classList.remove("signup-hidden");
+      }
     }
   }
 
@@ -292,16 +298,21 @@
     if (!user || !user.email) return;
     try {
       const db = getDB();
+      const forUsers = JSON.parse(JSON.stringify(user));
+      const forAuth = JSON.parse(JSON.stringify(user));
 
-      ["users", "authUsers"].forEach((key) => {
+      ["users", "authUsers"].forEach((key, i) => {
+        const payload = i === 0 ? forUsers : forAuth;
         db[key] = Array.isArray(db[key]) ? db[key] : [];
         const idx = db[key].findIndex(
-          (item) => String(item.email || "").toLowerCase() === String(user.email || "").toLowerCase()
+          (item) =>
+            String(item.email || "").toLowerCase() ===
+            String(user.email || "").toLowerCase(),
         );
         if (idx !== -1) {
-          db[key][idx] = { ...db[key][idx], ...user };
+          db[key][idx] = { ...db[key][idx], ...payload };
         } else {
-          db[key].unshift(user);
+          db[key].unshift(payload);
         }
       });
 
@@ -532,6 +543,9 @@
     const phone = document.getElementById("signup-phone")?.value.trim() || "";
     const pass = document.getElementById("signup-pass")?.value || "";
     const fullName = `${first}${middle ? ` ${middle}` : ""} ${last}`.trim();
+    const emailLocal = email.includes("@")
+      ? email.split("@")[0].toLowerCase().replace(/[^a-z0-9._-]/gi, "")
+      : "";
 
     return {
       middleName: middle,
@@ -546,6 +560,7 @@
       name: fullName,
       fullName: fullName,
       email: email,
+      username: emailLocal || undefined,
       phone: phone,
       password: pass,
       campusId: campusId,
@@ -730,8 +745,10 @@
         showInlineAlert("Please capture your ID card using the camera (Step 3).");
         return;
       }
-      if (!capturedCorDataUrl) {
-        showInlineAlert("Please capture your COR / proof of employment using the camera (Step 3).");
+      if (getAccountType() === "student" && !capturedCorDataUrl) {
+        showInlineAlert(
+          "Please capture your Certificate of Registration using the camera (Step 3).",
+        );
         return;
       }
       if (!faceMatchComplete) {

@@ -188,6 +188,15 @@
     });
     saveDB(db);
 
+    if (newStatus === "approved") {
+      const approvedUser =
+        db.users.find((item) => item.id === id) ||
+        db.authUsers.find((item) => item.id === id);
+      if (typeof syncStaffDirectoryFromApprovedUser === "function") {
+        syncStaffDirectoryFromApprovedUser(approvedUser);
+      }
+    }
+
     try {
       const session = JSON.parse(localStorage.getItem("upressUser") || "null");
       if (session && session.id === id) {
@@ -239,7 +248,9 @@
     renderRequests();
     requestsContainer?.addEventListener("click", handleListClick);
     initFilters();
-    window.addEventListener("storage", e => { if (e.key === "upressDB") renderRequests(); });
+    window.addEventListener("storage", e => {
+      if (e.key === "upressease_db" || e.key === "upressDB") renderRequests();
+    });
     setInterval(renderRequests, 2000);
   }
 

@@ -204,6 +204,15 @@
     });
     saveDB(db);
 
+    if (newStatus === "approved") {
+      const approvedUser =
+        db.users.find((item) => item.id === id) ||
+        db.authUsers.find((item) => item.id === id);
+      if (typeof syncStaffDirectoryFromApprovedUser === "function") {
+        syncStaffDirectoryFromApprovedUser(approvedUser);
+      }
+    }
+
     try {
       const session = JSON.parse(localStorage.getItem("upressUser") || "null");
       if (session && session.id === id) {
@@ -215,9 +224,17 @@
     } catch { /* ignore */ }
 
     if (newStatus === "approved") {
-      notifyUser(id, `Your faculty account has been verified and approved. You now have full access to UPRESSease services.`, "success");
+      notifyUser(
+        id,
+        "Your student account has been verified and approved. You now have full access to UPRESSease services.",
+        "success",
+      );
     } else if (newStatus === "rejected") {
-      notifyUser(id, `Your faculty account verification was rejected. Please contact the admin for assistance.`, "error");
+      notifyUser(
+        id,
+        "Your student account verification was rejected. Please contact the admin for assistance.",
+        "error",
+      );
     }
 
     renderRequests();
@@ -255,7 +272,9 @@
     renderRequests();
     requestsContainer?.addEventListener("click", handleListClick);
     initFilters();
-    window.addEventListener("storage", e => { if (e.key === "upressDB") renderRequests(); });
+    window.addEventListener("storage", e => {
+      if (e.key === "upressease_db" || e.key === "upressDB") renderRequests();
+    });
     setInterval(renderRequests, 2000);
   }
 

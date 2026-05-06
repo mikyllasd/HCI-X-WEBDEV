@@ -14,7 +14,10 @@
   const yearLevelSelect = document.getElementById("accountsYearLevel");
 
   function normalizeStatus(user) {
-    const status = String(user.status || "pending").toLowerCase();
+    const status = String(
+      user.status || user.accountStatus || "pending",
+    ).toLowerCase();
+    if (status === "verified") return "approved";
     if (["approved", "rejected", "disabled"].includes(status)) return status;
     return "pending";
   }

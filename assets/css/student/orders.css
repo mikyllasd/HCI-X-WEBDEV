@@ -73,6 +73,10 @@
     padding-top: 0.625rem; border-top: 1px solid #f0f0f0;
 }
 .order-date { font-size: 0.8rem; color: #aaa; }
+.order-pickup-info { font-size: 0.8rem; color: #666; }
+.pickup-expected, .pickup-preferred { display: flex; align-items: center; gap: 0.3rem; }
+.pickup-expected .upress-icon { color: #f59e0b; }
+.pickup-preferred { margin-top: 0.25rem; color: #059669; }
 .order-total { font-size: 1.0625rem; font-weight: 700; color: var(--color-cta); }
 
 /* Empty state */

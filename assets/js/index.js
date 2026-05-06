@@ -10,7 +10,17 @@ const User = {
     get() { try { return JSON.parse(localStorage.getItem('upressUser') || 'null'); } catch { return null; } },
     update(patch) { const u = this.get() || {}; this.save({ ...u, ...patch }); },
     clear() { localStorage.removeItem('upressUser'); },
-    isLoggedIn() { return !!this.get(); }
+    isLoggedIn() { return !!this.get(); },
+    hasVerifiedAffiliations() {
+        const user = this.get();
+        if (!user || !user.affiliations) return false;
+        return user.affiliations.some(aff => aff.status === 'verified');
+    },
+    getVerifiedAffiliations() {
+        const user = this.get();
+        if (!user || !user.affiliations) return [];
+        return user.affiliations.filter(aff => aff.status === 'verified');
+    }
 };
 
 // ============================================================
@@ -73,12 +83,43 @@ const Orders = {
             (order_type === 'organization')
                 ? (orderData?.order_org || localStorage.getItem('upress_order_org') || '')
                 : (orderData?.order_org || '');
+        
+        // Calculate expected pickup date (3 business days from now)
+        const expectedDate = new Date();
+        expectedDate.setDate(expectedDate.getDate() + 3);
+        // Skip weekends for business days
+        if (expectedDate.getDay() === 0) expectedDate.setDate(expectedDate.getDate() + 1); // Sunday -> Monday
+        if (expectedDate.getDay() === 6) expectedDate.setDate(expectedDate.getDate() + 2); // Saturday -> Monday
+        
+        const expectedPickupDate = expectedDate.toLocaleDateString('en-PH', { 
+            year: 'numeric', month: 'short', day: 'numeric' 
+        });
+        
+        // Get preferred pickup date from checkout
+        const co = Checkout.get();
+        let preferredPickupDate = orderData.preferredPickupDate || co.preferredPickupDate;
+        
+        // Validate preferred date is after expected date
+        if (preferredPickupDate) {
+            const prefDate = new Date(preferredPickupDate);
+            const expDate = new Date(expectedDate);
+            if (prefDate <= expDate) {
+                preferredPickupDate = null; // Reset if invalid
+            } else {
+                preferredPickupDate = prefDate.toLocaleDateString('en-PH', { 
+                    year: 'numeric', month: 'short', day: 'numeric' 
+                });
+            }
+        }
+        
         const fullOrder = {
             ...orderData,
             orderId,
             order_type,
             order_org,
             dateOrdered: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }),
+            expectedPickupDate,
+            preferredPickupDate,
             status: 'Pending',
             paymentVerified: false,
             paymentStatus

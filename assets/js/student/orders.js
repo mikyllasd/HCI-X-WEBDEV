@@ -4,7 +4,7 @@
     const u = User.get();
     if (!u) { window.location.href = '../auth/portal.html'; return; }
 
-    let currentFilter = 'all';
+    let currentFilter = 'individual';
 
     /* ── Rating state ── */
     let ratingTargetOrderId = null;
@@ -41,6 +41,8 @@
     }
 
     function countByStatus(orders, status) {
+        if (status === 'individual') return orders.filter(o => o.order_type !== 'organization').length;
+        if (status === 'organization') return orders.filter(o => o.order_type === 'organization').length;
         if (status === 'all') return orders.length;
         return orders.filter(o => o.status === status).length;
     }
@@ -51,6 +53,14 @@
             const s = el.dataset.status;
             el.textContent = countByStatus(orders, s);
         });
+        
+        // Show/hide organization tab based on affiliations and orders
+        const hasAffiliations = User.hasVerifiedAffiliations();
+        const orgOrdersCount = countByStatus(orders, 'organization');
+        const orgTab = document.getElementById('org-orders-tab');
+        if (orgTab) {
+            orgTab.style.display = (hasAffiliations && orgOrdersCount > 0) ? 'block' : 'none';
+        }
     }
 
     function renderOrders() {
@@ -60,15 +70,15 @@
 
         updateTabCounts();
 
-        const filtered = currentFilter === 'all'
-            ? orders
-            : orders.filter(o => o.status === currentFilter);
+        const filtered = currentFilter === 'individual'
+            ? orders.filter(o => o.order_type !== 'organization')
+            : orders.filter(o => o.order_type === 'organization');
 
         if (filtered.length === 0) {
             listEl.innerHTML = `
                 <div class="orders-empty">
                     <div class="orders-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
-                    <p>No ${currentFilter === 'all' ? '' : currentFilter.toLowerCase() + ' '}orders yet.</p>
+                    <p>No ${currentFilter === 'individual' ? 'individual' : 'organization'} orders yet.</p>
                     <button class="orders-browse-btn" onclick="window.location.href='dashboard.html'">
                         Browse Services
                     </button>
@@ -155,6 +165,13 @@
                         <span class="upress-icon upress-icon--cal" aria-hidden="true"></span>
                         ${escHtml(o.dateOrdered || '')}
                     </span>
+                    <div class="order-pickup-info">
+                        <div class="pickup-expected">
+                            <span class="upress-icon upress-icon--clock" aria-hidden="true"></span>
+                            Expected: ${escHtml(o.expectedPickupDate || 'TBD')}
+                        </div>
+                        ${o.preferredPickupDate ? `<div class="pickup-preferred">Preferred: ${escHtml(o.preferredPickupDate)}</div>` : ''}
+                    </div>
                     <span class="order-total">₱${totalAmt.toFixed(2)}</span>
                 </div>
 

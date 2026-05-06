@@ -4,6 +4,14 @@
     const u = User.get();
     if (!u) { window.location.href = '../auth/portal.html'; return; }
 
+    /* Check affiliations for organization access */
+    const hasAffiliations = User.hasVerifiedAffiliations();
+    if (!hasAffiliations) {
+        /* Hide organization option */
+        const orgCard = document.getElementById('btn-organization');
+        if (orgCard) orgCard.style.display = 'none';
+    }
+
     /* ── State ── */
     let selectedType = null; // 'individual' | 'organization'
     let selectedOrg  = null; // org name string or null

@@ -257,12 +257,28 @@ function proceedToConfirmation() {
         return;
     }
 
+    const preferredPickupDate = document.getElementById('preferred-pickup-date')?.value;
+    
+    // Validate preferred pickup date if provided
+    if (preferredPickupDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(preferredPickupDate);
+        
+        // For now, just check it's not in the past. Expected date validation will be done later
+        if (selectedDate < today) {
+            showAlert('Invalid Date', 'Preferred pickup date cannot be in the past.');
+            return;
+        }
+    }
+
     Checkout.set({
         customerInfo: {
             name: u.name,
             phone,
             email: u.email
-        }
+        },
+        preferredPickupDate: preferredPickupDate || null
     });
 
     if (u.phone !== phone) {

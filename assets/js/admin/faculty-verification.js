@@ -8,149 +8,188 @@
   const searchInput = document.getElementById("verificationSearch");
   const statusSelect = document.getElementById("verificationStatus");
   const collegeSelect = document.getElementById("verificationCollege");
-  const courseSelect = document.getElementById("verificationCourse");
-  const yearLevelSelect = document.getElementById("verificationYearLevel");
 
-  const initialState = {
+  let filterState = {
     search: "",
     status: "all",
     college: "all",
-    course: "all",
-    yearLevel: "all",
   };
 
-  let filterState = { ...initialState };
+  // ── DB ─────────────────────────────────────────────────────────────────────
 
-  function getVerificationRequests() {
+  function getDB() {
+    if (typeof window.getDB === "function") return window.getDB();
+    try { return JSON.parse(localStorage.getItem("upressDB") || "{}"); }
+    catch { return {}; }
+  }
+
+  function saveDB(db) {
+    if (typeof window.saveDB === "function") return window.saveDB(db);
+    try { localStorage.setItem("upressDB", JSON.stringify(db)); }
+    catch (err) { console.error("saveDB error:", err); }
+  }
+
+  // ── DATA ───────────────────────────────────────────────────────────────────
+
+  function getAllFaculty() {
     const db = getDB();
-    return (db.users || []).filter((user) => {
+
+    const merged = [
+      ...(Array.isArray(db.users) ? db.users : []),
+      ...(Array.isArray(db.authUsers) ? db.authUsers : []),
+    ];
+
+    const seen = new Set();
+    return merged.filter((user) => {
+      if (!user || !user.id) return false;
+      if (seen.has(user.id)) return false;
+      seen.add(user.id);
+
       const role = String(user.role || user.accountType || "").toLowerCase();
-      const hasFacultyId = Boolean(user.facultyId);
-      return (
-        role === "faculty" || user.accountType === "faculty" || hasFacultyId
-      );
+      // Only faculty — explicitly exclude students and system roles
+      return role === "faculty" || user.accountType === "faculty";
     });
   }
 
+  // ── STATUS ─────────────────────────────────────────────────────────────────
+
   function normalizeStatus(user) {
-    const raw = user.status;
-    const status = String(raw != null ? raw : "").toLowerCase();
-    if (["approved", "rejected", "disabled", "pending"].includes(status)) {
-      return status;
-    }
-    if (raw === undefined || raw === null || raw === "") {
-      const id = String(user.id || "");
-      if (id.startsWith("fac_pending")) return "pending";
-      return "approved";
-    }
+    const raw = String(user.status || user.accountStatus || "").toLowerCase();
+    if (raw === "approved" || raw === "verified") return "approved";
+    if (raw === "rejected") return "rejected";
+    if (raw === "disabled") return "disabled";
     return "pending";
   }
+
+  // ── STATS ──────────────────────────────────────────────────────────────────
+
+  function updateStats(all) {
+    if (totalEl) totalEl.textContent = all.length;
+    if (pendingEl) pendingEl.textContent = all.filter(u => normalizeStatus(u) === "pending").length;
+    if (approvedEl) approvedEl.textContent = all.filter(u => normalizeStatus(u) === "approved").length;
+    if (rejectedEl) rejectedEl.textContent = all.filter(u => normalizeStatus(u) === "rejected").length;
+  }
+
+  // ── FILTERS ────────────────────────────────────────────────────────────────
 
   function getUniqueValues(items, key) {
     const values = new Set();
     items.forEach((item) => {
-      const value = String(item[key] || "").trim();
-      if (value) values.add(value);
+      const v = String(item[key] || "").trim();
+      if (v && v !== "undefined") values.add(v);
     });
     return Array.from(values).sort();
   }
 
-  function updateStats(requests) {
-    if (totalEl) totalEl.textContent = requests.length;
-    if (pendingEl)
-      pendingEl.textContent = requests.filter(
-        (user) => normalizeStatus(user) === "pending",
-      ).length;
-    if (approvedEl)
-      approvedEl.textContent = requests.filter(
-        (user) => normalizeStatus(user) === "approved",
-      ).length;
-    if (rejectedEl)
-      rejectedEl.textContent = requests.filter(
-        (user) => normalizeStatus(user) === "rejected",
-      ).length;
+  function renderOptionList(select, values) {
+    if (!select) return;
+    const current = select.value;
+    select.innerHTML =
+      `<option value="all">All</option>` +
+      values.map(v =>
+        `<option value="${v.toLowerCase()}" ${current === v.toLowerCase() ? "selected" : ""}>${v}</option>`
+      ).join("");
   }
 
-  function getFilteredRequests() {
-    return getVerificationRequests().filter((user) => {
+  function renderFilters(all) {
+    renderOptionList(collegeSelect, getUniqueValues(all, "college"));
+  }
+
+  function getFiltered(all) {
+    return all.filter((user) => {
       const status = normalizeStatus(user);
       const college = String(user.college || "").toLowerCase();
-      const course = String(user.course || "").toLowerCase();
-      const yearLevel = String(user.yearLevel || "").toLowerCase();
-      const search = filterState.search.toLowerCase();
-      const matchesSearch =
-        !search ||
-        String(user.fullName || "")
-          .toLowerCase()
-          .includes(search) ||
-        String(user.email || "")
-          .toLowerCase()
-          .includes(search) ||
-        String(user.facultyId || user.studentId || "")
-          .toLowerCase()
-          .includes(search);
-      const matchesStatus =
-        filterState.status === "all" || filterState.status === status;
-      const matchesCollege =
-        filterState.college === "all" || college === filterState.college;
-      const matchesCourse =
-        filterState.course === "all" || course === filterState.course;
-      const matchesYear =
-        filterState.yearLevel === "all" || yearLevel === filterState.yearLevel;
+      const search = filterState.search.toLowerCase().trim();
 
-      return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesCollege &&
-        matchesCourse &&
-        matchesYear
-      );
+      const matchesSearch = !search ||
+        String(user.fullName || user.name || "").toLowerCase().includes(search) ||
+        String(user.email || "").toLowerCase().includes(search) ||
+        String(user.campusId || user.facultyId || "").toLowerCase().includes(search);
+
+      const matchesStatus = filterState.status === "all" || filterState.status === status;
+      const matchesCollege = filterState.college === "all" || college === filterState.college;
+
+      return matchesSearch && matchesStatus && matchesCollege;
     });
   }
 
-  function renderOptionList(select, values) {
-    if (!select) return;
-    select.innerHTML =
-      `<option value="all">All</option>` +
-      values
-        .map(
-          (value) => `<option value="${value.toLowerCase()}">${value}</option>`,
-        )
-        .join("");
-  }
-
-  function renderFilters(requests) {
-    if (!collegeSelect || !courseSelect || !yearLevelSelect) return;
-
-    renderOptionList(collegeSelect, getUniqueValues(requests, "college"));
-    renderOptionList(courseSelect, getUniqueValues(requests, "course"));
-    renderOptionList(yearLevelSelect, getUniqueValues(requests, "yearLevel"));
-  }
+  // ── RENDER ─────────────────────────────────────────────────────────────────
 
   function formatField(value) {
-    return value ? String(value) : "—";
+    if (value === null || value === undefined || value === "") return "—";
+    if (typeof value === "string" && value.includes("T") && value.includes("-")) {
+      try {
+        return new Date(value).toLocaleDateString("en-PH", {
+          year: "numeric", month: "short", day: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        });
+      } catch { return value; }
+    }
+    return String(value);
   }
 
   function buildStatusBadge(status) {
-    const classNames = ["request-card__badge"];
-    if (status === "approved") classNames.push("request-card__badge--approved");
-    if (status === "pending") classNames.push("request-card__badge--pending");
-    if (status === "rejected") classNames.push("request-card__badge--rejected");
-    return `<span class="${classNames.join(" ")}">${status.toUpperCase()}</span>`;
+    const map = {
+      approved: "request-card__badge--approved",
+      pending: "request-card__badge--pending",
+      rejected: "request-card__badge--rejected",
+      disabled: "request-card__badge--rejected",
+    };
+    return `<span class="request-card__badge ${map[status] || "request-card__badge--pending"}">${status.toUpperCase()}</span>`;
   }
 
-  function renderRequest(user) {
+  function buildDocImages(user) {
+    const parts = [];
+
+    if (user.idPhotoUrl) {
+      parts.push(`
+        <div class="request-card__image-block">
+          <p class="request-card__image-label">Captured ID</p>
+          <img src="${user.idPhotoUrl}" alt="Faculty captured ID"
+            style="max-width:100%;border-radius:6px;border:1px solid #ddd;" />
+        </div>`);
+    }
+
+    if (user.corPhotoUrl) {
+      parts.push(`
+        <div class="request-card__image-block">
+          <p class="request-card__image-label">Proof of Employment</p>
+          <img src="${user.corPhotoUrl}" alt="Proof of employment"
+            style="max-width:100%;border-radius:6px;border:1px solid #ddd;" />
+        </div>`);
+    }
+
+    if (user.imageUrl) {
+      parts.push(`
+        <div class="request-card__image-block">
+          <p class="request-card__image-label">Uploaded document</p>
+          <img src="${user.imageUrl}" alt="Uploaded document"
+            style="max-width:100%;border-radius:6px;border:1px solid #ddd;" />
+        </div>`);
+    }
+
+    if (!parts.length) {
+      return `<em style="font-size:12px;color:#999">No documents captured yet.</em>`;
+    }
+
+    return parts.join("");
+  }
+
+  function renderCard(user) {
     const status = normalizeStatus(user);
-    const uploadedImage = user.imageUrl
-      ? `<img src="${user.imageUrl}" alt="Uploaded faculty document" />`
-      : `<div class="request-card__image-icon" aria-hidden="true"><i data-lucide="image"></i></div>`;
+    const displayId = user.campusId || user.facultyId || "—";
+    const displayName = user.fullName || user.name || "—";
 
     return `
-      <article class="request-card">
+      <article class="request-card" data-user-id="${user.id}">
         <div class="request-card__header">
           <div>
-            <h3 class="card-title">${formatField(user.fullName)}</h3>
-            <p class="card-subtitle">${formatField(user.facultyId || user.studentId)} · ${formatField(user.college)} · ${formatField(user.course)}</p>
+            <h3 class="card-title">${displayName}</h3>
+            <p class="card-subtitle">
+              ${displayId}
+              &nbsp;·&nbsp; Faculty
+              &nbsp;·&nbsp; ${formatField(user.college)}
+            </p>
           </div>
           ${buildStatusBadge(status)}
         </div>
@@ -161,78 +200,117 @@
             <span class="request-card__value">${formatField(user.email)}</span>
           </div>
           <div class="request-card__item">
-            <span class="request-card__label">Year Level</span>
-            <span class="request-card__value">${formatField(user.yearLevel)}</span>
+            <span class="request-card__label">Mobile</span>
+            <span class="request-card__value">${formatField(user.phone)}</span>
           </div>
           <div class="request-card__item">
-            <span class="request-card__label">Type</span>
-            <span class="request-card__value">${formatField(user.type || user.studentType || "Regular")}</span>
+            <span class="request-card__label">Department</span>
+            <span class="request-card__value">${formatField(user.college)}</span>
+          </div>
+          <div class="request-card__item">
+            <span class="request-card__label">Face Verified</span>
+            <span class="request-card__value">${user.faceVerified ? "Yes" : "Pending"}</span>
+          </div>
+          <div class="request-card__item">
+            <span class="request-card__label">Signup Path</span>
+            <span class="request-card__value">${user.signupPath ? "Path " + user.signupPath : "—"}</span>
           </div>
           <div class="request-card__item">
             <span class="request-card__label">Submitted</span>
-            <span class="request-card__value">${formatField(user.submittedAt || user.createdAt || "—")}</span>
+            <span class="request-card__value">${formatField(user.createdAt || user.submittedAt)}</span>
           </div>
+          ${user.reviewedAt ? `
+          <div class="request-card__item">
+            <span class="request-card__label">Reviewed</span>
+            <span class="request-card__value">${formatField(user.reviewedAt)}</span>
+          </div>` : ""}
+          ${user.flagged ? `
+          <div class="request-card__item">
+            <span class="request-card__label" style="color:#c00">Flagged</span>
+            <span class="request-card__value" style="color:#c00">Suspicious account</span>
+          </div>` : ""}
         </div>
 
         <div class="request-card__image">
-          ${uploadedImage}
+          ${buildDocImages(user)}
         </div>
 
         <div class="request-card__actions">
-          <button class="btn btn--success btn--sm" type="button" data-action="approve" data-user="${user.id}">Approve</button>
-          <button class="btn btn--danger btn--sm" type="button" data-action="reject" data-user="${user.id}">Reject</button>
-          <button class="btn btn--outline btn--sm" type="button" data-action="flag" data-user="${user.id}">${user.flagged ? "Unflag" : "Flag Suspicious"}</button>
+          ${status !== "approved"
+            ? `<button class="btn btn--success btn--sm" type="button" data-action="approve" data-user="${user.id}">Approve</button>`
+            : `<button class="btn btn--outline btn--sm" type="button" disabled>Approved</button>`}
+          ${status !== "rejected"
+            ? `<button class="btn btn--danger btn--sm" type="button" data-action="reject" data-user="${user.id}">Reject</button>`
+            : `<button class="btn btn--outline btn--sm" type="button" disabled>Rejected</button>`}
+          <button class="btn btn--outline btn--sm" type="button"
+            data-action="flag" data-user="${user.id}">
+            ${user.flagged ? "Unflag" : "Flag Suspicious"}
+          </button>
         </div>
-      </article>
-    `;
+      </article>`;
   }
 
+  // ── MAIN RENDER ────────────────────────────────────────────────────────────
+
   function renderRequests() {
-    const requests = getFilteredRequests();
-    updateStats(getVerificationRequests());
-    renderFilters(getVerificationRequests());
+    const all = getAllFaculty();
+    const filtered = getFiltered(all);
+
+    updateStats(all);
+    renderFilters(all);
 
     if (!requestsContainer) return;
 
-    if (requests.length === 0) {
+    if (filtered.length === 0) {
       requestsContainer.innerHTML = "";
       emptyState?.classList.add("active");
       return;
     }
 
     emptyState?.classList.remove("active");
-    requestsContainer.innerHTML = requests.map(renderRequest).join("");
+    requestsContainer.innerHTML = filtered.map(renderCard).join("");
   }
 
-  function saveChanges() {
-    renderRequests();
-  }
+  // ── ACTIONS ────────────────────────────────────────────────────────────────
 
   function updateUserStatus(id, newStatus) {
     const db = getDB();
-    const user = (db.users || []).find((item) => item.id === id);
-    if (!user) return;
-    user.status = newStatus;
-    user.verified = newStatus === "approved";
-    user.active = newStatus === "approved";
-    user.accountStatus =
-      newStatus === "approved"
-        ? "verified"
-        : newStatus === "rejected"
-          ? "rejected"
-          : "pending";
-    user.reviewedAt = new Date().toISOString();
+
+    ["users", "authUsers"].forEach((key) => {
+      const arr = Array.isArray(db[key]) ? db[key] : [];
+      const user = arr.find((item) => item.id === id);
+      if (!user) return;
+      user.status = newStatus;
+      user.accountStatus = newStatus === "approved" ? "verified" : newStatus;
+      user.verified = newStatus === "approved";
+      user.active = newStatus === "approved";
+      user.reviewedAt = new Date().toISOString();
+    });
+
     saveDB(db);
-    saveChanges();
+
+    try {
+      const session = JSON.parse(localStorage.getItem("upressUser") || "null");
+      if (session && session.id === id) {
+        session.status = newStatus;
+        session.accountStatus = newStatus === "approved" ? "verified" : newStatus;
+        session.verified = newStatus === "approved";
+        localStorage.setItem("upressUser", JSON.stringify(session));
+      }
+    } catch { /* ignore */ }
+
+    renderRequests();
   }
 
   function toggleFlagged(id) {
     const db = getDB();
-    const user = (db.users || []).find((item) => item.id === id);
-    if (!user) return;
-    user.flagged = !user.flagged;
+    ["users", "authUsers"].forEach((key) => {
+      const arr = Array.isArray(db[key]) ? db[key] : [];
+      const user = arr.find((item) => item.id === id);
+      if (user) user.flagged = !user.flagged;
+    });
     saveDB(db);
-    saveChanges();
+    renderRequests();
   }
 
   function handleListClick(event) {
@@ -241,55 +319,38 @@
     const action = button.dataset.action;
     const id = button.dataset.user;
     if (!id) return;
-
-    if (action === "approve") {
-      updateUserStatus(id, "approved");
-    } else if (action === "reject") {
-      updateUserStatus(id, "rejected");
-    } else if (action === "flag") {
-      toggleFlagged(id);
-    }
+    if (action === "approve") updateUserStatus(id, "approved");
+    else if (action === "reject") updateUserStatus(id, "rejected");
+    else if (action === "flag") toggleFlagged(id);
   }
+
+  // ── FILTER LISTENERS ───────────────────────────────────────────────────────
 
   function initFilters() {
-    if (searchInput) {
-      searchInput.addEventListener("input", (event) => {
-        filterState.search = event.target.value || "";
-        renderRequests();
-      });
-    }
-    if (statusSelect) {
-      statusSelect.addEventListener("change", (event) => {
-        filterState.status = event.target.value;
-        renderRequests();
-      });
-    }
-    if (collegeSelect) {
-      collegeSelect.addEventListener("change", (event) => {
-        filterState.college = event.target.value;
-        renderRequests();
-      });
-    }
-    if (courseSelect) {
-      courseSelect.addEventListener("change", (event) => {
-        filterState.course = event.target.value;
-        renderRequests();
-      });
-    }
-    if (yearLevelSelect) {
-      yearLevelSelect.addEventListener("change", (event) => {
-        filterState.yearLevel = event.target.value;
-        renderRequests();
-      });
-    }
+    searchInput?.addEventListener("input", (e) => {
+      filterState.search = e.target.value || "";
+      renderRequests();
+    });
+    statusSelect?.addEventListener("change", (e) => {
+      filterState.status = e.target.value;
+      renderRequests();
+    });
+    collegeSelect?.addEventListener("change", (e) => {
+      filterState.college = e.target.value;
+      renderRequests();
+    });
   }
+
+  // ── INIT ───────────────────────────────────────────────────────────────────
 
   function init() {
     renderRequests();
-    if (requestsContainer) {
-      requestsContainer.addEventListener("click", handleListClick);
-    }
+    requestsContainer?.addEventListener("click", handleListClick);
     initFilters();
+
+    window.addEventListener("storage", (e) => {
+      if (e.key === "upressDB") renderRequests();
+    });
   }
 
   window.addEventListener("DOMContentLoaded", init);

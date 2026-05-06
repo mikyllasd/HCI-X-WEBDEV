@@ -33,6 +33,42 @@ if (localStorage.getItem('upress_verify_phone_on_load') === 'true') {
     }
 }
 
+/* Check for new verified affiliations */
+checkNewAffiliations();
+
+function checkNewAffiliations() {
+    const user = User.get();
+    if (!user) return;
+
+    const lastChecked = localStorage.getItem('upress_last_affiliation_check');
+    const currentAffiliations = user.affiliations || [];
+    const newAffiliations = currentAffiliations.filter(aff => {
+        if (!aff.verifiedAt) return false;
+        const verifiedDate = new Date(aff.verifiedAt);
+        return !lastChecked || verifiedDate > new Date(lastChecked);
+    });
+
+    if (newAffiliations.length > 0) {
+        const orgNames = newAffiliations.map(aff => aff.organizationName).join(', ');
+        showAlert('Affiliation Approved!', `Congratulations! Your affiliation with ${orgNames} has been verified. You can now place organization orders.`);
+        localStorage.setItem('upress_last_affiliation_check', new Date().toISOString());
+    }
+}
+
+function updateProfileSection(user) {
+    setText('profile-name', user?.name || 'Student Name');
+    setText('profile-id', `ID: ${user?.studentId || '0000-0000'}`);
+    setText('profile-email', user?.email || 'student@wmsu.edu.ph');
+
+    const statusEl = document.getElementById('profile-status');
+    if (statusEl) {
+        const status = user?.accountStatus || 'pending';
+        const statusText = status === 'verified' ? 'Verified' : 'Pending';
+        const statusClass = status === 'verified' ? 'status-verified' : 'status-pending';
+        statusEl.innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+    }
+}
+
 /* ===================== SIDEBAR ===================== */
 function openSidebar() {
     document.getElementById('sidebar').classList.add('open');
@@ -415,4 +451,170 @@ function simulateEmailVerification(newEmail) {
         updateProfileSection(User.get());
         showAlert('Email Updated', 'Your email has been successfully updated.');
     }
+}
+
+/* ===================== AFFILIATE MODAL ===================== */
+function showAffiliateModal() {
+    document.getElementById('affiliate-modal').style.display = 'flex';
+    goToAffiliateStep(1);
+}
+
+function closeAffiliateModal() {
+    document.getElementById('affiliate-modal').style.display = 'none';
+    // Reset form
+    document.querySelectorAll('input[name="affiliate-type"]').forEach(r => r.checked = false);
+    document.querySelector('input[name="affiliate-type"][value="known"]').checked = true;
+    document.getElementById('affiliate-org-known').value = '';
+    document.getElementById('affiliate-college-known').value = '';
+    document.getElementById('affiliate-position-known').value = '';
+    document.getElementById('affiliate-contact-known').value = '';
+    document.getElementById('affiliate-otp-known').value = '';
+    document.getElementById('affiliate-org-other').value = '';
+    document.getElementById('affiliate-college-other').value = '';
+    document.getElementById('affiliate-proof-other').value = '';
+    document.getElementById('affiliate-position-other').value = '';
+    document.getElementById('affiliate-contact-other').value = '';
+    document.getElementById('affiliate-otp-other').value = '';
+    document.getElementById('affiliate-send-otp-known').disabled = false;
+    document.getElementById('affiliate-send-otp-other').disabled = false;
+    document.getElementById('affiliate-submit-known').disabled = true;
+    document.getElementById('affiliate-submit-other').disabled = true;
+}
+
+function goToAffiliateStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.affiliate-step').forEach(s => s.classList.add('affiliate-hidden'));
+    
+    if (step === 1) {
+        document.getElementById('affiliate-step-1').classList.remove('affiliate-hidden');
+    } else if (step === 2) {
+        const type = document.querySelector('input[name="affiliate-type"]:checked').value;
+        if (type === 'known') {
+            document.getElementById('affiliate-step-2-known').classList.remove('affiliate-hidden');
+        } else {
+            document.getElementById('affiliate-step-2-other').classList.remove('affiliate-hidden');
+        }
+    } else if (step === 3) {
+        document.getElementById('affiliate-step-success').classList.remove('affiliate-hidden');
+    }
+}
+
+function onKnownOrgChange(org) {
+    const collegeField = document.getElementById('affiliate-college-known');
+    const collegeMap = {
+        'Computer Science Department': 'College of Computing Studies',
+        'Mathematics Department': 'College of Arts and Sciences',
+        'Physics Department': 'College of Arts and Sciences',
+        'Chemistry Department': 'College of Arts and Sciences',
+        'Biology Department': 'College of Arts and Sciences',
+        'Engineering Department': 'College of Engineering',
+        'Business Administration Department': 'College of Business Administration',
+        'Education Department': 'College of Education',
+        'Arts Department': 'College of Arts and Sciences',
+        'Sports Department': 'College of Sports, Physical Education and Athletics'
+    };
+    collegeField.value = collegeMap[org] || '';
+}
+
+function sendAffiliateOTP(type) {
+    const contactField = document.getElementById(`affiliate-contact-${type}`);
+    const contact = contactField.value.trim();
+    
+    if (!/^09[0-9]{9}$/.test(contact)) {
+        showAlert('Invalid Contact', 'Please enter a valid Philippine mobile number (09XXXXXXXXX).');
+        return;
+    }
+    
+    // Demo OTP
+    showAlert('OTP Sent', 'Demo OTP: 123456\n\nIn a real system, this would be sent to your phone.');
+    
+    const otpField = document.getElementById(`affiliate-otp-${type}`);
+    const sendBtn = document.getElementById(`affiliate-send-otp-${type}`);
+    const submitBtn = document.getElementById(`affiliate-submit-${type}`);
+    
+    otpField.disabled = false;
+    sendBtn.disabled = true;
+    
+    // Auto-fill demo OTP for testing
+    setTimeout(() => {
+        otpField.value = '123456';
+        submitBtn.disabled = false;
+    }, 1000);
+}
+
+function onProofUpload(input) {
+    const file = input.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            showAlert('File Too Large', 'Please select a file smaller than 5MB.');
+            input.value = '';
+            return;
+        }
+        // In demo, just accept the file
+        console.log('Proof file selected:', file.name);
+    }
+}
+
+function submitAffiliateRequest(type) {
+    const user = User.get();
+    if (!user) return;
+    
+    let requestData = {
+        id: `AFF_${Date.now()}`,
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        organizationType: type, // 'known' or 'other'
+        status: 'pending', // pending, approved, rejected
+        submittedAt: new Date().toISOString()
+    };
+    
+    if (type === 'known') {
+        const org = document.getElementById('affiliate-org-known').value;
+        const college = document.getElementById('affiliate-college-known').value;
+        const position = document.getElementById('affiliate-position-known').value;
+        const contact = document.getElementById('affiliate-contact-known').value;
+        const otp = document.getElementById('affiliate-otp-known').value;
+        
+        if (!org || !college || !position || !contact || otp !== '123456') {
+            showAlert('Incomplete Form', 'Please fill all required fields and verify OTP.');
+            return;
+        }
+        
+        requestData.organizationName = org;
+        requestData.college = college;
+        requestData.position = position;
+        requestData.contactNumber = contact;
+    } else {
+        const org = document.getElementById('affiliate-org-other').value;
+        const college = document.getElementById('affiliate-college-other').value;
+        const proof = document.getElementById('affiliate-proof-other').files[0];
+        const position = document.getElementById('affiliate-position-other').value;
+        const contact = document.getElementById('affiliate-contact-other').value;
+        const otp = document.getElementById('affiliate-otp-other').value;
+        
+        if (!org || !college || !proof || !position || !contact || otp !== '123456') {
+            showAlert('Incomplete Form', 'Please fill all required fields, upload proof, and verify OTP.');
+            return;
+        }
+        
+        requestData.organizationName = org;
+        requestData.organizationTypeDisplay = college; // This is actually the college field
+        requestData.position = position;
+        requestData.contactNumber = contact;
+        requestData.proofImage = URL.createObjectURL(proof); // Demo: store as data URL
+        requestData.description = `Organization under ${college}`;
+    }
+    
+    // Save to localStorage (in real system, this would go to server)
+    const db = getDB();
+    if (!db.affiliationRequests) db.affiliationRequests = [];
+    db.affiliationRequests.push(requestData);
+    saveDB(db);
+    
+    // Show success
+    goToAffiliateStep(3);
+    
+    // Add notification
+    addNotification('Affiliation Request Submitted', 'Your affiliation request is being processed. You will be notified once verified.');
 }

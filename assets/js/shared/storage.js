@@ -8,6 +8,7 @@ const defaultDB = {
   transactions: [],
   ratings: [],
   archives: {},
+  affiliationRequests: [],
   systemSettings: {
     maintenanceMode: false,
     policies: {},
@@ -75,6 +76,7 @@ function mergeWithDefaults(db) {
     transactions: Array.isArray(db.transactions) ? db.transactions : [],
     ratings: Array.isArray(db.ratings) ? db.ratings : [],
     archives: typeof db.archives === "object" ? db.archives : {},
+    affiliationRequests: Array.isArray(db.affiliationRequests) ? db.affiliationRequests : [],
     systemSettings: {
       maintenanceMode: db.systemSettings?.maintenanceMode || false,
       policies: db.systemSettings?.policies || {},

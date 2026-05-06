@@ -9,10 +9,8 @@
 </head>
 <body>
 
-<!-- Sidebar Overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-<!-- Right Sidebar -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <span class="sidebar-logo"><span class="upress-icon upress-icon--grad" aria-hidden="true"></span></span>
@@ -25,32 +23,6 @@
         </button>
     </div>
 
-    <!-- Profile Section -->
-    <div class="sidebar-profile">
-        <div class="profile-avatar">
-            <span class="upress-icon upress-icon--user" aria-hidden="true"></span>
-        </div>
-        <div class="profile-info">
-            <div class="profile-name" id="profile-name">Student Name</div>
-            <div class="profile-id" id="profile-id">ID: 0000-0000</div>
-            <div class="profile-email" id="profile-email">student@wmsu.edu.ph</div>
-            <div class="profile-status" id="profile-status">
-                <span class="status-badge status-pending">Pending</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update Email Button -->
-    <div class="sidebar-profile-actions">
-        <button type="button" class="sidebar-update-email-btn" id="update-email-btn" onclick="showUpdateEmailModal()">
-            <span class="upress-icon upress-icon--mail" aria-hidden="true"></span> Update Email
-        </button>
-        <button type="button" class="sidebar-affiliate-btn" id="affiliate-btn" onclick="showAffiliateModal()">
-            <span class="upress-icon upress-icon--users" aria-hidden="true"></span> Affiliate
-        </button>
-    </div>
-
-    <!-- Sidebar Tabs -->
     <div class="sidebar-tabs">
         <button type="button" class="sidebar-tab active" onclick="switchSidebarTab('orders', this)">
             <span class="upress-icon upress-icon--pkg" aria-hidden="true"></span> My Orders
@@ -63,12 +35,11 @@
         </button>
     </div>
 
-    <!-- My Orders Panel -->
     <div class="sidebar-panel active" id="panel-orders">
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
                 <p class="sidebar-section-label">Active Orders</p>
-                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">⤢ Full View</button>
+                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
             </div>
             <div id="sidebar-orders-list" class="sidebar-empty-state">
                 <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--pkg" aria-hidden="true"></span></div>
@@ -78,7 +49,6 @@
         </div>
     </div>
 
-    <!-- Cart Panel -->
     <div class="sidebar-panel" id="panel-cart">
         <div class="sidebar-panel-inner">
             <div class="sidebar-cart-toolbar">
@@ -104,12 +74,11 @@
         </div>
     </div>
 
-    <!-- History Panel -->
     <div class="sidebar-panel" id="panel-history">
         <div class="sidebar-panel-inner">
             <div class="sidebar-orders-actions">
                 <p class="sidebar-section-label">Order History</p>
-                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()" title="View Full Orders Page">⤢ Full View</button>
+                <button type="button" class="sidebar-fullscreen-btn" onclick="goToFullOrders()">⤢ Full View</button>
             </div>
             <div id="sidebar-history-list" class="sidebar-empty-state">
                 <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--clock" aria-hidden="true"></span></div>
@@ -118,7 +87,6 @@
         </div>
     </div>
 
-    <!-- Logout -->
     <div class="sidebar-footer">
         <button type="button" class="sidebar-logout-btn" onclick="logout()">
             <span class="upress-icon upress-icon--x" aria-hidden="true"></span> Logout
@@ -126,7 +94,6 @@
     </div>
 </aside>
 
-<!-- Navbar -->
 <header class="dashboard-navbar">
     <div class="nav-left">
         <button type="button" class="nav-icon-btn sidebar-toggle-btn" onclick="openSidebar()" title="Menu" aria-label="Open menu">
@@ -146,9 +113,14 @@
             <span class="upress-icon upress-icon--bell" aria-hidden="true"></span>
             <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
         </button>
-        <button type="button" class="nav-icon-btn nav-logout-btn" onclick="logout()" title="Logout">
-            <span class="upress-icon upress-icon--x" aria-hidden="true"></span>
-            <span class="nav-logout-label">Logout</span>
+        <button type="button" class="nav-profile-btn" id="nav-profile-btn" onclick="toggleProfilePanel()" title="My Profile">
+            <span class="nav-profile-avatar" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                    <circle cx="16" cy="11" r="5.5" stroke="currentColor" stroke-width="2.2"/>
+                    <path d="M5 27c0-5.523 4.925-10 11-10s11 4.477 11 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="nav-profile-name-label" id="nav-profile-display-name">Student</span>
         </button>
     </div>
 </header>
@@ -164,6 +136,34 @@
     <div id="notif-list" class="notif-empty">
         <div class="sidebar-empty-icon"><span class="upress-icon upress-icon--bell" aria-hidden="true"></span></div>
         <p>No notifications yet.</p>
+    </div>
+</div>
+
+<!-- Profile Panel Dropdown -->
+<div class="profile-panel" id="profile-panel" style="display:none;">
+    <div class="profile-panel-inner">
+        <div class="profile-panel-avatar-wrap" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
+                <circle cx="16" cy="11" r="5.5" stroke="currentColor" stroke-width="2"/>
+                <path d="M5 27c0-5.523 4.925-10 11-10s11 4.477 11 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="profile-panel-name" id="profile-panel-name">Student Name</div>
+        <div class="profile-panel-id" id="profile-panel-id">ID: 0000-0000</div>
+        <div class="profile-panel-email" id="profile-panel-email">student@wmsu.edu.ph</div>
+        <div id="profile-panel-status"></div>
+        <div class="profile-panel-affil" id="profile-panel-affil" style="display:none;">
+            <span class="profile-panel-affil-label">Affiliated:</span>
+            <span id="profile-panel-affil-name"></span>
+        </div>
+        <div class="profile-panel-actions">
+            <button type="button" class="profile-panel-action-btn" onclick="showUpdateEmailModal(); closeProfilePanel();">
+                <span class="upress-icon upress-icon--mail" aria-hidden="true"></span> Update Email
+            </button>
+            <button type="button" class="profile-panel-action-btn" onclick="showAffiliateModal(); closeProfilePanel();">
+                <span class="upress-icon upress-icon--users" aria-hidden="true"></span> Affiliate
+            </button>
+        </div>
     </div>
 </div>
 
@@ -219,7 +219,7 @@
             </button>
         </div>
         <div class="affiliate-modal-body">
-            <!-- Step 1: Choose affiliation type -->
+
             <div class="affiliate-step" id="affiliate-step-1">
                 <h3>Select Organization Type</h3>
                 <p>Choose whether your organization is recognized by WMSU or if it's a custom organization.</p>
@@ -247,7 +247,6 @@
                 </div>
             </div>
 
-            <!-- Step 2: Known org details -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-2-known">
                 <h3>Organization Details</h3>
                 <div class="affiliate-form">
@@ -285,7 +284,7 @@
                             <input type="text" id="affiliate-otp-known" placeholder="Enter 6-digit code" maxlength="6" disabled>
                             <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-known" onclick="sendAffiliateOTP('known')">Send OTP</button>
                         </div>
-                        <small>Demo OTP: 123456</small>
+                        <small>A verification code will be sent to your contact number.</small>
                     </div>
                 </div>
                 <div class="affiliate-step-actions">
@@ -294,7 +293,6 @@
                 </div>
             </div>
 
-            <!-- Step 2: Other org details -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-2-other">
                 <h3>Organization Details</h3>
                 <div class="affiliate-form">
@@ -325,7 +323,7 @@
                             <input type="text" id="affiliate-otp-other" placeholder="Enter 6-digit code" maxlength="6" disabled>
                             <button type="button" class="affiliate-verify-btn" id="affiliate-send-otp-other" onclick="sendAffiliateOTP('other')">Send OTP</button>
                         </div>
-                        <small>Demo OTP: 123456</small>
+                        <small>A verification code will be sent to your contact number.</small>
                     </div>
                 </div>
                 <div class="affiliate-step-actions">
@@ -334,17 +332,17 @@
                 </div>
             </div>
 
-            <!-- Success message -->
             <div class="affiliate-step affiliate-hidden" id="affiliate-step-success">
                 <div class="affiliate-success">
                     <div class="affiliate-success-icon">
                         <span class="upress-icon upress-icon--check" aria-hidden="true"></span>
                     </div>
                     <h3>Request Submitted</h3>
-                    <p>Your request is being processed. We will send you a notification if your request has been verified.</p>
+                    <p>Your affiliation request has been submitted. We will notify you once it has been reviewed.</p>
                     <button type="button" class="affiliate-btn-primary" onclick="closeAffiliateModal()">Close</button>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

@@ -1,319 +1,120 @@
 (function () {
-  const db = getDB();
-  const academicYear = db.academicYear || "";
-
-  const totalSalesEl = document.getElementById("dashboardTotalSales");
-  const dailySalesEl = document.getElementById("dashboardDailySales");
-  const weeklySalesEl = document.getElementById("dashboardWeeklySales");
-  const monthlySalesEl = document.getElementById("dashboardMonthlySales");
-  const semestralSalesEl = document.getElementById("dashboardSemestralSales");
-  const gcashPaidEl = document.getElementById("dashboardGCashPaid");
-  const creditUnpaidEl = document.getElementById("dashboardCreditUnpaid");
-  const verifiedUsersEl = document.getElementById("dashboardVerifiedUsers");
-  const pendingRequestsEl = document.getElementById("dashboardPendingRequests");
-  const transactionsBody = document.getElementById("dashboardTransactionsBody");
-  const transactionsWrapper = document.getElementById(
-    "dashboardTransactionsWrapper",
-  );
-  const emptyState = document.getElementById("dashboardEmptyState");
-  const chartCanvas = document.getElementById("dashboardSalesChart");
-
-  let salesChart = null;
-
-  function normalizeTransactions() {
-    return (db.transactions || []).filter((transaction) => {
-      if (!transaction) return false;
-      if (!transaction.date) return false;
-      return !academicYear || transaction.academicYear === academicYear;
-    });
-  }
-
-  function toMoney(amount) {
-    return `₱${Number(amount || 0).toFixed(2)}`;
-  }
-
-  function parseDate(value) {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? null : date;
-  }
-
-  function isCompleted(transaction) {
-    const status = String(transaction.status || "").toLowerCase();
-    return ["completed", "paid", "settled"].includes(status);
-  }
-
-  function getPaymentType(transaction) {
-    const value = String(
-      transaction.paymentType ||
-        transaction.paymentMethod ||
-        transaction.payment ||
-        transaction.method ||
-        "",
-    ).toLowerCase();
-    if (
-      value.includes("gcash") ||
-      value.includes("online payment") ||
-      value.includes("maya")
-    ) {
-      return "gcash";
-    }
-    if (
-      value.includes("credit") ||
-      value.includes("pay onsite") ||
-      value.includes("cash")
-    ) {
-      return "credit";
-    }
-    return value || "other";
-  }
-
-  function getCurrentSemester(date) {
-    const month = date.getMonth() + 1;
-    return month <= 6 ? "1st" : "2nd";
-  }
-
-  function getDailySales(transactions) {
-    const today = new Date();
-    return transactions
-      .filter((transaction) => {
-        const date = parseDate(transaction.date);
-        return (
-          date &&
-          date.toDateString() === today.toDateString() &&
-          isCompleted(transaction)
-        );
-      })
-      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-  }
-
-  function getWeeklySales(transactions) {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - dayOfWeek + 1);
-    weekStart.setHours(0, 0, 0, 0);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    weekEnd.setHours(23, 59, 59, 999);
-
-    return transactions
-      .filter((transaction) => {
-        const date = parseDate(transaction.date);
-        return (
-          date &&
-          date >= weekStart &&
-          date <= weekEnd &&
-          isCompleted(transaction)
-        );
-      })
-      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-  }
-
-  function getMonthlySales(transactions) {
-    const today = new Date();
-    return transactions
-      .filter((transaction) => {
-        const date = parseDate(transaction.date);
-        return (
-          date &&
-          date.getFullYear() === today.getFullYear() &&
-          date.getMonth() === today.getMonth() &&
-          isCompleted(transaction)
-        );
-      })
-      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-  }
-
-  function getSemestralSales(transactions) {
-    const today = new Date();
-    const currentSemester = getCurrentSemester(today);
-    return transactions
-      .filter((transaction) => {
-        const date = parseDate(transaction.date);
-        return (
-          date &&
-          getCurrentSemester(date) === currentSemester &&
-          isCompleted(transaction)
-        );
-      })
-      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-  }
-
-  function getSalesTrend(transactions) {
-    const months = new Map();
-    const now = new Date();
-
-    for (let offset = 5; offset >= 0; offset -= 1) {
-      const month = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-      const label = month.toLocaleString("default", {
-        month: "short",
-        year: "numeric",
-      });
-      months.set(label, 0);
+    // ── Profile panel toggle ──────────────────────────────────────────────
+    function toggleProfilePanel() {
+        const panel = document.getElementById('profile-panel');
+        const notifPanel = document.getElementById('notif-panel');
+        if (!panel) return;
+        const isOpen = panel.style.display === 'block';
+        if (notifPanel) notifPanel.style.display = 'none';
+        panel.style.display = isOpen ? 'none' : 'block';
     }
 
-    transactions.forEach((transaction) => {
-      const date = parseDate(transaction.date);
-      if (!date || !isCompleted(transaction)) return;
-      const label = date.toLocaleString("default", {
-        month: "short",
-        year: "numeric",
-      });
-      if (months.has(label)) {
-        months.set(label, months.get(label) + Number(transaction.amount || 0));
-      }
+    function closeProfilePanel() {
+        const panel = document.getElementById('profile-panel');
+        if (panel) panel.style.display = 'none';
+    }
+
+    // Close panels when clicking outside
+    document.addEventListener('click', function (e) {
+        const profilePanel = document.getElementById('profile-panel');
+        const profileBtn   = document.getElementById('nav-profile-btn');
+        const notifPanel   = document.getElementById('notif-panel');
+        const notifBtn     = document.getElementById('notif-btn');
+
+        if (profilePanel && profilePanel.style.display === 'block') {
+            if (!profilePanel.contains(e.target) && !profileBtn.contains(e.target)) {
+                profilePanel.style.display = 'none';
+            }
+        }
+        if (notifPanel && notifPanel.style.display === 'block') {
+            if (!notifPanel.contains(e.target) && !notifBtn.contains(e.target)) {
+                notifPanel.style.display = 'none';
+            }
+        }
     });
 
-    return {
-      labels: Array.from(months.keys()),
-      values: Array.from(months.values()),
-    };
-  }
+    // ── Populate profile info in navbar + panel ───────────────────────────
+    function loadUserProfile() {
+        const db   = getDB();
+        const user = db.currentUser || db.users?.[0] || null;
+        if (!user) return;
 
-  function renderChart(transactions) {
-    const trend = getSalesTrend(transactions);
-    if (!chartCanvas) return;
+        const firstName  = (user.name || user.fullName || 'Student').split(' ')[0];
+        const initial    = firstName.charAt(0).toUpperCase();
+        const fullName   = user.name || user.fullName || 'Student';
+        const email      = user.email || 'student@wmsu.edu.ph';
+        const studentId  = user.studentId || user.id || '0000-0000';
+        const statusRaw  = String(user.status || 'pending').toLowerCase();
 
-    if (salesChart) {
-      salesChart.destroy();
+        // Navbar avatar + short name
+        const avatarEl   = document.getElementById('nav-profile-avatar');
+        const nameShort  = document.getElementById('nav-profile-name-short');
+        if (avatarEl)  avatarEl.textContent  = initial;
+        if (nameShort) nameShort.textContent = firstName;
+
+        // Panel header
+        const panelAvatar = document.getElementById('profile-panel-avatar');
+        const panelName   = document.getElementById('profile-panel-name');
+        const panelEmail  = document.getElementById('profile-panel-email');
+        const panelId     = document.getElementById('profile-panel-id');
+        const panelStatus = document.getElementById('profile-panel-status');
+        if (panelAvatar) panelAvatar.textContent = initial;
+        if (panelName)   panelName.textContent   = fullName;
+        if (panelEmail)  panelEmail.textContent   = email;
+        if (panelId)     panelId.textContent      = 'ID: ' + studentId;
+
+        if (panelStatus) {
+            const statusMap = {
+                approved: ['status-verified', 'Verified'],
+                verified: ['status-verified', 'Verified'],
+                pending:  ['status-pending',  'Pending'],
+                active:   ['status-active',   'Active'],
+            };
+            const [cls, label] = statusMap[statusRaw] || ['status-other', statusRaw];
+            panelStatus.innerHTML = `<span class="status-badge ${cls}">${label}</span>`;
+        }
+
+        // Welcome card
+        const welcomeName  = document.getElementById('welcome-name');
+        const welcomeEmail = document.getElementById('welcome-email');
+        if (welcomeName)  welcomeName.textContent  = firstName;
+        if (welcomeEmail) welcomeEmail.textContent = email;
+
+        // Affiliation in panel
+        const affWrap  = document.getElementById('profile-panel-affiliation-wrap');
+        const affValue = document.getElementById('profile-panel-aff-value');
+        const verified = (user.affiliations || []).find(a => a.status === 'verified');
+        if (verified && affWrap && affValue) {
+            affWrap.style.display  = 'flex';
+            affValue.textContent   = verified.organizationName || '—';
+        } else if (affWrap) {
+            affWrap.style.display  = 'none';
+        }
+
+        // Account status banner
+        const banner = document.getElementById('account-status-banner');
+        if (banner && statusRaw === 'pending') {
+            banner.className = 'account-status-banner account-status-banner--pending';
+            banner.style.display = 'block';
+            banner.textContent = '⚠ Your account is pending verification. Some features may be limited.';
+        }
     }
 
-    try {
-      salesChart = new Chart(chartCanvas, {
-        type: "line",
-        data: {
-          labels: trend.labels,
-          datasets: [
-            {
-              label: "Completed sales",
-              data: trend.values,
-              borderColor: "#4f46e5",
-              backgroundColor: "rgba(79, 70, 229, 0.16)",
-              fill: true,
-              tension: 0.35,
-              pointRadius: 4,
-              pointBackgroundColor: "#4338ca",
-            },
-          ],
-        },
-        options: {
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { color: "#475569" },
-            },
-            y: {
-              grid: { color: "rgba(148,163,184,0.16)" },
-              ticks: { color: "#475569", callback: (value) => `₱${value}` },
-            },
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (context) => `₱${Number(context.parsed.y).toFixed(2)}`,
-              },
-            },
-          },
-        },
-      });
-    } catch (error) {
-      console.error("Unable to render chart:", error);
-    }
-  }
-
-  function renderTransactionsTable(transactions) {
-    if (!transactionsBody) return;
-
-    const completed = transactions.filter(isCompleted);
-    if (completed.length === 0) {
-      transactionsWrapper?.classList.add("hidden");
-      emptyState?.classList.remove("hidden");
-      return;
+    // ── Check if user has an approved affiliation ─────────────────────────
+    function userHasApprovedAffiliation() {
+        const db   = getDB();
+        const user = db.currentUser || db.users?.[0] || null;
+        if (!user) return false;
+        return (user.affiliations || []).some(a => a.status === 'verified');
     }
 
-    transactionsWrapper?.classList.remove("hidden");
-    emptyState?.classList.add("hidden");
+    // Expose globally so create-order.html can call this
+    window.userHasApprovedAffiliation = userHasApprovedAffiliation;
 
-    const rows = completed
-      .slice(0, 8)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .map((transaction) => {
-        const paymentType = getPaymentType(transaction);
-        const date = parseDate(transaction.date);
-        return `
-          <tr>
-            <td>${date ? date.toLocaleDateString() : "N/A"}</td>
-            <td>${transaction.studentName || transaction.email || "Unknown"}</td>
-            <td>${transaction.serviceName || transaction.service || "—"}</td>
-            <td>${paymentType === "gcash" ? "GCash" : paymentType === "credit" ? "Credit" : "Other"}</td>
-            <td>${toMoney(transaction.amount)}</td>
-            <td>${String(transaction.status || "").toUpperCase()}</td>
-          </tr>
-        `;
-      })
-      .join("");
+    // ── Expose panel functions globally ───────────────────────────────────
+    window.toggleProfilePanel = toggleProfilePanel;
+    window.closeProfilePanel  = closeProfilePanel;
 
-    transactionsBody.innerHTML = rows;
-  }
-
-  function renderDashboard() {
-    const transactions = normalizeTransactions();
-    const completed = transactions.filter(isCompleted);
-
-    const totalSales = completed.reduce(
-      (sum, transaction) => sum + Number(transaction.amount || 0),
-      0,
-    );
-    const dailySales = getDailySales(transactions);
-    const weeklySales = getWeeklySales(transactions);
-    const monthlySales = getMonthlySales(transactions);
-    const semestralSales = getSemestralSales(transactions);
-    const gcashPaid = completed
-      .filter((transaction) => getPaymentType(transaction) === "gcash")
-      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-    const creditUnpaid = transactions
-      .filter(
-        (transaction) =>
-          getPaymentType(transaction) === "credit" && !isCompleted(transaction),
-      )
-      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-
-    const users = db.users || [];
-    const verifiedUsers = users.filter(
-      (user) => String(user.status || "").toLowerCase() === "approved",
-    ).length;
-    const pendingRequests = users.filter(
-      (user) => String(user.status || "").toLowerCase() === "pending",
-    ).length;
-
-    if (totalSalesEl) totalSalesEl.textContent = toMoney(totalSales);
-    if (dailySalesEl) dailySalesEl.textContent = toMoney(dailySales);
-    if (weeklySalesEl) weeklySalesEl.textContent = toMoney(weeklySales);
-    if (monthlySalesEl) monthlySalesEl.textContent = toMoney(monthlySales);
-    if (semestralSalesEl)
-      semestralSalesEl.textContent = toMoney(semestralSales);
-    if (gcashPaidEl) gcashPaidEl.textContent = toMoney(gcashPaid);
-    if (creditUnpaidEl) creditUnpaidEl.textContent = toMoney(creditUnpaid);
-    if (verifiedUsersEl) verifiedUsersEl.textContent = verifiedUsers;
-    if (pendingRequestsEl) pendingRequestsEl.textContent = pendingRequests;
-
-    renderChart(transactions);
-    renderTransactionsTable(transactions);
-  }
-
-  function init() {
-    if (!academicYear) {
-      const header = document.querySelector(".page-subtitle");
-      if (header) {
-        header.textContent =
-          "Set the current academic year in system settings to populate dashboard data.";
-      }
-    }
-
-    renderDashboard();
-  }
-
-  window.addEventListener("DOMContentLoaded", init);
+    // ── Init ──────────────────────────────────────────────────────────────
+    loadUserProfile();
 })();

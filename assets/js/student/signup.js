@@ -232,6 +232,7 @@
     const type = getAccountType();
     const first = document.getElementById("signup-first")?.value.trim();
     const last = document.getElementById("signup-last")?.value.trim();
+    const middle = document.getElementById("signup-middle")?.value.trim();
     const campusId = document.getElementById("signup-campus-id")?.value.trim();
     const college = document.getElementById("signup-college")?.value;
     const email = document.getElementById("signup-email")?.value.trim();
@@ -488,6 +489,7 @@
   function buildUserObject() {
     const type = getAccountType();
     const first = document.getElementById("signup-first")?.value.trim() || "";
+    const middle = document.getElementById("signup-middle")?.value.trim() || "";
     const last = document.getElementById("signup-last")?.value.trim() || "";
     const campusId = document.getElementById("signup-campus-id")?.value.trim() || "";
     const college = document.getElementById("signup-college")?.value || "";
@@ -496,9 +498,10 @@
     const email = document.getElementById("signup-email")?.value.trim() || "";
     const phone = document.getElementById("signup-phone")?.value.trim() || "";
     const pass = document.getElementById("signup-pass")?.value || "";
-    const fullName = `${first} ${last}`.trim();
+    const fullName = `${first}${middle ? ` ${middle}` : ""} ${last}`.trim();
 
     return {
+      middleName: middle,
       id: `UPRESS_USER_${Date.now()}`,
       // role and accountType are BOTH set to the same value
       // so both student-verification.js and faculty-verification.js

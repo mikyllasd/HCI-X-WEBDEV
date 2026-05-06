@@ -25,18 +25,18 @@
 }
 
 .pos-panel {
-  background: #fff;
-  border: 1px solid #e8e4df;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.1rem 1.15rem 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .pos-panel__title {
   margin: 0 0 0.75rem;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-text);
 }
 
 .pos-label {
@@ -45,17 +45,19 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #666;
+  color: var(--color-text-muted);
   margin: 0.5rem 0 0.25rem;
 }
 
 .pos-input {
   width: 100%;
   padding: 0.55rem 0.65rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.9rem;
   font-family: inherit;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
 }
 
 .pos-row2 {
@@ -83,40 +85,42 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
-  color: #333;
+  border: 1px solid var(--color-border);
+  background: var(--color-card-muted);
+  color: var(--color-text);
 }
 
 .pos-btn--primary {
-  background: #8b1538;
-  border-color: #6b0f2b;
+  background: var(--color-header);
+  border-color: var(--color-header-hover);
   color: #fff;
 }
 
 .pos-btn--accent {
-  background: #0d6e4d;
-  border-color: #0a5a40;
+  background: var(--color-success);
+  border-color: var(--color-success);
   color: #fff;
 }
 
 .pos-btn--ghost {
-  background: #fff;
+  background: var(--color-surface-raised);
 }
 
 .pos-ticket-lines {
   min-height: 120px;
   max-height: 280px;
   overflow: auto;
-  border: 1px dashed #ddd;
+  border: 1px dashed var(--color-border);
   border-radius: 8px;
   padding: 0.5rem;
   margin-bottom: 0.75rem;
   font-size: 0.85rem;
+  background: var(--color-surface-soft);
+  color: var(--color-text);
 }
 
 .pos-ticket-lines.pos-empty {
-  color: #888;
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -127,7 +131,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.45rem 0.35rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .pos-line:last-child {
@@ -143,7 +147,7 @@
 }
 
 .pos-totals {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-border);
   padding-top: 0.65rem;
   margin-bottom: 0.5rem;
 }
@@ -152,11 +156,12 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.95rem;
+  color: var(--color-text);
 }
 
 .pos-hint {
   font-size: 0.78rem;
-  color: #666;
+  color: var(--color-text-muted);
   line-height: 1.45;
   margin: 1rem 0 0;
 }
@@ -166,14 +171,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.65rem 0.75rem;
-  background: #f8f6f3;
+  background: var(--color-surface-soft);
   border-radius: 8px;
   margin-bottom: 0.75rem;
   font-size: 0.85rem;
+  color: var(--color-text);
 }
 
 .pos-kpi strong {
-  color: #0d6e4d;
+  color: var(--color-success);
   font-size: 1.05rem;
 }
 
@@ -181,19 +187,21 @@
   max-height: 360px;
   overflow: auto;
   font-size: 0.8rem;
+  color: var(--color-text);
 }
 
 .pos-sale-card {
-  border: 1px solid #eee;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 0.55rem 0.65rem;
   margin-bottom: 0.45rem;
+  background: var(--color-surface-soft);
 }
 
 .pos-sale-card time {
   display: block;
   font-size: 0.72rem;
-  color: #888;
+  color: var(--color-text-muted);
   margin-bottom: 0.2rem;
 }
 
@@ -218,9 +226,9 @@
   flex-shrink: 0;
   padding: 0.35rem 0.7rem;
   border-radius: 6px;
-  border: 1px solid #6b0f2b;
-  background: #fff;
-  color: #6b0f2b;
+  border: 1px solid var(--color-header-hover);
+  background: var(--color-surface-raised);
+  color: var(--color-header);
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
@@ -230,7 +238,7 @@
 
 .btn-pos-print-receipt:hover,
 .pos-sale-print:hover {
-  background: #8b1538;
-  border-color: #6b0f2b;
+  background: var(--color-header);
+  border-color: var(--color-header-hover);
   color: #fff;
 }

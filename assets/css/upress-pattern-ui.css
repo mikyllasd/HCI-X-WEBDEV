@@ -5,7 +5,7 @@
   --pattern-primary-dark: var(--color-header-hover);
   --pattern-accent: var(--color-cta);
   --pattern-bg: var(--color-bg-page);
-  --pattern-surface: var(--color-white);
+  --pattern-surface: var(--color-surface-raised);
   --pattern-surface-tint: var(--color-surface-soft);
   --pattern-line: var(--color-border);
   --pattern-font: var(--font-sans);

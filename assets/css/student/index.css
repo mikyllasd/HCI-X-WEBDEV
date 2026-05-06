@@ -4,7 +4,7 @@
 body { background: var(--color-bg-page); color: var(--color-text); font-size: 1rem; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
 .login-bg { display: flex; background: linear-gradient(180deg, var(--color-header) 0%, #6a0000 100%); min-height: 100vh; justify-content: center; align-items: center; padding: 1.25rem; }
-.login-card { background: var(--color-white); padding: 2.5rem; width: 100%; max-width: 26.25rem; border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--color-border); }
+.login-card { background: var(--color-surface-raised); padding: 2.5rem; width: 100%; max-width: 26.25rem; border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--color-border); }
 .login-icon { background: var(--color-header); color: white; width: 3.75rem; height: 3.75rem; margin: auto; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 1.75rem; }
 .login-bg input { width: 100%; padding: 0.75rem; margin-bottom: 0.9375rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.875rem; outline: none; box-sizing: border-box; font-family: var(--font-sans); }
 .login-bg input:focus { border-color: var(--color-cta); box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-cta) 25%, transparent); }

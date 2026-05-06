@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function(){var k='upress-theme';var s=localStorage.getItem(k);var t=(s==='dark'||s==='light')?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+
     <title>UPress Sign-In | UPRESSease</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +18,9 @@
     <link rel="stylesheet" href="../../css/auth/portal.css" />
     <link rel="stylesheet" href="../../css/auth/forgot-password.css" />
     <link rel="stylesheet" href="../../css/upress-icons.css" />
-  </head>
+  <link rel="stylesheet" href="../../css/upress-theme-toggle.css" />
+
+</head>
   <body class="page-auth">
     <main class="auth-main">
       <div class="portal-wrap">
@@ -313,5 +319,7 @@
     <script src="../../js/student/student.js"></script>
     <script src="../../js/auth/forgot-password.js"></script>
     <script src="../../js/auth/portal.js"></script>
-  </body>
+  <script src="../../js/shared/theme-toggle.js" defer></script>
+
+</body>
 </html>

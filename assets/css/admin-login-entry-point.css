@@ -11,7 +11,7 @@
   --crimson-deep:  var(--color-header-hover);
   --crimson-mid:   var(--color-cta);
   --crimson-light: #c0392b;
-  --card-bg:       var(--color-white);
+  --card-bg:       var(--color-surface-raised);
   --input-bg:      var(--color-surface-soft);
   --border:        var(--color-border);
   --text-main:     var(--color-text);

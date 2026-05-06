@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function(){var k='upress-theme';var s=localStorage.getItem(k);var t=(s==='dark'||s==='light')?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+
     <title>Admin Portal – UPRESSease</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -10,7 +14,9 @@
     />
     <link rel="stylesheet" href="../css/upress-pattern-ui.css" />
     <link rel="stylesheet" href="../css/admin-login-entry-point.css" />
-  </head>
+  <link rel="stylesheet" href="../css/upress-theme-toggle.css" />
+
+</head>
   <body class="page-auth">
     <main class="auth-main">
       <div class="card">
@@ -68,5 +74,7 @@
         </p>
       </div>
     </main>
-  </body>
+  <script src="../js/shared/theme-toggle.js" defer></script>
+
+</body>
 </html>

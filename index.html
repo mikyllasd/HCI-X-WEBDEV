@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function(){var k='upress-theme';var s=localStorage.getItem(k);var t=(s==='dark'||s==='light')?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+
   <title>UPRESSease - University Printing Services</title>
   <meta name="description" content="WMSU's one-stop printing solution for students and faculty. Fast, reliable, and affordable printing services.">
   <link rel="stylesheet" href="assets/css/landing.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/upress-theme-toggle.css" />
+
 </head>
 <body>
   <!-- Header -->
@@ -627,5 +633,7 @@
 
   <script src="assets/js/site-pricing.js"></script>
   <script src="assets/js/landing.js"></script>
+  <script src="assets/js/shared/theme-toggle.js" defer></script>
+
 </body>
 </html>

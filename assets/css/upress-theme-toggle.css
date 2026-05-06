@@ -1,0 +1,54 @@
+/* Floating theme control (paired with assets/js/shared/theme-toggle.js) */
+.upress-theme-fab {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 10050;
+  width: 3.35rem;
+  height: 3.35rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.upress-theme-fab:hover {
+  transform: scale(1.07);
+  box-shadow: var(--shadow-xl);
+}
+
+.upress-theme-fab:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 3px;
+}
+
+.upress-theme-fab__icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.upress-theme-fab--dark .upress-theme-fab__icon--sun {
+  display: flex;
+}
+
+.upress-theme-fab:not(.upress-theme-fab--dark) .upress-theme-fab__icon--moon {
+  display: flex;
+}
+
+@media (max-width: 480px) {
+  .upress-theme-fab {
+    bottom: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+  }
+}

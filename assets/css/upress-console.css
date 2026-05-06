@@ -99,7 +99,7 @@ body.staff-dashboard-body .sd-layout {
 
 .app-wrapper .nav-link.active,
 .app-shell .nav-item.active {
-  background: color-mix(in srgb, var(--color-header) 14%, var(--color-white));
+  background: color-mix(in srgb, var(--color-header) 14%, var(--color-surface-raised));
   color: var(--color-header);
   font-weight: 700;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-header) 22%, transparent);
@@ -232,7 +232,7 @@ body.staff-dashboard-body .staff-sidebar .nav-link:hover {
 }
 
 body.staff-dashboard-body .staff-sidebar .nav-link.active {
-  background: color-mix(in srgb, var(--color-header) 14%, var(--color-white));
+  background: color-mix(in srgb, var(--color-header) 14%, var(--color-surface-raised));
   color: var(--color-header);
 }
 

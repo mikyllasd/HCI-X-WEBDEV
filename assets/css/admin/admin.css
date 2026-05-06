@@ -341,7 +341,7 @@ textarea {
   top: 0;
   z-index: 100;
   height: var(--topbar-h);
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--clr-surface) 92%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--clr-border);
@@ -349,7 +349,7 @@ textarea {
   align-items: center;
   gap: 12px;
   padding: 0 24px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Mobile hamburger (hidden on desktop) */
@@ -386,6 +386,7 @@ textarea {
   font-size: var(--fs-lg);
   font-weight: 600;
   flex: 1;
+  color: var(--clr-text);
 }
 
 .topbar-actions {
@@ -421,7 +422,7 @@ textarea {
   height: 7px;
   border-radius: 50%;
   background: var(--clr-primary);
-  border: 1.5px solid #fff;
+  border: 1.5px solid var(--clr-surface);
 }
 
 /* Admin initial avatar */
@@ -475,6 +476,7 @@ textarea {
 .page-header h1 {
   font-size: var(--fs-2xl);
   font-weight: 700;
+  color: var(--clr-text);
 }
 .page-subtitle {
   font-size: var(--fs-base);
@@ -484,8 +486,8 @@ textarea {
 
 /* Dark crimson header bar (Orders, QR, Active Accounts, Annual Stats) */
 .page-dark-header {
-  background: #fff;
-  color: black;
+  background: var(--clr-primary);
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -493,6 +495,7 @@ textarea {
   flex-shrink: 0;
 }
 .page-dark-header h1 {
+  font-size: var(--fs-xl);
   font-weight: 700;
 }
 .page-dark-header p {
@@ -562,6 +565,7 @@ textarea {
 .add-service-header h1 {
   font-size: var(--fs-2xl);
   font-weight: 700;
+  color: var(--clr-text);
 }
 
 .add-service-body {
@@ -873,7 +877,7 @@ textarea {
 }
 .search-box input:focus {
   border-color: var(--clr-primary);
-  background: #fff;
+  background: var(--clr-surface);
 }
 
 /* Dropdown selects */
@@ -890,7 +894,7 @@ textarea {
 }
 .select-input:focus {
   border-color: var(--clr-primary);
-  background: #fff;
+  background: var(--clr-surface);
 }
 
 /* Field label */
@@ -923,7 +927,7 @@ textarea {
 }
 .form-input:focus {
   border-color: var(--clr-primary);
-  background: #fff;
+  background: var(--clr-surface);
 }
 
 /* Textarea */
@@ -942,7 +946,7 @@ textarea {
 }
 .form-textarea:focus {
   border-color: var(--clr-primary);
-  background: #fff;
+  background: var(--clr-surface);
 }
 
 /* ----------------------------------------------------------
@@ -1699,8 +1703,8 @@ color: var(--clr-text-muted);
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: #fff5f5;
-  border: 1.5px solid #fecaca;
+  background: var(--clr-primary-ghost);
+  border: 1.5px solid color-mix(in srgb, var(--clr-primary) 28%, var(--clr-border));
   border-radius: var(--radius-md);
   padding: 14px 18px;
   font-size: var(--fs-sm);
@@ -1733,7 +1737,7 @@ color: var(--clr-text-muted);
   border: 2px solid var(--clr-primary); /* red border per screenshot */
   border-radius: var(--radius-md);
   font-size: var(--fs-base);
-  background: #fff;
+  background: var(--clr-surface);
   color: var(--clr-text);
   outline: none;
   transition: box-shadow var(--t);

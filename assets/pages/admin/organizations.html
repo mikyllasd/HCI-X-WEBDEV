@@ -160,6 +160,10 @@
                 <i data-lucide="users" aria-hidden="true"></i>
                 Affiliation Requests
               </button>
+              <button type="button" class="tab-btn" data-tab="custom-requests">
+                <i data-lucide="help-circle" aria-hidden="true"></i>
+                Org custom requests
+              </button>
             </div>
           </div>
 
@@ -329,6 +333,15 @@
               </div>
             </div>
           </div>
+
+          <div id="custom-requests-tab" class="tab-content">
+            <div class="page-header" style="margin-bottom: 1rem">
+              <p class="page-subtitle" style="margin: 0">
+                Organization “Other / custom” jobs submitted by students. Staff decisions appear below; add oversight or acknowledgement as needed.
+              </p>
+            </div>
+            <div id="orgCustomRequestsList" class="verification-list"></div>
+          </div>
         </div>
       </main>
     </div>
@@ -396,6 +409,8 @@
 
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="../../js/shared/org-custom-requests.js"></script>
+    <script src="../../js/shared/org-custom-requests-ui.js"></script>
     <script src="../../js/admin/organizations.js"></script>
     <script>
       lucide.createIcons();

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="../../css/staff/staff.css" />
     <link rel="stylesheet" href="../../css/staff/staff-pos.css" />
     <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/admin/verification.css" />
   <link rel="stylesheet" href="../../css/upress-theme-toggle.css" />
 
 </head>
@@ -117,6 +118,21 @@
           </div>
         </div>
 
+        <div class="sd-panel" aria-label="Organization custom requests" style="margin-bottom: 1rem">
+          <div class="sd-panel__head">
+            <div>
+              <div class="sd-panel__title">
+                <span class="sd-panel__titleIcon" aria-hidden="true">≡</span>
+                <span>Custom / Other org requests</span>
+              </div>
+              <div class="sd-panel__sub">
+                Student organization requests outside standard services — mark doable, not feasible, or ask for more details.
+              </div>
+            </div>
+          </div>
+          <div id="staffOrgCustomList" class="verification-list" style="padding: 0 4px 12px"></div>
+        </div>
+
         <div class="staff-panel-full card sp">
           <div class="sd-panel__head" style="padding: 0; border: 0; margin-bottom: 10px">
             <div>
@@ -197,10 +213,13 @@
 
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/org-custom-requests.js"></script>
+    <script src="../../js/shared/org-custom-requests-ui.js"></script>
     <script src="../../js/staff/staff-shell.js"></script>
     <script src="../../js/staff/staff-list-tools.js"></script>
     <script src="../../js/staff/org-ledger.js"></script>
     <script src="../../js/staff/staff-orgs.js"></script>
+    <script src="../../js/staff/staff-org-custom-bootstrap.js"></script>
   <script src="../../js/shared/theme-toggle.js" defer></script>
 
 </body>

@@ -163,7 +163,15 @@
         }
 
         showStep(2);
+        syncOrgCustomCardVisibility();
     };
+
+    function syncOrgCustomCardVisibility() {
+        const wrap = document.getElementById("co-org-custom-request-wrap");
+        if (!wrap) return;
+        const isOrg = localStorage.getItem("upress_order_type") === "organization";
+        wrap.style.display = isOrg ? "block" : "none";
+    }
 
     // ── Back to step 1 ─────────────────────────────────────────────────────
 
@@ -180,5 +188,6 @@
     // ── Init ───────────────────────────────────────────────────────────────
 
     showStep(1);
+    syncOrgCustomCardVisibility();
 
 })();

@@ -37,18 +37,26 @@
 
   function getAllFaculty() {
     const db = getDB();
-    const merged = [
-      ...(Array.isArray(db.users) ? db.users : []),
-      ...(Array.isArray(db.authUsers) ? db.authUsers : [])
-    ];
-    const seen = new Set();
-    return merged.filter(user => {
-      if (!user || !user.id) return false;
-      if (seen.has(user.id)) return false;
-      seen.add(user.id);
+    const usersArr = Array.isArray(db.users) ? db.users : [];
+    const authArr = Array.isArray(db.authUsers) ? db.authUsers : [];
+    const merged = [...usersArr, ...authArr];
+    const byEmail = new Map();
+
+    for (const user of merged) {
+      if (!user || !user.email || !user.id) continue;
       const role = String(user.role || user.accountType || "").toLowerCase();
-      return role === "faculty" || user.accountType === "faculty";
-    });
+      if (role !== "faculty" && user.accountType !== "faculty") continue;
+      const key = String(user.email).toLowerCase();
+      const prev = byEmail.get(key);
+      if (!prev) {
+        byEmail.set(key, user);
+        continue;
+      }
+      const prevInUsers = usersArr.includes(prev);
+      const curInUsers = usersArr.includes(user);
+      if (curInUsers && !prevInUsers) byEmail.set(key, user);
+    }
+    return Array.from(byEmail.values());
   }
 
   function normalizeStatus(user) {
@@ -176,22 +184,49 @@
 
   function updateUserStatus(id, newStatus) {
     const db = getDB();
-    ["users", "authUsers"].forEach(key => {
+    const reviewedAt = new Date().toISOString();
+    const accountStatus = newStatus === "approved" ? "verified" : newStatus;
+    const merged = [...(db.users || []), ...(db.authUsers || [])];
+    const seed = merged.find((item) => item && item.id === id);
+    const emailKey = seed ? String(seed.email || "").toLowerCase() : "";
+
+    function applyRow(u) {
+      u.status = newStatus;
+      u.accountStatus = accountStatus;
+      u.verified = newStatus === "approved";
+      u.active = newStatus === "approved";
+      u.reviewedAt = reviewedAt;
+    }
+
+    ["users", "authUsers"].forEach((key) => {
       const arr = Array.isArray(db[key]) ? db[key] : [];
-      const user = arr.find(item => item.id === id);
-      if (!user) return;
-      user.status = newStatus;
-      user.accountStatus = newStatus === "approved" ? "verified" : newStatus;
-      user.verified = newStatus === "approved";
-      user.active = newStatus === "approved";
-      user.reviewedAt = new Date().toISOString();
+      arr.forEach((item) => {
+        if (!item) return;
+        if (item.id === id || (emailKey && String(item.email || "").toLowerCase() === emailKey)) {
+          applyRow(item);
+        }
+      });
     });
     saveDB(db);
 
+    const canonical =
+      (db.users || []).find(
+        (item) => emailKey && String(item.email || "").toLowerCase() === emailKey,
+      ) || seed;
+    const notifyId = canonical?.id || id;
+
     if (newStatus === "approved") {
       const approvedUser =
-        db.users.find((item) => item.id === id) ||
-        db.authUsers.find((item) => item.id === id);
+        (db.users || []).find(
+          (item) =>
+            item.id === notifyId ||
+            (emailKey && String(item.email || "").toLowerCase() === emailKey),
+        ) ||
+        (db.authUsers || []).find(
+          (item) =>
+            item.id === notifyId ||
+            (emailKey && String(item.email || "").toLowerCase() === emailKey),
+        );
       if (typeof syncStaffDirectoryFromApprovedUser === "function") {
         syncStaffDirectoryFromApprovedUser(approvedUser);
       }
@@ -199,18 +234,31 @@
 
     try {
       const session = JSON.parse(localStorage.getItem("upressUser") || "null");
-      if (session && session.id === id) {
+      if (
+        session &&
+        ((emailKey && String(session.email || "").toLowerCase() === emailKey) ||
+          session.id === id ||
+          session.id === notifyId)
+      ) {
         session.status = newStatus;
-        session.accountStatus = newStatus === "approved" ? "verified" : newStatus;
+        session.accountStatus = accountStatus;
         session.verified = newStatus === "approved";
         localStorage.setItem("upressUser", JSON.stringify(session));
       }
     } catch { /* ignore */ }
 
     if (newStatus === "approved") {
-      notifyUser(id, `Your faculty account has been verified and approved. You now have full access to UPRESSease services.`, "success");
+      notifyUser(
+        notifyId,
+        "Your faculty account has been verified and approved. You now have full access to UPRESSease services.",
+        "success",
+      );
     } else if (newStatus === "rejected") {
-      notifyUser(id, `Your faculty account verification was rejected. Please contact the admin for assistance.`, "error");
+      notifyUser(
+        notifyId,
+        "Your faculty account verification was rejected. Please contact the admin for assistance.",
+        "error",
+      );
     }
 
     renderRequests();
@@ -218,10 +266,20 @@
 
   function toggleFlagged(id) {
     const db = getDB();
-    ["users", "authUsers"].forEach(key => {
+    const seed = [...(db.users || []), ...(db.authUsers || [])].find(
+      (item) => item && item.id === id,
+    );
+    if (!seed || !seed.email) return;
+    const emailKey = String(seed.email).toLowerCase();
+    const next = !seed.flagged;
+    ["users", "authUsers"].forEach((key) => {
       const arr = Array.isArray(db[key]) ? db[key] : [];
-      const user = arr.find(item => item.id === id);
-      if (user) user.flagged = !user.flagged;
+      arr.forEach((item) => {
+        if (!item) return;
+        if (item.id === id || String(item.email || "").toLowerCase() === emailKey) {
+          item.flagged = next;
+        }
+      });
     });
     saveDB(db);
     renderRequests();

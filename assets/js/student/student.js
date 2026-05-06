@@ -206,7 +206,9 @@ function goTo(page) {
         'pay-method':      'pay-method.html',
         'gcash':           'gcash.html',
         'confirm':         'confirm.html',
-        'orders':          'orders.html'
+        'orders':          'orders.html',
+        'create-order':    'create-order.html',
+        'org-custom-request': 'org-custom-request.html'
     };
     if (map[page]) {
         window.location.href = map[page];

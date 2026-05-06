@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        var k = "upress-theme";
+        var s = localStorage.getItem(k);
+        var t =
+          s === "dark" || s === "light"
+            ? s
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+    <title>UPRESSease | Organization custom request</title>
+    <link rel="stylesheet" href="../../css/student/student.css" />
+    <link rel="stylesheet" href="../../css/student/create-order.css" />
+    <link rel="stylesheet" href="../../css/upress-theme-toggle.css" />
+  </head>
+  <body>
+    <header class="co-navbar">
+      <a href="create-order.html" class="co-back-btn" aria-label="Back">←</a>
+      <div class="co-nav-center">
+        <div class="co-nav-logo">
+          <span class="upress-icon upress-icon--grad" aria-hidden="true"></span>
+        </div>
+        <div class="co-nav-text">
+          <h1>Custom org request</h1>
+          <p>Beyond standard services — staff will review</p>
+        </div>
+      </div>
+      <div class="co-nav-right"></div>
+    </header>
+
+    <div class="co-container" style="max-width: 560px; margin: 0 auto">
+      <div class="co-order-summary-bar" id="ocr-summary"></div>
+
+      <form id="ocr-form" class="co-step-panel active" style="display: block; padding-top: 0">
+        <p class="co-section-head" style="margin-bottom: 1rem">
+          Describe what your organization needs (custom print run, special finishing, bulk
+          layout, etc.). UPress staff will confirm if it can be done and follow up.
+        </p>
+
+        <label class="co-label" for="ocr-title">Short title <span class="co-required">*</span></label>
+        <input id="ocr-title" class="co-select" style="width: 100%; box-sizing: border-box" required maxlength="120" placeholder="e.g. 500pcs two-color posters for week-long exhibit" />
+
+        <label class="co-label" for="ocr-category">Category <span class="co-required">*</span></label>
+        <select id="ocr-category" class="co-select" style="width: 100%" required>
+          <option value="">— Select —</option>
+          <option value="printing">Printing</option>
+          <option value="binding">Binding</option>
+          <option value="merchandise">Merchandise / giveaways</option>
+          <option value="event_collateral">Event collateral</option>
+          <option value="other">Other / mixed</option>
+        </select>
+
+        <label class="co-label" for="ocr-qty">Quantity, size, deadline, or specs</label>
+        <input id="ocr-qty" class="co-select" style="width: 100%; box-sizing: border-box" placeholder="e.g. A3, 200 copies, needed by March 15" />
+
+        <label class="co-label" for="ocr-details">Full details <span class="co-required">*</span></label>
+        <textarea id="ocr-details" class="co-others-input" style="min-height: 140px; width: 100%; box-sizing: border-box; resize: vertical" required placeholder="Materials, colors, file readiness, pickup, budget hints, etc."></textarea>
+
+        <label class="co-label" for="ocr-file">Reference file (optional, max 5MB)</label>
+        <input type="file" id="ocr-file" accept="image/*,.pdf" />
+
+        <div class="co-step-actions" style="margin-top: 1.25rem">
+          <a href="create-order.html" class="co-btn co-btn-secondary">Cancel</a>
+          <button type="submit" class="co-btn co-btn-primary">Submit request</button>
+        </div>
+      </form>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/org-custom-requests.js"></script>
+    <script src="../../js/student/org-custom-request.js"></script>
+    <script src="../../js/shared/theme-toggle.js" defer></script>
+  </body>
+</html>

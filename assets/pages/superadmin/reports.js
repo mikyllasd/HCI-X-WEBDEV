@@ -734,6 +734,21 @@
           </button>
         </div>
 
+        <div class="settings-section" style="margin-bottom: 1.25rem">
+          <div class="settings-section-header">
+            <div class="settings-section-icon orange">
+              <i data-lucide="help-circle" aria-hidden="true"></i>
+            </div>
+            <div>
+              <div class="settings-section-title">Organization custom requests</div>
+              <div class="settings-section-sub">
+                Student org requests outside standard services — full trail (staff, admin, oversight).
+              </div>
+            </div>
+          </div>
+          <div id="saOrgCustomList" class="verification-list"></div>
+        </div>
+
         <div class="card reports-filter-card">
           <div class="reports-filter-row">
             <div class="form-group">
@@ -960,6 +975,12 @@
         ?.addEventListener("click", () => exportFilteredTransactionsCsv());
 
       applyFilters();
+
+      const saOcr = document.getElementById("saOrgCustomList");
+      if (saOcr && window.UpressOrgCustomRequestsUI) {
+        window.UpressOrgCustomRequestsUI.mount(saOcr, { role: "superadmin" });
+      }
+      if (typeof lucide !== "undefined") lucide.createIcons();
     }
 
     function updateStats() {

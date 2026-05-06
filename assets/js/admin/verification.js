@@ -43,18 +43,26 @@
 
   function getAllStudents() {
     const db = getDB();
-    const merged = [
-      ...(Array.isArray(db.users) ? db.users : []),
-      ...(Array.isArray(db.authUsers) ? db.authUsers : [])
-    ];
-    const seen = new Set();
-    return merged.filter(user => {
-      if (!user || !user.id) return false;
-      if (seen.has(user.id)) return false;
-      seen.add(user.id);
+    const usersArr = Array.isArray(db.users) ? db.users : [];
+    const authArr = Array.isArray(db.authUsers) ? db.authUsers : [];
+    const merged = [...usersArr, ...authArr];
+    const byEmail = new Map();
+
+    for (const user of merged) {
+      if (!user || !user.email || !user.id) continue;
       const role = String(user.role || user.accountType || "").toLowerCase();
-      return role === "student" || user.accountType === "student";
-    });
+      if (role !== "student" && user.accountType !== "student") continue;
+      const key = String(user.email).toLowerCase();
+      const prev = byEmail.get(key);
+      if (!prev) {
+        byEmail.set(key, user);
+        continue;
+      }
+      const prevInUsers = usersArr.includes(prev);
+      const curInUsers = usersArr.includes(user);
+      if (curInUsers && !prevInUsers) byEmail.set(key, user);
+    }
+    return Array.from(byEmail.values());
   }
 
   function normalizeStatus(user) {
@@ -132,8 +140,11 @@
 
   function buildDocImages(user) {
     const parts = [];
-    if (user.idPhotoUrl) parts.push(`<div class="request-card__image-block"><p class="request-card__image-label">Captured ID</p><img src="${user.idPhotoUrl}" alt="Faculty captured ID" style="max-width:100%;border-radius:6px;border:1px solid #ddd;" /></div>`);
-    if (user.corPhotoUrl) parts.push(`<div class="request-card__image-block"><p class="request-card__image-label">Proof of Employment</p><img src="${user.corPhotoUrl}" alt="Proof of employment" style="max-width:100%;border-radius:6px;border:1px solid #ddd;" /></div>`);
+    const isFaculty =
+      String(user.role || user.accountType || "").toLowerCase() === "faculty";
+    const corLabel = isFaculty ? "Proof of Employment" : "Certificate of Registration";
+    if (user.idPhotoUrl) parts.push(`<div class="request-card__image-block"><p class="request-card__image-label">Captured ID</p><img src="${user.idPhotoUrl}" alt="Captured ID" style="max-width:100%;border-radius:6px;border:1px solid #ddd;" /></div>`);
+    if (user.corPhotoUrl) parts.push(`<div class="request-card__image-block"><p class="request-card__image-label">${corLabel}</p><img src="${user.corPhotoUrl}" alt="" style="max-width:100%;border-radius:6px;border:1px solid #ddd;" /></div>`);
     if (user.imageUrl) parts.push(`<div class="request-card__image-block"><p class="request-card__image-label">Uploaded document</p><img src="${user.imageUrl}" alt="Uploaded document" style="max-width:100%;border-radius:6px;border:1px solid #ddd;" /></div>`);
     return parts.length ? parts.join("") : `<em style="font-size:12px;color:#999">No documents captured yet.</em>`;
   }
@@ -149,7 +160,7 @@
           <div>
             <h3 class="card-title">${displayName}</h3>
             <p class="card-subtitle">
-              ${displayId} &nbsp;·&nbsp; Faculty &nbsp;·&nbsp; ${formatField(user.college)}
+              ${displayId} &nbsp;·&nbsp; Student &nbsp;·&nbsp; ${formatField(user.college)}
             </p>
           </div>
           ${buildStatusBadge(status)}
@@ -192,22 +203,49 @@
 
   function updateUserStatus(id, newStatus) {
     const db = getDB();
-    ["users", "authUsers"].forEach(key => {
+    const reviewedAt = new Date().toISOString();
+    const accountStatus = newStatus === "approved" ? "verified" : newStatus;
+    const merged = [...(db.users || []), ...(db.authUsers || [])];
+    const seed = merged.find((item) => item && item.id === id);
+    const emailKey = seed ? String(seed.email || "").toLowerCase() : "";
+
+    function applyRow(u) {
+      u.status = newStatus;
+      u.accountStatus = accountStatus;
+      u.verified = newStatus === "approved";
+      u.active = newStatus === "approved";
+      u.reviewedAt = reviewedAt;
+    }
+
+    ["users", "authUsers"].forEach((key) => {
       const arr = Array.isArray(db[key]) ? db[key] : [];
-      const user = arr.find(item => item.id === id);
-      if (!user) return;
-      user.status = newStatus;
-      user.accountStatus = newStatus === "approved" ? "verified" : newStatus;
-      user.verified = newStatus === "approved";
-      user.active = newStatus === "approved";
-      user.reviewedAt = new Date().toISOString();
+      arr.forEach((item) => {
+        if (!item) return;
+        if (item.id === id || (emailKey && String(item.email || "").toLowerCase() === emailKey)) {
+          applyRow(item);
+        }
+      });
     });
     saveDB(db);
 
+    const canonical =
+      (db.users || []).find(
+        (item) => emailKey && String(item.email || "").toLowerCase() === emailKey,
+      ) || seed;
+    const notifyId = canonical?.id || id;
+
     if (newStatus === "approved") {
       const approvedUser =
-        db.users.find((item) => item.id === id) ||
-        db.authUsers.find((item) => item.id === id);
+        (db.users || []).find(
+          (item) =>
+            item.id === notifyId ||
+            (emailKey && String(item.email || "").toLowerCase() === emailKey),
+        ) ||
+        (db.authUsers || []).find(
+          (item) =>
+            item.id === notifyId ||
+            (emailKey && String(item.email || "").toLowerCase() === emailKey),
+        );
       if (typeof syncStaffDirectoryFromApprovedUser === "function") {
         syncStaffDirectoryFromApprovedUser(approvedUser);
       }
@@ -215,9 +253,14 @@
 
     try {
       const session = JSON.parse(localStorage.getItem("upressUser") || "null");
-      if (session && session.id === id) {
+      if (
+        session &&
+        ((emailKey && String(session.email || "").toLowerCase() === emailKey) ||
+          session.id === id ||
+          session.id === notifyId)
+      ) {
         session.status = newStatus;
-        session.accountStatus = newStatus === "approved" ? "verified" : newStatus;
+        session.accountStatus = accountStatus;
         session.verified = newStatus === "approved";
         localStorage.setItem("upressUser", JSON.stringify(session));
       }
@@ -225,13 +268,13 @@
 
     if (newStatus === "approved") {
       notifyUser(
-        id,
+        notifyId,
         "Your student account has been verified and approved. You now have full access to UPRESSease services.",
         "success",
       );
     } else if (newStatus === "rejected") {
       notifyUser(
-        id,
+        notifyId,
         "Your student account verification was rejected. Please contact the admin for assistance.",
         "error",
       );
@@ -242,10 +285,20 @@
 
   function toggleFlagged(id) {
     const db = getDB();
-    ["users", "authUsers"].forEach(key => {
+    const seed = [...(db.users || []), ...(db.authUsers || [])].find(
+      (item) => item && item.id === id,
+    );
+    if (!seed || !seed.email) return;
+    const emailKey = String(seed.email).toLowerCase();
+    const next = !seed.flagged;
+    ["users", "authUsers"].forEach((key) => {
       const arr = Array.isArray(db[key]) ? db[key] : [];
-      const user = arr.find(item => item.id === id);
-      if (user) user.flagged = !user.flagged;
+      arr.forEach((item) => {
+        if (!item) return;
+        if (item.id === id || String(item.email || "").toLowerCase() === emailKey) {
+          item.flagged = next;
+        }
+      });
     });
     saveDB(db);
     renderRequests();

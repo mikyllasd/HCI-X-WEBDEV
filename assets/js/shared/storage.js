@@ -14,6 +14,8 @@ const defaultDB = {
   faculty: [],
   orgLedgers: [],
   orgLedgerArchive: [],
+  /** Organization “Other / custom” print or merch requests (manual staff review). */
+  orgCustomRequests: [],
   systemSettings: {
     maintenanceMode: false,
     policies: {},
@@ -177,6 +179,9 @@ function mergeWithDefaults(db) {
     orgLedgers: Array.isArray(db.orgLedgers) ? db.orgLedgers : [],
     orgLedgerArchive: Array.isArray(db.orgLedgerArchive)
       ? db.orgLedgerArchive
+      : [],
+    orgCustomRequests: Array.isArray(db.orgCustomRequests)
+      ? db.orgCustomRequests
       : [],
     systemSettings: {
       maintenanceMode: db.systemSettings?.maintenanceMode || false,

@@ -43,6 +43,12 @@
 
     if (activeBtn) activeBtn.classList.add("active");
     if (activeContent) activeContent.classList.add("active");
+
+    if (tabName === "custom-requests" && window.UpressOrgCustomRequestsUI) {
+      const el = document.getElementById("orgCustomRequestsList");
+      if (el) window.UpressOrgCustomRequestsUI.mount(el, { role: "admin" });
+      if (typeof lucide !== "undefined") lucide.createIcons();
+    }
   }
 
   // ── AFFILIATION FUNCTIONS ──────────────────────────────────────────────────

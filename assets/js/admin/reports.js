@@ -157,15 +157,15 @@
       const date = parseDate(getTxnDateValue(transaction));
       return (
         date &&
-        (!db.academicYear || transaction.academicYear === db.academicYear)
+        (!db.academicYear ||
+          !transaction.academicYear ||
+          transaction.academicYear === db.academicYear)
       );
     });
   }
 
   function getFilteredTransactions() {
-    const transactions = getCurrentAcademicTransactions().filter(
-      (transaction) => normalizeStatus(transaction.status) === "completed",
-    );
+    const transactions = getCurrentAcademicTransactions();
     const paymentType = paymentTypeSelect?.value || "all";
     const userType = userTypeSelect?.value || "all";
     const organization = organizationSelect?.value || "all";
@@ -213,6 +213,9 @@
   }
 
   function getSummaryMetrics(transactions) {
+    const completed = transactions.filter(
+      (t) => normalizeStatus(t.status) === "completed",
+    );
     const today = new Date();
     const dailyStart = new Date(today);
     dailyStart.setHours(0, 0, 0, 0);
@@ -263,7 +266,7 @@
       semester: 0,
     };
 
-    transactions.forEach((transaction) => {
+    completed.forEach((transaction) => {
       const amount = Number(transaction.amount || 0);
       const paymentType = getPaymentType(transaction);
       const date = parseDate(getTxnDateValue(transaction));
@@ -367,10 +370,13 @@
 
   function renderPaymentChart(transactions) {
     if (!paymentChartCanvas) return;
-    const paid = transactions
+    const completed = transactions.filter(
+      (t) => normalizeStatus(t.status) === "completed",
+    );
+    const paid = completed
       .filter((transaction) => getPaymentType(transaction) === "gcash")
       .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-    const unpaid = transactions
+    const unpaid = completed
       .filter((transaction) => getPaymentType(transaction) === "credit")
       .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
 
@@ -624,20 +630,15 @@ const payment = getPaymentLabel(getPaymentType(transaction));
 
   /**
    * Some builds store reportable orders in `db.orders` (and only later mirror to `db.transactions`).
-   * Admin reports rely on `db.transactions`, so when it's empty we backfill from `db.orders`
+   * Admin reports rely on `db.transactions`, so we backfill missing transactions from orders
    * (non-destructive; one-time per order id).
    */
-  function ensureTransactionsFromOrdersIfEmpty() {
+  function mergeTransactionsFromOrders() {
     try {
-      if (!Array.isArray(db.transactions) || db.transactions.length > 0) return;
       if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
         return;
       const fresh = window.getDB();
       const existing = Array.isArray(fresh.transactions) ? fresh.transactions : [];
-      if (existing.length > 0) {
-        db.transactions = existing;
-        return;
-      }
       const orders = Array.isArray(fresh.orders) ? fresh.orders : [];
       if (!orders.length) return;
 
@@ -669,11 +670,11 @@ const payment = getPaymentLabel(getPaymentType(transaction));
         });
       }
       if (!txs.length) return;
-      fresh.transactions = txs;
+      fresh.transactions = existing.concat(txs);
       window.saveDB(fresh);
-      db.transactions = txs;
+      db.transactions = fresh.transactions;
     } catch (e) {
-      console.warn("ensureTransactionsFromOrdersIfEmpty:", e);
+      console.warn("mergeTransactionsFromOrders:", e);
     }
   }
 
@@ -717,7 +718,7 @@ const payment = getPaymentLabel(getPaymentType(transaction));
     if (courseSelect) courseSelect.dataset.label = "Courses";
     if (yearLevelSelect) yearLevelSelect.dataset.label = "Year Levels";
 
-    ensureTransactionsFromOrdersIfEmpty();
+    mergeTransactionsFromOrders();
     renderUsersFilters();
     applyFilters();
     initFilters();

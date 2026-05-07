@@ -145,22 +145,32 @@
   }
   window.toggleNotifPanel = toggleNotifPanel;
 
+  function notifBelongsToCurrentUser(n) {
+    return String(n.userId || '') === String(currentUser.id || '');
+  }
+
   function renderNotifications() {
     const db = getDB();
     const notifList = document.getElementById('notif-list');
+    const notifPanel = document.getElementById('notif-panel');
     const notifBadge = document.getElementById('notif-badge');
     if (!notifList) return;
 
-    const userNotifs = (db.notifications || []).filter(n => n.userId === currentUser.id);
+    const userNotifs = (db.notifications || []).filter(notifBelongsToCurrentUser);
     const unread = userNotifs.filter(n => !n.read);
 
     if (notifBadge) {
       if (unread.length > 0) {
         notifBadge.style.display = 'flex';
-        notifBadge.textContent = unread.length > 9 ? '9+' : unread.length;
+        notifBadge.textContent = unread.length > 9 ? '9+' : String(unread.length);
       } else {
         notifBadge.style.display = 'none';
       }
+    }
+
+    const panelOpen = notifPanel && notifPanel.style.display === 'block';
+    if (!panelOpen) {
+      return;
     }
 
     if (userNotifs.length === 0) {
@@ -179,14 +189,14 @@
     }).join('');
 
     const db2 = getDB();
-    (db2.notifications || []).forEach(n => { if (n.userId === currentUser.id) n.read = true; });
+    (db2.notifications || []).forEach(n => { if (notifBelongsToCurrentUser(n)) n.read = true; });
     saveDB(db2);
     if (notifBadge) notifBadge.style.display = 'none';
   }
 
   function clearNotifications() {
     const db = getDB();
-    db.notifications = (db.notifications || []).filter(n => n.userId !== currentUser.id);
+    db.notifications = (db.notifications || []).filter(n => !notifBelongsToCurrentUser(n));
     saveDB(db);
     renderNotifications();
   }

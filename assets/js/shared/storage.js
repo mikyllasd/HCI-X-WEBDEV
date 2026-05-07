@@ -16,6 +16,8 @@ const defaultDB = {
   orgLedgerArchive: [],
   /** Organization “Other / custom” print or merch requests (manual staff review). */
   orgCustomRequests: [],
+  /** In-app notifications (e.g. staff org-custom approval); keyed by user id. */
+  notifications: [],
   systemSettings: {
     maintenanceMode: false,
     policies: {},
@@ -224,6 +226,7 @@ function mergeWithDefaults(db) {
     orgCustomRequests: Array.isArray(db.orgCustomRequests)
       ? db.orgCustomRequests
       : [],
+    notifications: Array.isArray(db.notifications) ? db.notifications : [],
     systemSettings: {
       maintenanceMode: db.systemSettings?.maintenanceMode || false,
       policies: db.systemSettings?.policies || {},

@@ -113,6 +113,10 @@
   }
 
   function staffDecision(id, nextStatus, notes, quotedPrice) {
+    const prev =
+      typeof window.UpressOrgCustomRequests.list === "function"
+        ? window.UpressOrgCustomRequests.list().find((x) => x.id === id)
+        : null;
     const patch = {
       status: nextStatus,
       staffNotes: notes,
@@ -125,6 +129,8 @@
     }
     const row = window.UpressOrgCustomRequests.update(id, patch);
     if (!row) return;
+    const targetUserId = row.userId || (prev && prev.userId);
+    if (!targetUserId) return;
     let msg = "";
     if (nextStatus === "doable")
       msg =
@@ -140,7 +146,11 @@
       msg =
         "UPress needs more information about your organization custom request. Notes: " +
         (notes || "—");
-    window.UpressOrgCustomRequests.notifyUser(row.userId, msg, nextStatus === "doable" ? "success" : "warning");
+    window.UpressOrgCustomRequests.notifyUser(
+      targetUserId,
+      msg,
+      nextStatus === "doable" ? "success" : "warning",
+    );
   }
 
   function buildOrgCustomReviewModalHtml(r) {

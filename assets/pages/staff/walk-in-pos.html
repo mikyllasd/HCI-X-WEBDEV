@@ -233,6 +233,18 @@
                 <div class="pos-total-row">
                   <span>Subtotal</span><strong id="posSubtotal">₱0.00</strong>
                 </div>
+                <div class="pos-total-row" style="align-items:center;gap:10px">
+                  <span>Discount</span>
+                  <select id="posDiscountSelect" class="pos-input" style="max-width:240px">
+                    <option value="">None</option>
+                  </select>
+                </div>
+                <div class="pos-total-row" id="posDiscountAmountRow" style="display:none">
+                  <span>Discount amount</span><strong id="posDiscountAmount">-₱0.00</strong>
+                </div>
+                <div class="pos-total-row" style="font-weight:900">
+                  <span>Total</span><strong id="posGrandTotal">₱0.00</strong>
+                </div>
               </div>
 
               <label class="pos-label">Payment</label>
@@ -324,6 +336,7 @@
 
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/discounts.js"></script>
     <script src="../../js/staff/staff-data.js"></script>
     <script src="../../js/staff/staff-shell.js"></script>
     <script src="../../js/staff/staff-pos.js"></script>

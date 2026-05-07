@@ -48,8 +48,10 @@
     /** Consecutive school years "YYYY-(YYYY+1)", e.g. 2025-2026 */
     function schoolYearOptions(selected) {
       const y = new Date().getFullYear();
-      const back = 12;
-      const ahead = 6;
+      // Only allow setting the current academic year (and optionally next),
+      // to prevent switching to a past year from System Settings.
+      const back = 0;
+      const ahead = 1;
       const labels = [];
       for (let start = y - back; start <= y + ahead; start++) {
         labels.push(`${start}-${start + 1}`);
@@ -379,6 +381,15 @@
       const parts = academicYear.split("-").map(Number);
       if (parts.length !== 2 || parts[1] !== parts[0] + 1) {
         showToast("School year must be consecutive years (e.g. 2025-2026).");
+        return;
+      }
+
+      // Prevent selecting a previous school year from System Settings.
+      const currentStart = new Date().getFullYear();
+      if (parts[0] < currentStart) {
+        showToast(
+          "Please select the current academic year (past years are read-only in Archives).",
+        );
         return;
       }
 

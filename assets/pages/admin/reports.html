@@ -168,7 +168,7 @@
                 <i data-lucide="check-circle" aria-hidden="true"></i>
               </div>
               <p class="stat-card__value" id="reportsTotalSales">₱0.00</p>
-              <p class="stat-card__text">Only completed transactions</p>
+              <p class="stat-card__text">Net sales after discounts</p>
             </article>
             <article class="stat-card stat-card--green">
               <div class="stat-card__header">
@@ -185,6 +185,14 @@
               </div>
               <p class="stat-card__value" id="reportsCreditSales">₱0.00</p>
               <p class="stat-card__text">Cash payments recorded</p>
+            </article>
+            <article class="stat-card stat-card--teal">
+              <div class="stat-card__header">
+                <span>Discounts Given</span>
+                <i data-lucide="badge-percent" aria-hidden="true"></i>
+              </div>
+              <p class="stat-card__value" id="reportsDiscountTotal">₱0.00</p>
+              <p class="stat-card__text">Total discount amount (completed)</p>
             </article>
             <article class="stat-card stat-card--purple">
               <div class="stat-card__header">
@@ -374,7 +382,9 @@
                     <th>Student</th>
                     <th>Service</th>
                     <th>Payment</th>
-                    <th>Amount</th>
+                    <th>Gross</th>
+                    <th>Discount</th>
+                    <th>Net</th>
                     <th>Status</th>
                   </tr>
                 </thead>

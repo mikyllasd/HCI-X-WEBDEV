@@ -5,6 +5,7 @@
   const gcashSalesEl = document.getElementById("reportsGCashSales");
   const creditSalesEl = document.getElementById("reportsCreditSales");
   const verifiedUsersEl = document.getElementById("reportsVerifiedUsers");
+  const discountTotalEl = document.getElementById("reportsDiscountTotal");
   const dailyEl = document.getElementById("reportsDaily");
   const weeklyEl = document.getElementById("reportsWeekly");
   const monthlyEl = document.getElementById("reportsMonthly");
@@ -48,6 +49,27 @@
 
   function toMoney(amount) {
     return `₱${Number(amount || 0).toFixed(2)}`;
+  }
+
+  function getTxGross(t) {
+    const gross = t?.grossAmount ?? t?.grossTotal;
+    const disc = t?.discountAmount ?? 0;
+    const net = t?.netAmount ?? t?.amount;
+    if (gross != null && Number.isFinite(Number(gross))) return Number(gross);
+    // Backfill for legacy rows
+    const n = Number(net || 0);
+    const d = Number(disc || 0);
+    return Math.max(0, n + d);
+  }
+
+  function getTxDiscount(t) {
+    const disc = t?.discountAmount ?? 0;
+    return Math.max(0, Number(disc || 0));
+  }
+
+  function getTxNet(t) {
+    const net = t?.netAmount ?? t?.amount;
+    return Math.max(0, Number(net || 0));
   }
 
   function normalizeStatus(status) {
@@ -152,20 +174,27 @@
     return { start, end };
   }
 
+  function applyFilters() {
+    const transactions = getFilteredTransactions();
+    updateSummaryCards(transactions);
+    renderPaymentChart(transactions);
+    renderRecords(transactions);
+  }
+
   function getCurrentAcademicTransactions() {
     return (db.transactions || []).filter((transaction) => {
       const date = parseDate(getTxnDateValue(transaction));
       return (
         date &&
-        (!db.academicYear || transaction.academicYear === db.academicYear)
+        (!db.academicYear ||
+          !transaction.academicYear ||
+          transaction.academicYear === db.academicYear)
       );
     });
   }
 
   function getFilteredTransactions() {
-    const transactions = getCurrentAcademicTransactions().filter(
-      (transaction) => normalizeStatus(transaction.status) === "completed",
-    );
+    const transactions = getCurrentAcademicTransactions();
     const paymentType = paymentTypeSelect?.value || "all";
     const userType = userTypeSelect?.value || "all";
     const organization = organizationSelect?.value || "all";
@@ -213,6 +242,9 @@
   }
 
   function getSummaryMetrics(transactions) {
+    const completed = transactions.filter(
+      (t) => normalizeStatus(t.status) === "completed",
+    );
     const today = new Date();
     const dailyStart = new Date(today);
     dailyStart.setHours(0, 0, 0, 0);
@@ -254,20 +286,23 @@
     );
 
     const totals = {
-      total: 0,
+      total: 0, // net
       gcash: 0,
       credit: 0,
+      discounts: 0,
       daily: 0,
       weekly: 0,
       monthly: 0,
       semester: 0,
     };
 
-    transactions.forEach((transaction) => {
-      const amount = Number(transaction.amount || 0);
+    completed.forEach((transaction) => {
+      const amount = getTxNet(transaction);
+      const disc = getTxDiscount(transaction);
       const paymentType = getPaymentType(transaction);
       const date = parseDate(getTxnDateValue(transaction));
       totals.total += amount;
+      totals.discounts += disc;
       if (paymentType === "gcash") totals.gcash += amount;
       if (paymentType === "credit") totals.credit += amount;
       if (date && date >= dailyStart && date <= dailyEnd)
@@ -287,6 +322,7 @@
     if (totalSalesEl) totalSalesEl.textContent = toMoney(metrics.total);
     if (gcashSalesEl) gcashSalesEl.textContent = toMoney(metrics.gcash);
     if (creditSalesEl) creditSalesEl.textContent = toMoney(metrics.credit);
+    if (discountTotalEl) discountTotalEl.textContent = toMoney(metrics.discounts);
     if (verifiedUsersEl)
       verifiedUsersEl.textContent = (db.users || []).filter(
         (user) =>
@@ -367,10 +403,13 @@
 
   function renderPaymentChart(transactions) {
     if (!paymentChartCanvas) return;
-    const paid = transactions
+    const completed = transactions.filter(
+      (t) => normalizeStatus(t.status) === "completed",
+    );
+    const paid = completed
       .filter((transaction) => getPaymentType(transaction) === "gcash")
       .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
-    const unpaid = transactions
+    const unpaid = completed
       .filter((transaction) => getPaymentType(transaction) === "credit")
       .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0);
 
@@ -451,13 +490,18 @@
       .map((transaction) => {
         const paymentType = getPaymentType(transaction);
         const date = parseDate(getTxnDateValue(transaction));
+        const gross = getTxGross(transaction);
+        const disc = getTxDiscount(transaction);
+        const net = getTxNet(transaction);
         return `
           <tr>
             <td>${date ? date.toLocaleDateString() : "N/A"}</td>
             <td>${String(transaction.studentName || transaction.email || "Unknown")}</td>
             <td>${String(transaction.serviceName || transaction.service || "—")}</td>
             <td>${getPaymentLabel(paymentType)}</td>
-            <td>${toMoney(transaction.amount)}</td>
+            <td>${toMoney(gross)}</td>
+            <td>${disc > 0 ? "-" + toMoney(disc) : "—"}</td>
+            <td>${toMoney(net)}</td>
             <td>${String(transaction.status || "").toUpperCase()}</td>
           </tr>
         `;
@@ -466,7 +510,7 @@
 
     if (!rows) {
       recordsBody.innerHTML =
-        '<tr><td colspan=6 class="text-center">No matching transaction records found.</td></tr>';
+        '<tr><td colspan=8 class="text-center">No matching transaction records found.</td></tr>';
       emptyState?.classList.remove("hidden");
       renderRecordsPagination(0, 1);
       return;
@@ -517,7 +561,7 @@
 
     // Add date range
     const period = periodSelect?.value || "daily";
-    const { start, end } = getDateRange(period);
+    const { start, end } = getPeriodRange(period);
     doc.setFontSize(12);
     doc.text(
       `Period: ${start.toLocaleDateString()} - ${end.toLocaleDateString()}`,
@@ -526,40 +570,39 @@
     );
 
     // Add summary
-    const totalSales = transactions.reduce(
-      (sum, t) => sum + Number(t.amount || 0),
-      0,
-    );
+    const totalSales = transactions.reduce((sum, t) => sum + getTxNet(t), 0);
+    const totalDiscounts = transactions.reduce((sum, t) => sum + getTxDiscount(t), 0);
     const gcashSales = transactions
       .filter((t) => getPaymentType(t) === "gcash")
-      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+      .reduce((sum, t) => sum + getTxNet(t), 0);
     const creditSales = transactions
       .filter((t) => getPaymentType(t) === "credit")
-      .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+      .reduce((sum, t) => sum + getTxNet(t), 0);
 
     doc.text(`Total Sales: ₱${totalSales.toFixed(2)}`, 20, 50);
     doc.text(`Online Paid: ₱${gcashSales.toFixed(2)}`, 20, 60);
     doc.text(`Cash (Paid): ₱${creditSales.toFixed(2)}`, 20, 70);
-    doc.text(`Total Records: ${transactions.length}`, 20, 80);
+    doc.text(`Discounts Given: ₱${totalDiscounts.toFixed(2)}`, 20, 80);
+    doc.text(`Total Records: ${transactions.length}`, 20, 90);
 
     // Add table headers
-    let yPosition = 100;
+    let yPosition = 110;
     doc.setFontSize(10);
     doc.text("Date", 20, yPosition);
     doc.text("Student", 60, yPosition);
     doc.text("Service", 120, yPosition);
     doc.text("Payment", 160, yPosition);
-    doc.text("Amount", 190, yPosition);
+    doc.text("Gross", 190, yPosition);
 
     // Add table data
     yPosition += 10;
     transactions.slice(0, 50).forEach((transaction) => {
       // Limit to 50 records for PDF
-      const date = parseDate(transaction.date)?.toLocaleDateString() || "—";
+      const date = parseDate(getTxnDateValue(transaction))?.toLocaleDateString() || "—";
       const student = getUserName(transaction.email) || "—";
-      const service = transaction.service || "—";
-const payment = getPaymentLabel(getPaymentType(transaction));
-      const amount = `₱${Number(transaction.amount || 0).toFixed(2)}`;
+      const service = transaction.serviceName || transaction.service || "—";
+      const payment = getPaymentLabel(getPaymentType(transaction));
+      const amount = `₱${getTxGross(transaction).toFixed(2)}`;
 
       doc.text(date, 20, yPosition);
       doc.text(student.substring(0, 15), 60, yPosition);
@@ -584,13 +627,15 @@ const payment = getPaymentLabel(getPaymentType(transaction));
 
     // Prepare data for Excel
     const data = [
-      ["Date", "Student", "Service", "Payment", "Amount", "Status"],
+      ["Date", "Student", "Service", "Payment", "Gross", "Discount", "Net", "Status"],
       ...transactions.map((transaction) => [
-        parseDate(transaction.date)?.toLocaleDateString() || "—",
+        parseDate(getTxnDateValue(transaction))?.toLocaleDateString() || "—",
         getUserName(transaction.email) || "—",
-        transaction.service || "—",
+        transaction.serviceName || transaction.service || "—",
         getPaymentLabel(getPaymentType(transaction)),
-        Number(transaction.amount || 0),
+        getTxGross(transaction),
+        getTxDiscount(transaction),
+        getTxNet(transaction),
         transaction.status || "—",
       ]),
     ];
@@ -605,7 +650,9 @@ const payment = getPaymentLabel(getPaymentType(transaction));
       { wch: 25 }, // Student
       { wch: 20 }, // Service
       { wch: 10 }, // Payment
-      { wch: 12 }, // Amount
+      { wch: 12 }, // Gross
+      { wch: 12 }, // Discount
+      { wch: 12 }, // Net
       { wch: 10 }, // Status
     ];
 
@@ -624,20 +671,15 @@ const payment = getPaymentLabel(getPaymentType(transaction));
 
   /**
    * Some builds store reportable orders in `db.orders` (and only later mirror to `db.transactions`).
-   * Admin reports rely on `db.transactions`, so when it's empty we backfill from `db.orders`
+   * Admin reports rely on `db.transactions`, so we backfill missing transactions from orders
    * (non-destructive; one-time per order id).
    */
-  function ensureTransactionsFromOrdersIfEmpty() {
+  function mergeTransactionsFromOrders() {
     try {
-      if (!Array.isArray(db.transactions) || db.transactions.length > 0) return;
       if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
         return;
       const fresh = window.getDB();
       const existing = Array.isArray(fresh.transactions) ? fresh.transactions : [];
-      if (existing.length > 0) {
-        db.transactions = existing;
-        return;
-      }
       const orders = Array.isArray(fresh.orders) ? fresh.orders : [];
       if (!orders.length) return;
 
@@ -669,11 +711,11 @@ const payment = getPaymentLabel(getPaymentType(transaction));
         });
       }
       if (!txs.length) return;
-      fresh.transactions = txs;
+      fresh.transactions = existing.concat(txs);
       window.saveDB(fresh);
-      db.transactions = txs;
+      db.transactions = fresh.transactions;
     } catch (e) {
-      console.warn("ensureTransactionsFromOrdersIfEmpty:", e);
+      console.warn("mergeTransactionsFromOrders:", e);
     }
   }
 
@@ -717,7 +759,7 @@ const payment = getPaymentLabel(getPaymentType(transaction));
     if (courseSelect) courseSelect.dataset.label = "Courses";
     if (yearLevelSelect) yearLevelSelect.dataset.label = "Year Levels";
 
-    ensureTransactionsFromOrdersIfEmpty();
+    mergeTransactionsFromOrders();
     renderUsersFilters();
     applyFilters();
     initFilters();

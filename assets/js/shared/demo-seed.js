@@ -9,7 +9,7 @@
 (function (global) {
   "use strict";
 
-  const DEMO_ACADEMIC_YEAR = "";
+  const DEMO_ACADEMIC_YEAR = "2025-2026";
 
   const DEMO_VERIFICATION_REQUESTS = [
     {
@@ -403,6 +403,39 @@
     },
   ];
 
+  const DEMO_DISCOUNTS = [
+    {
+      id: "disc_demo_student10",
+      code: "STUDENT10",
+      name: "Student 10% off",
+      type: "percent", // percent | fixed
+      value: 10,
+      active: true,
+      startsAt: "",
+      endsAt: "",
+      minAmount: 0,
+      maxDiscount: 0,
+      notes: "Demo code for checkout and POS",
+      createdAt: "2026-01-10T00:00:00.000Z",
+      updatedAt: "2026-01-10T00:00:00.000Z",
+    },
+    {
+      id: "disc_demo_fixed50",
+      code: "LESS50",
+      name: "Less ₱50",
+      type: "fixed",
+      value: 50,
+      active: true,
+      startsAt: "",
+      endsAt: "",
+      minAmount: 300,
+      maxDiscount: 0,
+      notes: "Demo fixed discount with minimum spend",
+      createdAt: "2026-01-10T00:00:00.000Z",
+      updatedAt: "2026-01-10T00:00:00.000Z",
+    },
+  ];
+
   const DEMO_USERS = [
     {
       id: "user_demo_student",
@@ -753,6 +786,7 @@
       organizations: clone(DEMO_ORGANIZATIONS),
       orgCustomRequests: clone(DEMO_ORG_CUSTOM_REQUESTS),
       notifications: [],
+      discounts: clone(DEMO_DISCOUNTS),
       systemSettings: {
         maintenanceMode: false,
         policies: {},

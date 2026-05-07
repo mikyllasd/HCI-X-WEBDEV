@@ -131,7 +131,12 @@ function renderCheckoutItems() {
 
 function updateTotals() {
     const subtotal = Cart.total();
-    const total = subtotal; // No taxes/fees in this implementation
+    const code = String(document.getElementById('checkout-discount-code')?.value || '').trim();
+    const r = window.UpressDiscounts?.applyDiscountCode
+        ? window.UpressDiscounts.applyDiscountCode(code, subtotal)
+        : { ok: false, discountAmount: 0, netAmount: subtotal, code };
+    const discountAmount = Number(r.discountAmount || 0);
+    const total = Number(r.netAmount || subtotal);
     const downpaymentThreshold = 500;
     const downpaymentEl = document.getElementById('checkout-downpayment');
     const downpaymentRow = document.getElementById('checkout-downpayment-row');
@@ -141,11 +146,32 @@ function updateTotals() {
     const totalEl = document.getElementById('checkout-total');
     const fullTotalEl = document.getElementById('checkout-full-total');
     const subtotalEl = document.getElementById('checkout-subtotal');
+    const discRow = document.getElementById('checkout-discount-row');
+    const discEl = document.getElementById('checkout-discount-amount');
 
     if (subtotalEl) subtotalEl.textContent = '₱' + subtotal.toFixed(2);
+    if (discRow && discEl) {
+        if (discountAmount > 0) {
+            discRow.style.display = 'flex';
+            discEl.textContent = '-₱' + discountAmount.toFixed(2);
+        } else {
+            discRow.style.display = 'none';
+            discEl.textContent = '-₱0.00';
+        }
+    }
+
+    try {
+        Checkout.set({
+            discountCode: (r.ok ? (r.code || code).trim() : ''),
+            discountId: r.ok ? (r.discount?.id || '') : '',
+            grossAmount: subtotal.toFixed(2),
+            discountAmount: discountAmount.toFixed(2),
+            netAmount: total.toFixed(2),
+        });
+    } catch (_) {}
 
     if (subtotal > downpaymentThreshold) {
-        const downpayment = Math.ceil(subtotal * 0.20 * 100) / 100;
+        const downpayment = Math.ceil(total * 0.20 * 100) / 100;
         if (downpaymentRow) downpaymentRow.style.display = 'flex';
         if (downpaymentEl) downpaymentEl.textContent = '₱' + downpayment.toFixed(2);
         if (downpaymentNote) downpaymentNote.style.display = 'block';
@@ -308,3 +334,32 @@ renderCheckoutItems();
 updateTotals();
 showPhoneConfirmation();
 attachPaymentEvents();
+
+// Discount UI
+document.getElementById('checkout-apply-discount')?.addEventListener('click', () => {
+    const hint = document.getElementById('checkout-discount-hint');
+    const code = String(document.getElementById('checkout-discount-code')?.value || '').trim();
+    const gross = Cart.total();
+    const r = window.UpressDiscounts?.applyDiscountCode
+        ? window.UpressDiscounts.applyDiscountCode(code, gross)
+        : { ok: false, reason: 'no_helper', discountAmount: 0, netAmount: gross, code };
+    if (hint) {
+        if (!code) hint.textContent = '';
+        else if (r.ok) hint.textContent = `Applied ${r.code} (−₱${Number(r.discountAmount || 0).toFixed(2)})`;
+        else if (r.reason === 'min_not_met') hint.textContent = 'Minimum amount not met for this code.';
+        else if (r.reason === 'inactive') hint.textContent = 'This discount code is disabled.';
+        else if (r.reason === 'expired') hint.textContent = 'This discount code has expired.';
+        else if (r.reason === 'not_started') hint.textContent = 'This discount code is not active yet.';
+        else hint.textContent = 'Invalid discount code.';
+    }
+    updateTotals();
+});
+
+// Prefill from checkout state if present
+try {
+    const co = Checkout.get() || {};
+    if (co.discountCode && document.getElementById('checkout-discount-code')) {
+        document.getElementById('checkout-discount-code').value = co.discountCode;
+        updateTotals();
+    }
+} catch (_) {}

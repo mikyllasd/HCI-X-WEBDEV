@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (countEl) countEl.textContent = `${filtered.length} records`;
 
     if (!filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="13" style="color:#667085">No records match the selected filters.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="14" style="color:#667085">No records match the selected filters.</td></tr>`;
       return;
     }
 
@@ -263,6 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((r) => {
         const typeLabel =
           r.userType === "faculty" ? "Faculty" : r.userType === "organization" ? "Organization" : "Student";
+        const printType = r.channel === "Walk-in POS" ? "pos" : "web";
         return `
           <tr>
             <td><code>${esc(r.id)}</code></td>
@@ -278,6 +279,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${esc(String(r.paymentMethod || "—"))}</td>
             <td><code>${esc(String(r.reference || "—"))}</code></td>
             <td style="font-weight:800;color:var(--color-header)">${esc(money(r.amount))}</td>
+            <td class="data-table__col-actions">
+              <div class="data-table__actions">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-pos-print-receipt"
+                  data-print-type="${esc(printType)}"
+                  data-order-id="${esc(r.id)}"
+                >Print</button>
+              </div>
+            </td>
           </tr>
         `;
       })
@@ -308,6 +319,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id)?.addEventListener("change", render);
   });
   document.getElementById("actSearch")?.addEventListener("input", render);
+
+  document.getElementById("completedOrdersTable")?.addEventListener("click", (e) => {
+    const btn = e.target?.closest?.(".btn-pos-print-receipt");
+    if (!btn) return;
+    const printType = btn.getAttribute("data-print-type") || "web";
+    const orderId = btn.getAttribute("data-order-id") || "";
+    try {
+      if (typeof window.openPrintWindow === "function") {
+        window.openPrintWindow({ type: printType, id: orderId });
+        return;
+      }
+    } catch {
+      // fallback below
+    }
+    // Basic fallback: print current page if the staff.js helper isn't available for some reason.
+    window.print();
+  });
 
   document.addEventListener("staff:data-changed", render);
   window.addEventListener("storage", (e) => {

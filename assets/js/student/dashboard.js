@@ -426,7 +426,50 @@
 
   function getUserOrders() {
     const db = getDB();
-    return (db.orders || []).filter(o => o.userId === currentUser.id || o.studentId === currentUser.id);
+    const uid = String(currentUser.id || "");
+
+    const webOrders = (db.orders || []).filter(
+      (o) => String(o.userId || o.studentId || "") === uid,
+    );
+
+    const ocr = Array.isArray(db.orgCustomRequests) ? db.orgCustomRequests : [];
+    const orgCustomOrders = ocr
+      .filter((r) => String(r && r.userId || "") === uid)
+      .map((r) => {
+        const st = String(r.status || "pending").toLowerCase();
+        let uiStatus = "Pending";
+        if (st === "doable") uiStatus = "Approved";
+        else if (st === "needs_info") uiStatus = "Needs info";
+        else if (st === "not_doable") uiStatus = "Rejected";
+
+        const amount =
+          r.quotedPrice != null && Number.isFinite(Number(r.quotedPrice))
+            ? Number(r.quotedPrice)
+            : 0;
+
+        return {
+          id: r.id,
+          orderId: r.id,
+          isOrgCustom: true,
+          serviceName: "Other / custom request",
+          service: r.requestTitle || "Organization custom request",
+          order_org: r.organizationName || "",
+          organizationName: r.organizationName || "",
+          status: uiStatus,
+          amount,
+          date: r.submittedAt || r.updatedAt || r.staffReviewedAt || "",
+          submittedAt: r.submittedAt || "",
+          staffReviewedAt: r.staffReviewedAt || "",
+          staffNotes: r.staffNotes || "",
+          ocrStatus: st,
+        };
+      });
+
+    const merged = [...orgCustomOrders, ...webOrders];
+    merged.sort(
+      (a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0),
+    );
+    return merged;
   }
 
   let currentOrderFilter = 'all';
@@ -462,11 +505,11 @@
     listEl.className = '';
     listEl.innerHTML = orders.map(o => `
       <div class="sidebar-order-item">
-        <span class="sidebar-order-name">${o.serviceName || o.service || 'Order'}</span>
+        <span class="sidebar-order-name">${o.isOrgCustom ? `${o.service || 'Organization custom request'}` : (o.serviceName || o.service || 'Order')}</span>
         <span class="sidebar-order-meta">${o.date ? new Date(o.date).toLocaleDateString() : ''}
           <span class="sidebar-order-status status-${o.status || 'Pending'}">${o.status || 'Pending'}</span>
         </span>
-        <span class="sidebar-order-price">₱${Number(o.amount || 0).toFixed(2)}</span>
+        <span class="sidebar-order-price">${o.isOrgCustom && !(Number(o.amount || 0) > 0) ? '—' : `₱${Number(o.amount || 0).toFixed(2)}`}</span>
       </div>
     `).join('');
   }

@@ -1,25 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UPRESSease – Superadmin Discounts</title>
-    <link rel="stylesheet" href="../../css/shared/global.css" />
-    <link rel="stylesheet" href="../../css/staff/staff.css" />
-    <link rel="stylesheet" href="../../css/superadmin/services.css" />
+    <script>
+      (function () {
+        var k = "upress-theme";
+        var s = localStorage.getItem(k);
+        var t =
+          s === "dark" || s === "light"
+            ? s
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+
+    <title>UPRESSease – Discount codes</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="../../css/admin/admin-dashboard.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/upress-super-content.css" />
+    <link rel="stylesheet" href="../../css/upress-super-widgets.css" />
+    <link rel="stylesheet" href="../../css/upress-console.css" />
+    <link rel="stylesheet" href="../../css/superadmin/services.css" />
+    <link rel="stylesheet" href="../../css/superadmin/discounts.css" />
+    <link rel="stylesheet" href="../../css/upress-theme-toggle.css" />
   </head>
-  <body class="sd-body">
+  <body class="staff-dashboard-body" data-page="discounts">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="staff-layout sd-layout">
-      <aside class="sidebar staff-sidebar" id="sidebar" aria-label="Superadmin sidebar">
-        <div class="sidebar-header">
-          <div class="sidebar-brand">
-            <img src="../../images/logo.png" alt="UPRESSease logo" />
-            <div>
-              <span class="brand-name">UPRESSease</span>
-              <span class="brand-sub">Superadmin</span>
-            </div>
+    <div class="app-wrapper staff-layout sd-layout">
+      <aside
+        class="sidebar staff-sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Superadmin sidebar"
+      >
+        <div class="sidebar-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <span class="brand-name">UPRESSease</span>
+            <span class="brand-sub">Superadmin</span>
           </div>
           <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close sidebar">
             <i data-lucide="x" aria-hidden="true"></i>
@@ -85,66 +113,20 @@
           </ul>
         </nav>
       </aside>
-
       <main class="main-content staff-main sd-main" role="main">
         <button class="hamburger main-hamburger" id="hamburger" type="button" aria-label="Open menu">
           <span></span><span></span><span></span>
         </button>
-
-        <div class="page-container">
-          <header class="page-header">
-            <div>
-              <h1 class="page-title">Discounts</h1>
-              <p class="page-sub">Create, edit, and enable discount codes for student checkout and walk-in POS.</p>
-            </div>
-            <div class="page-actions">
-              <button class="btn btn-primary" id="addDiscountBtn" type="button">
-                <i data-lucide="plus" aria-hidden="true"></i> Add Discount
-              </button>
-            </div>
-          </header>
-
-          <div class="list-toolbar">
-            <label class="list-search">
-              Search
-              <input
-                class="list-search__input"
-                id="discountSearch"
-                type="search"
-                placeholder="Search code, name, type, value…"
-              />
-            </label>
-            <span class="list-toolbar__count" id="discountCount">0 discounts</span>
-          </div>
-
-          <div class="card">
-            <div class="table-wrapper">
-              <table class="data-table" aria-label="Discount codes">
-                <thead>
-                  <tr>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Value</th>
-                    <th>Minimum</th>
-                    <th>Active</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="discountsBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <div class="page-container" id="pageContainer"></div>
       </main>
     </div>
 
-    <div class="modal-backdrop" id="discountModal" aria-hidden="true">
-      <div class="modal">
+    <div class="modal-backdrop modal--discount" id="discountModal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-labelledby="discountModalTitle" aria-modal="true">
         <div class="modal-header">
           <div>
-            <h2 class="modal-title" id="discountModalTitle">Add Discount</h2>
-            <p class="modal-sub" id="discountModalSub">Create a new discount code.</p>
+            <h2 class="modal-title" id="discountModalTitle">Add discount</h2>
+            <p class="modal-sub" id="discountModalSub">Create a reusable code for checkout and POS.</p>
           </div>
           <button class="modal-close" id="discountModalClose" type="button" aria-label="Close modal">
             <i data-lucide="x" aria-hidden="true"></i>
@@ -152,60 +134,75 @@
         </div>
         <div class="modal-body">
           <form id="discountForm">
+            <p class="discount-modal__section-title">Basics</p>
             <div class="form-group">
-              <label class="form-label">Code <span class="required">*</span></label>
-              <input class="form-input" id="discCode" required placeholder="e.g. STUDENT10" />
+              <label class="form-label" for="discCode">Code <span class="required">*</span></label>
+              <input class="form-input" id="discCode" required placeholder="STUDENT10" autocomplete="off" />
+              <div class="form-hint" style="margin-top: 8px">
+                Stored uppercase. Students enter at checkout; staff pick from POS.
+              </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Name <span class="required">*</span></label>
-              <input class="form-input" id="discName" required placeholder="e.g. Student 10% off" />
+              <label class="form-label" for="discName">Display name <span class="required">*</span></label>
+              <input class="form-input" id="discName" required placeholder="Student 10% off" />
             </div>
+
+            <p class="discount-modal__section-title">Value & limits</p>
             <div class="form-row">
-              <div class="form-group" style="flex:1">
-                <label class="form-label">Type</label>
+              <div class="form-group">
+                <label class="form-label" for="discType">Type</label>
                 <select class="form-input form-select" id="discType">
-                  <option value="percent">Percent (%)</option>
-                  <option value="fixed">Fixed (₱)</option>
+                  <option value="percent">Percentage off (%)</option>
+                  <option value="fixed">Fixed amount (₱)</option>
                 </select>
               </div>
-              <div class="form-group" style="flex:1">
-                <label class="form-label">Value <span class="required">*</span></label>
+              <div class="form-group">
+                <label class="form-label" for="discValue">Value <span class="required">*</span></label>
                 <input class="form-input" id="discValue" type="number" min="0" step="0.01" required />
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group" style="flex:1">
-                <label class="form-label">Minimum amount (₱)</label>
+              <div class="form-group">
+                <label class="form-label" for="discMin">Minimum order (₱)</label>
                 <input class="form-input" id="discMin" type="number" min="0" step="0.01" value="0" />
               </div>
-              <div class="form-group" style="flex:1">
-                <label class="form-label">Max discount (optional)</label>
+              <div class="form-group">
+                <label class="form-label" for="discMax">Max discount cap (₱)</label>
                 <input class="form-input" id="discMax" type="number" min="0" step="0.01" value="0" />
+                <div class="form-hint" style="margin-top: 8px">Use 0 for no cap (common for percentage codes).</div>
               </div>
             </div>
+
+            <p class="discount-modal__section-title">Schedule (optional)</p>
             <div class="form-row">
-              <div class="form-group" style="flex:1">
-                <label class="form-label">Starts at</label>
+              <div class="form-group">
+                <label class="form-label" for="discStart">Valid from</label>
                 <input class="form-input" id="discStart" type="date" />
               </div>
-              <div class="form-group" style="flex:1">
-                <label class="form-label">Ends at</label>
+              <div class="form-group">
+                <label class="form-label" for="discEnd">Valid until</label>
                 <input class="form-input" id="discEnd" type="date" />
               </div>
             </div>
+
+            <p class="discount-modal__section-title">Notes</p>
             <div class="form-group">
-              <label class="form-label">Notes</label>
-              <textarea class="form-input" id="discNotes" rows="3" style="resize:vertical"></textarea>
+              <label class="form-label" for="discNotes">Internal notes</label>
+              <textarea class="form-input" id="discNotes" rows="3"></textarea>
             </div>
-            <div class="form-group" style="display:flex;align-items:center;gap:10px">
+
+            <label class="discount-modal__toggle" for="discActive">
               <input id="discActive" type="checkbox" checked />
-              <label for="discActive" class="form-label" style="margin:0">Active</label>
-            </div>
-            <div class="modal-actions">
-              <button class="btn btn--outline" id="discountCancel" type="button">Cancel</button>
-              <button class="btn btn-primary" id="discountSave" type="submit">Save</button>
-            </div>
+              <div>
+                <div class="discount-modal__toggle-label">Discount is active</div>
+                <p class="discount-modal__toggle-hint">Inactive codes are hidden from student checkout and POS.</p>
+              </div>
+            </label>
           </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="discountCancel" type="button">Cancel</button>
+          <button class="btn btn-primary" id="discountSave" type="submit" form="discountForm">Save discount</button>
         </div>
       </div>
     </div>
@@ -213,8 +210,7 @@
     <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/storage.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
-    <script src="discounts.js"></script>
     <script src="../../js/shared/theme-toggle.js" defer></script>
+    <script src="discounts.js"></script>
   </body>
 </html>
-

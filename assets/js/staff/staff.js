@@ -962,9 +962,104 @@ function initCompletedPage() {
     pageSize: 10,
     emptyLabel: "orders",
   });
+  const table = document.getElementById("completedOrdersTable");
+  if (table && !table.dataset.printBound) {
+    table.dataset.printBound = "1";
+    table.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn-pos-print-receipt");
+      if (!btn) return;
+      const type = btn.getAttribute("data-print-type") || "";
+      if (type === "pos") {
+        const sid = btn.getAttribute("data-sale-id");
+        if (!sid || !window.UpressStaffData) return;
+        const sale = window.UpressStaffData.getWalkInSaleById(sid);
+        if (!sale) return alert("Sale not found.");
+        openPrintWindow({
+          title: "UPRESSease — Walk-in POS receipt",
+          lines: [
+            ["Sale ID", sale.saleId],
+            ["Date", sale.date || sale.ts || ""],
+            ["Customer", sale.customerName || "Walk-in"],
+            ["Patron", sale.patronType || "—"],
+            ["Payment", sale.paymentMethod || "—"],
+            ["Reference", sale.gcashRef || "—"],
+          ],
+          items: (sale.items || []).map((it) => ({
+            label: `${it.service} ×${it.qty}`,
+            value: `₱${Number(it.lineTotal || 0).toFixed(2)}`,
+          })),
+          total: `₱${Number(sale.grandTotal || 0).toFixed(2)}`,
+        });
+        return;
+      }
+
+      const oid = btn.getAttribute("data-order-id");
+      if (!oid) return;
+      const row = btn.closest("tr");
+      const payloadEnc = row ? row.getAttribute("data-order-full") : "";
+      let payload = null;
+      try {
+        payload = payloadEnc ? JSON.parse(decodeURIComponent(payloadEnc)) : null;
+      } catch (_) {
+        payload = null;
+      }
+      openPrintWindow({
+        title: "UPRESSease — Order receipt",
+        lines: [
+          ["Order ID", oid],
+          ["Customer", payload?.student || payload?.customerName || "—"],
+          ["Service", payload?.service || "—"],
+          ["Date", payload?.date || payload?.dateOrdered || "—"],
+          ["Payment", payload?.payment || payload?.paymentMethod || "—"],
+          ["Status", payload?.status || "Completed"],
+        ],
+        items: [],
+        total: payload?.amount ? String(payload.amount) : "—",
+      });
+    });
+  }
   document.addEventListener("staff:data-changed", () => {
     if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   });
+}
+
+function openPrintWindow({ title, lines, items, total }) {
+  const w = window.open("", "_blank", "width=420,height=700");
+  if (!w) {
+    alert("Pop-up blocked. Allow pop-ups to print.");
+    return;
+  }
+  const esc = (s) =>
+    String(s ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  const rows = (items || []).length
+    ? (items || [])
+        .map(
+          (it) =>
+            `<tr><td>${esc(it.label)}</td><td style="text-align:right">${esc(it.value)}</td></tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="2">—</td></tr>`;
+  const meta = (lines || [])
+    .map(([k, v]) => `<div><b>${esc(k)}:</b> ${esc(v)}</div>`)
+    .join("");
+  w.document.write(
+    `<!doctype html><html><head><meta charset="utf-8"/><title>${esc(
+      title || "Print",
+    )}</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px;}table{width:100%;border-collapse:collapse;font-size:12px;}td{padding:6px 0;border-bottom:1px solid #eee;}h1{font-size:16px;margin:0 0 10px;} .meta{font-size:12px;line-height:1.45;margin-bottom:10px;color:#111;} .tot{font-weight:800;text-align:right;margin-top:10px;}</style></head><body>`,
+  );
+  w.document.write(`<h1>${esc(title || "UPRESSease")}</h1>`);
+  w.document.write(`<div class="meta">${meta}</div>`);
+  w.document.write(`<table>${rows}</table>`);
+  w.document.write(`<div class="tot">Total ${esc(total || "—")}</div>`);
+  w.document.write(`</body></html>`);
+  w.document.close();
+  w.focus();
+  w.print();
+  w.close();
 }
 
 function setupOrderQueueSorting() {

@@ -452,7 +452,7 @@
         <td>${escapeHtmlStaff(p.date)}</td>
         <td>Web / Staff</td>
         <td><span class="badge badge-complete">${escapeHtmlStaff(statusLabel(p.status))}</span></td>
-        <td>—</td>
+        <td><button type="button" class="btn-pos-print-receipt" data-print-type="web" data-order-id="${String(p.orderId).replace(/\"/g, "&quot;")}">Print</button></td>
       </tr>`;
   }
 
@@ -492,7 +492,7 @@
         <td>${escapeHtmlStaff(p.date)}</td>
         <td>Walk-in POS</td>
         <td><span class="badge badge-complete">Completed</span></td>
-        <td><button type="button" class="btn-pos-print-receipt" data-sale-id="${String(sale.saleId).replace(
+        <td><button type="button" class="btn-pos-print-receipt" data-print-type="pos" data-sale-id="${String(sale.saleId).replace(
           /"/g,
           "&quot;",
         )}">Print</button></td>
@@ -560,7 +560,7 @@
       const posRows = walkIns.map(buildPosCompletedRowHtml).join("");
       const webRows = doneWeb.map(buildCompletedRowHtml).join("");
       if (!posRows && !webRows) {
-        cBody.innerHTML = `<tr><td colspan="7" class="sd-muted">${escapeHtmlStaff(
+        cBody.innerHTML = `<tr><td colspan="14" class="sd-muted">${escapeHtmlStaff(
           "No completed orders yet. Finished web orders and walk-in POS sales appear here.",
         )}</td></tr>`;
       } else {

@@ -636,6 +636,27 @@ function getArchivedServices(fromYear) {
         // Persist removal even if we didn't add anything new.
         localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
       }
+      // Continue: a DB may already have services but still be missing demo transactions.
+    }
+
+    if (
+      (!Array.isArray(db.transactions) || db.transactions.length === 0) &&
+      Array.isArray(demo.transactions) &&
+      demo.transactions.length
+    ) {
+      const year = db.academicYear || demo.academicYear;
+      db.academicYear = year;
+      const byId = new Set(db.transactions.map((t) => String(t?.id || t?.orderId || "")));
+      const toAdd = demo.transactions
+        .filter((t) => {
+          const id = String(t?.id || t?.orderId || "");
+          return id && !byId.has(id);
+        })
+        .map((tx) => ({ ...JSON.parse(JSON.stringify(tx)), academicYear: year }));
+      if (toAdd.length) {
+        db.transactions = db.transactions.concat(toAdd);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      }
       return;
     }
 

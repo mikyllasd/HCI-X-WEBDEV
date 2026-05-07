@@ -213,6 +213,7 @@
     clearTicket();
     const refIn = document.getElementById("posGcashRef");
     if (refIn) refIn.value = "";
+    window.renderWalkInPosHistory?.();
     document.dispatchEvent(new CustomEvent("staff:data-changed"));
     alert("Sale recorded. Use Print on the sale row (today’s list or Completed orders).");
   }
@@ -395,6 +396,11 @@
 
     renderTicket();
     window.renderWalkInPosHistory();
+
+    // If other staff pages update shared storage, keep today's list fresh.
+    document.addEventListener("staff:data-changed", () => {
+      window.renderWalkInPosHistory?.();
+    });
 
     document.getElementById("posLineService")?.addEventListener("change", () => {
       syncFreshmanUi();

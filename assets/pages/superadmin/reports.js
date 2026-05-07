@@ -44,6 +44,26 @@
       return ["completed", "paid"].includes(value) ? "completed" : value;
     }
 
+    function getTxGross(t) {
+      const gross = t?.grossAmount ?? t?.grossTotal;
+      const disc = t?.discountAmount ?? 0;
+      const net = t?.netAmount ?? t?.amount;
+      if (gross != null && Number.isFinite(Number(gross))) return Number(gross);
+      const n = Number(net || 0);
+      const d = Number(disc || 0);
+      return Math.max(0, n + d);
+    }
+
+    function getTxDiscount(t) {
+      const disc = t?.discountAmount ?? 0;
+      return Math.max(0, Number(disc || 0));
+    }
+
+    function getTxNet(t) {
+      const net = t?.netAmount ?? t?.amount;
+      return Math.max(0, Number(net || 0));
+    }
+
     function getPaymentType(transaction) {
       const value = String(
         transaction.paymentType ||
@@ -148,7 +168,9 @@
         "Category",
         "Organization",
         "College",
-        "Amount (PHP)",
+        "Gross (PHP)",
+        "Discount (PHP)",
+        "Net (PHP)",
         "Status",
         "Semester",
         "Date (ISO)",
@@ -156,6 +178,7 @@
         "Payment",
         "Academic year",
         "Transaction ID",
+        "Discount code",
       ];
       const lines = [headers.map(escapeCsvCell).join(",")];
       rows.forEach((txn) => {
@@ -167,7 +190,9 @@
             escapeCsvCell(txn.category),
             escapeCsvCell(getTransactionOrganization(txn)),
             escapeCsvCell(getTransactionCollege(txn)),
-            escapeCsvCell(Number(txn.amount || 0).toFixed(2)),
+            escapeCsvCell(getTxGross(txn).toFixed(2)),
+            escapeCsvCell(getTxDiscount(txn).toFixed(2)),
+            escapeCsvCell(getTxNet(txn).toFixed(2)),
             escapeCsvCell(txn.status),
             escapeCsvCell(txn.semester || ""),
             escapeCsvCell(dateStr),
@@ -175,6 +200,7 @@
             escapeCsvCell(paymentTypeLabel(txn)),
             escapeCsvCell(txn.academicYear || db.academicYear || ""),
             escapeCsvCell(txn.id),
+            escapeCsvCell(String(txn.discountCode || "")),
           ].join(","),
         );
       });
@@ -254,7 +280,9 @@
           txn.id,
           txn.serviceName,
           txn.category,
-          txn.amount,
+          getTxGross(txn),
+          getTxDiscount(txn),
+          getTxNet(txn),
           txn.status,
           txn.semester,
           txn.email,
@@ -314,7 +342,8 @@
     function getYearlyData() {
       const filtered = getFilteredData();
       const yearly = {
-        total: 0,
+        total: 0, // net
+        discounts: 0,
         count: 0,
         completed: 0,
         pending: 0,
@@ -323,7 +352,8 @@
       };
 
       filtered.forEach((txn) => {
-        yearly.total += parseFloat(txn.amount) || 0;
+        yearly.total += getTxNet(txn);
+        yearly.discounts += getTxDiscount(txn);
         yearly.count++;
         const st = String(txn.status || "").toLowerCase();
         if (st === "completed" || st === "paid") yearly.completed++;
@@ -333,7 +363,7 @@
         if (!yearly.byService[txn.serviceName]) {
           yearly.byService[txn.serviceName] = 0;
         }
-        yearly.byService[txn.serviceName] += parseFloat(txn.amount) || 0;
+        yearly.byService[txn.serviceName] += getTxNet(txn);
       });
 
       return yearly;
@@ -605,7 +635,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
         <tr>
-          <td colspan="6" class="text-center">No transaction records match the selected filters.</td>
+          <td colspan="8" class="text-center">No transaction records match the selected filters.</td>
         </tr>
       `;
         renderTransactionPagination(0, 1);
@@ -626,7 +656,9 @@
       <tr>
         <td>${txn.serviceName}</td>
         <td>${txn.category}</td>
-        <td>₱${parseFloat(txn.amount).toFixed(2)}</td>
+        <td>₱${getTxGross(txn).toFixed(2)}</td>
+        <td>${getTxDiscount(txn) > 0 ? "₱" + getTxDiscount(txn).toFixed(2) : "—"}</td>
+        <td>₱${getTxNet(txn).toFixed(2)}</td>
         <td><span class="transaction-status ${statusTone(txn.status)}">${txn.status}</span></td>
         <td>${txn.semester || "N/A"}</td>
         <td>${new Date(txn.date).toLocaleDateString()}</td>
@@ -818,7 +850,17 @@
               </svg>
             </div>
             <p class="stat-card__value" id="totalRevenue">₱0.00</p>
-            <p class="stat-card__label">Sum of filtered amounts</p>
+            <p class="stat-card__label">Net revenue after discounts</p>
+          </article>
+          <article class="stat-card stat-card--teal">
+            <div class="stat-card__header">
+              <span>Discounts given</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20 12V8H4v8"/><path d="M4 8l8 6 8-6"/><path d="M7 15h.01M17 15h.01"/>
+              </svg>
+            </div>
+            <p class="stat-card__value" id="totalDiscounts">₱0.00</p>
+            <p class="stat-card__label">Total discount amount (filtered)</p>
           </article>
           <article class="stat-card stat-card--purple">
             <div class="stat-card__header">
@@ -880,7 +922,9 @@
                 <tr>
                   <th>Service</th>
                   <th>Category</th>
-                  <th>Amount</th>
+                  <th>Gross</th>
+                  <th>Discount</th>
+                  <th>Net</th>
                   <th>Status</th>
                   <th>Semester</th>
                   <th>Date</th>
@@ -971,6 +1015,8 @@
       document.getElementById("completedCount").textContent = summary.completed;
       document.getElementById("totalRevenue").textContent =
         "₱" + summary.total.toFixed(2);
+      document.getElementById("totalDiscounts").textContent =
+        "₱" + summary.discounts.toFixed(2);
       document.getElementById("avgTransaction").textContent =
         filtered.length > 0
           ? "₱" + (summary.total / filtered.length).toFixed(2)

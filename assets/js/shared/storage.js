@@ -7,6 +7,8 @@ const defaultDB = {
   services: [],
   transactions: [],
   ratings: [],
+  /** Discount codes configurable by Superadmin; used by student checkout + staff POS. */
+  discounts: [],
   archives: {},
   affiliationRequests: [],
   organizations: [],
@@ -46,8 +48,11 @@ function getDB() {
     if (raw) {
       const db = JSON.parse(raw);
       const merged = mergeWithDefaults(db);
-      // If database is empty, load demo data
-      if (merged.users.length === 0) {
+      // If database is empty, load demo data.
+      // IMPORTANT: do not auto-seed demo data if an academic year is already set,
+      // otherwise switching years (which may clear year-scoped arrays) would get
+      // overwritten by demo seed on next read.
+      if (!merged.academicYear && merged.users.length === 0) {
         return mergeLegacyUpressDbAffiliations(loadDemoData());
       }
       return mergeLegacyUpressDbAffiliations(merged);
@@ -212,6 +217,7 @@ function mergeWithDefaults(db) {
     services: Array.isArray(db.services) ? db.services : [],
     transactions: Array.isArray(db.transactions) ? db.transactions : [],
     ratings: Array.isArray(db.ratings) ? db.ratings : [],
+    discounts: Array.isArray(db.discounts) ? db.discounts : [],
     archives: typeof db.archives === "object" ? db.archives : {},
     affiliationRequests: Array.isArray(db.affiliationRequests)
       ? db.affiliationRequests
@@ -246,24 +252,6 @@ function generateStorageId(prefix) {
 /**
  * Archive current year data before switching to new year
  */
-function archiveCurrentYear() {
-  const db = getDB();
-
-  if (!db.academicYear) return;
-
-  // Create archive entry for current year
-  db.archives = db.archives || {};
-  db.archives[db.academicYear] = {
-    users: [...db.users],
-    transactions: [...db.transactions],
-    ratings: [...db.ratings],
-    services: [...db.services], // Archive services too for historical reference
-    archivedAt: new Date().toISOString(),
-  };
-
-  saveDB(db);
-}
-
 /**
  * Set academic year and handle data archiving
  * If switching years, archives current data and creates fresh dataset
@@ -275,16 +263,12 @@ function setAcademicYear(year) {
   // If switching from one year to another, archive current data
   if (db.academicYear && db.academicYear !== year) {
     archiveCurrentYear();
-    const freshDB = getDB(); // Reload after archiving
-    freshDB.academicYear = year;
-
-    // Reset working data for new year
-    freshDB.users = [];
-    freshDB.transactions = [];
-    freshDB.ratings = [];
-    // Services persist - they can be reused from previous year
-
-    saveDB(freshDB);
+    // Switch to the new year without wiping the whole DB.
+    // Only year-scoped collections are reset; users/services/discounts persist.
+    db.academicYear = year;
+    db.transactions = [];
+    db.ratings = [];
+    saveDB(db);
   } else if (!db.academicYear) {
     // Setting year for first time
     db.academicYear = year;
@@ -304,6 +288,7 @@ function archiveCurrentYear() {
   }
 
   // Store current year's data in archives (read-only)
+  db.archives = db.archives || {};
   db.archives[db.academicYear] = {
     users: db.users.map((u) => ({ ...u })), // Deep copy
     transactions: db.transactions.map((t) => ({ ...t })), // Deep copy
@@ -487,7 +472,14 @@ function addTransaction(tx) {
     id: tx.id || generateStorageId("txn"),
     serviceId: tx.serviceId,
     serviceName: tx.serviceName,
-    amount: parseFloat(tx.amount),
+    amount: parseFloat(tx.netAmount ?? tx.amount),
+    grossAmount:
+      tx.grossAmount != null ? parseFloat(tx.grossAmount) : undefined,
+    discountAmount:
+      tx.discountAmount != null ? parseFloat(tx.discountAmount) : undefined,
+    netAmount: tx.netAmount != null ? parseFloat(tx.netAmount) : undefined,
+    discountCode: tx.discountCode || "",
+    discountId: tx.discountId || "",
     category: tx.category,
     status: tx.status || "pending",
     semester: tx.semester || "",

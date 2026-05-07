@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPRESSease – Superadmin Discounts</title>
+    <link rel="stylesheet" href="../../css/shared/global.css" />
+    <link rel="stylesheet" href="../../css/staff/staff.css" />
+    <link rel="stylesheet" href="../../css/superadmin/services.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="sd-body">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="staff-layout sd-layout">
+      <aside class="sidebar staff-sidebar" id="sidebar" aria-label="Superadmin sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-brand">
+            <img src="../../images/logo.png" alt="UPRESSease logo" />
+            <div>
+              <span class="brand-name">UPRESSease</span>
+              <span class="brand-sub">Superadmin</span>
+            </div>
+          </div>
+          <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close sidebar">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="sidebar-user">
+          <button class="user-pill" type="button" aria-label="Logged in as superadmin">
+            <i data-lucide="user" aria-hidden="true"></i>
+            <span>Superadmin</span>
+          </button>
+          <p class="user-handle">@superadmin</p>
+        </div>
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <ul class="nav-list" role="list">
+            <li>
+              <a href="dashboard.html" class="nav-link" data-page="dashboard">
+                <i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="users.html" class="nav-link" data-page="users">
+                <i data-lucide="users" aria-hidden="true"></i><span>Manage Users</span>
+              </a>
+            </li>
+            <li>
+              <a href="services.html" class="nav-link" data-page="services">
+                <i data-lucide="settings" aria-hidden="true"></i><span>Services</span>
+              </a>
+            </li>
+            <li>
+              <a href="discounts.html" class="nav-link active" data-page="discounts">
+                <i data-lucide="badge-percent" aria-hidden="true"></i><span>Discounts</span>
+              </a>
+            </li>
+            <li>
+              <a href="reports.html" class="nav-link" data-page="reports">
+                <i data-lucide="bar-chart-2" aria-hidden="true"></i><span>Reports</span>
+              </a>
+            </li>
+            <li>
+              <a href="archive.html" class="nav-link" data-page="archive">
+                <i data-lucide="archive" aria-hidden="true"></i><span>Archives</span>
+              </a>
+            </li>
+            <li>
+              <a href="settings.html" class="nav-link" data-page="settings">
+                <i data-lucide="settings" aria-hidden="true"></i><span>System Settings</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav-list nav-list--bottom" role="list">
+            <li>
+              <a
+                href="#"
+                class="nav-link nav-link--logout"
+                id="logoutBtn"
+                data-page="logout"
+                aria-label="Logout"
+              >
+                <i data-lucide="log-out" aria-hidden="true"></i><span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content staff-main sd-main" role="main">
+        <button class="hamburger main-hamburger" id="hamburger" type="button" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="page-container">
+          <header class="page-header">
+            <div>
+              <h1 class="page-title">Discounts</h1>
+              <p class="page-sub">Create, edit, and enable discount codes for student checkout and walk-in POS.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" id="addDiscountBtn" type="button">
+                <i data-lucide="plus" aria-hidden="true"></i> Add Discount
+              </button>
+            </div>
+          </header>
+
+          <div class="list-toolbar">
+            <label class="list-search">
+              Search
+              <input
+                class="list-search__input"
+                id="discountSearch"
+                type="search"
+                placeholder="Search code, name, type, value…"
+              />
+            </label>
+            <span class="list-toolbar__count" id="discountCount">0 discounts</span>
+          </div>
+
+          <div class="card">
+            <div class="table-wrapper">
+              <table class="data-table" aria-label="Discount codes">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Minimum</th>
+                    <th>Active</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="discountsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="discountModal" aria-hidden="true">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" id="discountModalTitle">Add Discount</h2>
+            <p class="modal-sub" id="discountModalSub">Create a new discount code.</p>
+          </div>
+          <button class="modal-close" id="discountModalClose" type="button" aria-label="Close modal">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="discountForm">
+            <div class="form-group">
+              <label class="form-label">Code <span class="required">*</span></label>
+              <input class="form-input" id="discCode" required placeholder="e.g. STUDENT10" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Name <span class="required">*</span></label>
+              <input class="form-input" id="discName" required placeholder="e.g. Student 10% off" />
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="flex:1">
+                <label class="form-label">Type</label>
+                <select class="form-input form-select" id="discType">
+                  <option value="percent">Percent (%)</option>
+                  <option value="fixed">Fixed (₱)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex:1">
+                <label class="form-label">Value <span class="required">*</span></label>
+                <input class="form-input" id="discValue" type="number" min="0" step="0.01" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="flex:1">
+                <label class="form-label">Minimum amount (₱)</label>
+                <input class="form-input" id="discMin" type="number" min="0" step="0.01" value="0" />
+              </div>
+              <div class="form-group" style="flex:1">
+                <label class="form-label">Max discount (optional)</label>
+                <input class="form-input" id="discMax" type="number" min="0" step="0.01" value="0" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="flex:1">
+                <label class="form-label">Starts at</label>
+                <input class="form-input" id="discStart" type="date" />
+              </div>
+              <div class="form-group" style="flex:1">
+                <label class="form-label">Ends at</label>
+                <input class="form-input" id="discEnd" type="date" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Notes</label>
+              <textarea class="form-input" id="discNotes" rows="3" style="resize:vertical"></textarea>
+            </div>
+            <div class="form-group" style="display:flex;align-items:center;gap:10px">
+              <input id="discActive" type="checkbox" checked />
+              <label for="discActive" class="form-label" style="margin:0">Active</label>
+            </div>
+            <div class="modal-actions">
+              <button class="btn btn--outline" id="discountCancel" type="button">Cancel</button>
+              <button class="btn btn-primary" id="discountSave" type="submit">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../js/shared/demo-seed.js"></script>
+    <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/superadmin-shell.js"></script>
+    <script src="discounts.js"></script>
+    <script src="../../js/shared/theme-toggle.js" defer></script>
+  </body>
+</html>
+

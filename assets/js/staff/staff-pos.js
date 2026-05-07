@@ -21,15 +21,41 @@
     return ticketLines.reduce((s, L) => s + L.lineTotal, 0);
   }
 
+  function getSelectedDiscountCode() {
+    const sel = document.getElementById("posDiscountSelect");
+    return String(sel?.value || "").trim();
+  }
+
+  function computeTotals() {
+    const gross = subtotal();
+    const code = getSelectedDiscountCode();
+    const r = window.UpressDiscounts?.applyDiscountCode
+      ? window.UpressDiscounts.applyDiscountCode(code, gross)
+      : { ok: false, discountAmount: 0, netAmount: gross, code };
+    return {
+      gross,
+      discountCode: r.ok ? (r.code || code) : "",
+      discountId: r.ok ? String(r.discount?.id || "") : "",
+      discountAmount: Number(r.discountAmount || 0),
+      net: Number(r.netAmount || gross),
+    };
+  }
+
   function renderTicket() {
     const host = document.getElementById("posTicketLines");
     const subEl = document.getElementById("posSubtotal");
+    const discRow = document.getElementById("posDiscountAmountRow");
+    const discEl = document.getElementById("posDiscountAmount");
+    const grandEl = document.getElementById("posGrandTotal");
     if (!host) return;
 
     if (!ticketLines.length) {
       host.classList.add("pos-empty");
       host.textContent = "No lines yet. Add services above.";
       if (subEl) subEl.textContent = money(0);
+      if (discRow) discRow.style.display = "none";
+      if (discEl) discEl.textContent = "-₱0.00";
+      if (grandEl) grandEl.textContent = money(0);
       return;
     }
 
@@ -51,6 +77,18 @@
       .join("");
 
     if (subEl) subEl.textContent = money(subtotal());
+
+    const t = computeTotals();
+    if (discRow && discEl) {
+      if (t.discountAmount > 0) {
+        discRow.style.display = "flex";
+        discEl.textContent = "-₱" + t.discountAmount.toFixed(2);
+      } else {
+        discRow.style.display = "none";
+        discEl.textContent = "-₱0.00";
+      }
+    }
+    if (grandEl) grandEl.textContent = money(t.net);
   }
 
   function addLine() {
@@ -123,6 +161,40 @@
     }
   }
 
+  function populatePosDiscountDropdown() {
+    const select = document.getElementById("posDiscountSelect");
+    if (!select) return;
+    const cur = String(select.value || "");
+
+    let discounts = [];
+    try {
+      const db = typeof window.getDB === "function" ? window.getDB() : null;
+      discounts = Array.isArray(db?.discounts) ? db.discounts : [];
+    } catch (_) {}
+
+    const active = discounts
+      .filter((d) => d && d.active !== false && d.code)
+      .slice()
+      .sort((a, b) => String(a.code).localeCompare(String(b.code)));
+
+    select.innerHTML =
+      `<option value="">None</option>` +
+      active
+        .map((d) => {
+          const code = String(d.code || "").trim().toUpperCase();
+          const label =
+            String(d.type || "percent").toLowerCase() === "fixed"
+              ? `${code} — ₱${Number(d.value || 0).toFixed(2)} off`
+              : `${code} — ${Number(d.value || 0)}% off`;
+          return `<option value="${escapePos(code)}">${escapePos(label)}</option>`;
+        })
+        .join("");
+
+    if (cur && Array.from(select.options).some((o) => o.value === cur)) {
+      select.value = cur;
+    }
+  }
+
   function receiptHtmlInner(sale) {
     const rows =
       sale.items && sale.items.length
@@ -186,6 +258,7 @@
       return;
     }
 
+    const totals = computeTotals();
     const sale = {
       saleId: "POS-" + Date.now(),
       ts: new Date().toISOString(),
@@ -202,7 +275,11 @@
         notes: L.notes,
         lineTotal: L.lineTotal,
       })),
-      grandTotal: subtotal(),
+      grossTotal: totals.gross,
+      discountCode: totals.discountCode,
+      discountId: totals.discountId,
+      discountAmount: totals.discountAmount,
+      grandTotal: totals.net,
       source: "walk-in-pos",
     };
 
@@ -382,6 +459,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     populatePosServiceDropdown();
+    populatePosDiscountDropdown();
     document.getElementById("posAddLineBtn")?.addEventListener("click", addLine);
     document.getElementById("posClearTicketBtn")?.addEventListener("click", clearTicket);
     document.getElementById("posCompleteSaleBtn")?.addEventListener("click", completeSale);
@@ -400,7 +478,10 @@
     // If other staff pages update shared storage, keep today's list fresh.
     document.addEventListener("staff:data-changed", () => {
       window.renderWalkInPosHistory?.();
+      populatePosDiscountDropdown();
     });
+
+    document.getElementById("posDiscountSelect")?.addEventListener("change", renderTicket);
 
     document.getElementById("posLineService")?.addEventListener("change", () => {
       syncFreshmanUi();

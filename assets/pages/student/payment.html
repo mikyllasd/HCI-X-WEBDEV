@@ -81,6 +81,20 @@
                     <span class="checkout-summary-label">Subtotal</span>
                     <span class="checkout-summary-value" id="checkout-subtotal">₱0.00</span>
                 </div>
+                <div class="checkout-summary-row" style="align-items:flex-start;gap:10px">
+                    <div style="flex:1">
+                        <span class="checkout-summary-label">Discount code</span>
+                        <div style="display:flex;gap:8px;margin-top:6px">
+                            <input id="checkout-discount-code" class="sinput" style="flex:1" placeholder="Enter code (optional)" />
+                            <button type="button" class="btn-secondary" id="checkout-apply-discount">Apply</button>
+                        </div>
+                        <small id="checkout-discount-hint" style="display:block;margin-top:6px;color:#667085"></small>
+                    </div>
+                </div>
+                <div class="checkout-summary-row" id="checkout-discount-row" style="display:none;">
+                    <span class="checkout-summary-label">Discount</span>
+                    <span class="checkout-summary-value" id="checkout-discount-amount">-₱0.00</span>
+                </div>
                 <hr class="divider" />
                 <div class="checkout-summary-row" id="checkout-downpayment-row" style="display:none;">
                     <span class="checkout-summary-label">Downpayment Due</span>
@@ -104,6 +118,7 @@
     </div>
 </main>
 <script src="../../js/student/student.js"></script>
+<script src="../../js/shared/discounts.js"></script>
 <script src="../../js/student/payment.js"></script>
   <script src="../../js/shared/theme-toggle.js" defer></script>
 

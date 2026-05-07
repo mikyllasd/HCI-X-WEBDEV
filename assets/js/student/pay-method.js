@@ -1,6 +1,11 @@
 // pay-method.js
 const cart  = Cart.get();
-const total = Cart.total();
+const co = Checkout.get ? Checkout.get() : {};
+const grossTotal = Cart.total();
+const netTotal =
+    co && co.netAmount != null && Number.isFinite(Number(co.netAmount))
+        ? Number(co.netAmount)
+        : grossTotal;
 
 const listEl  = document.getElementById('pm-cart-items-list');
 const countEl = document.getElementById('pm-cart-count');
@@ -17,14 +22,14 @@ if (listEl) {
         </div>`).join('');
 }
 if (countEl) countEl.textContent = `${cart.length} item(s) in cart`;
-if (totalEl) totalEl.textContent = '₱' + total.toFixed(2);
+if (totalEl) totalEl.textContent = '₱' + netTotal.toFixed(2);
 
 // ===================== DOWNPAYMENT RULE =====================
 const DOWNPAYMENT_THRESHOLD = 600;
 const downpaymentSection = document.getElementById('downpayment-section');
-if (total >= DOWNPAYMENT_THRESHOLD) {
-    const downpayment = total * 0.5;
-    const balance = total - downpayment;
+if (netTotal >= DOWNPAYMENT_THRESHOLD) {
+    const downpayment = netTotal * 0.5;
+    const balance = netTotal - downpayment;
     downpaymentSection.style.display = 'block';
     document.getElementById('pm-downpayment').textContent = '₱' + downpayment.toFixed(2);
     document.getElementById('pm-balance').textContent = '₱' + balance.toFixed(2);
@@ -46,7 +51,18 @@ function finalizeOrder(extra = {}) {
     const cartItems = Cart.get();
     const co        = Checkout.get();
     const customer  = co.customerInfo || {};
-    const totalAmount = Cart.total();
+    const totalAmount =
+        co && co.netAmount != null && Number.isFinite(Number(co.netAmount))
+            ? Number(co.netAmount)
+            : Cart.total();
+    const grossAmount =
+        co && co.grossAmount != null && Number.isFinite(Number(co.grossAmount))
+            ? Number(co.grossAmount)
+            : Cart.total();
+    const discountAmount =
+        co && co.discountAmount != null && Number.isFinite(Number(co.discountAmount))
+            ? Number(co.discountAmount)
+            : Math.max(0, grossAmount - totalAmount);
     
     // Calculate downpayment info
     let downpaymentInfo = {};
@@ -59,7 +75,17 @@ function finalizeOrder(extra = {}) {
     }
     
     cartItems.forEach(item => {
-        Orders.add({ ...item, customer, ...downpaymentInfo, ...extra });
+        Orders.add({
+            ...item,
+            customer,
+            ...downpaymentInfo,
+            discountCode: String(co.discountCode || ''),
+            discountId: String(co.discountId || ''),
+            grossAmount: grossAmount.toFixed(2),
+            discountAmount: discountAmount.toFixed(2),
+            netAmount: totalAmount.toFixed(2),
+            ...extra
+        });
     });
     Cart.clear();
     Checkout.clear();

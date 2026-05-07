@@ -32,6 +32,17 @@
       if (typeof f.allowOnlinePayments !== "boolean")
         f.allowOnlinePayments = true;
       if (typeof f.enableRatings !== "boolean") f.enableRatings = true;
+
+      if (!db.systemSettings.contact || typeof db.systemSettings.contact !== "object") {
+        db.systemSettings.contact = {};
+      }
+      const c = db.systemSettings.contact;
+      if (typeof c.location !== "string")
+        c.location = "WMSU Campus, Normal Road\nZamboanga City 7000";
+      if (typeof c.phone !== "string") c.phone = "+63 917 123 4567";
+      if (typeof c.email !== "string") c.email = "upressease@wmsu.edu.ph";
+      if (typeof c.hours !== "string")
+        c.hours = "Monday - Friday\n8:00 AM - 5:00 PM";
     }
 
     /** Consecutive school years "YYYY-(YYYY+1)", e.g. 2025-2026 */
@@ -200,6 +211,52 @@
       </div>
     </div>
 
+    <div class="settings-section">
+      <div class="settings-section-header">
+        <div class="settings-section-icon blue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+        </div>
+        <div>
+          <div class="settings-section-title">Landing page contact details</div>
+          <div class="settings-section-sub">Update the contact information shown on the public landing page.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contactLocation">Location</label>
+        <textarea class="form-input" id="contactLocation" rows="2" style="resize: vertical">${escHtml(
+          db.systemSettings.contact.location || "",
+        )}</textarea>
+        <div style="font-size: 12px; color: var(--color-text-muted); margin-top: 4px;">
+          Use new lines to match the landing page formatting.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contactPhone">Phone</label>
+        <input class="form-input" id="contactPhone" type="text" value="${escHtml(
+          db.systemSettings.contact.phone || "",
+        )}" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="contactEmail">Email</label>
+        <input class="form-input" id="contactEmail" type="email" value="${escHtml(
+          db.systemSettings.contact.email || "",
+        )}" />
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0">
+        <label class="form-label" for="contactHours">Operating hours</label>
+        <textarea class="form-input" id="contactHours" rows="2" style="resize: vertical">${escHtml(
+          db.systemSettings.contact.hours || "",
+        )}</textarea>
+      </div>
+    </div>
+
     <div class="sticky-save">
       <button class="btn btn-primary" id="saveSettings">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
@@ -338,6 +395,15 @@
       db.systemSettings.features.allowWalkInSales = !!document.getElementById(
         "cfgAllowWalkInSales",
       )?.checked;
+
+      db.systemSettings.contact.location =
+        document.getElementById("contactLocation")?.value || "";
+      db.systemSettings.contact.phone =
+        document.getElementById("contactPhone")?.value || "";
+      db.systemSettings.contact.email =
+        document.getElementById("contactEmail")?.value || "";
+      db.systemSettings.contact.hours =
+        document.getElementById("contactHours")?.value || "";
 
       saveDB(db);
 

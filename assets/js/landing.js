@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.UPressPricing.applyLandingPricing();
   }
   syncServicesFromDb();
+  applyContactDetailsFromDb();
   initMobileMenu();
   initHeaderScroll();
   initSmoothScroll();
@@ -76,6 +77,50 @@ function syncServicesFromDb() {
   const cta = grid.querySelector(".service-card-cta");
   if (cta) cta.insertAdjacentHTML("beforebegin", html);
   else grid.insertAdjacentHTML("beforeend", html);
+}
+
+function applyContactDetailsFromDb() {
+  let db = null;
+  try {
+    const raw = localStorage.getItem("upressease_db");
+    db = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    db = null;
+  }
+  const c = db && db.systemSettings && db.systemSettings.contact ? db.systemSettings.contact : null;
+  if (!c) return;
+
+  const locEl = document.getElementById("landingContactLocation");
+  const phoneEl = document.getElementById("landingContactPhone");
+  const emailEl = document.getElementById("landingContactEmail");
+  const hoursEl = document.getElementById("landingContactHours");
+
+  function toHtmlLines(v) {
+    return String(v || "")
+      .split(/\r?\n/)
+      .map((line) =>
+        line
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;"),
+      )
+      .join("<br>");
+  }
+
+  if (locEl && typeof c.location === "string" && c.location.trim()) {
+    locEl.innerHTML = toHtmlLines(c.location);
+  }
+  if (phoneEl && typeof c.phone === "string" && c.phone.trim()) {
+    phoneEl.textContent = c.phone;
+  }
+  if (emailEl && typeof c.email === "string" && c.email.trim()) {
+    emailEl.textContent = c.email;
+  }
+  if (hoursEl && typeof c.hours === "string" && c.hours.trim()) {
+    hoursEl.innerHTML = toHtmlLines(c.hours);
+  }
 }
 
 function initMobileMenu() {

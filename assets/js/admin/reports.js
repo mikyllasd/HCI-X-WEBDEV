@@ -30,6 +30,17 @@
   let recordsPage = 1;
   const RECORDS_PAGE_SIZE = 10;
 
+  function getTxnDateValue(transaction) {
+    if (!transaction) return "";
+    return (
+      transaction.date ||
+      transaction.dateOrdered ||
+      transaction.createdAt ||
+      transaction.ts ||
+      ""
+    );
+  }
+
   function parseDate(value) {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? null : date;
@@ -143,7 +154,7 @@
 
   function getCurrentAcademicTransactions() {
     return (db.transactions || []).filter((transaction) => {
-      const date = parseDate(transaction.date);
+      const date = parseDate(getTxnDateValue(transaction));
       return (
         date &&
         (!db.academicYear || transaction.academicYear === db.academicYear)
@@ -167,7 +178,7 @@
     const endDate = parseDate(endDateInput?.value);
 
     return transactions.filter((transaction) => {
-      const date = parseDate(transaction.date);
+      const date = parseDate(getTxnDateValue(transaction));
       if (!inDateRange(date, periodRange.start, periodRange.end)) return false;
 
       const type = getPaymentType(transaction);
@@ -255,7 +266,7 @@
     transactions.forEach((transaction) => {
       const amount = Number(transaction.amount || 0);
       const paymentType = getPaymentType(transaction);
-      const date = parseDate(transaction.date);
+      const date = parseDate(getTxnDateValue(transaction));
       totals.total += amount;
       if (paymentType === "gcash") totals.gcash += amount;
       if (paymentType === "credit") totals.credit += amount;
@@ -403,6 +414,7 @@
       ? transactions
       : transactions.filter((transaction) => {
           const paymentType = getPaymentType(transaction);
+          const dateLabel = parseDate(getTxnDateValue(transaction))?.toLocaleDateString() || "";
           return [
             transaction.id,
             transaction.studentName,
@@ -413,6 +425,9 @@
             transaction.amount,
             transaction.status,
             transaction.date,
+            transaction.dateOrdered,
+            transaction.createdAt,
+            dateLabel,
           ]
             .join(" ")
             .toLowerCase()
@@ -432,10 +447,10 @@
     const visibleRows = searched.slice(start, start + RECORDS_PAGE_SIZE);
 
     const rows = visibleRows
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .sort((a, b) => new Date(getTxnDateValue(b)) - new Date(getTxnDateValue(a)))
       .map((transaction) => {
         const paymentType = getPaymentType(transaction);
-        const date = parseDate(transaction.date);
+        const date = parseDate(getTxnDateValue(transaction));
         return `
           <tr>
             <td>${date ? date.toLocaleDateString() : "N/A"}</td>
@@ -607,6 +622,61 @@ const payment = getPaymentLabel(getPaymentType(transaction));
     return user?.fullName || user?.name || email?.split("@")[0] || "—";
   }
 
+  /**
+   * Some builds store reportable orders in `db.orders` (and only later mirror to `db.transactions`).
+   * Admin reports rely on `db.transactions`, so when it's empty we backfill from `db.orders`
+   * (non-destructive; one-time per order id).
+   */
+  function ensureTransactionsFromOrdersIfEmpty() {
+    try {
+      if (!Array.isArray(db.transactions) || db.transactions.length > 0) return;
+      if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
+        return;
+      const fresh = window.getDB();
+      const existing = Array.isArray(fresh.transactions) ? fresh.transactions : [];
+      if (existing.length > 0) {
+        db.transactions = existing;
+        return;
+      }
+      const orders = Array.isArray(fresh.orders) ? fresh.orders : [];
+      if (!orders.length) return;
+
+      const year = fresh.academicYear || db.academicYear || "";
+      const seen = new Set(existing.map((t) => String(t?.id || t?.orderId || "")));
+      const txs = [];
+      for (const o of orders) {
+        const oid = String(o?.orderId || o?.id || "").trim();
+        if (!oid || seen.has(oid)) continue;
+        seen.add(oid);
+        const dateVal = o?.date || o?.dateOrdered || o?.createdAt || new Date().toISOString();
+        txs.push({
+          id: "txn_" + oid,
+          orderId: oid,
+          serviceId: o?.serviceId || "",
+          serviceName: o?.service || o?.serviceName || "—",
+          amount: Number(o?.amount || o?.total || 0),
+          category: o?.category || "",
+          status: o?.status || "pending",
+          semester: o?.semester || "",
+          date: dateVal,
+          academicYear: year,
+          paymentType: "",
+          paymentMethod: o?.payment || o?.paymentMethod || "",
+          email: o?.email || o?.userEmail || "",
+          userId: o?.userId || "",
+          order_type: o?.order_type || "",
+          order_org: o?.order_org || "",
+        });
+      }
+      if (!txs.length) return;
+      fresh.transactions = txs;
+      window.saveDB(fresh);
+      db.transactions = txs;
+    } catch (e) {
+      console.warn("ensureTransactionsFromOrdersIfEmpty:", e);
+    }
+  }
+
   function initFilters() {
     const inputs = [
       paymentTypeSelect,
@@ -647,6 +717,7 @@ const payment = getPaymentLabel(getPaymentType(transaction));
     if (courseSelect) courseSelect.dataset.label = "Courses";
     if (yearLevelSelect) yearLevelSelect.dataset.label = "Year Levels";
 
+    ensureTransactionsFromOrdersIfEmpty();
     renderUsersFilters();
     applyFilters();
     initFilters();

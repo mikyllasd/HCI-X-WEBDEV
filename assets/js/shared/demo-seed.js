@@ -9,7 +9,7 @@
 (function (global) {
   "use strict";
 
-  const DEMO_ACADEMIC_YEAR = "2025-2026";
+  const DEMO_ACADEMIC_YEAR = "";
 
   const DEMO_VERIFICATION_REQUESTS = [
     {

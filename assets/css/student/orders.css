@@ -95,9 +95,12 @@
 .status-tab.active                              { font-weight: 700; }
 .status-tab[data-status="all"].active           { background: #f0f0f0; color: #333; }
 .status-tab[data-status="Pending"].active       { background: #fff3cd; color: #856404; }
+.status-tab[data-status="Approved"].active      { background: #d1fae5; color: #065f46; }
+.status-tab[data-status="Needs info"].active    { background: #e0e7ff; color: #3730a3; }
 .status-tab[data-status="Processing"].active    { background: #cfe2ff; color: #084298; }
 .status-tab[data-status="Ready"].active         { background: #d1fae5; color: #065f46; }
 .status-tab[data-status="Completed"].active     { background: #d1e7dd; color: #0a3622; }
+.status-tab[data-status="Rejected"].active      { background: #f8d7da; color: #842029; }
 .status-tab[data-status="Cancelled"].active     { background: #f8d7da; color: #842029; }
 
 /* Count badges per status */
@@ -108,9 +111,12 @@
     background: #eee; color: #777;
 }
 .status-tab[data-status="Pending"] .tab-count    { background: #fff3cd; color: #856404; }
+.status-tab[data-status="Approved"] .tab-count   { background: #d1fae5; color: #065f46; }
+.status-tab[data-status="Needs info"] .tab-count { background: #e0e7ff; color: #3730a3; }
 .status-tab[data-status="Processing"] .tab-count { background: #cfe2ff; color: #084298; }
 .status-tab[data-status="Ready"] .tab-count      { background: #d1fae5; color: #065f46; }
 .status-tab[data-status="Completed"] .tab-count  { background: #d1e7dd; color: #0a3622; }
+.status-tab[data-status="Rejected"] .tab-count   { background: #f8d7da; color: #842029; }
 .status-tab[data-status="Cancelled"] .tab-count  { background: #f8d7da; color: #842029; }
 
 /* ── Orders List ── */
@@ -137,9 +143,12 @@
 
 /* Left border color by status */
 .order-card[data-status="Pending"]    { border-left-color: #f59e0b; }
+.order-card[data-status="Approved"]   { border-left-color: #10b981; }
+.order-card[data-status="Needs info"] { border-left-color: #6366f1; }
 .order-card[data-status="Processing"] { border-left-color: #3b82f6; }
 .order-card[data-status="Ready"]      { border-left-color: #10b981; }
 .order-card[data-status="Completed"]  { border-left-color: #059669; }
+.order-card[data-status="Rejected"]   { border-left-color: #ef4444; }
 .order-card[data-status="Cancelled"]  { border-left-color: #ef4444; }
 
 .order-card-top {
@@ -160,9 +169,12 @@
     border-radius: 999px; white-space: nowrap; flex-shrink: 0;
 }
 .status-Pending    { background: #fff3cd; color: #856404; }
+.status-Approved   { background: #d1fae5; color: #065f46; }
+.status-Needs\ info { background: #e0e7ff; color: #3730a3; }
 .status-Processing { background: #cfe2ff; color: #084298; }
 .status-Ready      { background: #d1fae5; color: #065f46; }
 .status-Completed  { background: #d1e7dd; color: #0a3622; }
+.status-Rejected   { background: #f8d7da; color: #842029; }
 .status-Cancelled  { background: #f8d7da; color: #842029; }
 
 .order-desc {

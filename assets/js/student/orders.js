@@ -108,8 +108,73 @@
 
     /* ── Orders ── */
     function getOrders() {
-        try { return Orders.getAll() || []; }
-        catch (e) { console.error('Orders.getAll() failed:', e); return []; }
+        let base = [];
+        try { base = Orders.getAll() || []; }
+        catch (e) { console.error('Orders.getAll() failed:', e); base = []; }
+
+        // Merge org custom requests (stored in upressease_db.orgCustomRequests) into "Organization" orders view.
+        try {
+            if (typeof window.getDB === 'function') {
+                const db = window.getDB();
+                const uid = String((User.get() || {}).id || '');
+                const ocr = Array.isArray(db?.orgCustomRequests) ? db.orgCustomRequests : [];
+                const mapped = ocr
+                    .filter(r => String(r && r.userId || '') === uid)
+                    .map(r => {
+                        const st = String(r.status || 'pending').toLowerCase();
+                        let uiStatus = 'Pending';
+                        if (st === 'doable') uiStatus = 'Approved';
+                        else if (st === 'needs_info') uiStatus = 'Needs info';
+                        else if (st === 'not_doable') uiStatus = 'Rejected';
+
+                        const amountNum =
+                            r.quotedPrice != null && Number.isFinite(Number(r.quotedPrice))
+                                ? Number(r.quotedPrice)
+                                : 0;
+
+                        const submittedIso = r.submittedAt || r.updatedAt || '';
+                        const dateOrdered = submittedIso
+                            ? new Date(submittedIso).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' })
+                            : '—';
+
+                        const expected =
+                            uiStatus === 'Approved'
+                                ? 'Follow up with UPress'
+                                : uiStatus === 'Needs info'
+                                    ? 'Needs your response'
+                                    : uiStatus === 'Rejected'
+                                        ? 'Not feasible'
+                                        : 'Awaiting staff review';
+
+                        return {
+                            orderId: r.id,
+                            order_type: 'organization',
+                            order_org: r.organizationName || '',
+                            status: uiStatus,
+                            dateOrdered,
+                            expectedPickupDate: expected,
+                            preferredPickupDate: '',
+                            items: [
+                                {
+                                    service: r.requestTitle || 'Other / custom request',
+                                    serviceName: r.requestTitle || 'Other / custom request',
+                                    desc: r.requestDetails || '',
+                                    total: amountNum
+                                }
+                            ]
+                        };
+                    });
+
+                const seen = new Set(base.map(o => String(o && o.orderId || '')).filter(Boolean));
+                mapped.forEach(o => { if (!seen.has(String(o.orderId))) base.push(o); });
+            }
+        } catch (e) {
+            console.warn('mergeOrgCustomIntoOrders:', e);
+        }
+
+        // newest first
+        base.sort((a, b) => (Date.parse(b.dateOrdered) || 0) - (Date.parse(a.dateOrdered) || 0));
+        return base;
     }
 
     function getTypeFiltered(orders) {

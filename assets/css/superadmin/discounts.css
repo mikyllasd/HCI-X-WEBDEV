@@ -1,0 +1,138 @@
+/* Superadmin Discounts — matches Services / Reports console patterns */
+
+#discountsEmpty[hidden],
+#discountsTableWrap[hidden] {
+  display: none !important;
+}
+
+.discounts-table-card .table-wrapper {
+  margin: 0;
+  overflow-x: auto;
+}
+
+.discounts-table.data-table thead th {
+  white-space: nowrap;
+  padding: 14px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  background: color-mix(in srgb, var(--color-border) 45%, transparent);
+}
+
+.discounts-table.data-table tbody td {
+  padding: 14px 18px;
+  vertical-align: middle;
+}
+
+.discounts-table.data-table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-header) 6%, transparent);
+}
+
+.discounts-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-header) 12%, transparent);
+  color: var(--color-header);
+}
+
+.discounts-type-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.discounts-type-pill--percent {
+  background: color-mix(in srgb, #10b981 18%, transparent);
+  color: #047857;
+}
+
+.discounts-type-pill--fixed {
+  background: color-mix(in srgb, #f59e0b 20%, transparent);
+  color: #b45309;
+}
+
+[data-theme="dark"] .discounts-type-pill--percent {
+  color: #34d399;
+}
+
+[data-theme="dark"] .discounts-type-pill--fixed {
+  color: #fbbf24;
+}
+
+.discounts-value-strong {
+  font-weight: 800;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Modal tweaks for discounts.html */
+.modal--discount .form-hint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.modal--discount #discountForm .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .modal--discount #discountForm .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.discount-modal__section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin: 20px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.discount-modal__section-title:first-of-type {
+  margin-top: 0;
+}
+
+.discount-modal__toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft, var(--color-surface-raised));
+  margin-top: 8px;
+}
+
+.discount-modal__toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-header);
+}
+
+.discount-modal__toggle-label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.discount-modal__toggle-hint {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}

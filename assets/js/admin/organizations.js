@@ -43,6 +43,12 @@
 
     if (activeBtn) activeBtn.classList.add("active");
     if (activeContent) activeContent.classList.add("active");
+
+    if (tabName === "custom-requests" && window.UpressOrgCustomRequestsUI) {
+      const el = document.getElementById("orgCustomRequestsList");
+      if (el) window.UpressOrgCustomRequestsUI.mount(el, { role: "admin" });
+      if (typeof lucide !== "undefined") lucide.createIcons();
+    }
   }
 
   // ── AFFILIATION FUNCTIONS ──────────────────────────────────────────────────
@@ -196,7 +202,7 @@
       .join("");
   }
 
-  /** Mutates `db.organizations` only; caller must `saveDB(db)`. */
+  /** Mutates `target.organizations`; caller saves when passing shared `db`. */
   function addOrUpdateOrganizationDirectory(request, db) {
     const target = db || getDB();
     target.organizations = Array.isArray(target.organizations)
@@ -238,6 +244,8 @@
         recognizedAt: new Date().toISOString(),
       });
     }
+
+    if (!db) saveDB(target);
   }
 
   function notifyUser(userId, message, type) {
@@ -284,7 +292,8 @@
 
     addOrUpdateOrganizationDirectory(requests[requestIndex], db);
     saveDB(db);
-    const orgLabel = requests[requestIndex].organizationName || "your organization";
+    const orgLabel =
+      requests[requestIndex].organizationName || "your organization";
     notifyUser(
       uid,
       `Your affiliation request for ${orgLabel} has been approved. You can now place organization orders.`,
@@ -303,7 +312,8 @@
     if (requestIndex === -1) return;
 
     const uid = requests[requestIndex].userId;
-    const orgLabel = requests[requestIndex].organizationName || "your organization";
+    const orgLabel =
+      requests[requestIndex].organizationName || "your organization";
 
     requests[requestIndex].status = "rejected";
     requests[requestIndex].reviewedAt = new Date().toISOString();

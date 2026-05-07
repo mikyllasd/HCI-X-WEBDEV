@@ -1,15 +1,9 @@
-/**
- * Mount org custom / “Other” requests on the staff Order Queue page.
- */
 document.addEventListener("DOMContentLoaded", () => {
-  const el = document.getElementById("queueOrgCustomList");
+  const el = document.getElementById("staffOrgCustomList");
   if (!el || !window.UpressOrgCustomRequestsUI) return;
 
   function render() {
-    window.UpressOrgCustomRequestsUI.mount(el, {
-      role: "staff",
-      sortPendingFirst: true,
-    });
+    window.UpressOrgCustomRequestsUI.mount(el, { role: "staff" });
   }
 
   render();

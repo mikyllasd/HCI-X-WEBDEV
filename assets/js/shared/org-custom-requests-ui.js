@@ -13,8 +13,8 @@
 
   const STATUS_LABEL = {
     pending: "Pending staff review",
-    doable: "Approved — quoted",
-    not_doable: "Rejected",
+    doable: "Doable — proceed with follow-up",
+    not_doable: "Not feasible",
     needs_info: "More information needed",
   };
 
@@ -57,13 +57,11 @@
     if (role === "staff" && st === "pending") {
       actions = `
         <div class="request-card__actions" style="flex-direction:column;align-items:stretch;gap:10px">
-          <label style="font-size:12px;font-weight:600">Quoted price (PHP) *</label>
-          <input type="number" class="form-input" min="0.01" step="0.01" data-ocr-price="${esc(r.id)}" placeholder="e.g. 1500.00" />
-          <label style="font-size:12px;font-weight:600">Message to student (included in notification)</label>
-          <textarea class="form-input" rows="2" data-ocr-notes="${esc(r.id)}" placeholder="Timeline, pickup, what is included, etc.">${esc(r.staffNotes || "")}</textarea>
+          <label style="font-size:12px;font-weight:600">Staff notes (visible to student in notification)</label>
+          <textarea class="form-input" rows="2" data-ocr-notes="${esc(r.id)}" placeholder="What can / cannot be done, timeline, etc.">${esc(r.staffNotes || "")}</textarea>
           <div style="display:flex;flex-wrap:wrap;gap:8px">
-            <button type="button" class="btn btn--success btn--sm" data-ocr-action="doable" data-ocr-id="${esc(r.id)}">Approve at this price</button>
-            <button type="button" class="btn btn--danger btn--sm" data-ocr-action="not_doable" data-ocr-id="${esc(r.id)}">Reject</button>
+            <button type="button" class="btn btn--success btn--sm" data-ocr-action="doable" data-ocr-id="${esc(r.id)}">Mark doable</button>
+            <button type="button" class="btn btn--danger btn--sm" data-ocr-action="not_doable" data-ocr-id="${esc(r.id)}">Not feasible</button>
             <button type="button" class="btn btn--outline btn--sm" data-ocr-action="needs_info" data-ocr-id="${esc(r.id)}">Request more info</button>
           </div>
         </div>`;
@@ -100,7 +98,6 @@
           <div class="request-card__item"><span class="request-card__label">Category</span><span class="request-card__value">${esc(fmtCat(r.requestCategory))}</span></div>
           <div class="request-card__item"><span class="request-card__label">Quantity / specs</span><span class="request-card__value">${esc(r.quantityOrSpecs || "—")}</span></div>
           <div class="request-card__item"><span class="request-card__label">Submitted</span><span class="request-card__value">${esc(fmtDate(r.submittedAt))}</span></div>
-          ${r.quotedPrice != null && r.quotedPrice !== "" && Number.isFinite(Number(r.quotedPrice)) ? `<div class="request-card__item"><span class="request-card__label">Quoted price</span><span class="request-card__value">₱${Number(r.quotedPrice).toFixed(2)}</span></div>` : ""}
           ${r.staffReviewedAt ? `<div class="request-card__item"><span class="request-card__label">Staff reviewed</span><span class="request-card__value">${esc(fmtDate(r.staffReviewedAt))}</span></div>` : ""}
           ${r.adminReviewedAt ? `<div class="request-card__item"><span class="request-card__label">Admin recorded</span><span class="request-card__value">${esc(fmtDate(r.adminReviewedAt))}</span></div>` : ""}
         </div>
@@ -115,43 +112,27 @@
       </article>`;
   }
 
-  function staffDecision(id, nextStatus, notes, quotedPrice) {
-    const patch = {
+  function staffDecision(id, nextStatus, notes) {
+    const row = window.UpressOrgCustomRequests.update(id, {
       status: nextStatus,
       staffNotes: notes,
       staffReviewedAt: new Date().toISOString(),
-    };
-    if (nextStatus === "doable" && quotedPrice != null && Number.isFinite(Number(quotedPrice))) {
-      patch.quotedPrice = Number(quotedPrice);
-    }
-    if (nextStatus === "not_doable") {
-      patch.quotedPrice = null;
-    }
-    const row = window.UpressOrgCustomRequests.update(id, patch);
+    });
     if (!row) return;
     let msg = "";
-    if (nextStatus === "doable") {
-      const p =
-        row.quotedPrice != null && Number.isFinite(Number(row.quotedPrice))
-          ? `Quoted price: ₱${Number(row.quotedPrice).toFixed(2)}. `
-          : "";
+    if (nextStatus === "doable")
       msg =
-        "Your organization custom request was approved. " +
-        p +
-        (notes ? "Details: " + notes : "Visit the office or check notifications for next steps.");
-    } else if (nextStatus === "not_doable")
+        "Your organization custom request was reviewed: UPress can accommodate it. Check your email or visit the org officer for next steps. Notes: " +
+        (notes || "—");
+    else if (nextStatus === "not_doable")
       msg =
-        "Your organization custom request was not approved. " +
-        (notes || "Please contact UPress if you have questions.");
+        "Your organization custom request was reviewed: we cannot accommodate this scope. Notes: " +
+        (notes || "—");
     else
       msg =
-        "UPress needs more information about your organization custom request. " +
-        (notes || "");
-    window.UpressOrgCustomRequests.notifyUser(
-      row.userId,
-      msg,
-      nextStatus === "doable" ? "success" : nextStatus === "not_doable" ? "error" : "warning",
-    );
+        "UPress needs more information about your organization custom request. Notes: " +
+        (notes || "—");
+    window.UpressOrgCustomRequests.notifyUser(row.userId, msg, nextStatus === "doable" ? "success" : "warning");
   }
 
   function bind(container) {
@@ -164,42 +145,31 @@
       if (!id || !action) return;
 
       if (action === "doable" || action === "not_doable" || action === "needs_info") {
-        const ta = container.querySelector(`textarea[data-ocr-notes="${CSS.escape(id)}"]`);
+        const ta = container.querySelector(`textarea[data-ocr-notes="${id}"]`);
         const notes = ta ? ta.value.trim() : "";
-        if (action === "doable") {
-          const priceEl = container.querySelector(`input[data-ocr-price="${CSS.escape(id)}"]`);
-          const raw = priceEl ? priceEl.value.trim() : "";
-          const price = parseFloat(raw, 10);
-          if (!Number.isFinite(price) || price <= 0) {
-            window.alert("Enter a quoted price greater than zero (PHP) to approve.");
-            return;
-          }
-          staffDecision(id, action, notes, price);
-        } else {
-          staffDecision(id, action, notes);
-        }
-        mount(container, { role, sortPendingFirst: container.dataset.ocrSortPending === "1" });
+        staffDecision(id, action, notes);
+        mount(container, { role });
         return;
       }
 
       if (action === "admin_save") {
-        const ta = container.querySelector(`textarea[data-ocr-admin-notes="${CSS.escape(id)}"]`);
-        const ack = container.querySelector(`input[data-ocr-admin-ack="${CSS.escape(id)}"]`);
+        const ta = container.querySelector(`textarea[data-ocr-admin-notes="${id}"]`);
+        const ack = container.querySelector(`input[data-ocr-admin-ack="${id}"]`);
         window.UpressOrgCustomRequests.update(id, {
           adminNotes: ta ? ta.value.trim() : "",
           adminAcknowledged: !!(ack && ack.checked),
           adminReviewedAt: new Date().toISOString(),
         });
-        mount(container, { role, sortPendingFirst: container.dataset.ocrSortPending === "1" });
+        mount(container, { role });
         return;
       }
 
       if (action === "oversight_save") {
-        const ta = container.querySelector(`textarea[data-ocr-oversight="${CSS.escape(id)}"]`);
+        const ta = container.querySelector(`textarea[data-ocr-oversight="${id}"]`);
         window.UpressOrgCustomRequests.update(id, {
           oversightNotes: ta ? ta.value.trim() : "",
         });
-        mount(container, { role, sortPendingFirst: container.dataset.ocrSortPending === "1" });
+        mount(container, { role });
       }
     });
   }
@@ -209,19 +179,8 @@
   function mount(container, opts) {
     if (!container || !window.UpressOrgCustomRequests) return;
     const role = opts && opts.role ? opts.role : "staff";
-    const sortPendingFirst = !!(opts && opts.sortPendingFirst);
     container.dataset.ocrRole = role;
-    if (sortPendingFirst) container.dataset.ocrSortPending = "1";
-    else delete container.dataset.ocrSortPending;
-    let rows = window.UpressOrgCustomRequests.list();
-    if (sortPendingFirst) {
-      rows = [...rows].sort((a, b) => {
-        const pr = (s) => (String(s || "").toLowerCase() === "pending" ? 0 : 1);
-        const d = pr(a.status) - pr(b.status);
-        if (d !== 0) return d;
-        return String(b.submittedAt || "").localeCompare(String(a.submittedAt || ""));
-      });
-    }
+    const rows = window.UpressOrgCustomRequests.list();
     if (!rows.length) {
       container.innerHTML =
         '<p class="page-subtitle" style="margin:0">No organization custom requests yet.</p>';

@@ -418,6 +418,23 @@
       createdAt: "2025-01-12T08:00:00.000Z",
     },
     {
+      id: "user_demo_test_wmsu",
+      fullName: "Test Student WMSU",
+      email: "test.student@wmsu.edu.ph",
+      username: "teststudentwmsu",
+      role: "student",
+      suspended: false,
+      password: "123123",
+      accountType: "student",
+      accountStatus: "verified",
+      college: "College of Computing Studies",
+      course: "Computer Science",
+      yearLevel: "2nd Year",
+      studentId: "2026-DEMO-01",
+      campusId: "2026-DEMO-01",
+      createdAt: "2025-01-12T09:00:00.000Z",
+    },
+    {
       id: "user_demo_maria",
       fullName: "Maria Santos",
       email: "maria.santos@wmsu.edu.ph",
@@ -687,6 +704,7 @@
 
   const DISPLAY_NAMES = {
     "student@wmsu.edu.ph": "Demo Student",
+    "test.student@wmsu.edu.ph": "Test Student WMSU",
     "maria.santos@wmsu.edu.ph": "Maria Santos",
     "juan.delacruz@wmsu.edu.ph": "Juan Dela Cruz",
     "anna.lopez@wmsu.edu.ph": "Anna Lopez",

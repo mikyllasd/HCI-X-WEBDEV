@@ -341,33 +341,48 @@ function updateAuthUser(email, updates) {
  */
 function authenticateUser(email, password) {
   const normalizedEmail = String(email || "").toLowerCase();
-  let user = getAuthUser(normalizedEmail);
   const db = getDB();
 
-  if (!user) {
-    user = (db.users || []).find(
-      (item) => String(item.email || "").toLowerCase() === normalizedEmail,
-    );
+  const profile = (db.users || []).find(
+    (item) => String(item.email || "").toLowerCase() === normalizedEmail,
+  );
 
-    if (user) {
-      const authUser = {
-        id: user.id || generateStorageId("auth"),
-        email: user.email,
-        password: user.password || "",
-        fullName:
-          user.fullName ||
-          `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-        phone: user.phone || "",
-        accountType: user.accountType || "student",
-        accountStatus: user.accountStatus || user.status || "pending",
-        createdAt: user.createdAt || new Date().toISOString(),
-      };
+  let user = getAuthUser(normalizedEmail);
 
-      db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
-      db.authUsers.push(authUser);
-      saveDB(db);
-      user = authUser;
-    }
+  if (profile && profile.password && user && user.password !== profile.password) {
+    updateAuthUser(normalizedEmail, {
+      password: profile.password,
+      accountStatus:
+        profile.accountStatus ||
+        profile.status ||
+        user.accountStatus,
+      fullName:
+        profile.fullName ||
+        `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
+        user.fullName,
+    });
+    user = getAuthUser(normalizedEmail);
+  }
+
+  if (!user && profile) {
+    const authUser = {
+      id: profile.id || generateStorageId("auth"),
+      email: profile.email,
+      password: profile.password || "",
+      fullName:
+        profile.fullName ||
+        `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
+      phone: profile.phone || "",
+      accountType: profile.accountType || "student",
+      accountStatus:
+        profile.accountStatus || profile.status || "pending",
+      createdAt: profile.createdAt || new Date().toISOString(),
+    };
+
+    db.authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
+    db.authUsers.push(authUser);
+    saveDB(db);
+    user = authUser;
   }
 
   if (!user) return null;
@@ -660,6 +675,39 @@ function getArchivedServices(fromYear) {
     }
     if (changed) window.saveDB(db);
   } catch {}
+})();
+
+/**
+ * Merge demo `db.users` rows that ship with a preset `password` (e.g. test
+ * accounts) into an existing local DB so email login works without a full reset.
+ */
+(function ensureSeededLoginUsersFromDemo() {
+  if (typeof window === "undefined" || !window.UpressDemoSeed?.getDemoDatabase)
+    return;
+  if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
+    return;
+  try {
+    if (localStorage.getItem(SKIP_DEMO_KEY) === "1") return;
+    const db = window.getDB();
+    const demoUsers = window.UpressDemoSeed.getDemoDatabase().users || [];
+    const withPassword = demoUsers.filter((u) => u && u.password);
+    if (!withPassword.length) return;
+    db.users = Array.isArray(db.users) ? db.users : [];
+    let changed = false;
+    for (const row of withPassword) {
+      const email = String(row.email || "").toLowerCase();
+      if (!email) continue;
+      const exists = db.users.some(
+        (u) => String(u.email || "").toLowerCase() === email,
+      );
+      if (exists) continue;
+      db.users.push(JSON.parse(JSON.stringify(row)));
+      changed = true;
+    }
+    if (changed) window.saveDB(db);
+  } catch (e) {
+    console.warn("ensureSeededLoginUsersFromDemo:", e);
+  }
 })();
 
 /**

@@ -93,7 +93,7 @@
       if (s === 'pending') {
         banner.style.display = 'block';
         banner.className = 'account-status-banner account-status-banner--pending';
-        banner.textContent = 'Your account is pending verification. Some features may be limited until your account is approved.';
+        banner.textContent = 'Your account is pending verification. You cannot place orders until an administrator approves your signup.';
       } else {
         banner.style.display = 'none';
       }
@@ -804,13 +804,36 @@
   // ── INIT ───────────────────────────────────────────────────────────────────
 
   function init() {
+    if (typeof User !== 'undefined' && User.syncAccountStatusFromDB) {
+      User.syncAccountStatusFromDB();
+    }
     populateProfile();
     renderDashCartPreview();
     renderSidebarOrders();
     renderNotifications();
 
+    const createOrderLink = document.querySelector('a.btn-create-order[href="create-order.html"]');
+    if (createOrderLink && typeof User !== 'undefined') {
+      createOrderLink.addEventListener('click', function (e) {
+        if (!User.canPlaceOrders()) {
+          e.preventDefault();
+          if (typeof showAlert === 'function') {
+            showAlert(
+              'Account verification required',
+              'Your account is pending administrator approval. After your signup is approved, you can create order requests here.',
+            );
+          } else {
+            alert('Your account must be approved before you can create orders.');
+          }
+        }
+      });
+    }
+
     window.addEventListener('storage', function (e) {
-      if (e.key === 'upressDB') {
+      if (e.key === 'upressease_db' || e.key === 'upressDB') {
+        if (typeof User !== 'undefined' && User.syncAccountStatusFromDB) {
+          User.syncAccountStatusFromDB();
+        }
         populateProfile();
         renderNotifications();
         renderDashCartPreview();

@@ -2,29 +2,8 @@
 
     // ── DB / User helpers ──────────────────────────────────────────────────
 
-    function getDB() {
-        if (typeof window.getDB === 'function') return window.getDB();
-        try { return JSON.parse(localStorage.getItem('upressDB') || '{}'); } catch { return {}; }
-    }
-
     function getCurrentUser() {
         try { return JSON.parse(localStorage.getItem('upressUser') || 'null'); } catch { return null; }
-    }
-
-    function hasVerifiedAffiliation(user) {
-        if (!user) return false;
-        if (Array.isArray(user.affiliations)) {
-            const found = user.affiliations.find(a =>
-                a.status === 'verified' || a.status === 'approved'
-            );
-            if (found) return true;
-        }
-        const db = getDB();
-        const requests = Array.isArray(db.affiliationRequests) ? db.affiliationRequests : [];
-        return requests.some(r =>
-            r.userId === user.id &&
-            (r.status === 'approved' || r.status === 'verified')
-        );
     }
 
     // ── Guard ──────────────────────────────────────────────────────────────
@@ -35,6 +14,24 @@
         return;
     }
 
+    if (typeof User !== 'undefined') {
+        User.clearOrganizationOrderContextIfUnauthorized();
+        User.syncAccountStatusFromDB();
+        if (!User.canPlaceOrders()) {
+            const msg =
+                'Your account must be approved by an administrator before you can place orders. After signup verification is approved, you can return here to create order requests.';
+            if (typeof showAlert === 'function') {
+                showAlert('Account verification required', msg, () => {
+                    window.location.href = 'dashboard.html';
+                });
+            } else {
+                alert(msg);
+                window.location.href = 'dashboard.html';
+            }
+            return;
+        }
+    }
+
     // ── State ──────────────────────────────────────────────────────────────
 
     let selectedType = null; // 'individual' | 'organization'
@@ -42,7 +39,7 @@
 
     // ── Check affiliation and show/hide org option ─────────────────────────
 
-    const hasAffil = hasVerifiedAffiliation(currentUser);
+    const hasAffil = typeof User !== 'undefined' && User.hasVerifiedAffiliations();
     const orgCard = document.getElementById('btn-organization');
     const noAffilNotice = document.getElementById('co-no-affil-notice');
 
@@ -74,6 +71,10 @@
     // ── Order type selection ───────────────────────────────────────────────
 
     window.selectOrderType = function (type) {
+        if (type === 'organization' && typeof User !== 'undefined' && !User.hasVerifiedAffiliations()) {
+            alert('Organization orders require an approved affiliation. Finish verification on your dashboard first.');
+            return;
+        }
         selectedType = type;
         selectedOrg  = null;
 
@@ -134,6 +135,10 @@
         if (!selectedType) return;
 
         if (selectedType === 'organization') {
+            if (typeof User !== 'undefined' && !User.hasVerifiedAffiliations()) {
+                alert('Organization orders require an approved affiliation. Finish verification on your dashboard first.');
+                return;
+            }
             const orgVal = document.getElementById('co-org-select')?.value || '';
             if (!orgVal) return;
             selectedOrg = orgVal === 'Others'

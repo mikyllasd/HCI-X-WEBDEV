@@ -46,15 +46,15 @@ function getDB() {
       const merged = mergeWithDefaults(db);
       // If database is empty, load demo data
       if (merged.users.length === 0) {
-        return loadDemoData();
+        return mergeLegacyUpressDbAffiliations(loadDemoData());
       }
-      return merged;
+      return mergeLegacyUpressDbAffiliations(merged);
     }
   } catch (error) {
     console.error("Error loading DB:", error);
   }
   // No data found, load demo data
-  return loadDemoData();
+  return mergeLegacyUpressDbAffiliations(loadDemoData());
 }
 
 /**
@@ -154,6 +154,47 @@ function syncStaffDirectoryFromApprovedUser(user) {
     else db.faculty.unshift(row);
     saveDB(db);
   }
+}
+
+/**
+ * Older student pages wrote to `upressDB` while the canonical app DB is `upressease_db`.
+ * Merge affiliation requests from legacy storage so admin can see them.
+ * @param {Object} db
+ * @returns {Object}
+ */
+function mergeLegacyUpressDbAffiliations(db) {
+  try {
+    const raw = localStorage.getItem("upressDB");
+    if (!raw) return db;
+    const legacy = JSON.parse(raw);
+    const legacyReq = legacy.affiliationRequests;
+    if (!Array.isArray(legacyReq) || legacyReq.length === 0) return db;
+    db.affiliationRequests = Array.isArray(db.affiliationRequests)
+      ? db.affiliationRequests
+      : [];
+    const seen = new Set(
+      db.affiliationRequests.map((r) => r && r.id).filter(Boolean),
+    );
+    let added = false;
+    for (const r of legacyReq) {
+      if (r && r.id && !seen.has(r.id)) {
+        db.affiliationRequests.push(r);
+        seen.add(r.id);
+        added = true;
+      }
+    }
+    if (added) saveDB(db);
+    delete legacy.affiliationRequests;
+    const legacyKeys = legacy && typeof legacy === "object" ? Object.keys(legacy) : [];
+    if (legacyKeys.length === 0) {
+      localStorage.removeItem("upressDB");
+    } else {
+      localStorage.setItem("upressDB", JSON.stringify(legacy));
+    }
+  } catch (e) {
+    console.error("mergeLegacyUpressDbAffiliations:", e);
+  }
+  return db;
 }
 
 /**

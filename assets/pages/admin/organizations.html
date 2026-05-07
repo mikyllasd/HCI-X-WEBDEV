@@ -160,33 +160,27 @@
                 <i data-lucide="users" aria-hidden="true"></i>
                 Affiliation Requests
               </button>
-              <button type="button" class="tab-btn" data-tab="custom-requests">
-                <i data-lucide="help-circle" aria-hidden="true"></i>
-                Org custom requests
-              </button>
             </div>
           </div>
 
           <div id="organizations-tab" class="tab-content active">
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-icon">
+            <div class="stats-grid stats-grid--2 verification-stats-grid">
+              <article class="stat-card stat-card--blue">
+                <div class="stat-card__header">
+                  <span>Total Organizations</span>
                   <i data-lucide="building" aria-hidden="true"></i>
                 </div>
-                <div class="stat-content">
-                  <div class="stat-number" id="organizationTotal">0</div>
-                  <div class="stat-label">Total Organizations</div>
-                </div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon">
+                <p class="stat-card__value" id="organizationTotal">0</p>
+                <p class="stat-card__text">Approved organizations in the directory</p>
+              </article>
+              <article class="stat-card stat-card--teal">
+                <div class="stat-card__header">
+                  <span>Colleges Represented</span>
                   <i data-lucide="layers" aria-hidden="true"></i>
                 </div>
-                <div class="stat-content">
-                  <div class="stat-number" id="organizationCollegeCount">0</div>
-                  <div class="stat-label">Colleges Represented</div>
-                </div>
-              </div>
+                <p class="stat-card__value" id="organizationCollegeCount">0</p>
+                <p class="stat-card__text">Distinct colleges with at least one org</p>
+              </article>
             </div>
 
             <div class="filters-section">
@@ -243,43 +237,39 @@
           </div>
 
           <div id="affiliations-tab" class="tab-content">
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i data-lucide="file-text" aria-hidden="true"></i>
+            <div class="stats-grid stats-grid--4 verification-stats-grid">
+              <article class="stat-card stat-card--blue">
+                <div class="stat-card__header">
+                  <span>Total Requests</span>
+                  <i data-lucide="users" aria-hidden="true"></i>
                 </div>
-                <div class="stat-content">
-                  <div class="stat-number" id="affiliationTotal">0</div>
-                  <div class="stat-label">Total Requests</div>
-                </div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon">
+                <p class="stat-card__value" id="affiliationTotal">0</p>
+                <p class="stat-card__text">All affiliation requests</p>
+              </article>
+              <article class="stat-card stat-card--yellow">
+                <div class="stat-card__header">
+                  <span>Pending</span>
                   <i data-lucide="clock" aria-hidden="true"></i>
                 </div>
-                <div class="stat-content">
-                  <div class="stat-number" id="affiliationPending">0</div>
-                  <div class="stat-label">Pending</div>
-                </div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon">
+                <p class="stat-card__value" id="affiliationPending">0</p>
+                <p class="stat-card__text">Awaiting review</p>
+              </article>
+              <article class="stat-card stat-card--green">
+                <div class="stat-card__header">
+                  <span>Approved</span>
                   <i data-lucide="check-circle" aria-hidden="true"></i>
                 </div>
-                <div class="stat-content">
-                  <div class="stat-number" id="affiliationApproved">0</div>
-                  <div class="stat-label">Approved</div>
-                </div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon">
+                <p class="stat-card__value" id="affiliationApproved">0</p>
+                <p class="stat-card__text">Approved affiliations</p>
+              </article>
+              <article class="stat-card stat-card--red-solid">
+                <div class="stat-card__header">
+                  <span>Rejected</span>
                   <i data-lucide="x-circle" aria-hidden="true"></i>
                 </div>
-                <div class="stat-content">
-                  <div class="stat-number" id="affiliationRejected">0</div>
-                  <div class="stat-label">Rejected</div>
-                </div>
-              </div>
+                <p class="stat-card__value" id="affiliationRejected">0</p>
+                <p class="stat-card__text">Rejected applications</p>
+              </article>
             </div>
 
             <div class="filters-section">
@@ -332,15 +322,6 @@
                 <p>All requests have been processed.</p>
               </div>
             </div>
-          </div>
-
-          <div id="custom-requests-tab" class="tab-content">
-            <div class="page-header" style="margin-bottom: 1rem">
-              <p class="page-subtitle" style="margin: 0">
-                Organization “Other / custom” jobs submitted by students. Staff decisions appear below; add oversight or acknowledgement as needed.
-              </p>
-            </div>
-            <div id="orgCustomRequestsList" class="verification-list"></div>
           </div>
         </div>
       </main>
@@ -408,9 +389,8 @@
     </div>
 
     <script src="../../js/shared/storage.js"></script>
+    <script src="../../js/shared/demo-seed.js"></script>
     <script src="../../js/shared/superadmin-shell.js"></script>
-    <script src="../../js/shared/org-custom-requests.js"></script>
-    <script src="../../js/shared/org-custom-requests-ui.js"></script>
     <script src="../../js/admin/organizations.js"></script>
     <script>
       lucide.createIcons();

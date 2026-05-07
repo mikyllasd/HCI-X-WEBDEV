@@ -677,6 +677,55 @@
     return JSON.parse(JSON.stringify(obj));
   }
 
+  /** Demo org “Other / custom” requests for staff Order Queue (modal review). */
+  const DEMO_ORG_CUSTOM_REQUESTS = [
+    {
+      id: "ocr_demo_pending_banner",
+      status: "pending",
+      submittedAt: "2026-05-01T10:30:00.000Z",
+      updatedAt: "2026-05-01T10:30:00.000Z",
+      staffNotes: "",
+      staffReviewedAt: "",
+      quotedPrice: null,
+      adminNotes: "",
+      adminAcknowledged: false,
+      adminReviewedAt: "",
+      oversightNotes: "",
+      userId: "user_demo_test_wmsu",
+      userName: "Test Student WMSU",
+      userEmail: "test.student@wmsu.edu.ph",
+      organizationName: "Computer Science Student Council",
+      requestTitle: "Demo: Event backdrop + standees",
+      requestCategory: "event_collateral",
+      quantityOrSpecs: "1 backdrop 8×4 ft, 6 standees 2×5 ft",
+      requestDetails:
+        "For College Week 2026. Matte laminate preferred. Final artwork after quote approval.\n\n(Open Review & quote in the modal to approve and set ₱.)",
+    },
+    {
+      id: "ocr_demo_approved_shirts",
+      status: "doable",
+      submittedAt: "2026-04-28T14:00:00.000Z",
+      updatedAt: "2026-04-30T09:15:00.000Z",
+      staffReviewedAt: "2026-04-30T09:15:00.000Z",
+      staffNotes:
+        "80 pcs confirmed. Pickup at UPress; ~3 weeks from down payment.",
+      quotedPrice: 11850.5,
+      adminNotes: "",
+      adminAcknowledged: false,
+      adminReviewedAt: "",
+      oversightNotes: "",
+      userId: "user_demo_maria",
+      userName: "Maria Santos",
+      userEmail: "maria.santos@wmsu.edu.ph",
+      organizationName: "Women in Tech WMSU",
+      requestTitle: "Demo: Org shirts (already approved)",
+      requestCategory: "merchandise",
+      quantityOrSpecs: "80 shirts, cotton, 2-color front print",
+      requestDetails:
+        "Sizes XS–XL. Navy shirt, white + gold ink. (Demo row showing quoted price after staff approval.)",
+    },
+  ];
+
   function getDemoDatabase() {
     return {
       academicYear: DEMO_ACADEMIC_YEAR,
@@ -686,11 +735,58 @@
       ratings: clone(DEMO_RATINGS),
       archives: {},
       organizations: clone(DEMO_ORGANIZATIONS),
+      orgCustomRequests: clone(DEMO_ORG_CUSTOM_REQUESTS),
       systemSettings: {
         maintenanceMode: false,
         policies: {},
       },
     };
+  }
+
+  /** Merge demo organizations into an existing DB (one-time per id). */
+  function seedOrganizationsDemo() {
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
+      return;
+    try {
+      const db = window.getDB();
+      if (!Array.isArray(db.organizations)) db.organizations = [];
+      const existingIds = new Set(
+        db.organizations.map((o) => o && o.id).filter(Boolean),
+      );
+      let added = false;
+      for (const row of DEMO_ORGANIZATIONS) {
+        if (existingIds.has(row.id)) continue;
+        db.organizations.push(clone(row));
+        existingIds.add(row.id);
+        added = true;
+      }
+      if (added) window.saveDB(db);
+    } catch (e) {
+      console.warn("seedOrganizationsDemo:", e);
+    }
+  }
+
+  /** Merge demo org custom rows into an existing DB (one-time per id). */
+  function seedOrgCustomRequestsDemo() {
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
+      return;
+    try {
+      const db = window.getDB();
+      if (!Array.isArray(db.orgCustomRequests)) db.orgCustomRequests = [];
+      const existingIds = new Set(
+        db.orgCustomRequests.map((r) => r && r.id).filter(Boolean),
+      );
+      let added = false;
+      for (const row of DEMO_ORG_CUSTOM_REQUESTS) {
+        if (existingIds.has(row.id)) continue;
+        db.orgCustomRequests.unshift(clone(row));
+        existingIds.add(row.id);
+        added = true;
+      }
+      if (added) window.saveDB(db);
+    } catch (e) {
+      console.warn("seedOrgCustomRequestsDemo:", e);
+    }
   }
 
   function getAdminPortalSampleData() {
@@ -1231,5 +1327,7 @@
     seedStudentsIfEmpty,
     seedFacultyIfEmpty,
     seedActivityRecordsIfEmpty,
+    seedOrgCustomRequestsDemo,
+    seedOrganizationsDemo,
   };
 })(typeof window !== "undefined" ? window : globalThis);

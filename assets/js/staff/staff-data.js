@@ -273,7 +273,7 @@
 
   function modalPayload(p) {
     const badge = statusLabel(p.status);
-    return {
+    const base = {
       orderId: p.orderId,
       student: p.student,
       service: p.service,
@@ -294,6 +294,93 @@
       orderType: p.orderType || "Individual",
       orderOrg: p.orderOrg || "",
     };
+    if (p.isOrgCustom) {
+      base.isOrgCustom = true;
+      base.ocrId = p.ocrId || "";
+      base.ocrStatus = p.ocrStatus || "";
+    }
+    return base;
+  }
+
+  function getOrgCustomQueuePayloads() {
+    if (
+      typeof window.UpressOrgCustomRequests === "undefined" ||
+      typeof window.UpressOrgCustomRequests.list !== "function"
+    ) {
+      return [];
+    }
+    return window
+      .UpressOrgCustomRequests.list()
+      .filter((r) => r && String(r.status || "") !== "not_doable")
+      .map(orgCustomToStaffPayload);
+  }
+
+  function orgCustomToStaffPayload(r) {
+    const t = r.submittedAt ? new Date(r.submittedAt).getTime() : 0;
+    const st = String(r.status || "pending");
+    let uiStatus = "Pending";
+    if (st === "doable") uiStatus = "Processing";
+    if (st === "needs_info") uiStatus = "Pending";
+    const submitted = r.submittedAt
+      ? new Date(r.submittedAt).toLocaleDateString("en-PH", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "—";
+    const amt =
+      r.quotedPrice != null && Number.isFinite(Number(r.quotedPrice))
+        ? "₱" + Number(r.quotedPrice).toFixed(2)
+        : "—";
+    return {
+      orderId: r.id,
+      student: r.userName || "—",
+      service: r.requestTitle || "Organization custom request",
+      organizationName: r.organizationName || "",
+      date: submitted,
+      status: uiStatus,
+      payment: "—",
+      amount: amt,
+      reference: "—",
+      file: "—",
+      pages: "—",
+      size: r.quantityOrSpecs || "—",
+      rush: "No",
+      notes: r.requestDetails || "—",
+      paymentVerified: false,
+      paymentStatus: "",
+      orderType: "Organization",
+      orderOrg: r.organizationName || "",
+      isOrgCustom: true,
+      ocrId: r.id,
+      ocrStatus: st,
+      __sort: Number.isFinite(t) ? t : 0,
+    };
+  }
+
+  function buildOrgCustomQueueRowHtml(p) {
+    const badge = statusLabel(p.status);
+    const bcls = statusToBadgeClass(p.status);
+    const enc = encAttr(modalPayload(p));
+    const orgLine = p.organizationName
+      ? `<div class="sd-muted" style="margin-top:2px;font-size:12px;">${escapeHtmlStaff(p.organizationName)}</div>`
+      : "";
+    const subSvc = `<div class="sd-muted" style="margin-top:2px;font-size:12px;">Organization custom request</div>`;
+    const reviewOrView =
+      p.ocrStatus === "pending" || p.ocrStatus === "needs_info"
+        ? `<button type="button" class="btn-action">Review</button>`
+        : `<button type="button" class="btn-action">View</button>`;
+    return `
+      <tr data-order-full="${enc}">
+        <td>${escapeHtmlStaff(p.orderId)}</td>
+        <td>${escapeHtmlStaff(p.student)}</td>
+        <td>${escapeHtmlStaff(p.service)}${subSvc}${orgLine}</td>
+        <td>${escapeHtmlStaff(p.date)}</td>
+        <td><span class="badge ${bcls}">${escapeHtmlStaff(badge)}</span></td>
+        ${queueActionsCell(
+          `<span class="badge badge-process" style="font-size:10px">Org custom</span>${reviewOrView}`,
+        )}
+      </tr>`;
   }
 
   function encAttr(obj) {
@@ -301,6 +388,7 @@
   }
 
   function buildQueueRowHtml(p) {
+    if (p.isOrgCustom) return buildOrgCustomQueueRowHtml(p);
     const badge = statusLabel(p.status);
     const bcls = statusToBadgeClass(p.status);
     const payTag = p.paymentVerified
@@ -327,7 +415,7 @@
         <td>${escapeHtmlStaff(p.service)}${typeLine}</td>
         <td>${escapeHtmlStaff(p.date)}</td>
         <td><span class="badge ${bcls}">${escapeHtmlStaff(badge)}</span></td>
-        <td>${payTag} ${verifyBtn} <button class="btn-action">View</button></td>
+        ${queueActionsCell(`${payTag} ${verifyBtn} <button class="btn-action">View</button>`)}
       </tr>`;
   }
 
@@ -346,7 +434,7 @@
         <td>${escapeHtmlStaff(p.service)}${typeLine}</td>
         <td>${escapeHtmlStaff(p.date)}</td>
         <td><span class="badge ${bcls}">${escapeHtmlStaff(badge)}</span></td>
-        <td><button class="btn-action release">Release</button></td>
+        ${queueActionsCell(`<button class="btn-action release">Release</button>`)}
       </tr>`;
   }
 
@@ -420,9 +508,26 @@
       .replaceAll("'", "&#039;");
   }
 
+  /** Keeps badges + buttons on one row (long labels truncate; buttons stay aligned). */
+  function queueActionsCell(innerHtml) {
+    return `<td class="data-table__col-actions"><div class="data-table__actions">${innerHtml}</div></td>`;
+  }
+
   function hydrateTablesFromStorage() {
     const orders = getWebOrders().map(orderToStaffPayload);
-    const queue = orders.filter((o) => o.status === "Pending" || o.status === "Processing");
+    const webQueue = orders.filter((o) => o.status === "Pending" || o.status === "Processing");
+    const orgQueue = getOrgCustomQueuePayloads();
+    const queueMerged = [
+      ...orgQueue.map((p) => ({ p, sk: p.__sort || 0 })),
+      ...webQueue.map((p) => {
+        const raw = p.raw;
+        const d = raw && (raw.dateOrdered || raw.createdAt);
+        const sk = d ? new Date(d).getTime() : NaN;
+        return { p, sk: Number.isFinite(sk) ? sk : 0 };
+      }),
+    ]
+      .sort((a, b) => b.sk - a.sk)
+      .map((x) => x.p);
     const ready = orders.filter((o) => o.status === "Ready");
     const done = orders.filter((o) => o.status === "Completed");
 
@@ -437,7 +542,12 @@
       tbody.innerHTML = rows.map(rowHtmlFn).join("");
     };
 
-    fill("orderQueueTable", queue, "No web orders in queue. Walk-in customers can use Walk-in POS.", buildQueueRowHtml);
+    fill(
+      "orderQueueTable",
+      queueMerged,
+      "No items in queue. Web orders and organization custom requests appear here.",
+      buildQueueRowHtml,
+    );
     fill("readyReleaseTable", ready, "No orders ready for pickup.", buildReadyRowHtml);
 
     const walkIns = getWalkInSales().slice().sort((a, b) => new Date(b.ts || 0) - new Date(a.ts || 0));

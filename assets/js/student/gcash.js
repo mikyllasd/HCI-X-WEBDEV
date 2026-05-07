@@ -57,6 +57,8 @@ setText('gcash-info-phone', customer.phone || '—');
 setText('gcash-info-date',  customer.date  || '—');
 
 function submitGcashPayment() {
+    if (!User.assertAccountApprovedForCheckout()) return;
+    if (!User.assertVerifiedForOrganizationCheckout()) return;
     const ref   = document.getElementById('gcash-ref')?.value.trim();
     const proof = document.getElementById('gcash-proof')?.files[0];
     if (!ref)   { showAlert('Missing Info', 'Please enter your GCash reference number.'); return; }

@@ -6,24 +6,129 @@
 // ============================================================
 // USER SYSTEM
 // ============================================================
+function isVerifiedAffiliationStatus(status) {
+    const s = String(status || '').toLowerCase();
+    return s === 'verified' || s === 'approved';
+}
+
 const User = {
     save(data) { localStorage.setItem('upressUser', JSON.stringify(data)); },
     get() { try { return JSON.parse(localStorage.getItem('upressUser') || 'null'); } catch { return null; } },
     update(patch) { const u = this.get() || {}; this.save({ ...u, ...patch }); },
     clear() { localStorage.removeItem('upressUser'); },
     isLoggedIn() { return !!this.get(); },
+    /** Sync signup / admin review fields from canonical DB into the browser session. */
+    syncAccountStatusFromDB() {
+        const u = this.get();
+        if (!u || (!u.id && !u.email)) return;
+        let db;
+        try {
+            if (typeof window.getDB === 'function') db = window.getDB();
+            else {
+                const raw = localStorage.getItem('upressease_db');
+                if (!raw) return;
+                db = JSON.parse(raw);
+            }
+        } catch { return; }
+        const email = String(u.email || '').toLowerCase();
+        const row = [...(db.users || []), ...(db.authUsers || [])].find(
+            (x) =>
+                x &&
+                (x.id === u.id ||
+                    (email && String(x.email || '').toLowerCase() === email)),
+        );
+        if (!row) return;
+        const patch = {};
+        ['accountStatus', 'status', 'verified', 'active'].forEach((k) => {
+            if (row[k] !== undefined && row[k] !== u[k]) patch[k] = row[k];
+        });
+        if (Object.keys(patch).length) this.save({ ...u, ...patch });
+    },
+    /**
+     * Admin-approved portal account (post-signup verification), not org affiliation.
+     * Pending / rejected accounts cannot place orders; verified or approved can.
+     */
+    canPlaceOrders() {
+        this.syncAccountStatusFromDB();
+        const u = this.get();
+        if (!u) return false;
+        const s = String(u.accountStatus || u.status || '').toLowerCase();
+        if (
+            s === 'rejected' ||
+            s === 'suspended' ||
+            s === 'deactivated' ||
+            s === 'disabled'
+        ) {
+            return false;
+        }
+        if (s === 'pending') return false;
+        if (s === 'verified' || s === 'approved') return true;
+        if (u.verified === true) return true;
+        if (!u.accountStatus && !u.status) return true;
+        return false;
+    },
+    /**
+     * Portal signup must be admin-approved before ordering (individual or org).
+     * @returns {boolean}
+     */
+    assertAccountApprovedForCheckout() {
+        if (this.canPlaceOrders()) return true;
+        if (typeof showAlert === 'function') {
+            showAlert(
+                'Account verification required',
+                'Your account must be approved by an administrator before you can place orders. After admin approval, you can create order requests from the dashboard.',
+            );
+        } else {
+            alert(
+                'Your account must be approved by an administrator before you can place orders.',
+            );
+        }
+        return false;
+    },
     hasVerifiedAffiliations() {
         const u = this.get();
         if (!u) return false;
         if (Array.isArray(u.affiliations)) {
-            if (u.affiliations.some(a => a.status === 'verified' || a.status === 'approved')) return true;
+            if (u.affiliations.some(a => isVerifiedAffiliationStatus(a.status))) return true;
         }
         if (typeof window.getDB === 'function') {
             try {
                 const db = window.getDB();
                 const requests = Array.isArray(db.affiliationRequests) ? db.affiliationRequests : [];
-                if (requests.some(r => r.userId === u.id && (r.status === 'approved' || r.status === 'verified'))) return true;
+                if (requests.some(r =>
+                    r.userId === u.id && isVerifiedAffiliationStatus(r.status)
+                )) return true;
+                const users = Array.isArray(db.users) ? db.users : [];
+                const authUsers = Array.isArray(db.authUsers) ? db.authUsers : [];
+                for (const row of [...users, ...authUsers]) {
+                    if (!row || row.id !== u.id || !Array.isArray(row.affiliations)) continue;
+                    if (row.affiliations.some(a => isVerifiedAffiliationStatus(a.status))) return true;
+                }
             } catch { /* ignore */ }
+        }
+        return false;
+    },
+    /** Drop org order context when the current user is not allowed to place organization orders. */
+    clearOrganizationOrderContextIfUnauthorized() {
+        if (localStorage.getItem('upress_order_type') !== 'organization') return;
+        if (this.hasVerifiedAffiliations()) return;
+        localStorage.setItem('upress_order_type', 'individual');
+        localStorage.removeItem('upress_order_org');
+    },
+    /**
+     * Call before completing checkout when cart/order context may be "organization".
+     * Clears stale org context and shows a modal if verification is missing.
+     * @returns {boolean} true if checkout may proceed
+     */
+    assertVerifiedForOrganizationCheckout() {
+        if (localStorage.getItem('upress_order_type') !== 'organization') return true;
+        if (this.hasVerifiedAffiliations()) return true;
+        this.clearOrganizationOrderContextIfUnauthorized();
+        if (typeof showAlert === 'function') {
+            showAlert(
+                'Affiliation required',
+                'Organization orders require an approved affiliation. Complete verification on your dashboard, or continue with an individual order.'
+            );
         }
         return false;
     }
@@ -81,10 +186,14 @@ const Orders = {
         const pm = orderData.paymentMethod || '';
         const paymentStatus =
             pm.indexOf('GCash') !== -1 ? 'awaiting_proof' : 'due_at_pickup';
-        const order_type =
+        let order_type =
             orderData?.order_type ||
             localStorage.getItem('upress_order_type') ||
             'individual';
+        if (order_type === 'organization' && !User.hasVerifiedAffiliations()) {
+            User.clearOrganizationOrderContextIfUnauthorized();
+            order_type = 'individual';
+        }
         const order_org =
             (order_type === 'organization')
                 ? (orderData?.order_org || localStorage.getItem('upress_order_org') || '')

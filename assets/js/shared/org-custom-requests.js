@@ -51,6 +51,7 @@
         updatedAt: new Date().toISOString(),
         staffNotes: "",
         staffReviewedAt: "",
+        quotedPrice: null,
         adminNotes: "",
         adminAcknowledged: false,
         adminReviewedAt: "",

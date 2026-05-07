@@ -246,6 +246,7 @@ function goBackToCart() {
 }
 
 function proceedToConfirmation() {
+    if (!User.assertAccountApprovedForCheckout()) return;
     const phone = paymentPhoneInput ? paymentPhoneInput.value.trim() : u.phone;
     if (!isValidPhilippinesPhone(phone)) {
         showAlert('Invalid phone number', 'Please verify a valid 09XXXXXXXXX mobile number before continuing.');

@@ -30,6 +30,10 @@
   let affiliationFilterState = { search: "", status: "all", type: "all" };
   let currentRequest = null;
 
+  function getOrganizations() {
+    return getDB().organizations || [];
+  }
+
   const modal = document.getElementById("organizationModal");
   const modalBody = document.getElementById("organizationModalBody");
 
@@ -44,11 +48,6 @@
     if (activeBtn) activeBtn.classList.add("active");
     if (activeContent) activeContent.classList.add("active");
 
-    if (tabName === "custom-requests" && window.UpressOrgCustomRequestsUI) {
-      const el = document.getElementById("orgCustomRequestsList");
-      if (el) window.UpressOrgCustomRequestsUI.mount(el, { role: "admin" });
-      if (typeof lucide !== "undefined") lucide.createIcons();
-    }
   }
 
   // ── AFFILIATION FUNCTIONS ──────────────────────────────────────────────────
@@ -395,10 +394,6 @@
     }
   }
 
-  function formatField(value) {
-    return value || "—";
-  }
-
   function normalizeText(value) {
     return String(value || "")
       .trim()
@@ -649,6 +644,13 @@
         if (e.target === affiliationModal) closeAffiliationModal();
       });
     }
+  }
+
+  if (
+    typeof UpressDemoSeed !== "undefined" &&
+    typeof UpressDemoSeed.seedOrganizationsDemo === "function"
+  ) {
+    UpressDemoSeed.seedOrganizationsDemo();
   }
 
   setupEventListeners();

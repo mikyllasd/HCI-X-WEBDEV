@@ -41,6 +41,8 @@ document.querySelectorAll('.payment-option').forEach(opt => {
 });
 
 function finalizeOrder(extra = {}) {
+    if (!User.assertAccountApprovedForCheckout()) return;
+    if (!User.assertVerifiedForOrganizationCheckout()) return;
     const cartItems = Cart.get();
     const co        = Checkout.get();
     const customer  = co.customerInfo || {};
@@ -65,6 +67,8 @@ function finalizeOrder(extra = {}) {
 }
 
 function proceedPayment() {
+    if (!User.assertAccountApprovedForCheckout()) return;
+    if (!User.assertVerifiedForOrganizationCheckout()) return;
     const selected = document.querySelector('input[name="payment"]:checked');
     if (!selected) { showAlert('No Selection', 'Please select a payment method to continue.'); return; }
     Checkout.set({ paymentMethod: selected.value });

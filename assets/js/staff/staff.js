@@ -88,6 +88,9 @@ function getOrderFromRow(tr) {
         staffReviewStatus: parsed.staffReviewStatus || 'pending_review',
         staffReviewNotes: parsed.staffReviewNotes || '',
         staffReviewedAt: parsed.staffReviewedAt || '',
+        isOrgCustom: !!parsed.isOrgCustom,
+        ocrId: parsed.ocrId || '',
+        ocrStatus: parsed.ocrStatus || '',
       };
     } catch (_) {}
   }
@@ -607,6 +610,24 @@ document.addEventListener('click', (e) => {
   if (actionBtn && !actionBtn.classList.contains('release')) {
     const tr = actionBtn.closest('tr');
     const order = getOrderFromRow(tr);
+    if (
+      order &&
+      order.isOrgCustom &&
+      order.ocrId &&
+      window.UpressOrgCustomRequests &&
+      window.UpressOrgCustomRequestsUI
+    ) {
+      const r = window.UpressOrgCustomRequests.list().find((x) => x.id === order.ocrId);
+      if (r) {
+        const st = String(r.status || '');
+        if (st === 'pending' || st === 'needs_info') {
+          window.UpressOrgCustomRequestsUI.openStaffReviewModal(r, null, 'staff');
+        } else {
+          window.UpressOrgCustomRequestsUI.openStaffViewModal(r);
+        }
+      }
+      return;
+    }
     renderOrderModal(order, 'process');
     return;
   }
@@ -879,6 +900,9 @@ function initAnalyticsPage() {
 }
 
 function initOrderQueuePage() {
+  if (window.UpressDemoSeed && typeof window.UpressDemoSeed.seedOrgCustomRequestsDemo === "function") {
+    window.UpressDemoSeed.seedOrgCustomRequestsDemo();
+  }
   if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   setupOrderQueueSorting();
   window.UpressListTools?.initTableList?.({
@@ -888,6 +912,9 @@ function initOrderQueuePage() {
     paginationId: "oqPagination",
     pageSize: 8,
     emptyLabel: "orders",
+  });
+  document.addEventListener("staff:data-changed", () => {
+    if (window.UpressStaffData) UpressStaffData.hydrateTablesFromStorage();
   });
 }
 

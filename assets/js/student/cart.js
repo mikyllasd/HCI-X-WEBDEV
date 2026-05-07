@@ -199,6 +199,7 @@ function removeCartItem(cartId) {
 }
 
 function cartProceedCheckout() {
+    if (!User.assertAccountApprovedForCheckout()) return;
     if (cartSelected.size === 0) {
         showAlert('No Items Selected', 'Please select at least one item to checkout.');
         return;

@@ -152,6 +152,13 @@
     return { start, end };
   }
 
+  function applyFilters() {
+    const transactions = getFilteredTransactions();
+    updateSummaryCards(transactions);
+    renderPaymentChart(transactions);
+    renderRecords(transactions);
+  }
+
   function getCurrentAcademicTransactions() {
     return (db.transactions || []).filter((transaction) => {
       const date = parseDate(getTxnDateValue(transaction));
@@ -523,7 +530,7 @@
 
     // Add date range
     const period = periodSelect?.value || "daily";
-    const { start, end } = getDateRange(period);
+    const { start, end } = getPeriodRange(period);
     doc.setFontSize(12);
     doc.text(
       `Period: ${start.toLocaleDateString()} - ${end.toLocaleDateString()}`,
@@ -561,10 +568,10 @@
     yPosition += 10;
     transactions.slice(0, 50).forEach((transaction) => {
       // Limit to 50 records for PDF
-      const date = parseDate(transaction.date)?.toLocaleDateString() || "—";
+      const date = parseDate(getTxnDateValue(transaction))?.toLocaleDateString() || "—";
       const student = getUserName(transaction.email) || "—";
-      const service = transaction.service || "—";
-const payment = getPaymentLabel(getPaymentType(transaction));
+      const service = transaction.serviceName || transaction.service || "—";
+      const payment = getPaymentLabel(getPaymentType(transaction));
       const amount = `₱${Number(transaction.amount || 0).toFixed(2)}`;
 
       doc.text(date, 20, yPosition);
@@ -592,9 +599,9 @@ const payment = getPaymentLabel(getPaymentType(transaction));
     const data = [
       ["Date", "Student", "Service", "Payment", "Amount", "Status"],
       ...transactions.map((transaction) => [
-        parseDate(transaction.date)?.toLocaleDateString() || "—",
+        parseDate(getTxnDateValue(transaction))?.toLocaleDateString() || "—",
         getUserName(transaction.email) || "—",
-        transaction.service || "—",
+        transaction.serviceName || transaction.service || "—",
         getPaymentLabel(getPaymentType(transaction)),
         Number(transaction.amount || 0),
         transaction.status || "—",

@@ -202,9 +202,12 @@
       .join("");
   }
 
-  function addOrUpdateOrganizationDirectory(request) {
-    const db = getDB();
-    db.organizations = Array.isArray(db.organizations) ? db.organizations : [];
+  /** When `db` is passed, mutates that object only; caller must `saveDB(db)`. */
+  function addOrUpdateOrganizationDirectory(request, db) {
+    const target = db || getDB();
+    target.organizations = Array.isArray(target.organizations)
+      ? target.organizations
+      : [];
 
     const orgName = String(request.organizationName || "").trim();
     const college = String(
@@ -212,7 +215,7 @@
     ).trim();
     if (!orgName) return;
 
-    const exists = db.organizations.some((org) => {
+    const exists = target.organizations.some((org) => {
       return (
         String(org.name || "")
           .trim()
@@ -224,7 +227,7 @@
     });
 
     if (!exists) {
-      db.organizations.push({
+      target.organizations.push({
         id: `ORG_${Date.now()}`,
         name: orgName,
         college: college || "Unknown College",
@@ -242,7 +245,7 @@
       });
     }
 
-    saveDB(db);
+    if (!db) saveDB(target);
   }
 
   function notifyUser(userId, message, type) {
@@ -260,59 +263,60 @@
   }
 
   function approveAffiliationRequest(requestId) {
-    const requests = getAffiliationRequests();
+    const db = getDB();
+    if (!Array.isArray(db.affiliationRequests)) db.affiliationRequests = [];
+    const requests = db.affiliationRequests;
     const requestIndex = requests.findIndex((r) => r.id === requestId);
     if (requestIndex === -1) return;
 
     requests[requestIndex].status = "approved";
     requests[requestIndex].reviewedAt = new Date().toISOString();
 
-    // Add to user's affiliations
-    const db = getDB();
-    const userIndex = db.users.findIndex(
-      (u) => u.id === requests[requestIndex].userId,
-    );
-    if (userIndex !== -1) {
-      if (!db.users[userIndex].affiliations) {
-        db.users[userIndex].affiliations = [];
-      }
-      db.users[userIndex].affiliations.push({
-        id: requestId,
-        organizationName: requests[requestIndex].organizationName,
-        position: requests[requestIndex].position,
-        contactNumber: requests[requestIndex].contactNumber,
-        organizationType: requests[requestIndex].organizationType,
-        verifiedAt: new Date().toISOString(),
-        status: "verified",
-      });
-    }
+    const affPayload = {
+      id: requestId,
+      organizationName: requests[requestIndex].organizationName,
+      position: requests[requestIndex].position,
+      contactNumber: requests[requestIndex].contactNumber,
+      organizationType: requests[requestIndex].organizationType,
+      verifiedAt: new Date().toISOString(),
+      status: "verified",
+    };
+    const uid = requests[requestIndex].userId;
+    ["users", "authUsers"].forEach((key) => {
+      const arr = Array.isArray(db[key]) ? db[key] : [];
+      const userIndex = arr.findIndex((u) => u && u.id === uid);
+      if (userIndex === -1) return;
+      if (!arr[userIndex].affiliations) arr[userIndex].affiliations = [];
+      arr[userIndex].affiliations.push({ ...affPayload });
+    });
 
-    addOrUpdateOrganizationDirectory(requests[requestIndex]);
     addOrUpdateOrganizationDirectory(requests[requestIndex], db);
     saveDB(db);
-    const orgLabel = requests[requestIndex].organizationName || "your organization";
+    const orgLabel =
+      requests[requestIndex].organizationName || "your organization";
     notifyUser(
       uid,
       `Your affiliation request for ${orgLabel} has been approved. You can now place organization orders.`,
       "success",
     );
     renderAffiliationRequests();
-    renderOrganizations(); // Refresh organizations list
+    renderOrganizations();
     closeAffiliationModal();
   }
 
   function rejectAffiliationRequest(requestId) {
-    const requests = getAffiliationRequests();
+    const db = getDB();
+    if (!Array.isArray(db.affiliationRequests)) db.affiliationRequests = [];
+    const requests = db.affiliationRequests;
     const requestIndex = requests.findIndex((r) => r.id === requestId);
     if (requestIndex === -1) return;
 
     const uid = requests[requestIndex].userId;
-    const orgLabel = requests[requestIndex].organizationName || "your organization";
+    const orgLabel =
+      requests[requestIndex].organizationName || "your organization";
 
     requests[requestIndex].status = "rejected";
     requests[requestIndex].reviewedAt = new Date().toISOString();
-
-    const db = getDB();
     saveDB(db);
 
     notifyUser(

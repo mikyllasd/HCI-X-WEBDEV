@@ -757,7 +757,11 @@
       }
     }
 
-    if (selectedOrg === 'Other' && proofInput && proofInput.files && proofInput.files[0]) {
+    if (selectedOrg === 'Other') {
+      if (!proofInput || !proofInput.files || !proofInput.files[0]) {
+        alert('Please upload proof of affiliation for "Other" organizations.');
+        return;
+      }
       const reader = new FileReader();
       reader.onload = function (e) {
         requestData.proofImage = e.target.result;

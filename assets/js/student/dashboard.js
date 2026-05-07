@@ -154,6 +154,7 @@
     const notifList = document.getElementById('notif-list');
     const notifPanel = document.getElementById('notif-panel');
     const notifBadge = document.getElementById('notif-badge');
+    const sidebarNotifBadge = document.getElementById('sidebar-notif-badge');
     if (!notifList) return;
 
     const userNotifs = (db.notifications || []).filter(notifBelongsToCurrentUser);
@@ -165,6 +166,14 @@
         notifBadge.textContent = unread.length > 9 ? '9+' : String(unread.length);
       } else {
         notifBadge.style.display = 'none';
+      }
+    }
+    if (sidebarNotifBadge) {
+      if (unread.length > 0) {
+        sidebarNotifBadge.style.display = 'flex';
+        sidebarNotifBadge.textContent = unread.length > 9 ? '9+' : String(unread.length);
+      } else {
+        sidebarNotifBadge.style.display = 'none';
       }
     }
 

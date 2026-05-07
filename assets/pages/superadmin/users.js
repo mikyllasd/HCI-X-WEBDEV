@@ -84,24 +84,36 @@
 
       // Get users based on selected academic year and tab
       let usersToShow = [];
+      const isStaffOrAdmin = (u) => {
+        const role = String(u && (u.role || u.accountType) || "").toLowerCase();
+        return role === "staff" || role === "admin";
+      };
       if (selectedAcademicYear === db.academicYear) {
         // Current year - show from active database
         if (userTab === "active") {
-          usersToShow = db.users.filter((u) => !u.suspended && !u.deleted);
+          usersToShow = db.users.filter(
+            (u) => isStaffOrAdmin(u) && !u.suspended && !u.deleted,
+          );
         } else if (userTab === "disabled") {
-          usersToShow = db.users.filter((u) => u.suspended && !u.deleted);
+          usersToShow = db.users.filter(
+            (u) => isStaffOrAdmin(u) && u.suspended && !u.deleted,
+          );
         } else if (userTab === "removed") {
-          usersToShow = db.users.filter((u) => u.deleted);
+          usersToShow = db.users.filter((u) => isStaffOrAdmin(u) && u.deleted);
         }
       } else if (db.archives[selectedAcademicYear]) {
         // Archived year - show from archives
         const archivedUsers = db.archives[selectedAcademicYear].users || [];
         if (userTab === "active") {
-          usersToShow = archivedUsers.filter((u) => !u.suspended && !u.deleted);
+          usersToShow = archivedUsers.filter(
+            (u) => isStaffOrAdmin(u) && !u.suspended && !u.deleted,
+          );
         } else if (userTab === "disabled") {
-          usersToShow = archivedUsers.filter((u) => u.suspended && !u.deleted);
+          usersToShow = archivedUsers.filter(
+            (u) => isStaffOrAdmin(u) && u.suspended && !u.deleted,
+          );
         } else if (userTab === "removed") {
-          usersToShow = archivedUsers.filter((u) => u.deleted);
+          usersToShow = archivedUsers.filter((u) => isStaffOrAdmin(u) && u.deleted);
         }
       }
 

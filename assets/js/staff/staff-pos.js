@@ -83,6 +83,46 @@
     renderTicket();
   }
 
+  function getDbServicesSafe() {
+    try {
+      if (typeof window.getDB === "function") {
+        const db = window.getDB();
+        return Array.isArray(db?.services) ? db.services : [];
+      }
+    } catch (_) {}
+    return [];
+  }
+
+  function populatePosServiceDropdown() {
+    const select = document.getElementById("posLineService");
+    if (!select) return;
+
+    const existing = Array.from(select.querySelectorAll("option"))
+      .map((o) => String(o.value || o.textContent || "").trim())
+      .filter(Boolean);
+
+    const dbServices = getDbServicesSafe()
+      .map((s) => String(s?.name || s?.serviceName || "").trim())
+      .filter(Boolean);
+
+    const merged = Array.from(new Set([...dbServices, ...existing]));
+    merged.sort((a, b) => a.localeCompare(b));
+
+    const keepOther = merged.includes("Other") ? "Other" : null;
+    const main = merged.filter((n) => n && n !== "Other");
+    select.innerHTML = main.map((n) => `<option value="${escapePos(n)}">${escapePos(n)}</option>`).join("");
+    select.insertAdjacentHTML(
+      "beforeend",
+      `<option value="Other">Other (describe in notes)</option>`,
+    );
+
+    // Keep current selection if possible.
+    const current = String(select.value || "").trim();
+    if (current && (main.includes(current) || current === "Other")) {
+      select.value = current;
+    }
+  }
+
   function receiptHtmlInner(sale) {
     const rows =
       sale.items && sale.items.length
@@ -340,6 +380,7 @@
   });
 
   document.addEventListener("DOMContentLoaded", () => {
+    populatePosServiceDropdown();
     document.getElementById("posAddLineBtn")?.addEventListener("click", addLine);
     document.getElementById("posClearTicketBtn")?.addEventListener("click", clearTicket);
     document.getElementById("posCompleteSaleBtn")?.addEventListener("click", completeSale);

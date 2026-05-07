@@ -2,11 +2,81 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.UPressPricing && typeof window.UPressPricing.applyLandingPricing === "function") {
     window.UPressPricing.applyLandingPricing();
   }
+  syncServicesFromDb();
   initMobileMenu();
   initHeaderScroll();
   initSmoothScroll();
   initContactForm();
 });
+
+function safeReadDbServices() {
+  try {
+    const raw = localStorage.getItem("upressease_db");
+    if (!raw) return [];
+    const db = JSON.parse(raw);
+    return Array.isArray(db?.services) ? db.services : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function syncServicesFromDb() {
+  const grid = document.querySelector("#services .services-grid");
+  if (!grid) return;
+
+  const base = new Set(["printing", "binding", "lanyards", "mug printing", "id processing", "id printing"]);
+  const dbServices = safeReadDbServices()
+    .map((s) => ({
+      name: String(s?.name || s?.serviceName || "").trim(),
+      description: String(s?.description || "").trim(),
+      category: String(s?.category || "").trim(),
+    }))
+    .filter((s) => s.name);
+
+  const extra = [];
+  const seen = new Set();
+  for (const s of dbServices) {
+    const k = s.name.toLowerCase();
+    if (base.has(k)) continue;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    extra.push(s);
+  }
+  if (!extra.length) return;
+
+  const esc = (v) =>
+    String(v ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  const html = extra
+    .slice(0, 6)
+    .map(
+      (s) => `
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16v16H4z" />
+          <path d="M8 8h8" />
+          <path d="M8 12h8" />
+          <path d="M8 16h5" />
+        </svg>
+      </div>
+      <h3 class="service-title">${esc(s.name)}</h3>
+      <p class="service-description">${esc(s.description || "Service available at UPress.")}</p>
+      ${s.category ? `<ul class="service-features"><li>Category: ${esc(s.category)}</li></ul>` : ""}
+    </div>`,
+    )
+    .join("");
+
+  // Insert before the CTA card if present; otherwise append.
+  const cta = grid.querySelector(".service-card-cta");
+  if (cta) cta.insertAdjacentHTML("beforebegin", html);
+  else grid.insertAdjacentHTML("beforeend", html);
+}
 
 function initMobileMenu() {
   const menuBtn = document.getElementById("mobile-menu-btn");

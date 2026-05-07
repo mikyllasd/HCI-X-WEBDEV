@@ -506,8 +506,24 @@
       username: "staffdemo",
       role: "staff",
       suspended: false,
+      password: "123123",
+      accountType: "staff",
+      accountStatus: "verified",
       facultyId: "FAC-001",
       createdAt: "2025-01-12T08:00:00.000Z",
+    },
+    {
+      id: "user_demo_admin",
+      fullName: "Admin Demo",
+      email: "admin@upress.demo",
+      username: "admindemo",
+      role: "admin",
+      suspended: false,
+      password: "123123",
+      accountType: "admin",
+      accountStatus: "verified",
+      campusId: "ADMIN-DEMO-01",
+      createdAt: "2025-01-12T07:30:00.000Z",
     },
     {
       id: "user_demo_ana_reyes",
@@ -736,11 +752,37 @@
       archives: {},
       organizations: clone(DEMO_ORGANIZATIONS),
       orgCustomRequests: clone(DEMO_ORG_CUSTOM_REQUESTS),
+      notifications: [],
       systemSettings: {
         maintenanceMode: false,
         policies: {},
       },
     };
+  }
+
+  /** Merge demo admin/staff user rows into an existing DB (one-time per id). */
+  function seedAdminStaffUsersDemo() {
+    if (typeof window.getDB !== "function" || typeof window.saveDB !== "function")
+      return;
+    try {
+      const db = window.getDB();
+      db.users = Array.isArray(db.users) ? db.users : [];
+      const existingIds = new Set(db.users.map((u) => u && u.id).filter(Boolean));
+      const toMerge = DEMO_USERS.filter((u) => {
+        const r = String(u && (u.role || u.accountType) || "").toLowerCase();
+        return r === "admin" || r === "staff";
+      });
+      let added = false;
+      for (const row of toMerge) {
+        if (existingIds.has(row.id)) continue;
+        db.users.push(clone(row));
+        existingIds.add(row.id);
+        added = true;
+      }
+      if (added) window.saveDB(db);
+    } catch (e) {
+      console.warn("seedAdminStaffUsersDemo:", e);
+    }
   }
 
   /** Merge demo organizations into an existing DB (one-time per id). */
@@ -1328,6 +1370,7 @@
     seedFacultyIfEmpty,
     seedActivityRecordsIfEmpty,
     seedOrgCustomRequestsDemo,
+    seedAdminStaffUsersDemo,
     seedOrganizationsDemo,
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -188,9 +188,113 @@
         window.location.href = page;
     };
 
+    function getDbServicesSafe() {
+        try {
+            if (typeof window.getDB === 'function') {
+                const db = window.getDB();
+                return Array.isArray(db?.services) ? db.services : [];
+            }
+        } catch (_) {}
+        return [];
+    }
+
+    function escapeHtml(s) {
+        return String(s ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function renderServiceCardsFromDb() {
+        const grid = document.querySelector('.co-services-grid');
+        if (!grid) return;
+
+        const hrefByName = {
+            'printing': 'printing.html',
+            'binding': 'binding.html',
+            'lanyards': 'lanyard.html',
+            'mug printing': 'mug.html',
+            'id printing': 'id-printing.html',
+            'id processing': 'id-printing.html',
+        };
+
+        const iconByKey = {
+            printing: 'upress-icon--print',
+            binding: 'upress-icon--book',
+            lanyards: 'upress-icon--ticket',
+            mugs: 'upress-icon--mug',
+            id: 'upress-icon--id',
+            default: 'upress-icon--print',
+        };
+
+        const services = getDbServicesSafe()
+            .map((s) => ({
+                id: String(s?.id || ''),
+                name: String(s?.name || s?.serviceName || '').trim(),
+                description: String(s?.description || '').trim(),
+                category: String(s?.category || '').trim(),
+            }))
+            .filter((s) => s.name);
+
+        if (!services.length) return; // keep existing hardcoded markup fallback
+
+        // Unique by lowercased name (avoid duplicates when seed merges)
+        const seen = new Set();
+        const uniq = [];
+        for (const s of services) {
+            const k = s.name.toLowerCase();
+            if (seen.has(k)) continue;
+            seen.add(k);
+            uniq.push(s);
+        }
+
+        function iconClassFor(name) {
+            const n = name.toLowerCase();
+            if (n.includes('print')) return iconByKey.printing;
+            if (n.includes('bind')) return iconByKey.binding;
+            if (n.includes('lany')) return iconByKey.lanyards;
+            if (n.includes('mug')) return iconByKey.mugs;
+            if (n.includes('id')) return iconByKey.id;
+            return iconByKey.default;
+        }
+
+        const cardsHtml = uniq.map((s) => {
+            const nameKey = s.name.toLowerCase();
+            const href = hrefByName[nameKey];
+            const desc = s.description || 'Service available at UPress.';
+            if (href) {
+                return `
+            <button type="button" class="co-service-card" onclick="serviceHref('${href}')">
+                <div class="co-service-icon"><span class="upress-icon ${iconClassFor(s.name)}" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">${escapeHtml(s.name)}</div>
+                    <div class="co-service-desc">${escapeHtml(desc)}</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>`;
+            }
+            return `
+            <button type="button" class="co-service-card" onclick="alert('This service is newly added but does not have an online order form yet. Please contact UPress staff for assistance.')">
+                <div class="co-service-icon"><span class="upress-icon ${iconClassFor(s.name)}" aria-hidden="true"></span></div>
+                <div class="co-service-info">
+                    <div class="co-service-name">${escapeHtml(s.name)}</div>
+                    <div class="co-service-desc">${escapeHtml(desc || 'Available soon in online ordering.')}</div>
+                </div>
+                <span class="co-service-arrow">→</span>
+            </button>`;
+        }).join('');
+
+        const orgCustomWrap = document.getElementById('co-org-custom-request-wrap');
+        const orgCustomHtml = orgCustomWrap ? orgCustomWrap.outerHTML : '';
+        grid.innerHTML = cardsHtml + orgCustomHtml;
+    }
+
     // ── Init ───────────────────────────────────────────────────────────────
 
     showStep(1);
     syncOrgCustomCardVisibility();
+    renderServiceCardsFromDb();
 
 })();

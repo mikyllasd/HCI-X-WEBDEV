@@ -25,6 +25,14 @@
     let selectedAcademicYear = db.academicYear || "";
     const USERS_PAGE_SIZE = 6;
 
+    // Ensure demo admin + staff exist in current DB (non-destructive merge).
+    if (
+      typeof window.UpressDemoSeed !== "undefined" &&
+      typeof window.UpressDemoSeed.seedAdminStaffUsersDemo === "function"
+    ) {
+      window.UpressDemoSeed.seedAdminStaffUsersDemo();
+    }
+
     function generateUserId() {
       return "user_" + Math.random().toString(36).substr(2, 9);
     }
